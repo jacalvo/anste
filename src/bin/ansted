@@ -1,0 +1,45 @@
+#!/usr/bin/perl
+
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License, version 2, as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+use strict;
+use warnings;
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+
+use ANSTE::Comm::SlaveServer;
+
+use POSIX qw(setsid);
+use SOAP::Transport::HTTP;
+
+use constant PORT => 8000;
+
+sub daemonize {
+    chdir('/')                  or die "Can't chdir to /: $!";
+    open(STDIN, '/dev/null')    or die "Can't read /dev/null: $!";
+    open(STDOUT, '>>/dev/null') or die "Can't write to /dev/null: $!";
+    open(STDERR, '>>/dev/null') or die "Can't write to /dev/null: $!";
+    defined(my $pid = fork)     or die "Can't fork: $!";
+    exit if $pid;
+    setsid()                    or die "Can't start a new session: $!";
+    umask 0;
+}
+
+daemonize();
+my $daemon = new SOAP::Transport::HTTP::Daemon(LocalPort => PORT, Reuse => 1);
+$daemon->dispatch_to('ANSTE::Comm::SlaveServer');
+$daemon->handle();

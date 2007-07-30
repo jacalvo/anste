@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario>
+	<name>scenarioName</name>
+	<desc>scenarioDesc</desc>
+
+	<virtualizer>test</virtualizer>
+	<system>test</system>
+
+	<server>
+		<name>serverName</name>
+		<desc>serverDesc</desc>
+		<network>
+            <interface type="static">
+                <name>eth0</name>
+    			<address>192.168.0.2</address>
+	    		<netmask>255.255.255.0</netmask>
+		    	<gateway>192.168.0.1</gateway>
+            </interface>
+            <interface type="static">
+                <name>eth1</name>
+    			<address>192.168.1.2</address>
+	    		<netmask>255.255.255.0</netmask>
+		    	<gateway>192.168.1.1</gateway>
+            </interface>
+		</network>
+		<packages>
+			<profile>lamp-server</profile>
+		</packages>
+	</server>
+
+	<server>
+		<name>serverName</name>
+		<desc>serverDesc</desc>
+		<network type="dhcp">
+            <interface type="dhcp">
+                <name>eth0</name>
+            </interface>
+        </network>
+		<packages>
+			<profile>ftp-server</profile>
+			<package>samba-common</package>
+			<package>samba</package>
+		</packages>
+	</server>
+
+</scenario>

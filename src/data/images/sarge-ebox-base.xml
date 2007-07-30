@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<image>
+	<name>baseimage-ebox</name>
+	<desc>Debian GNU/Linux 3.1</desc>
+    
+    <packages>
+        <package>postfix</package>
+        <profile>ebox</profile>
+    </packages>
+</image>

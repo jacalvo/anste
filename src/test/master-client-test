@@ -1,0 +1,74 @@
+#!/usr/bin/perl
+
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License, version 2, as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+use warnings;
+use strict;
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+
+use Comm::MasterClient;
+
+use constant SERVER => "http://localhost:8000";
+
+my $client = new Comm::MasterClient;
+$client->connect(SERVER);
+
+print "Trying to put test.sh\n";
+if ($client->put("test.sh")) {
+    print "OK\n";
+} else {
+    print "ERROR\n";
+}
+print "\n\nTrying to execute true.sh\n";
+open(my $FILE, ">", "true.sh");
+print $FILE "#!/bin/sh\n";
+print $FILE "true\n";
+close($FILE);
+if (not $client->put("true.sh")) {
+    print "Error uploading true.sh\n";    
+}
+if ($client->exec("true.sh")) {
+    print "OK\n";
+} else {
+    print "ERROR\n";
+}
+unlink("true.sh");
+print "\n\nTrying to execute test.sh\n";
+if ($client->exec("test.sh", "test.log")) {
+    print "OK\n";
+} else {
+    print "ERROR\n";
+}
+print "\n\nTrying to delete test.sh\n";
+if ($client->del("test.sh")) {
+    print "OK\n";
+} else {
+    print "ERROR\n";
+}
+print "\n\nTrying to get test.log\n";
+if ($client->get("test.log")) {
+    print "OK\n";
+} else {
+    print "ERROR\n";
+}
+print "\n\nTrying to delete test.log\n";
+if ($client->del("test.log")) {
+    print "OK\n";
+} else {
+    print "ERROR\n";
+}

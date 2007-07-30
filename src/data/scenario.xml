@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario>
+	<name>Scenario Name</name>
+	<desc>Description of the scenario</desc>
+
+	<virtualizer>Xen</virtualizer>
+	<system>Debian</system>
+
+	<host>
+		<name>hostname1</name>
+		<desc>Describes the role of the host in the test</desc>
+        <baseimage>sarge-base</baseimage>
+		<network>
+            <interface type="static">
+                <name>eth0</name>
+    			<address>192.168.3.5</address>
+	    		<netmask>255.255.255.0</netmask>
+		    	<gateway>192.168.3.1</gateway>
+            </interface>
+            <interface type="static">
+                <name>eth1</name>
+    			<address>192.168.6.2</address>
+	    		<netmask>255.255.255.0</netmask>
+		    	<gateway>192.168.6.1</gateway>
+            </interface>
+		</network>
+		<packages>
+			<profile>lamp-server</profile>
+		</packages>
+	</host>
+
+	<host>
+		<name>hostname2</name>
+		<desc>Blah blah blah</desc>
+        <baseimage>sarge-base</baseimage>
+		<network type="dhcp">
+            <interface type="dhcp">
+                <name>eth0</name>
+            </interface>
+        </network>
+		<packages>
+			<profile>ftp-server</profile>
+			<package>samba-common</package>
+			<package>samba</package>
+		</packages>
+	</host>
+
+	<host>
+		<name>hostname3</name>
+		<desc>Bleh bleh bleh</desc>
+        <baseimage>sarge-ebox-base</baseimage>
+		<network type="dhcp">
+            <interface type="dhcp">
+                <name>eth0</name>
+            </interface>
+        </network>
+	</host>
+
+</scenario>
