@@ -213,7 +213,8 @@ sub _executeSetup # (client, script)
     print "Trying to exec $script\n";
     $ret = $client->exec('install.sh');
     print "Server returned $ret\n";
-    $ret = $data->waitForExecution('baseimage');
+    my $image = $self->{image}->name();
+    $ret = $data->waitForExecution($image);
     print "Execution finished with return value = $ret\n";
 }
 
