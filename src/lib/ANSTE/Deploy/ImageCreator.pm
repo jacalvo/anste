@@ -50,22 +50,22 @@ sub createImage
 
     my $image = $self->{image};
 
-#    $cmd->createImage($image->name()) or die "Error creating base image.";
+    $cmd->createImage($image->name()) or die "Error creating base image.";
 
-#    $cmd->mountImage($image->name()) or die "Error mounting image.";
+    $cmd->mountImage($image->name()) or die "Error mounting image.";
 
-#    $cmd->copyFiles(COPY_SCRIPT) or die "Error copying files.";
+    $cmd->copyFiles(COPY_SCRIPT) or die "Error copying files.";
 
-#    $cmd->installBasePackages() or die "Error installing packages.";
+    $cmd->installBasePackages() or die "Error installing packages.";
 
-#    $cmd->umountImage() or die "Error unmounting image.";
+    $cmd->umountImage() or die "Error unmounting image.";
 
     # Starts Master Server thread
     my $thread = threads->create('_startMasterServer');
 
     $cmd->prepareSystem($image) or die "Error preparing system."; 
 
-#    $cmd->shutdownImage($image->name());
+    $cmd->shutdownImage($image->name());
 }
 
 sub _startMasterServer

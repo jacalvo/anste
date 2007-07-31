@@ -65,7 +65,7 @@ sub _writeInterface # (file, iface)
 
     my $name = $iface->name();
 	print $file "auto $name\n";
-	if ($iface->type() == Scenario::NetworkInterface->IFACE_TYPE_DHCP) {
+	if ($iface->type() == ANSTE::Scenario::NetworkInterface->IFACE_TYPE_DHCP) {
 		print $file "iface $name inet dhcp\n";
 	} else {
 		my $address = $iface->address();
@@ -88,7 +88,7 @@ sub _writeNetworkConfig # (file)
 	print $file "cat << EOF > interfaces\n";
 	print $file "auto lo\n";
 	print $file "iface lo inet loopback\n";
-    foreach my $iface ($network->interfaces()) {
+    foreach my $iface (@{$network->interfaces()}) {
 	    print $file "\n";
         $self->_writeInterface($file, $iface);
     }

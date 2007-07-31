@@ -22,12 +22,12 @@ use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
 use ANSTE::Scenario::Image;
-use ANSTE::System::BaseScriptGen;
+use ANSTE::System::CommInstallGen;
 
 use constant IMAGE => "data/images/sarge-ebox-base.xml";
 
 my $image = new ANSTE::Scenario::Image;
 $image->loadFromFile(IMAGE);
-my $gen = new ANSTE::System::BaseScriptGen($image);
+my $gen = new ANSTE::System::CommInstallGen($image);
 my $file = \*STDOUT;
 $gen->writeScript($file);

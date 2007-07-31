@@ -30,7 +30,7 @@ sub new # returns new Scenario object
 	$self->{desc} = '';
 	$self->{virtualizer} = '';
 	$self->{system} = '';
-	$self->{servers} = [];
+	$self->{hosts} = [];
 
 	bless($self, $class);
 
@@ -86,17 +86,17 @@ sub setSystem # (system)
 	$self->{system} = $system;
 }
 
-sub servers # returns servers list 
+sub hosts # returns hosts list 
 {
 	my ($self) = @_;
-	return $self->{servers};
+	return $self->{hosts};
 }
 
-sub addHost # (server)
+sub addHost # (host)
 {
-	my ($self, $server) = @_;	
+	my ($self, $host) = @_;	
 
-	push(@{ $self->{servers} }, $server);
+	push(@{ $self->{hosts} }, $host);
 }
 
 
@@ -128,11 +128,11 @@ sub loadFromFile # (filename)
 	$self->setSystem($system);
 
 
-	# Read the <server> elements 
+	# Read the <host> elements 
 	foreach my $element ($scenario->getElementsByTagName('host',0)) {
-		my $server = new ANSTE::Scenario::Host;
-		$server->load($element);
-		$self->addHost($server);
+		my $host = new ANSTE::Scenario::Host;
+		$host->load($element);
+		$self->addHost($host);
 	}
 
 	$doc->dispose;
