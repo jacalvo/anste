@@ -13,7 +13,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::System::Commands;
+package ANSTE::System::ImageCommands;
 
 use warnings;
 use strict;
@@ -21,21 +21,22 @@ use strict;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::SharedData;
 use ANSTE::System::BaseScriptGen;
+use ANSTE::System::CommInstallGen;
 
 use Cwd;
-use File::Temp qw(tempdir);
+use File::Temp qw(tempfile tempdir);
 
 use constant XEN_TOOLS_CONFIG => '/data/conf/xen-tools.conf';
 
 use constant IMAGE_PATH => '/home/xen/domains/';
 
-sub new # returns new Commands object
+sub new # (image) returns new Commands object
 {
-	my $class = shift;
+	my ($class, $image) = @_;
 	my $self = {};
 
     $self->{mountPoint} = undef;
-    $self->{hostname} = 'baseimage';
+    $self->{image} = $image;
 	
 	bless($self, $class);
 
@@ -43,12 +44,11 @@ sub new # returns new Commands object
 }
 
 # TODO: Do this with Virtualizer package
-sub createImage # (name)
+sub create
 {
-	my ($self, $name) = @_;
+	my ($self) = @_;
 
-    # Stores the hostname
-    $self->{hostname} = $name;
+    my $name = $self->{image}->name();
 
     my $confFile = getcwd() . XEN_TOOLS_CONFIG;
     my $command = "xen-create-image --hostname=$name".
@@ -57,9 +57,11 @@ sub createImage # (name)
     return _execute($command);
 }
 
-sub mountImage # (name)
+sub mount
 {
-	my ($self, $name) = @_;
+	my ($self) = @_;
+
+    my $name = $self->{image}->name();
 
     $self->{mountPoint} = tempdir();
 
@@ -72,13 +74,28 @@ sub mountImage # (name)
     return _execute($cmd);
 }
 
-sub copyFiles
+sub copyBaseFiles
 {
-    my ($self, $script) = @_;
+    my ($self) = @_;
 
     my $mountPoint = $self->{mountPoint};
+    my $image = $self->{image};
 
-    return _execute("./$script $mountPoint");
+    # Generates the installation script on a temporary file
+    my $gen = new ANSTE::System::CommInstallGen($image);
+    my ($fh, $filename) = tempfile();
+    $gen->writeScript($fh);
+    close($fh);
+    # Gives execution perm to the script
+    chmod(700, $filename);
+    
+    # Executes the installation script passing the mount point
+    # of the image as argument
+    my $ret = _execute("$filename $mountPoint");
+
+    unlink($filename);
+
+    return $ret;
 }
 
 sub installBasePackages
@@ -95,7 +112,7 @@ sub installBasePackages
     }
     elsif ($pid == 0) { # child
         chroot($mountPoint) or die "Can't chroot: $!";
-        $ENV{HOSTNAME} = $self->{hostname};
+        $ENV{HOSTNAME} = $self->{image}->name();
         _execute('apt-get update') or die "apt-get update failed: $!";
         my $ret = _installPackages('libsoap-lite-perl');
         _execute('apt-get clean') or die "apt-get clean failed: $!";
@@ -110,38 +127,11 @@ sub installBasePackages
     }
 }
 
-sub umountImage
+sub prepareSystem 
 {
     my ($self) = @_;
-    my $mountPoint = $self->{mountPoint};
-    my $ret = _execute("umount $mountPoint");
-    _execute("rmdir $mountPoint");
-    return($ret);
-}
 
-sub _installPackages # (list)
-{
-    my ($list) = @_;
-
-    $ENV{DEBIAN_FRONTEND} = 'noninteractive';
-
-    my $forceNew = '-o DPkg::Options::=--force-confnew';
-    my $forceDef = '-o DPkg::Options::=--force-confdef';
-    my $options = "-y $forceNew $forceDef";
-
-    my $command = "apt-get install $options $list";
-    return _execute($command);
-}
-
-sub _execute # (command)
-{
-    my ($command) = @_;
-    return system($command) == 0;
-}
-
-sub prepareSystem # (image)
-{
-    my ($self, $image) = @_;
+    my $image = $self->{image};
     
     my $client = new ANSTE::Comm::MasterClient;
     # FIXME: hardcoded!!!
@@ -164,15 +154,39 @@ sub prepareSystem # (image)
     unlink $script;
 }
 
-sub deployImage # (baseimage, image) ???
+
+sub umount
 {
+    my ($self) = @_;
+    my $mountPoint = $self->{mountPoint};
+    my $ret = _execute("umount $mountPoint");
+    _execute("rmdir $mountPoint");
+    return($ret);
 }
 
-sub shutdownImage # (image)
+sub shutdown
 {
-    my ($self, $image) = @_;
+    my ($self) = @_;
+
+    my $image = $self->{image}->name();
+
     # TODO: Maybe this could be done more softly sending poweroff :)
     system("xm destroy $image");
+}
+
+
+sub _installPackages # (list)
+{
+    my ($list) = @_;
+
+    $ENV{DEBIAN_FRONTEND} = 'noninteractive';
+
+    my $forceNew = '-o DPkg::Options::=--force-confnew';
+    my $forceDef = '-o DPkg::Options::=--force-confdef';
+    my $options = "-y $forceNew $forceDef";
+
+    my $command = "apt-get install $options $list";
+    return _execute($command);
 }
 
 sub _createVirtualMachine # (client, name)
@@ -183,7 +197,7 @@ sub _createVirtualMachine # (client, name)
 
     print "Waiting for the system start...\n";
     my $data = ANSTE::Comm::SharedData->instance();
-    $data->waitForReady('baseimage');
+    $data->waitForReady($name);
     print "System is up\n";
 }
 
@@ -200,7 +214,13 @@ sub _executeSetup # (client, script)
     $ret = $client->exec('install.sh');
     print "Server returned $ret\n";
     $ret = $data->waitForExecution('baseimage');
-    print "Execution finished with retValue = $ret\n";
+    print "Execution finished with return value = $ret\n";
+}
+
+sub _execute # (command)
+{
+    my ($command) = @_;
+    return system($command) == 0;
 }
 
 1;

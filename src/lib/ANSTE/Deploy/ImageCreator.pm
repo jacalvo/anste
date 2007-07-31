@@ -18,14 +18,12 @@ package ANSTE::Deploy::ImageCreator;
 use warnings;
 use strict;
 
-use ANSTE::System::Commands;
+use ANSTE::System::ImageCommands;
 use ANSTE::Comm::MasterServer;
 use ANSTE::Scenario::Image;
 
 use threads;
 use SOAP::Transport::HTTP;
-
-use constant COPY_SCRIPT => 'data/conf/copyfiles.sh';
 
 # TODO: Read from global preferences singleton
 use constant PORT => 8001;
@@ -46,26 +44,26 @@ sub createImage
 {
     my ($self) = @_;
 
-    my $cmd = new ANSTE::System::Commands;
-
     my $image = $self->{image};
 
-    $cmd->createImage($image->name()) or die "Error creating base image.";
+    my $cmd = new ANSTE::System::ImageCommands($image);
 
-    $cmd->mountImage($image->name()) or die "Error mounting image.";
+    $cmd->create() or die 'Error creating base image.';
 
-    $cmd->copyFiles(COPY_SCRIPT) or die "Error copying files.";
+    $cmd->mount() or die 'Error mounting image.';
 
-    $cmd->installBasePackages() or die "Error installing packages.";
+    $cmd->copyBaseFiles() or die 'Error copying files.';
 
-    $cmd->umountImage() or die "Error unmounting image.";
+    $cmd->installBasePackages() or die 'Error installing packages.';
+
+    $cmd->umount() or die 'Error unmounting image.';
 
     # Starts Master Server thread
     my $thread = threads->create('_startMasterServer');
 
-    $cmd->prepareSystem($image) or die "Error preparing system."; 
+    $cmd->prepareSystem() or die 'Error preparing system.'; 
 
-    $cmd->shutdownImage($image->name());
+    $cmd->shutdown();
 }
 
 sub _startMasterServer
@@ -75,6 +73,5 @@ sub _startMasterServer
     $server->dispatch_to('ANSTE::Comm::MasterServer');
     $server->handle();    
 }
-
 
 1;

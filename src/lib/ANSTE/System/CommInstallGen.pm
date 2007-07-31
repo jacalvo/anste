@@ -48,7 +48,7 @@ sub writeScript # (file)
     print $file "# TODO: Check arguments\n\n";
 
     print $file "# Receives the mount point of the image as an argument\n";
-    print $file "MOUNT='".'$1'."'\n\n";
+    print $file 'MOUNT=$1'."\n\n";
 
     my $masterIP = '192.168.45.111'; # FIXME: Get it well
 
@@ -58,7 +58,7 @@ sub writeScript # (file)
 
     $self->_writeHosts($file);
 
-    print "# Stores the master's IP so anste-slave can read it\n";
+    print $file "# Stores the master's IP so anste-slave can read it\n";
     print $file 'echo $MASTER_IP > $MOUNT/var/local/anste.master'."\n";
 }
 

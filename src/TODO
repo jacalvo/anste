@@ -41,3 +41,5 @@ scripts (directory.d), etc.
 - Document all ¿public? methods with NaturalDocs format
 
 - Integrate create-base-image as an option of the main 'anste' program?
+
+- Try to remove the following messages: A thread exited while...
