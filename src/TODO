@@ -6,13 +6,11 @@
 
 - SOAP authentication ??
 
-- Change all the non-interpolating literals with ' '.
-
 - Check errors on all IO functions.
 
 - Package a deb with ansted and anste-slave (add 'debian' directory on svn too)
 
-- Manage errors in System::Commands with exceptions and umount when a fail
+- Manage errors in System::ImageCommands with exceptions and umount when a fail
 occurs.
 
 - Rewrite get/put to send attachments with MIME:
@@ -32,7 +30,7 @@ occurs.
 - When doing all in a generic way could be interesting to have pre and post
 scripts (directory.d), etc.
 
-- Unit tests!!!!! (mainly for SlaveClient->MasterServer)
+- More Unit tests!!!!! (mainly for SlaveClient->MasterServer)
 
 - Test with vmware and windows to assure system and virtualizer independence??
 

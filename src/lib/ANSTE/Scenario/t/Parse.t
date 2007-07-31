@@ -16,28 +16,29 @@
 use strict;
 use warnings;
 
-use Scenario::Scenario;
+use ANSTE::Scenario::Scenario;
 
-use Test::More tests => 37;
+use Test::More tests => 27;
 
-use constant SCENARIO => "data/test.xml";
+use constant DATA => '../data';
+use constant SCENARIO => 'test.xml';
 
-sub testServer # (server)
+sub testServer # (host)
 {
-	my ($server) = @_;
-	my $name = $server->name();
-    is($name, "serverName", "name = serverName");
-	my $desc = $server->desc();
-    is($desc, "serverDesc", "name = serverName");
+	my ($host) = @_;
+	my $name = $host->name();
+    is($name, 'hostName', 'name = hostName');
+	my $desc = $host->desc();
+    is($desc, 'hostDesc', 'name = hostName');
 
-	testNetwork($server->network());
-	testPackages($server->packages());
+	testNetwork($host->network());
+	testPackages($host->packages());
 }
 
 sub testNetwork # (network)
 {
     my ($network) = @_;
-	foreach my $interface ($network->interfaces()) {
+	foreach my $interface (@{$network->interfaces()}) {
 		testInterface($interface);
 	}
 }
@@ -46,18 +47,18 @@ sub testInterface # (interface)
 {
 	my ($iface) = @_;
 	my $type = ($iface->type() == 
-                Scenario::NetworkInterface::IFACE_TYPE_DHCP) ? 
-                "dhcp" : 
-                "static";
+                ANSTE::Scenario::NetworkInterface::IFACE_TYPE_DHCP) ? 
+                'dhcp' : 
+                'static';
     my $name = $iface->name();
-    like($name, qr/^eth/, "interface name matchs /^eth/"); 
+    like($name, qr/^eth/, 'interface name matchs /^eth/'); 
     if ($type eq "static") {
         my $address = $iface->address();
-        like($address, qr/^192/, "interface name matchs /^192/"); 
+        like($address, qr/^192/, 'interface name matchs /^192/');
         my $netmask = $iface->netmask();
-        like($netmask, qr/^255/, "interface name matchs /^255/"); 
+        like($netmask, qr/^255/, 'interface name matchs /^255/'); 
         my $gateway = $iface->gateway();
-        like($gateway, qr/^192/, "gateway matchs /^192/");
+        like($gateway, qr/^192/, 'gateway matchs /^192/');
     }
 }
 
@@ -66,12 +67,11 @@ sub testPackages # (packages)
 	my $packages = shift;
 
 	print "Showing Packages...\n";
-	my @packages = $packages->list();
-    ok(length(@packages) > 0, "packages count test");
+    ok(length(@{$packages->list()}) > 0, 'packages count test');
     my $count = 0;
-	foreach my $package (@packages) {
-        ok(defined($package), "package defined");
-        unlike($package, qr/^$/, "package not empty");
+	foreach my $package (@{$packages->list()}) {
+        ok(defined($package), 'package defined');
+        unlike($package, qr/^$/, 'package not empty');
         $count++;
         if ($count == 2) {
             last;
@@ -79,63 +79,24 @@ sub testPackages # (packages)
 	}
 }
 
-sub testVirtualizer # (virtualizer)
-{
-	my $virtualizer = shift;
-	
-	print "\nShowing Virtualizer...\n";
-
-	my $name = $virtualizer->name();
-    is($name, "virtualizerName", "virtualizer name = virtualizerName");
-	my $desc = $virtualizer->desc();
-    is($desc, "virtualizerDesc", "virtualizer desc = virtualizerDesc");
-
-	my %commands = $virtualizer->commands();
-    ok(length(%commands) > 0, "virtualizer commands count test");
-	for my $commandName (keys %commands) {
-		my $command = $commands{$commandName}; 
-        ok(defined($command), "virtualizer command defined");
-        unlike($command, qr/^$/, "virtualizer command not empty");
-	}
-}
-
-sub testSystem # (system)
-{
-	my $system = shift;
-
-	print "\nShowing System...\n";
-
-	my $name = $system->name();
-    is($name, "systemName", "system name = systemName");
-	my $desc = $system->desc();
-    is($desc, "systemDesc", "system desc = systemDesc");
-
-
-	my %commands = $system->commands();
-    ok(length(%commands) > 0, "system commands test");
-	for my $commandName (keys %commands) {
-		my $command = $commands{$commandName}; 
-        ok(defined($command), "system command defined");
-        unlike($command, qr/^$/, "system command not empty");
-	}
-}
-
 sub test # (scenario)
 {
 	my $scenario = shift; 
 	my $name = $scenario->name();
-    is($name, "scenarioName", "scenario name = scenarioName");
+    is($name, 'scenarioName', 'scenario name = scenarioName');
 	my $desc = $scenario->desc();
-    is($desc, "scenarioDesc", "scenario desc = scenarioDesc");
+    is($desc, 'scenarioDesc', 'scenario desc = scenarioDesc');
 
-	testVirtualizer($scenario->virtualizer());
-	testSystem($scenario->system());
+    my $virtualizer = $scenario->virtualizer();
+    is($virtualizer, 'Virtualizer', 'virtualizer = Virtualizer');
+    my $system = $scenario->system();
+    is($system, 'System', 'system = System');
 
-	foreach my $server ($scenario->servers()) {
-		testServer($server);
+	foreach my $host (@{$scenario->hosts()}) {
+		testServer($host);
 	}
 }
 
-my $scenario = new Scenario::Scenario;
-$scenario->loadFromFile(SCENARIO);
+my $scenario = new ANSTE::Scenario::Scenario;
+$scenario->loadFromFile(DATA, SCENARIO);
 test($scenario);

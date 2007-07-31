@@ -26,7 +26,7 @@ use ANSTE::System::CommInstallGen;
 use Cwd;
 use File::Temp qw(tempfile tempdir);
 
-use constant XEN_TOOLS_CONFIG => '/data/conf/xen-tools.conf';
+use constant XEN_TOOLS_CONFIG => 'conf/xen-tools.conf';
 
 use constant IMAGE_PATH => '/home/xen/domains/';
 
@@ -44,13 +44,14 @@ sub new # (image) returns new Commands object
 }
 
 # TODO: Do this with Virtualizer package
+# HACK: Temporary $dir patch until this is done well.
 sub create
 {
-	my ($self) = @_;
+	my ($self, $dir) = @_;
 
     my $name = $self->{image}->name();
 
-    my $confFile = getcwd() . XEN_TOOLS_CONFIG;
+    my $confFile = getcwd() . "$dir/".XEN_TOOLS_CONFIG;
     my $command = "xen-create-image --hostname=$name".
                   " --ip='192.168.45.191' --config=$confFile"; 
 

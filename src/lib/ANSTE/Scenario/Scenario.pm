@@ -96,46 +96,48 @@ sub addHost # (host)
 {
 	my ($self, $host) = @_;	
 
-	push(@{ $self->{hosts} }, $host);
+	push(@{$self->{hosts}}, $host);
 }
 
 
-sub loadFromFile # (filename)
+sub loadFromFile # (dir, filename)
 {
-	my ($self, $filename) = @_;
+	my ($self, $dir, $filename) = @_;
 
 	my $parser = new XML::DOM::Parser;
-	my $doc = $parser->parsefile($filename);
+	my $doc = $parser->parsefile("$dir/$filename");
 
 	my $scenario = $doc->getDocumentElement();
 
 	# Read name and description of the scenario
-	my $nameNode = $scenario->getElementsByTagName('name',0)->item(0);
+	my $nameNode = $scenario->getElementsByTagName('name', 0)->item(0);
 	my $name = $nameNode->getFirstChild()->getNodeValue();
 	$self->setName($name);
-	my $descNode = $scenario->getElementsByTagName('desc',0)->item(0);
+	my $descNode = $scenario->getElementsByTagName('desc', 0)->item(0);
 	my $desc = $descNode->getFirstChild()->getNodeValue();
 	$self->setDesc($desc);
 
 	# Load the virtualizer profile
-	my $virtualizerNode = $scenario->getElementsByTagName('virtualizer',0)->item(0);
+	my $virtualizerNode = 
+        $scenario->getElementsByTagName('virtualizer', 0)->item(0);
 	my $virtualizer = $virtualizerNode->getFirstChild()->getNodeValue();
 	$self->setVirtualizer($virtualizer);
 
 	# Load the system profile
-	my $systemNode = $scenario->getElementsByTagName('system',0)->item(0);
+	my $systemNode = 
+        $scenario->getElementsByTagName('system', 0)->item(0);
 	my $system = $systemNode->getFirstChild()->getNodeValue();
 	$self->setSystem($system);
 
 
 	# Read the <host> elements 
-	foreach my $element ($scenario->getElementsByTagName('host',0)) {
+	foreach my $element ($scenario->getElementsByTagName('host', 0)) {
 		my $host = new ANSTE::Scenario::Host;
-		$host->load($element);
+		$host->load($dir, $element);
 		$self->addHost($host);
 	}
 
-	$doc->dispose;
+	$doc->dispose();
 }
 
 1;

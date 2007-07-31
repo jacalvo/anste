@@ -89,9 +89,9 @@ sub setPackages # (packages)
 	$self->{packages} = $packages;
 }
 
-sub load # (node)
+sub load # (dir, node)
 {
-	my ($self, $node) = @_;
+	my ($self, $dir, $node) = @_;
 
 	my $nameNode = $node->getElementsByTagName("name",0)->item(0);
 	my $name = $nameNode->getFirstChild()->getNodeValue();
@@ -105,7 +105,7 @@ sub load # (node)
 	}
 	my $packagesNode = $node->getElementsByTagName("packages",0)->item(0);
 	if($packagesNode){
-		$self->packages()->load($packagesNode);
+		$self->packages()->load($dir, $packagesNode);
 	}
 }
 

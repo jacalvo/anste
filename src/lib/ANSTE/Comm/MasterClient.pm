@@ -20,7 +20,7 @@ use warnings;
 
 use SOAP::Lite; # +trace => 'debug'; 
 
-use constant URI => "urn:ANSTE::Comm::SlaveServer";
+use constant URI => 'urn:ANSTE::Comm::SlaveServer';
 
 sub new
 {
@@ -56,8 +56,8 @@ sub put	# (file) returns boolean
     read(FILE, $content, $size);
     close(FILE);
 
-    my $response = $soap->put(SOAP::Data->name("name" => $file),
-		                      SOAP::Data->name("content" => $content));
+    my $response = $soap->put(SOAP::Data->name('name' => $file),
+		                      SOAP::Data->name('content' => $content));
     if ($response->fault) {
     	die "SOAP request failed: $!";
     }
@@ -72,12 +72,12 @@ sub get	# (file)
     my $soap = $self->{soap};
 
     # Sends the request 
-    my $response = $soap->get(SOAP::Data->name("name" => $file));
+    my $response = $soap->get(SOAP::Data->name('name' => $file));
     if ($response->fault) {
     	die "SOAP request failed: $!";
     }
     my $content = $response->result;
-    if ($content eq "ERR"){
+    if ($content eq 'ERR'){
         return 0;
     } else {
     	# Writes the file

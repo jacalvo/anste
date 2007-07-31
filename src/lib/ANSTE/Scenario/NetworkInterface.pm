@@ -36,10 +36,10 @@ sub new # returns new NetworkInterface object
 	my $self = {};
 	
 	$self->{type} = IFACE_TYPE_STATIC;
-	$self->{name} = "";
-	$self->{address} = "";
-	$self->{netmask} = "";
-	$self->{gateway} = "";
+	$self->{name} = '';
+	$self->{address} = '';
+	$self->{netmask} = '';
+	$self->{gateway} = '';
 
 	bless($self, $class);
 
@@ -139,22 +139,22 @@ sub load # (node)
 {
 	my ($self, $node) = @_;
 
-	my $type = $node->getAttribute("type");
-    my $nameNode = $node->getElementsByTagName("name",0)->item(0);
+	my $type = $node->getAttribute('type');
+    my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
     my $name = $nameNode->getFirstChild()->getNodeValue();
     $self->setName($name);
-	if ($type eq "static") {
+	if ($type eq 'static') {
 		$self->setTypeStatic();
-		my $addressNode = $node->getElementsByTagName("address",0)->item(0);
+		my $addressNode = $node->getElementsByTagName('address', 0)->item(0);
 		my $address = $addressNode->getFirstChild()->getNodeValue();
 		$self->setAddress($address);
-		my $netmaskNode = $node->getElementsByTagName("netmask",0)->item(0);
+		my $netmaskNode = $node->getElementsByTagName('netmask', 0)->item(0);
 		my $netmask = $netmaskNode->getFirstChild()->getNodeValue();
 		$self->setNetmask($netmask);
-		my $gatewayNode = $node->getElementsByTagName("gateway",0)->item(0);
+		my $gatewayNode = $node->getElementsByTagName('gateway', 0)->item(0);
 		my $gateway = $gatewayNode->getFirstChild()->getNodeValue();
 		$self->setGateway($gateway);
-	} elsif ($type eq "dhcp") {
+	} elsif ($type eq 'dhcp') {
 		$self->setTypeDHCP();
 	}
 }

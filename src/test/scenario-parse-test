@@ -23,20 +23,21 @@ use lib "$Bin/../lib";
 
 use ANSTE::Scenario::Scenario;
 
-use constant SCENARIO => "data/scenario.xml";
+use constant DATA => 'data';
+use constant SCENARIO => 'scenario.xml';
 
-sub doStuffWithServer # (server)
+sub doStuffWithHost # (host)
 {
-	my ($server) = @_;
-	my $name = $server->name();
-	my $desc = $server->desc();
+	my ($host) = @_;
+	my $name = $host->name();
+	my $desc = $host->desc();
 
-	print "\nShowing Server...\n";
+	print "\nShowing Host...\n";
 	print "name = $name\n";
 	print "desc = $desc\n";
 
-	doStuffWithNetwork($server->network());
-	doStuffWithPackages($server->packages());
+	doStuffWithNetwork($host->network());
+	doStuffWithPackages($host->packages());
 }
 
 sub doStuffWithNetwork # (network)
@@ -95,11 +96,11 @@ sub doStuff # (scenario)
     print "virtualizer = $virtualizer\n";
     print "system = $system\n";
 
-	foreach my $server (@{$scenario->servers()}) {
-		doStuffWithServer($server);
+	foreach my $host (@{$scenario->hosts()}) {
+		doStuffWithHost($host);
 	}
 }
 
 my $scenario = new ANSTE::Scenario::Scenario;
-$scenario->loadFromFile(SCENARIO);
+$scenario->loadFromFile(DATA, SCENARIO);
 doStuff($scenario);

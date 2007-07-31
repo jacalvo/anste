@@ -50,7 +50,7 @@ sub load # (node)
 {
 	my ($self, $node) = @_;
 
-    foreach my $element ($node->getElementsByTagName("interface", 0)) {
+    foreach my $element ($node->getElementsByTagName('interface', 0)) {
         my $interface = new ANSTE::Scenario::NetworkInterface;
         $interface->load($element);
         $self->addInterface($interface);

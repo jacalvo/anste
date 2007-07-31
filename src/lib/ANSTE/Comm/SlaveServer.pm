@@ -24,12 +24,12 @@ sub put	# (name, content)
 {
     my ($self, $name, $content) = @_;
 
-    if (open(FILE, ">", "$DIR/$name")) { 
+    if (open(FILE, '>', "$DIR/$name")) { 
     	print FILE $content;
     	close FILE or die "Can't close: $!";
-    	return "OK";
+    	return 'OK';
     } else {
-	    return "ERR\n";
+	    return 'ERR\n';
     }
 }
 
@@ -38,12 +38,12 @@ sub get	# (name)
     my ($self, $name) = @_;
 
     # TODO: Check and forbid paths, only allow filenames stored in CWD
-    if (open(FILE, "<", "$DIR/$name")) {
+    if (open(FILE, '<', "$DIR/$name")) {
 	    chomp(my @lines = <FILE>);
 	    close FILE;
 	    return join("\n", @lines)."\n";
     } else {
-	    return "ERR";
+	    return 'ERR';
     }
 }
 
@@ -60,6 +60,7 @@ sub exec # (name, log)
         my $command = "$DIR/$name";
         my $logfile = defined($log) ? "$DIR/$log" : "$DIR/out.log"; 
         my $ret = _executeSavingLog($command, $logfile);
+        # FIXME: This isn't cool.
         exec("/usr/local/bin/anste-slave finished $ret");
         exit(0);
     }
@@ -73,9 +74,9 @@ sub del	# (name)
     my ($self, $name) = @_;
 
     if(unlink "$DIR/$name") {
-    	return "OK";
+    	return 'OK';
     } else {
-	    return "ERR";
+	    return 'ERR';
     }
 }
 
@@ -84,12 +85,12 @@ sub _executeSavingLog # (command, log)
     my ($command, $log) = @_;
 
     # Take copies of the file descriptors
-    open(OLDOUT, ">&STDOUT");
-    open(OLDERR, ">&STDERR");
+    open(OLDOUT, '>&STDOUT');
+    open(OLDERR, '>&STDERR');
 
     # Redirect stdout and stderr
     open(STDOUT, "> $log");
-    open(STDERR, ">&STDOUT");
+    open(STDERR, '>&STDOUT');
 
     my $ret = system($command);
 
@@ -98,8 +99,8 @@ sub _executeSavingLog # (command, log)
     close(STDERR);
 
     # Restore stdout and stderr
-    open(STDERR, ">&OLDERR");
-    open(STDOUT, ">&OLDOUT");
+    open(STDERR, '>&OLDERR');
+    open(STDOUT, '>&OLDOUT');
 
     # Avoid leaks by closing the independent copies
     close(OLDOUT);

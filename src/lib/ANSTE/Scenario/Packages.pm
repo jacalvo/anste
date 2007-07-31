@@ -46,21 +46,20 @@ sub add # (packages)
 	push(@{$self->{list}}, @packages);
 }
 
-sub load # (node)
+sub load # (dir, node)
 {
-	my $self = shift;
-	my $node = shift;
+	my ($self, $dir, $node) = @_;
 
-	foreach my $profile ($node->getElementsByTagName("profile",0)) {
-		my $file = "data/profiles/".$profile->getFirstChild()->getNodeValue();
-		open(FILE, $file) || die "Error loading $file\n";
+	foreach my $profile ($node->getElementsByTagName('profile', 0)) {
+		my $file = "$dir/profiles/".$profile->getFirstChild()->getNodeValue();
+		open(FILE, $file) or die "Error loading $file";
 		my @names;
 		chomp(@names = <FILE>);
-		close FILE;
+		close FILE or die "Can't close $file";
 		$self->add(@names);
 	}
 
-	foreach my $package ($node->getElementsByTagName("package",0)) {
+	foreach my $package ($node->getElementsByTagName('package', 0)) {
 		my $name = $package->getFirstChild()->getNodeValue();
 		$self->add($name);
 	}

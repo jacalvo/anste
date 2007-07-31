@@ -68,6 +68,7 @@ sub waitForReady # (host)
     until ($ready{$host}) {
         _waitForEvent();
     }
+    return(1);
 }
 
 sub waitForExecution # (host) returns retValue

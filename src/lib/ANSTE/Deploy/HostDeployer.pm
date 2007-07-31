@@ -22,7 +22,7 @@ use ANSTE::Scenario::Host;
 use ANSTE::Scenario::HostScriptGen;
 use ANSTE::Comm::MasterClient;
 
-use constant SETUP_SCRIPT => "setup.sh";
+use constant SETUP_SCRIPT => 'setup.sh';
 
 sub new # (host, system, virtualizer) returns new HostDeployer object
 {
@@ -57,7 +57,7 @@ sub _createVirtualMachine # returns IP address string
 
     my $name = $host->name();
     # FIXME: Hardcoded!!! (Get the ip of the secret communications interface)
-    my $ip = "192.168.45.191";
+    my $ip = '192.168.45.191';
 
     print "Creating virtual machine for host $name...\n"; 
     print "It will be accesible under $ip.\n"; 
@@ -77,7 +77,7 @@ sub _generateCommScript # (script)
 
     print "Generating setup script...\n";
     my $generator = new ANSTE::Scenario::HostScriptGen($host, $system);
-    open(my $file, ">", $script);
+    open(my $file, '>', $script);
     $generator->writeScript($file);
     close($file);
 }
@@ -100,7 +100,7 @@ sub _executeCommScript # (host, script)
     $client->get("$script.out");
     $self->_printOutput("$script.out");
     print "Deleting generated files...\n";
-    $client->del("$script");
+    $client->del($script);
     $client->del("$script.out");
     unlink($script);
     unlink("$script.out");
@@ -111,7 +111,7 @@ sub _printOutput # (file)
     my ($self, $file) = @_;
 
     my $FILE;
-    open($FILE, "<", $file);
+    open($FILE, '<', $file);
     my @lines = <$FILE>;
     foreach (@lines) {
         print;

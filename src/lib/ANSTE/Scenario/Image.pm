@@ -75,12 +75,12 @@ sub setPackages # (packages)
 	$self->{packages} = $packages;
 }
 
-sub loadFromFile # (filename)
+sub loadFromFile # (dir, filename)
 {
-	my ($self, $filename) = @_;
+	my ($self, $dir, $filename) = @_;
 
 	my $parser = new XML::DOM::Parser;
-	my $doc = $parser->parsefile($filename);
+	my $doc = $parser->parsefile("$dir/$filename");
 
 	my $image = $doc->getDocumentElement();
 
@@ -94,6 +94,8 @@ sub loadFromFile # (filename)
 	if($packagesNode){
 		$self->packages()->load($packagesNode);
 	}
+    $doc->dispose();
+    return(1);
 }
 
 1;

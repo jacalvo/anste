@@ -3,12 +3,12 @@
 	<name>scenarioName</name>
 	<desc>scenarioDesc</desc>
 
-	<virtualizer>test</virtualizer>
-	<system>test</system>
+	<virtualizer>Virtualizer</virtualizer>
+	<system>System</system>
 
-	<server>
-		<name>serverName</name>
-		<desc>serverDesc</desc>
+	<host>
+		<name>hostName</name>
+		<desc>hostDesc</desc>
 		<network>
             <interface type="static">
                 <name>eth0</name>
@@ -26,11 +26,11 @@
 		<packages>
 			<profile>lamp-server</profile>
 		</packages>
-	</server>
+	</host>
 
-	<server>
-		<name>serverName</name>
-		<desc>serverDesc</desc>
+	<host>
+		<name>hostName</name>
+		<desc>hostDesc</desc>
 		<network type="dhcp">
             <interface type="dhcp">
                 <name>eth0</name>
@@ -41,6 +41,6 @@
 			<package>samba-common</package>
 			<package>samba</package>
 		</packages>
-	</server>
+	</host>
 
 </scenario>
