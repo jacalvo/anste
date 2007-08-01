@@ -20,22 +20,22 @@ use base 'ANSTE::Virtualizer::Virtualizer';
 use strict;
 use warnings;
 
-sub new # returns new Xen object
-{
-	my $class = shift;
-	my $self = {};
-	
-	bless($self, $class);
-
-	return $self;
-}
-
-# public overriden method
+# Method: createImage
 #
-# named parameters: 
-# - name
-# - ip
-# - config
+#   Overriden method that creates a new base image using the xen-create-image
+#   utility from xen-tools.
+#
+# Parameters: 
+#   
+#   name    -   name of the image type to be created
+#   ip      -   ip address that will be assigned to the image
+#   config  -   path of the specific xen-tools.conf file 
+#
+# Returns:
+#
+#   boolean - Always returns true due to xen-create-image is broken and
+#             returns it although the creation process fails.
+#
 sub createImage # (%params)
 {
     my ($self, %params) = @_;
@@ -49,7 +49,18 @@ sub createImage # (%params)
     $self->execute($command);
 }
 
-# public overriden
+# Method: shutdownImage 
+#
+#   Overriden method that destroys a Xen running image.
+#
+# Parameters:
+#
+#   image - name of the image to shutdown 
+#
+# Returns:
+#   
+#   boolean - indicates if the process has been successful
+#
 sub shutdownImage # (image)
 {
     my ($self, $image) = @_;
@@ -57,6 +68,18 @@ sub shutdownImage # (image)
     $self->execute("xm destroy $image");
 }
 
+# Method: createVM
+#
+#   Overriden method that creates a Xen Virtual Machine.
+#
+# Parameters:
+#
+#   name - name of the xen configuration file for the image 
+#
+# Returns:
+#   
+#   boolean - indicates if the process has been successful
+#
 sub createVM # (name)
 {
     my ($self, $name) = @_;
@@ -64,6 +87,19 @@ sub createVM # (name)
     $self->execute("xm create $name.cfg");
 }
 
+# Method: imageFile
+#
+#   Overriden method to get the path o a Xen disk image. 
+#
+# Parameters:
+#
+#   path - root directory where images are stored
+#   name - name of the image (of the directory in the Xen case)
+#
+# Returns:
+#   
+#   boolean - indicates if the process has been successful
+#
 sub imageFile # (path, name)
 {
     my ($self, $path, $name) = @_;

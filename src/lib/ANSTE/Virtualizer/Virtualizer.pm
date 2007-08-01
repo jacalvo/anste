@@ -20,7 +20,14 @@ use warnings;
 
 use ANSTE::Exceptions::NotImplemented;
 
-
+# Constructor: new
+#   
+#   Constructor for Virtualizer class and his derivated classes.
+#
+# Returns:
+#
+#   A recently created <ANSTE::Virtualizer::Virtualizer> object
+#
 sub new # returns new Virtualizer object
 {
 	my $class = shift;
@@ -31,25 +38,67 @@ sub new # returns new Virtualizer object
 	return $self;
 }
 
-# public method
+# Method: execute
+#   
+#   Executes a command
+#
+# Parameters:
+#
+#   command - string that contains the command to be executed
+#
+# Returns:
+#
+#   boolean - true if the exit code is 0, false otherwise
+#
 sub execute # (command)
 {
     my ($self, $command) = @_;
     return system($command) == 0;
 }
 
-# public abstract method
+# Method: createImage 
 #
-# named parameters: 
-# - name
-# - ip
-# - config
+#   Override this method to execute the command of a
+#   specific virtualizer to create a base image.
+#
+# Parameters: 
+#   
+#   name    -   name of the image type to be created
+#   ip      -   ip address that will be assigned to the image
+#   config  -   configuration file with different parameters 
+#               depending on the virtualizer
+#
+# Returns:
+#   
+#   boolean -   indicates if the process has been successful
+#               
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
 sub createImage # (%params)
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
 
-# public abstract method
+# Method: shutdownImage 
+#
+#   Override this method to execute the command
+#   of the corresponding virtualizer program
+#   to shutdown a given image being virtualized. 
+#
+# Parameters:
+#
+#   image - name of the image to shutdown 
+#
+# Returns:
+#   
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
 sub shutdownImage # (image)
 {
     throw ANSTE::Exceptions::NotImplemented();
@@ -60,15 +109,42 @@ sub shutdownImage # (image)
 #   Override this method to create the Virtual Machine
 #   with the corresponding virtualizer program.
 #
-# Arguments:
+# Parameters:
 #
 #   name - name of the virtual machine
+#
+# Returns:
+#   
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
 #
 sub createVM # (name)
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: imageFile
+#
+#   Override this method to return the full path
+#   of the disk image, adding extension and so on
+#   given the path and the name of the image.
+#
+# Parameters:
+#
+#   path - root directory where images are stored
+#   name - name of the image
+#
+# Returns:
+#   
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
 sub imageFile # (path, name)
 {
     throw ANSTE::Exceptions::NotImplemented();

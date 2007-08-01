@@ -20,16 +20,20 @@ use base 'ANSTE::System::System';
 use strict;
 use warnings;
 
-sub new # returns new Debian object
-{
-	my $class = shift;
-	my $self = {};
-	
-	bless($self, $class);
-
-	return $self;
-}
-
+# Method: mountImage 
+#
+#   Overriden method that executes mount with
+#   the given image and mount point as arguments.
+#
+# Parameters: 
+#   
+#   image      - path of the image to mount 
+#   mountPoint - directory where the image will be mounted
+#
+# Returns:
+#   
+#   boolean    - indicates if the process has been successful
+#               
 sub mountImage # (image, mountPoint)
 {
     my ($self, $image, $mountPoint) = @_;
@@ -39,6 +43,19 @@ sub mountImage # (image, mountPoint)
     $self->execute($cmd);
 }
 
+# Method: unmount 
+#
+#   Overriden method that executes umount with
+#   the mount point specified.
+#
+# Parameters: 
+#   
+#   mountPoint - path of the mounted directory 
+#
+# Returns:
+#   
+#   boolean    - indicates if the process has been successful
+#               
 sub unmount # (mountPoint)
 {
     my ($self, $mountPoint) = @_;
@@ -46,6 +63,16 @@ sub unmount # (mountPoint)
     $self->execute("umount $mountPoint");
 }
 
+# Method: installBasePackages 
+#
+#   Overriden methods that install the required packages
+#   to run anste on the slave host by using apt.
+#   Also creates the init.d symlinks for ansted.
+#
+# Returns:
+#   
+#   boolean - indicates if the process has been successful
+#               
 sub installBasePackages
 {
     my ($self) = @_;
