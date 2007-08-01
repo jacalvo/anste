@@ -19,9 +19,12 @@ use warnings;
 use strict;
 
 use ANSTE::Comm::MasterClient;
-use ANSTE::Comm::SharedData;
+use ANSTE::Comm::HostWaiter;
 use ANSTE::System::BaseScriptGen;
 use ANSTE::System::CommInstallGen;
+
+# TODO: Load dynamically
+use ANSTE::Virtualizer::Xen;
 
 use Cwd;
 use File::Temp qw(tempfile tempdir);
@@ -37,25 +40,29 @@ sub new # (image) returns new Commands object
 
     $self->{mountPoint} = undef;
     $self->{image} = $image;
+    $self->{virtualizer} = new Virtualizer::Xen();
 	
 	bless($self, $class);
 
 	return $self;
 }
 
-# TODO: Do this with Virtualizer package
-# HACK: Temporary $dir patch until this is done well.
 sub create
 {
-	my ($self, $dir) = @_;
+	my ($self) = @_;
 
     my $name = $self->{image}->name();
 
-    my $confFile = getcwd() . "$dir/".XEN_TOOLS_CONFIG;
-    my $command = "xen-create-image --hostname=$name".
-                  " --ip='192.168.45.191' --config=$confFile"; 
+    # TODO: Get this from config
+    my $DIR = '/data';
 
-    return _execute($command);
+    my $confFile = getcwd() . "$DIR/".XEN_TOOLS_CONFIG;
+
+    my $virtualizer = $self->{virtualizer};
+
+    $virtualizer->createImage(name => $name,
+                              ip => '192.168.45.191',
+                              config => $confFile);
 }
 
 sub mount
@@ -170,9 +177,10 @@ sub shutdown
     my ($self) = @_;
 
     my $image = $self->{image}->name();
+    my $virtualizer = $self->{virtualizer}; 
 
     # TODO: Maybe this could be done more softly sending poweroff :)
-    system("xm destroy $image");
+    $virtualizer->shutdownImage($image);
 }
 
 
@@ -194,11 +202,13 @@ sub _createVirtualMachine # (client, name)
 {
     my ($self, $client, $name) = @_;
 
-    _execute("xm create $name.cfg");
+    my $virtualizer = $self->{virtualizer};
+
+    $virtualizer->createVM($name);
 
     print "Waiting for the system start...\n";
-    my $data = ANSTE::Comm::SharedData->instance();
-    $data->waitForReady($name);
+    my $waiter = ANSTE::Comm::HostWaiter->instance();
+    $waiter->waitForReady($name);
     print "System is up\n";
 }
 
@@ -206,7 +216,7 @@ sub _executeSetup # (client, script)
 {
     my ($self, $client, $script) = @_;
 
-    my $data = ANSTE::Comm::SharedData->instance();
+    my $waiter = ANSTE::Comm::HostWaiter->instance();
 
     print "Trying to put $script\n";
     my $ret = $client->put($script);
@@ -215,7 +225,7 @@ sub _executeSetup # (client, script)
     $ret = $client->exec('install.sh');
     print "Server returned $ret\n";
     my $image = $self->{image}->name();
-    $ret = $data->waitForExecution($image);
+    $ret = $waiter->waitForExecution($image);
     print "Execution finished with return value = $ret\n";
 }
 
