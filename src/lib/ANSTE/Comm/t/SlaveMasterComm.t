@@ -18,7 +18,7 @@ use warnings;
 
 use ANSTE::Comm::MasterServer;
 use ANSTE::Comm::SlaveClient;
-use ANSTE::Comm::SharedData;
+use ANSTE::Comm::HostWaiter;
 
 use threads;
 use SOAP::Transport::HTTP;
@@ -65,10 +65,10 @@ sub _startMasterServer
 
 sub _waitThread
 {
-    my $data = ANSTE::Comm::SharedData->instance();
+    my $waiter = ANSTE::Comm::HostWaiter->instance();
 
-    ok($data->waitForReady($HOST), 'wait for ready');
+    ok($waiter->waitForReady($HOST), 'wait for ready');
 
     # Should return 1 because the return code = 1 passed in the client
-    ok($data->waitForExecution($HOST), 'wait for execution');
+    ok($waiter->waitForExecution($HOST), 'wait for execution');
 }

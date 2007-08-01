@@ -13,13 +13,20 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::Comm::SharedData;
+package ANSTE::Comm::HostWaiter;
 
 use strict;
 use warnings;
 
 use threads;
 use threads::shared;
+
+# Class: HostWaiter
+#
+# Informates when a slave host ends its boot process and finishes
+# the execution of a command.
+# This is done by blocking methods that waits for the event of a
+# given host.
 
 my $singleton;
 

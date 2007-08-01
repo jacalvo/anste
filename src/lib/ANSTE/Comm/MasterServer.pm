@@ -15,7 +15,7 @@
 
 package ANSTE::Comm::MasterServer;
 
-use ANSTE::Comm::SharedData;
+use ANSTE::Comm::HostWaiter;
 
 use strict;
 use warnings;
@@ -24,8 +24,8 @@ sub hostReady # (host)
 {
     my ($self, $host) = @_;
 
-    my $data = ANSTE::Comm::SharedData->instance(); 
-    $data->hostReady($host);
+    my $waiter = ANSTE::Comm::HostWaiter->instance(); 
+    $waiter->hostReady($host);
 
     return 'OK';
 }
@@ -34,8 +34,8 @@ sub executionFinished # (host, retValue)
 {
     my ($self, $host, $retValue) = @_;
 
-    my $data = ANSTE::Comm::SharedData->instance(); 
-    $data->executionFinished($host, $retValue);
+    my $waiter = ANSTE::Comm::HostWaiter->instance(); 
+    $waiter->executionFinished($host, $retValue);
 
     return 'OK';
 }
