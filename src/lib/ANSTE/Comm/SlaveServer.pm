@@ -95,16 +95,16 @@ sub _executeSavingLog # (command, log)
     my $ret = system($command) or return 1;
 
     # Close the redirected filehandles
-    close(STDOUT);             or return 1;
-    close(STDERR);             or return 1;
+    close(STDOUT)              or return 1;
+    close(STDERR)              or return 1;
 
     # Restore stdout and stderr
-    open(STDERR, '>&OLDERR');  or return 1;
-    open(STDOUT, '>&OLDOUT');  or return 1;
+    open(STDERR, '>&OLDERR')   or return 1;
+    open(STDOUT, '>&OLDOUT')   or return 1;
 
     # Avoid leaks by closing the independent copies
-    close(OLDOUT);             or return 1;
-    close(OLDERR);             or return 1;
+    close(OLDOUT)              or return 1;
+    close(OLDERR)              or return 1;
 
     return $ret;
 }
