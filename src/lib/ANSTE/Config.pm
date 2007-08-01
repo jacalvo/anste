@@ -59,4 +59,11 @@ sub imagePath
     return $self->{config}->{paths}->{images};
 }
 
+sub imagePath
+{
+    my ($self) = @_;
+
+    return $self->{config}->{paths}->{image-types};
+}
+
 1;

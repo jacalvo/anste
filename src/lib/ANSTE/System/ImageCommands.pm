@@ -62,10 +62,8 @@ sub create
 
     my $name = $self->{image}->name();
 
-    # TODO: Get this from config
-    my $DIR = '/data';
-
-    my $confFile = getcwd() . "$DIR/".XEN_TOOLS_CONFIG;
+    # TODO: Autogenerate this 
+    my $confFile = getcwd() . "/data/".XEN_TOOLS_CONFIG;
 
     my $virtualizer = $self->{virtualizer};
 

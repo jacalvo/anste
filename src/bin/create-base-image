@@ -22,12 +22,10 @@ use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
 use ANSTE::Deploy::ImageCreator;
+use ANSTE::Config;
 
 use threads;
 use SOAP::Transport::HTTP;
-
-# TODO: Get this from configuration.
-use constant IMAGE_DIR => 'data/images';
 
 my $imageFile = $ARGV[0];
 
@@ -41,8 +39,10 @@ if (@ARGV < 1) {
     exit(1);
 }
 
+my $imageDir = ANSTE::Config::instance()->imageTypePath();
+
 my $image = new ANSTE::Scenario::Image();
-$image->loadFromFile(IMAGE_DIR, $imageFile);
+$image->loadFromFile($imageDir, $imageFile);
 
 my $creator = new ANSTE::Deploy::ImageCreator($image);
 $creator->createImage();
