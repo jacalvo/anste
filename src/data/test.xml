@@ -3,9 +3,6 @@
 	<name>scenarioName</name>
 	<desc>scenarioDesc</desc>
 
-	<virtualizer>Virtualizer</virtualizer>
-	<system>System</system>
-
 	<host>
 		<name>hostName</name>
 		<desc>hostDesc</desc>
