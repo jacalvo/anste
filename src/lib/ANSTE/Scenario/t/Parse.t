@@ -18,7 +18,7 @@ use warnings;
 
 use ANSTE::Scenario::Scenario;
 
-use Test::More tests => 27;
+use Test::More tests => 25;
 
 use constant DATA => '../data';
 use constant SCENARIO => 'test.xml';
@@ -86,11 +86,6 @@ sub test # (scenario)
     is($name, 'scenarioName', 'scenario name = scenarioName');
 	my $desc = $scenario->desc();
     is($desc, 'scenarioDesc', 'scenario desc = scenarioDesc');
-
-    my $virtualizer = $scenario->virtualizer();
-    is($virtualizer, 'Virtualizer', 'virtualizer = Virtualizer');
-    my $system = $scenario->system();
-    is($system, 'System', 'system = System');
 
 	foreach my $host (@{$scenario->hosts()}) {
 		testServer($host);

@@ -64,4 +64,11 @@ sub createVM # (name)
     $self->execute("xm create $name.cfg");
 }
 
+sub imageFile # (path, name)
+{
+    my ($self, $path, $name) = @_;
+
+    return "$path/$name/disk.img";
+}
+
 1;

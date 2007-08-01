@@ -125,19 +125,6 @@ sub loadFromFile # (dir, filename)
 	my $desc = $descNode->getFirstChild()->getNodeValue();
 	$self->setDesc($desc);
 
-	# Load the virtualizer profile
-	my $virtualizerNode = 
-        $scenario->getElementsByTagName('virtualizer', 0)->item(0);
-	my $virtualizer = $virtualizerNode->getFirstChild()->getNodeValue();
-	$self->setVirtualizer($virtualizer);
-
-	# Load the system profile
-	my $systemNode = 
-        $scenario->getElementsByTagName('system', 0)->item(0);
-	my $system = $systemNode->getFirstChild()->getNodeValue();
-	$self->setSystem($system);
-
-
 	# Read the <host> elements 
 	foreach my $element ($scenario->getElementsByTagName('host', 0)) {
 		my $host = new ANSTE::Scenario::Host;

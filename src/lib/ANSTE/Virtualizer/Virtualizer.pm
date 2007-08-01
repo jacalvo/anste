@@ -69,4 +69,9 @@ sub createVM # (name)
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+sub imageFile # (path, name)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 1;

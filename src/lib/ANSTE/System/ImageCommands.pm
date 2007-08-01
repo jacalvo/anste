@@ -18,22 +18,17 @@ package ANSTE::System::ImageCommands;
 use warnings;
 use strict;
 
+use ANSTE::Config;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::HostWaiter;
 use ANSTE::System::BaseScriptGen;
 use ANSTE::System::CommInstallGen;
 
-# TODO: Load dynamically
-use ANSTE::System::Debian;
-use ANSTE::Virtualizer::Xen;
-
 use Cwd;
 use File::Temp qw(tempfile tempdir);
 
+# TODO: autogenerate it!
 use constant XEN_TOOLS_CONFIG => 'conf/xen-tools.conf';
-
-# TODO: Read this from config file
-use constant IMAGE_PATH => '/home/xen/domains/';
 
 sub new # (image) returns new Commands object
 {
@@ -42,8 +37,19 @@ sub new # (image) returns new Commands object
 
     $self->{mountPoint} = undef;
     $self->{image} = $image;
-    $self->{system} = new ANSTE::System::Debian();
-    $self->{virtualizer} = new ANSTE::Virtualizer::Xen();
+
+    my $config = ANSTE::Config->instance();
+    my $system = $config->system();
+    my $virtualizer = $config->virtualizer();
+
+    eval("use ANSTE::System::$system");
+    die "Can't load package $system: $@" if $@;
+
+    eval("use ANSTE::Virtualizer::$virtualizer");
+    die "Can't load package $virtualizer: $@" if $@;
+
+    $self->{system} = "ANSTE::System::$system"->new();
+    $self->{virtualizer} = "ANSTE::Virtualizer::$virtualizer"->new();
 	
 	bless($self, $class);
 
@@ -78,7 +84,12 @@ sub mount
 
     my $mountPoint = $self->{mountPoint};
 
-    my $image = IMAGE_PATH . $name . '/disk.img';
+    # Read images path from the config
+    my $config = ANSTE::Config->instance();
+    my $imagePath = $config->imagePath();
+
+    # Get the image file from the specific virtualizer
+    my $image = $self->{virtualizer}->imageFile($imagePath, $name);
 
     my $system = $self->{system};
 
