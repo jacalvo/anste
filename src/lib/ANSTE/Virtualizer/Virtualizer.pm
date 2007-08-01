@@ -18,6 +18,8 @@ package ANSTE::Virtualizer::Virtualizer;
 use strict;
 use warnings;
 
+use ANSTE::Exceptions::NotImplemented;
+
 
 sub new # returns new Virtualizer object
 {
@@ -29,10 +31,42 @@ sub new # returns new Virtualizer object
 	return $self;
 }
 
+# public method
 sub execute # (command)
 {
     my ($self, $command) = @_;
     return system($command) == 0;
+}
+
+# public abstract method
+#
+# named parameters: 
+# - name
+# - ip
+# - config
+sub createImage # (%params)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# public abstract method
+sub shutdownImage # (image)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: createVM
+#
+#   Override this method to create the Virtual Machine
+#   with the corresponding virtualizer program.
+#
+# Arguments:
+#
+#   name - name of the virtual machine
+#
+sub createVM # (name)
+{
+    throw ANSTE::Exceptions::NotImplemented();
 }
 
 1;

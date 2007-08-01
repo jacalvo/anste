@@ -18,6 +18,8 @@ package ANSTE::System::System;
 use strict;
 use warnings;
 
+use ANSTE::Exceptions::NotImplemented;
+
 sub new # returns new System object
 {
 	my $class = shift;
@@ -28,10 +30,29 @@ sub new # returns new System object
 	return $self;
 }
 
+# public method
 sub execute # (command)
 {
     my ($self, $command) = @_;
     return system($command) == 0;
+}
+
+# public abstract method
+sub mountImage # (image, mountPoint)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# public abstract method
+sub unmount # (mountPoint)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# public abstract method
+sub installBasePackages
+{
+    throw ANSTE::Exceptions::NotImplemented();
 }
 
 1;

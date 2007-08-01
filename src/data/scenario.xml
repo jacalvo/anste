@@ -3,9 +3,6 @@
 	<name>Scenario Name</name>
 	<desc>Description of the scenario</desc>
 
-	<virtualizer>Xen</virtualizer>
-	<system>Debian</system>
-
 	<host>
 		<name>hostname1</name>
 		<desc>Describes the role of the host in the test</desc>

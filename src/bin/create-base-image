@@ -26,6 +26,9 @@ use ANSTE::Deploy::ImageCreator;
 use threads;
 use SOAP::Transport::HTTP;
 
+# TODO: Get this from configuration.
+use constant IMAGE_DIR => 'data/images';
+
 my $imageFile = $ARGV[0];
 
 sub usage
@@ -39,7 +42,7 @@ if (@ARGV < 1) {
 }
 
 my $image = new ANSTE::Scenario::Image();
-$image->loadFromFile($imageFile);
+$image->loadFromFile(IMAGE_DIR, $imageFile);
 
 my $creator = new ANSTE::Deploy::ImageCreator($image);
 $creator->createImage();
