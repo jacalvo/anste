@@ -24,7 +24,7 @@ use lib "$Bin/../lib";
 use ANSTE::Scenario::Image;
 use ANSTE::System::BaseScriptGen;
 
-use constant IMAGE => "data/images/sarge-ebox-base.xml";
+use constant IMAGE => 'data/images/sarge-ebox-base.xml';
 
 my $image = new ANSTE::Scenario::Image;
 $image->loadFromFile(IMAGE);

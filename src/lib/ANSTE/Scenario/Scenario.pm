@@ -39,31 +39,36 @@ sub new # returns new Scenario object
 
 sub name # returns name string
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	return $self->{name};
 }
 
 sub setName # name string
 {
 	my ($self, $name) = @_;	
+
 	$self->{name} = $name;
 }
 
 sub desc # returns desc string
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	return $self->{desc};
 }
 
 sub setDesc # desc string
 {
 	my ($self, $desc) = @_;	
+
 	$self->{desc} = $desc;
 }
 
 sub virtualizer # returns virtualizer package
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	return $self->{virtualizer};
 }
 
@@ -76,19 +81,22 @@ sub setVirtualizer # (virtualizer)
 
 sub system # returns system package
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	return $self->{system};
 }
 
 sub setSystem # (system)
 {
 	my ($self, $system) = @_;
+
 	$self->{system} = $system;
 }
 
 sub hosts # returns hosts list 
 {
 	my ($self) = @_;
+
 	return $self->{hosts};
 }
 

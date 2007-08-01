@@ -49,6 +49,7 @@ sub new # returns new NetworkInterface object
 sub name # returns interface name string
 {
 	my ($self) = @_;
+
 	return $self->{name};
 }
 
@@ -61,19 +62,22 @@ sub setName # (name)
 
 sub type # returns interface type
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	return $self->{type};
 }
 
 sub setTypeStatic
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	$self->{type} = IFACE_TYPE_STATIC;
 }
 
 sub setTypeDHCP
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	$self->{type} = IFACE_TYPE_DHCP;
 }
 
@@ -87,7 +91,8 @@ sub setTypeDHCP
 #
 sub address # returns address string
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	return $self->{address};
 }
 
@@ -101,36 +106,38 @@ sub address # returns address string
 #
 sub setAddress # address string
 {
-	my $self = shift;	
-	my $address = shift;
+	my ($self, $address) = @_;	
+
 	# TODO: Check if it's a valid IP
 	$self->{address} = $address;
 }
 
 sub netmask # returns netmask string
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	return $self->{netmask};
 }
 
 sub setNetmask # netmask string
 {
-	my $self = shift;	
-	my $netmask = shift;
+	my ($self, $netmask) = @_;	
+
 	# TODO: Check if it's a valid IP
 	$self->{netmask} = $netmask;
 }
 
 sub gateway # returns gateway string
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	return $self->{gateway};
 }
 
 sub setGateway # gateway string
 {
-	my $self = shift;	
-	my $gateway = shift;
+	my ($self, $gateway) = @_;	
+
 	# TODO: Check if it's a valid IP
 	$self->{gateway} = $gateway;
 }

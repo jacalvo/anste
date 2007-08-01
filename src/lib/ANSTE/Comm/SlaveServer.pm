@@ -85,26 +85,26 @@ sub _executeSavingLog # (command, log)
     my ($command, $log) = @_;
 
     # Take copies of the file descriptors
-    open(OLDOUT, '>&STDOUT');
-    open(OLDERR, '>&STDERR');
+    open(OLDOUT, '>&STDOUT')   or return 1;
+    open(OLDERR, '>&STDERR')   or return 1;
 
     # Redirect stdout and stderr
-    open(STDOUT, "> $log");
-    open(STDERR, '>&STDOUT');
+    open(STDOUT, "> $log")     or return 1;
+    open(STDERR, '>&STDOUT')   or return 1;
 
-    my $ret = system($command);
+    my $ret = system($command) or return 1;
 
     # Close the redirected filehandles
-    close(STDOUT);
-    close(STDERR);
+    close(STDOUT);             or return 1;
+    close(STDERR);             or return 1;
 
     # Restore stdout and stderr
-    open(STDERR, '>&OLDERR');
-    open(STDOUT, '>&OLDOUT');
+    open(STDERR, '>&OLDERR');  or return 1;
+    open(STDOUT, '>&OLDOUT');  or return 1;
 
     # Avoid leaks by closing the independent copies
-    close(OLDOUT);
-    close(OLDERR);
+    close(OLDOUT);             or return 1;
+    close(OLDERR);             or return 1;
 
     return $ret;
 }

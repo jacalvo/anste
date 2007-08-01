@@ -27,8 +27,8 @@ sub new # returns new Host object
 	my $class = shift;
 	my $self = {};
 	
-	$self->{name} = "";
-	$self->{desc} = "";
+	$self->{name} = '';
+	$self->{desc} = '';
 	$self->{network} = new ANSTE::Scenario::Network;
 	$self->{packages} = new ANSTE::Scenario::Packages;
 
@@ -39,53 +39,56 @@ sub new # returns new Host object
 
 sub name # returns name string
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	return $self->{name};
 }
 
 sub setName # name string
 {
-	my $self = shift;	
-	my $name = shift;
+	my ($self, $name) = @_;	
+
 	$self->{name} = $name;
 }
 
 sub desc # returns desc string
 {
-	my $self = shift;
+	my ($self) = @_;
 	return $self->{desc};
 }
 
 sub setDesc # desc string
 {
-	my $self = shift;	
-	my $desc = shift;
+	my ($self, $desc) = @_;	
+
 	$self->{desc} = $desc;
 }
 
 sub network # returns Network object
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	return $self->{network};
 }
 
 sub setNetwork # (network)
 {
-	my $self = shift;	
-	my $network = shift;
+	my ($self, $network) = @_;	
+
 	$self->{network} = $network;
 }
 
 sub packages # returns Packages object
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	return $self->{packages};
 }
 
 sub setPackages # (packages)
 {
-	my $self = shift;	
-	my $packages = shift;
+	my ($self, $packages) = @_;
+
 	$self->{packages} = $packages;
 }
 
@@ -93,17 +96,17 @@ sub load # (dir, node)
 {
 	my ($self, $dir, $node) = @_;
 
-	my $nameNode = $node->getElementsByTagName("name",0)->item(0);
+	my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
 	my $name = $nameNode->getFirstChild()->getNodeValue();
 	$self->setName($name);
-	my $descNode = $node->getElementsByTagName("desc",0)->item(0);
+	my $descNode = $node->getElementsByTagName('desc', 0)->item(0);
 	my $desc = $descNode->getFirstChild()->getNodeValue();
 	$self->setDesc($desc);
-	my $networkNode = $node->getElementsByTagName("network",0)->item(0);
+	my $networkNode = $node->getElementsByTagName('network', 0)->item(0);
 	if($networkNode){
 		$self->network()->load($networkNode);
 	}
-	my $packagesNode = $node->getElementsByTagName("packages",0)->item(0);
+	my $packagesNode = $node->getElementsByTagName('packages', 0)->item(0);
 	if($packagesNode){
 		$self->packages()->load($dir, $packagesNode);
 	}

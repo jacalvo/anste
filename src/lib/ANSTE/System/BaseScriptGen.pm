@@ -56,7 +56,7 @@ sub _writePreInstall # (file)
     my $forceConfdef = 'Dpkg::Options::=--force-confdef';
     print $file "OPTIONS='-o $forceConfnew -o $forceConfdef';\n\n"; 
 
-    # TODO: Get this via System::Commands or similar
+    # TODO: Get this via System::Debian or similar
     my $command = 'apt-get update';
     
     print $file "$command\n\n";

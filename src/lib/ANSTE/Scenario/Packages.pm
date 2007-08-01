@@ -34,15 +34,16 @@ sub new # returns new Packages object
 
 sub list # returns the package list 
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	return $self->{list};
 }
 
 # Add a list or packages or a single package
 sub add # (packages)
 {
-	my $self = shift;	
-	my @packages = @_;
+	my ($self, @packages) = @_;	
+
 	push(@{$self->{list}}, @packages);
 }
 

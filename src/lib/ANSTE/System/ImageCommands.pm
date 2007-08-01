@@ -64,7 +64,7 @@ sub mount
 
     my $name = $self->{image}->name();
 
-    $self->{mountPoint} = tempdir();
+    $self->{mountPoint} = tempdir() or die "Can't create temp directory: $!";
 
     my $mountPoint = $self->{mountPoint};
 
@@ -84,17 +84,17 @@ sub copyBaseFiles
 
     # Generates the installation script on a temporary file
     my $gen = new ANSTE::System::CommInstallGen($image);
-    my ($fh, $filename) = tempfile();
+    my ($fh, $filename) = tempfile() or die "Can't create temporary file: $!";
     $gen->writeScript($fh);
-    close($fh);
+    close($fh) or die "Can't close temporary file: $!";
     # Gives execution perm to the script
-    chmod(700, $filename);
+    chmod(700, $filename) or die "Can't chmod $filename: $!";
     
     # Executes the installation script passing the mount point
     # of the image as argument
     my $ret = _execute("$filename $mountPoint");
 
-    unlink($filename);
+    unlink($filename) or die "Can't unlink $filename: $!";
 
     return $ret;
 }
@@ -119,7 +119,7 @@ sub installBasePackages
         _execute('apt-get clean') or die "apt-get clean failed: $!";
         # TODO: Do this more in a more generic way with the XMLs!!!
         _execute('update-rc.d ansted defaults 99') 
-            or die "update-rc.d fail: $!";
+            or die "update-rc.d failed: $!";
         exit($ret);
     }
     else { # parent
@@ -145,14 +145,14 @@ sub prepareSystem
     my $script = 'install.sh';
     my $gen = new ANSTE::System::BaseScriptGen($image);
     my $FILE;
-    open($FILE, '>', $script);
+    open($FILE, '>', $script) or die "Can't create $script: $!";
     $gen->writeScript($FILE);
-    close($FILE);
+    close($FILE) or die "Can't close file $script: $!";
 
     $self->_executeSetup($client, 'install.sh');
 
     # TODO: Do all this file things in /tmp
-    unlink $script;
+    unlink($script) or die "Can't remove $script: $!";
 }
 
 
@@ -161,7 +161,7 @@ sub umount
     my ($self) = @_;
     my $mountPoint = $self->{mountPoint};
     my $ret = _execute("umount $mountPoint");
-    _execute("rmdir $mountPoint");
+    rmdir($mountPoint) or die "Can't remove mount directory: $!";
     return($ret);
 }
 

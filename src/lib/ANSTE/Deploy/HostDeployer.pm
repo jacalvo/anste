@@ -77,9 +77,9 @@ sub _generateCommScript # (script)
 
     print "Generating setup script...\n";
     my $generator = new ANSTE::Scenario::HostScriptGen($host, $system);
-    open(my $file, '>', $script);
+    open(my $file, '>', $script) or die "Can't open file $file: $!";
     $generator->writeScript($file);
-    close($file);
+    close($file) or die "Can't close file $file: $!";
 }
 
 sub _executeCommScript # (host, script)
@@ -111,13 +111,13 @@ sub _printOutput # (file)
     my ($self, $file) = @_;
 
     my $FILE;
-    open($FILE, '<', $file);
+    open($FILE, '<', $file) or die "Can't open file $file: $!";
     my @lines = <$FILE>;
     foreach (@lines) {
         print;
     }
     print "\n";
-    close($FILE);
+    close($FILE) or die "Can't close file $file: $!";
 }
 
 1;
