@@ -13,13 +13,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::Virtualizer::Virtualizer;
+package ANSTE::System::System;
 
 use strict;
 use warnings;
 
-
-sub new # returns new Virtualizer object
+sub new # returns new System object
 {
 	my $class = shift;
 	my $self = {};

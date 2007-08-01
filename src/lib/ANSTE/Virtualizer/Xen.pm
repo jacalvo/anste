@@ -13,14 +13,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package Virtualizer::Xen;
+package ANSTE::Virtualizer::Xen;
 
 use base 'ANSTE::Virtualizer::Virtualizer';
 
 use strict;
 use warnings;
 
-sub new # returns new Virtualizer object
+sub new # returns new Xen object
 {
 	my $class = shift;
 	my $self = {};
@@ -45,7 +45,8 @@ sub createImage # (%params)
 
     my $command = "xen-create-image --hostname=$name" .
                   " --ip='192.168.45.191' --config=$confFile"; 
-    $self->_execute($command);
+
+    $self->execute($command);
 }
 
 # public overriden
@@ -53,14 +54,14 @@ sub shutdownImage # (image)
 {
     my ($self, $image) = @_;
 
-    $self->_execute("xm destroy $image");
+    $self->execute("xm destroy $image");
 }
 
 sub createVM # (name)
 {
     my ($self, $name) = @_;
 
-    $self->_execute("xm create $name.cfg");
+    $self->execute("xm create $name.cfg");
 }
 
 1;

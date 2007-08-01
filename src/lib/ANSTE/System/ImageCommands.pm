@@ -24,6 +24,7 @@ use ANSTE::System::BaseScriptGen;
 use ANSTE::System::CommInstallGen;
 
 # TODO: Load dynamically
+use ANSTE::System::Debian;
 use ANSTE::Virtualizer::Xen;
 
 use Cwd;
@@ -31,6 +32,7 @@ use File::Temp qw(tempfile tempdir);
 
 use constant XEN_TOOLS_CONFIG => 'conf/xen-tools.conf';
 
+# TODO: Read this from config file
 use constant IMAGE_PATH => '/home/xen/domains/';
 
 sub new # (image) returns new Commands object
@@ -40,7 +42,8 @@ sub new # (image) returns new Commands object
 
     $self->{mountPoint} = undef;
     $self->{image} = $image;
-    $self->{virtualizer} = new Virtualizer::Xen();
+    $self->{system} = new ANSTE::System::Debian();
+    $self->{virtualizer} = new ANSTE::Virtualizer::Xen();
 	
 	bless($self, $class);
 
@@ -77,9 +80,9 @@ sub mount
 
     my $image = IMAGE_PATH . $name . '/disk.img';
 
-    my $cmd = "mount -t ext3 -o loop $image $mountPoint";
+    my $system = $self->{system};
 
-    return _execute($cmd);
+    $system->mountImage($image, $mountPoint);
 }
 
 sub copyBaseFiles
@@ -88,6 +91,7 @@ sub copyBaseFiles
 
     my $mountPoint = $self->{mountPoint};
     my $image = $self->{image};
+    my $system = $self->{system};
 
     # Generates the installation script on a temporary file
     my $gen = new ANSTE::System::CommInstallGen($image);
@@ -99,7 +103,7 @@ sub copyBaseFiles
     
     # Executes the installation script passing the mount point
     # of the image as argument
-    my $ret = _execute("$filename $mountPoint");
+    my $ret = $system->execute("$filename $mountPoint");
 
     unlink($filename) or die "Can't unlink $filename: $!";
 
@@ -121,17 +125,16 @@ sub installBasePackages
     elsif ($pid == 0) { # child
         chroot($mountPoint) or die "Can't chroot: $!";
         $ENV{HOSTNAME} = $self->{image}->name();
-        _execute('apt-get update') or die "apt-get update failed: $!";
-        my $ret = _installPackages('libsoap-lite-perl');
-        _execute('apt-get clean') or die "apt-get clean failed: $!";
-        # TODO: Do this more in a more generic way with the XMLs!!!
-        _execute('update-rc.d ansted defaults 99') 
-            or die "update-rc.d failed: $!";
+        
+        my $system = $self->{system};
+
+        my $ret = $system->installBasePackages();
+
         exit($ret);
     }
     else { # parent
         waitpid($pid, 0);
-        return $?;
+        return($?);
     }
 }
 
@@ -149,26 +152,37 @@ sub prepareSystem
 
     $self->_createVirtualMachine($client, $name);
 
-    my $script = 'install.sh';
+    my $setupScript = 'install.sh';
     my $gen = new ANSTE::System::BaseScriptGen($image);
-    my $FILE;
-    open($FILE, '>', $script) or die "Can't create $script: $!";
-    $gen->writeScript($FILE);
-    close($FILE) or die "Can't close file $script: $!";
 
-    $self->_executeSetup($client, 'install.sh');
+    my $FILE;
+    open($FILE, '>', $setupScript) 
+        or die "Can't create $setupScript: $!";
+
+    $gen->writeScript($FILE);
+
+    close($FILE) 
+        or die "Can't close file $setupScript: $!";
+
+    $self->_executeSetup($client, $setupScript);
 
     # TODO: Do all this file things in /tmp
-    unlink($script) or die "Can't remove $script: $!";
+    unlink($setupScript)
+        or die "Can't remove $setupScript: $!";
 }
 
 
 sub umount
 {
     my ($self) = @_;
+    
     my $mountPoint = $self->{mountPoint};
-    my $ret = _execute("umount $mountPoint");
+    my $system = $self->{system};
+
+    my $ret = $system->unmount($mountPoint);
+    
     rmdir($mountPoint) or die "Can't remove mount directory: $!";
+
     return($ret);
 }
 
@@ -181,21 +195,6 @@ sub shutdown
 
     # TODO: Maybe this could be done more softly sending poweroff :)
     $virtualizer->shutdownImage($image);
-}
-
-
-sub _installPackages # (list)
-{
-    my ($list) = @_;
-
-    $ENV{DEBIAN_FRONTEND} = 'noninteractive';
-
-    my $forceNew = '-o DPkg::Options::=--force-confnew';
-    my $forceDef = '-o DPkg::Options::=--force-confdef';
-    my $options = "-y $forceNew $forceDef";
-
-    my $command = "apt-get install $options $list";
-    return _execute($command);
 }
 
 sub _createVirtualMachine # (client, name)
@@ -222,17 +221,11 @@ sub _executeSetup # (client, script)
     my $ret = $client->put($script);
     print "Server returned $ret\n";
     print "Trying to exec $script\n";
-    $ret = $client->exec('install.sh');
+    $ret = $client->exec($script);
     print "Server returned $ret\n";
     my $image = $self->{image}->name();
     $ret = $waiter->waitForExecution($image);
     print "Execution finished with return value = $ret\n";
-}
-
-sub _execute # (command)
-{
-    my ($command) = @_;
-    return system($command) == 0;
 }
 
 1;
