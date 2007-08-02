@@ -23,6 +23,7 @@ use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::HostWaiter;
 use ANSTE::System::BaseScriptGen;
 use ANSTE::System::CommInstallGen;
+use ANSTE::System::HostInstallGen;
 
 use Cwd;
 use File::Temp qw(tempfile tempdir);
@@ -95,6 +96,7 @@ sub mount
     $system->mountImage($image, $mountPoint);
 }
 
+# TODO: This two methods are very similar, try to factorize them
 sub copyBaseFiles
 {
     my ($self) = @_;
@@ -105,6 +107,30 @@ sub copyBaseFiles
 
     # Generates the installation script on a temporary file
     my $gen = new ANSTE::System::CommInstallGen($image);
+    my ($fh, $filename) = tempfile() or die "Can't create temporary file: $!";
+    $gen->writeScript($fh);
+    close($fh) or die "Can't close temporary file: $!";
+    # Gives execution perm to the script
+    chmod(700, $filename) or die "Can't chmod $filename: $!";
+    
+    # Executes the installation script passing the mount point
+    # of the image as argument
+    my $ret = $system->execute("$filename $mountPoint");
+
+    unlink($filename) or die "Can't unlink $filename: $!";
+
+    return $ret;
+}
+
+sub copyHostFiles # (hostname)
+{
+    my ($self, $hostname) = @_;
+
+    my $mountPoint = $self->{mountPoint};
+    my $system = $self->{system};
+
+    # Generates the installation script on a temporary file
+    my $gen = new ANSTE::System::HostInstallGen($hostname);
     my ($fh, $filename) = tempfile() or die "Can't create temporary file: $!";
     $gen->writeScript($fh);
     close($fh) or die "Can't close temporary file: $!";

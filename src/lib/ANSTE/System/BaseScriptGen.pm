@@ -18,7 +18,7 @@ package ANSTE::System::BaseScriptGen;
 use strict;
 use warnings;
 
-use ANSTE::Scenario::Image;
+use ANSTE::Scenario::BaseImage;
 
 sub new # (image) returns new BaseScriptGen object
 {

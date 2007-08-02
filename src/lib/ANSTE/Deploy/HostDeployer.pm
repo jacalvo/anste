@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use ANSTE::Scenario::Host;
+use ANSTE::System::ImageCommands;
 use ANSTE::System::SetupScriptGen;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::MasterServer;
@@ -60,6 +61,8 @@ sub deploy
    
     $self->_copyBaseImage() or die "Can't copy base image";
 
+    $self->_updateHostname();
+
     # Starts Master Server thread
     my $server = new ANSTE::Deploy::WaiterServer();
     $server->startThread();
@@ -81,12 +84,30 @@ sub _copyBaseImage
 
     # TODO: Read memory from baseimage specification
     # TODO: Erradicate this fucking IP!!!
-    my $newimage = new ANSTE::Deploy::Image(name => $host->name,
+    my $newimage = new ANSTE::Deploy::Image(name => $host->name(),
                                             memory => '256',
                                             ip => '192.168.45.191');
 
     print "Creating a copy of the base image\n";
     $virtualizer->createImageCopy($baseimage, $newimage);
+}
+
+sub _updateHostname
+{
+    my ($self) = @_;
+
+    my $host = $self->{host};
+
+    print "Updating hostname on the new image\n";
+
+    my $image = new ANSTE::Deploy::Image(name => $host->name());                                        
+    my $cmd = new ANSTE::System::ImageCommands($image);
+
+    $cmd->mount() or die "Can't mount image: $!";
+
+    $cmd->copyHostFiles($host->name()) or die "Can't copy files: $!";
+
+    $cmd->umount() or die "Can't unmount image: $!";
 }
 
 sub _createVirtualMachine # returns IP address string
@@ -122,7 +143,7 @@ sub _generateSetupScript # (script)
     my $system = $self->{system};
 
     print "Generating setup script...\n";
-    my $generator = new ANSTE::Scenario::SetupScriptGen($host, $system);
+    my $generator = new ANSTE::System::SetupScriptGen($host, $system);
     my $FILE;
     open($FILE, '>', $script) or die "Can't open file $script: $!";
     $generator->writeScript($FILE);
