@@ -18,8 +18,10 @@ package ANSTE::Scenario::Host;
 use strict;
 use warnings;
 
+use ANSTE::Scenario::BaseImage;
 use ANSTE::Scenario::Network;
 use ANSTE::Scenario::Packages;
+
 use XML::DOM;
 
 sub new # returns new Host object
@@ -29,6 +31,7 @@ sub new # returns new Host object
 	
 	$self->{name} = '';
 	$self->{desc} = '';
+    $self->{baseImage} = new ANSTE::Scenario::BaseImage;
 	$self->{network} = new ANSTE::Scenario::Network;
 	$self->{packages} = new ANSTE::Scenario::Packages;
 
@@ -64,6 +67,20 @@ sub setDesc # desc string
 	$self->{desc} = $desc;
 }
 
+sub baseImage # returns BaseImage object
+{
+	my ($self) = @_;
+
+	return $self->{baseImage};
+}
+
+sub setBaseImage # (baseImage)
+{
+	my ($self, $baseImage) = @_;	
+
+	$self->{baseImage} = $baseImage;
+}
+
 sub network # returns Network object
 {
 	my ($self) = @_;
@@ -92,23 +109,29 @@ sub setPackages # (packages)
 	$self->{packages} = $packages;
 }
 
-sub load # (dir, node)
+sub load # (node)
 {
-	my ($self, $dir, $node) = @_;
+	my ($self, $node) = @_;
 
 	my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
 	my $name = $nameNode->getFirstChild()->getNodeValue();
 	$self->setName($name);
+
 	my $descNode = $node->getElementsByTagName('desc', 0)->item(0);
 	my $desc = $descNode->getFirstChild()->getNodeValue();
 	$self->setDesc($desc);
+
+	my $baseimageNode = $node->getElementsByTagName('baseimage', 0)->item(0);
+	my $baseimage = $baseimageNode->getFirstChild()->getNodeValue();
+	$self->baseImage()->loadFromFile("$baseimage.xml");
+
 	my $networkNode = $node->getElementsByTagName('network', 0)->item(0);
 	if($networkNode){
 		$self->network()->load($networkNode);
 	}
 	my $packagesNode = $node->getElementsByTagName('packages', 0)->item(0);
 	if($packagesNode){
-		$self->packages()->load($dir, $packagesNode);
+		$self->packages()->load($packagesNode);
 	}
 }
 

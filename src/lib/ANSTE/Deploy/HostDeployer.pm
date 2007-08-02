@@ -19,19 +19,35 @@ use strict;
 use warnings;
 
 use ANSTE::Scenario::Host;
-use ANSTE::Scenario::HostScriptGen;
+use ANSTE::System::SetupScriptGen;
 use ANSTE::Comm::MasterClient;
+use ANSTE::Comm::MasterServer;
+use ANSTE::Comm::HostWaiter;
+use ANSTE::Deploy::WaiterServer;
+use ANSTE::Deploy::Image;
+use ANSTE::Config;
 
 use constant SETUP_SCRIPT => 'setup.sh';
 
-sub new # (host, system, virtualizer) returns new HostDeployer object
+sub new # (host) returns new HostDeployer object
 {
-	my ($class, $host, $system, $virtualizer) = @_;
+	my ($class, $host) = @_;
 	my $self = {};
 
 	$self->{host} = $host;
-	$self->{system} = $system;
-	$self->{virtualizer} = $virtualizer;
+
+    my $config = ANSTE::Config->instance();
+    my $system = $config->system();
+    my $virtualizer = $config->virtualizer();
+
+    eval("use ANSTE::System::$system");
+    die "Can't load package $system: $@" if $@;
+
+    eval("use ANSTE::Virtualizer::$virtualizer");
+    die "Can't load package $virtualizer: $@" if $@;
+
+    $self->{system} = "ANSTE::System::$system"->new();
+    $self->{virtualizer} = "ANSTE::Virtualizer::$virtualizer"->new();
 
 	bless($self, $class);
 
@@ -41,10 +57,36 @@ sub new # (host, system, virtualizer) returns new HostDeployer object
 sub deploy 
 {
     my ($self) = @_;
+   
+    $self->_copyBaseImage() or die "Can't copy base image";
 
+    # Starts Master Server thread
+    my $server = new ANSTE::Deploy::WaiterServer();
+    $server->startThread();
+    
     my $ip = $self->_createVirtualMachine();
-    $self->_generateCommScript(SETUP_SCRIPT);
-    $self->_executeCommScript($ip, SETUP_SCRIPT);
+
+    $self->_generateSetupScript(SETUP_SCRIPT);
+    $self->_executeSetupScript($ip, SETUP_SCRIPT);
+}
+
+sub _copyBaseImage
+{
+    my ($self) = @_;
+
+    my $host = $self->{host};
+    my $virtualizer = $self->{virtualizer};
+
+    my $baseimage = $host->baseImage()->name();
+
+    # TODO: Read memory from baseimage specification
+    # TODO: Erradicate this fucking IP!!!
+    my $newimage = new ANSTE::Deploy::Image(name => $host->name,
+                                            memory => '256',
+                                            ip => '192.168.45.191');
+
+    print "Creating a copy of the base image\n";
+    $virtualizer->createImageCopy($baseimage, $newimage);
 }
 
 sub _createVirtualMachine # returns IP address string
@@ -52,7 +94,6 @@ sub _createVirtualMachine # returns IP address string
     my ($self) = @_;
 
     my $host = $self->{host};
-    my $system = $self->{system};
     my $virtualizer = $self->{virtualizer};
 
     my $name = $host->name();
@@ -61,14 +102,19 @@ sub _createVirtualMachine # returns IP address string
 
     print "Creating virtual machine for host $name...\n"; 
     print "It will be accesible under $ip.\n"; 
-    print "System = ".$system->name()."\n";
-    print "Virtualizer = ".$virtualizer->name()."\n";
     print "\n";
 
-    return $ip;
+    $virtualizer->createVM($name) or die "Can't create VM $name: $!";
+
+    print "Waiting for the system start...\n";
+    my $waiter = ANSTE::Comm::HostWaiter->instance();
+    $waiter->waitForReady($name);
+    print "System is up\n";
+
+    return $ip; # Probably this will be removed
 }
 
-sub _generateCommScript # (script)
+sub _generateSetupScript # (script)
 {
     my ($self, $script) = @_;
     
@@ -76,29 +122,33 @@ sub _generateCommScript # (script)
     my $system = $self->{system};
 
     print "Generating setup script...\n";
-    my $generator = new ANSTE::Scenario::HostScriptGen($host, $system);
-    open(my $file, '>', $script) or die "Can't open file $file: $!";
-    $generator->writeScript($file);
-    close($file) or die "Can't close file $file: $!";
+    my $generator = new ANSTE::Scenario::SetupScriptGen($host, $system);
+    my $FILE;
+    open($FILE, '>', $script) or die "Can't open file $script: $!";
+    $generator->writeScript($FILE);
+    close($FILE) or die "Can't close file $script: $!";
 }
 
-sub _executeCommScript # (host, script)
+sub _executeSetupScript # (host, script)
 {
     my ($self, $host, $script) = @_;
 
     my $system = $self->{system};
 
     my $client = new ANSTE::Comm::MasterClient;
-    # TODO: Read PORT from preferences singleton
-    my $PORT = 8000;
+    my $PORT = ANSTE::Config->instance()->anstedPort(); 
     $client->connect("http://$host:$PORT");
-    print "Uploading script...\n";
+
+    print "Uploading setup script...\n";
     $client->put($script);
-    print "Executing script...\n";
+
+    print "Executing setup script...\n";
     $client->exec($script, "$script.out");
-    print "Script executing with the following output:\n";
+
+    print "Script executed with the following output:\n";
     $client->get("$script.out");
     $self->_printOutput("$script.out");
+
     print "Deleting generated files...\n";
     $client->del($script);
     $client->del("$script.out");

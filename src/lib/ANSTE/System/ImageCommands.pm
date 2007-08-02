@@ -67,9 +67,10 @@ sub create
 
     my $virtualizer = $self->{virtualizer};
 
-    $virtualizer->createImage(name => $name,
-                              ip => '192.168.45.191',
-                              config => $confFile);
+    # TODO: Erradicate this fucking IP!!!
+    $virtualizer->createBaseImage(name => $name,
+                                 ip => '192.168.45.191',
+                                 config => $confFile);
 }
 
 sub mount
@@ -159,7 +160,7 @@ sub prepareSystem
 
     my $name = $image->name();
 
-    $self->_createVirtualMachine($client, $name);
+    $self->_createVirtualMachine($name);
 
     my $setupScript = 'install.sh';
     my $gen = new ANSTE::System::BaseScriptGen($image);
@@ -206,9 +207,9 @@ sub shutdown
     $virtualizer->shutdownImage($image);
 }
 
-sub _createVirtualMachine # (client, name)
+sub _createVirtualMachine # (name)
 {
-    my ($self, $client, $name) = @_;
+    my ($self, $name) = @_;
 
     my $virtualizer = $self->{virtualizer};
 

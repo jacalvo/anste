@@ -56,7 +56,7 @@ sub execute # (command)
     return system($command) == 0;
 }
 
-# Method: createImage 
+# Method: createBaseImage 
 #
 #   Override this method to execute the command of a
 #   specific virtualizer to create a base image.
@@ -76,7 +76,7 @@ sub execute # (command)
 #
 #   throws <ANSTE::Exceptions::NotImplemented> 
 #
-sub createImage # (%params)
+sub createBaseImage # (%params)
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -146,6 +146,53 @@ sub createVM # (name)
 #   throws <ANSTE::Exceptions::NotImplemented> 
 #
 sub imageFile # (path, name)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: createImageCopy
+#
+#  Override this method to create a copy of a base image
+#  with the specified new configuration.
+#
+# Parameters:
+#
+#   baseimage - original image name
+#   newimage  - an <ANSTE::Deploy::Image> object with the configuration of
+#               the image
+#
+# Returns:
+#   
+#   boolean   - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub createImageCopy # (baseimage, newimage)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+
+# Method: deleteImage 
+#
+#   Override this method to delete an image using
+#   the specific virtualizer program.
+#
+# Parameters: 
+#   
+#   image - name of the image to be deleted
+#
+# Returns:
+#   
+#   boolean -   indicates if the process has been successful
+#               
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub deleteImage # (image)
 {
     throw ANSTE::Exceptions::NotImplemented();
 }

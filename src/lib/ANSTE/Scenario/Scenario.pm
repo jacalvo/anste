@@ -19,6 +19,8 @@ use strict;
 use warnings;
 
 use ANSTE::Scenario::Host;
+use ANSTE::Config;
+
 use XML::DOM;
 
 sub new # returns new Scenario object
@@ -108,9 +110,11 @@ sub addHost # (host)
 }
 
 
-sub loadFromFile # (dir, filename)
+sub loadFromFile # (filename)
 {
-	my ($self, $dir, $filename) = @_;
+	my ($self, $filename) = @_;
+
+    my $dir = ANSTE::Config->instance()->scenarioPath();
 
 	my $parser = new XML::DOM::Parser;
 	my $doc = $parser->parsefile("$dir/$filename");
@@ -128,7 +132,7 @@ sub loadFromFile # (dir, filename)
 	# Read the <host> elements 
 	foreach my $element ($scenario->getElementsByTagName('host', 0)) {
 		my $host = new ANSTE::Scenario::Host;
-		$host->load($dir, $element);
+		$host->load($element);
 		$self->addHost($host);
 	}
 

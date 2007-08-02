@@ -47,9 +47,11 @@ sub add # (packages)
 	push(@{$self->{list}}, @packages);
 }
 
-sub load # (dir, node)
+sub load # (node)
 {
-	my ($self, $dir, $node) = @_;
+	my ($self, $node) = @_;
+    
+    my $dir = ANSTE::Config->instance()->scenarioPath();
 
 	foreach my $profile ($node->getElementsByTagName('profile', 0)) {
 		my $file = "$dir/profiles/".$profile->getFirstChild()->getNodeValue();

@@ -20,13 +20,8 @@ use strict;
 
 use ANSTE::System::ImageCommands;
 use ANSTE::Comm::MasterServer;
-use ANSTE::Scenario::Image;
-
-use threads;
-use SOAP::Transport::HTTP;
-
-# TODO: Read from global preferences singleton
-use constant PORT => 8001;
+use ANSTE::Scenario::BaseImage;
+use ANSTE::Deploy::WaiterServer;
 
 sub new # (image) returns new ImageCreator object
 {
@@ -59,19 +54,12 @@ sub createImage
     $cmd->umount() or die 'Error unmounting image.';
 
     # Starts Master Server thread
-    my $thread = threads->create('_startMasterServer');
+    my $server = new ANSTE::Deploy::WaiterServer();
+    $server->startThread();
 
     $cmd->prepareSystem() or die 'Error preparing system.'; 
 
     $cmd->shutdown();
-}
-
-sub _startMasterServer
-{
-    my $server = new SOAP::Transport::HTTP::Daemon(LocalPort => PORT, 
-                                                   Reuse => 1);
-    $server->dispatch_to('ANSTE::Comm::MasterServer');
-    $server->handle();    
 }
 
 1;

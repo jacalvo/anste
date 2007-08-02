@@ -20,6 +20,8 @@ use warnings;
 
 use ANSTE::Scenario::Host;
 
+# TODO: Use System::Debian for implement this
+
 sub new # (host, system) returns new ServerScriptGen object
 {
 	my ($class, $host, $system) = @_;
@@ -85,7 +87,7 @@ sub _writeNetworkConfig # (file)
 	my $network = $self->{host}->network();
 
 	print $file "# Write /etc/network/interfaces\n";
-	print $file "cat << EOF > interfaces\n";
+	print $file "cat << EOF > /etc/network/interfaces\n";
 	print $file "auto lo\n";
 	print $file "iface lo inet loopback\n";
     foreach my $iface (@{$network->interfaces()}) {
@@ -96,7 +98,6 @@ sub _writeNetworkConfig # (file)
 	print $file "\n";
 	print $file "# Bring up all the interfaces\n";
 	print $file "ifup -a\n";
-
 }
 
 1;

@@ -13,22 +13,23 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::Scenario::Image;
+package ANSTE::Scenario::BaseImage;
 
 use strict;
 use warnings;
 
 use ANSTE::Scenario::Packages;
+use ANSTE::Config;
 
 use XML::DOM;
 
-sub new # returns new Image object
+sub new # returns new BaseImage object
 {
 	my $class = shift;
 	my $self = {};
 	
-	$self->{name} = "";
-	$self->{desc} = "";
+	$self->{name} = '';
+	$self->{desc} = '';
 	$self->{packages} = new ANSTE::Scenario::Packages();
 
 	bless($self, $class);
@@ -75,11 +76,13 @@ sub setPackages # (packages)
 	$self->{packages} = $packages;
 }
 
-sub loadFromFile # (dir, filename)
+sub loadFromFile # (filename)
 {
-	my ($self, $dir, $filename) = @_;
+	my ($self, $filename) = @_;
 
 	my $parser = new XML::DOM::Parser;
+    my $config = ANSTE::Config->instance();
+    my $dir = $config->imageTypePath();
 	my $doc = $parser->parsefile("$dir/$filename");
 
 	my $image = $doc->getDocumentElement();

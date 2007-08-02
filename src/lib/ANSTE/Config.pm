@@ -24,6 +24,8 @@ use constant CONFIG_FILE => 'data/anste.conf';
 
 my $singleton;
 
+# TODO: Return default values in case of undef
+
 sub instance 
 {
     my $class = shift;
@@ -42,28 +44,49 @@ sub system
 {
     my ($self) = @_;
 
-    return $self->{config}->{global}->{system};
+    return $self->{config}->{'global'}->{'system'};
 }
 
 sub virtualizer
 {
     my ($self) = @_;
 
-    return $self->{config}->{global}->{virtualizer};
+    return $self->{config}->{'global'}->{'virtualizer'};
 }
 
 sub imagePath
 {
     my ($self) = @_;
 
-    return $self->{config}->{paths}->{images};
+    return $self->{config}->{'paths'}->{'images'};
 }
 
-sub imagePath
+sub imageTypePath
 {
     my ($self) = @_;
 
-    return $self->{config}->{paths}->{image-types};
+    return $self->{config}->{'paths'}->{'image-types'};
+}
+
+sub scenarioPath
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'paths'}->{'scenarios'};
+}
+
+sub anstedPort
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'ansted'}->{'port'};
+}
+
+sub masterPort
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'master'}->{'port'};
 }
 
 1;

@@ -20,6 +20,14 @@ use base 'ANSTE::Virtualizer::Virtualizer';
 use strict;
 use warnings;
 
+use ANSTE::Config;
+use ANSTE::Deploy::Image;
+
+use File::Copy;
+use File::Copy::Recursive qw(dircopy);
+
+use constant XEN_CONFIG_TEMPLATE => 'data/xen-config.tmpl';
+
 # Method: createImage
 #
 #   Overriden method that creates a new base image using the xen-create-image
@@ -105,6 +113,88 @@ sub imageFile # (path, name)
     my ($self, $path, $name) = @_;
 
     return "$path/$name/disk.img";
+}
+
+# Method: copyImage
+#
+#  Overriden method that creates a copy of a base image
+#  with the specified new configuration.
+#
+# Parameters:
+#
+#   baseimage - original image name
+#   newimage  - an <ANSTE::Deploy::Image> object with the configuration of
+#               the image
+#
+# Returns:
+#   
+#   boolean   - indicates if the process has been successful
+#
+sub createImageCopy # (baseimage, newimage)
+{
+    my ($self, $baseimage, $newimage) = @_;
+
+    my $path = ANSTE::Config->instance()->imagePath();
+
+    my $imagename = $newimage->name();
+
+    dircopy("$path/$baseimage", "$path/$imagename");
+
+    # TODO: Change /etc/hostname and /etc/hosts with the new values
+
+    # Creates the configuration file for the new image
+    my $config = $self->_createConfig($newimage, $path);
+
+    # Writes the xen configuration file
+    my $FILE;
+    my $configFile = "/etc/xen/$imagename.cfg";
+    open($FILE, '>', $configFile) or return 0;
+    print $FILE $config;
+    close($FILE) or return 0; 
+
+    return 1;
+}
+
+# Method: deleteImage 
+#
+#   Overriden method that deletes an Xen image using
+#   the xen-delete-image program from xen-tools.
+#
+# Parameters: 
+#   
+#   image - name of the image to be deleted
+#
+# Returns:
+#   
+#   boolean - indicates if the process has been successful
+#               
+sub deleteImage # (image)
+{
+    my ($self, $image) = @_;
+
+    $self->execute("xen-delete-image $image");
+}
+
+
+sub _createConfig # (image, path) returns config string
+{
+    my ($self, $image, $path) = @_;
+
+    use Text::Template;
+
+    my $template = new Text::Template(SOURCE => XEN_CONFIG_TEMPLATE)
+        or die "Couldnt' construct template: $Text::Template::ERROR";
+
+    my %vars = (hostname => $image->name(),
+                ip => $image->ip(),
+                memory => $image->memory(),
+                path => $path,
+                device => 'sda');
+
+    my $config = $template->fill_in(HASH => \%vars)
+        or die "Couldn't fill in the template: $Text::Template::ERROR";
+
+    return $config;
 }
 
 1;

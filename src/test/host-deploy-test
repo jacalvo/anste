@@ -21,12 +21,15 @@ use warnings;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use Scenario::Scenario;
-use Deploy::ScenarioDeployer;
+use ANSTE::Scenario::Scenario;
+use ANSTE::Deploy::HostDeployer;
 
-use constant SCENARIO => 'data/scenario.xml';
+use constant SCENARIO => 'scenario.xml';
 
-my $scenario = new Scenario::Scenario;
+my $scenario = new ANSTE::Scenario::Scenario;
 $scenario->loadFromFile(SCENARIO);
-my $deployer = new Deploy::ScenarioDeployer($scenario);
+
+my $host = $scenario->hosts()->[0];
+
+my $deployer = new ANSTE::Deploy::HostDeployer($host);
 $deployer->deploy();
