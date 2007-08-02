@@ -20,6 +20,7 @@ use warnings;
 
 use ANSTE::Scenario::Scenario;
 use ANSTE::Deploy::HostDeployer;
+use ANSTE::Deploy::WaiterServer;
 
 sub new # (scenario) returns new ScenarioDeployer object
 {
@@ -38,14 +39,23 @@ sub deploy
     my ($self) = @_;
 
     my $scenario = $self->{scenario};
-    my $system = $scenario->system();
-    my $virtualizer = $scenario->virtualizer();
 
-    foreach my $host ($scenario->hosts()) {
-        my $deployer = new ANSTE::Deploy::HostDeployer($host, 
-                                                       $system, 
-                                                       $virtualizer);
-        $deployer->deploy();
+    my @deployers;
+
+    # Starts Master Server thread
+    my $server = new ANSTE::Deploy::WaiterServer();
+    $server->startThread();
+
+    foreach my $host (@{$scenario->hosts()}) {
+        my $deployer = new ANSTE::Deploy::HostDeployer($host);
+        $deployer->startDeployThread();
+        push(@deployers, $deployer);
+    }
+
+    foreach my $deployer (@deployers) {
+        $deployer->waitForFinish();
+        my $host = $deployer->{host}->name();
+        print "$host finished\n";
     }
 }
 

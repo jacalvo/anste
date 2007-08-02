@@ -24,9 +24,10 @@ use ANSTE::System::SetupScriptGen;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::MasterServer;
 use ANSTE::Comm::HostWaiter;
-use ANSTE::Deploy::WaiterServer;
 use ANSTE::Deploy::Image;
 use ANSTE::Config;
+
+use threads;
 
 use constant SETUP_SCRIPT => 'setup.sh';
 
@@ -55,6 +56,20 @@ sub new # (host) returns new HostDeployer object
 	return $self;
 }
 
+sub startDeployThread
+{
+    my ($self) = @_;
+
+    $self->{thread} = threads->create('deploy',$self);
+}
+
+sub waitForFinish
+{
+    my ($self) = @_;
+    
+    $self->{thread}->join();
+}
+
 sub deploy 
 {
     my ($self) = @_;
@@ -63,10 +78,6 @@ sub deploy
 
     $self->_updateHostname();
 
-    # Starts Master Server thread
-    my $server = new ANSTE::Deploy::WaiterServer();
-    $server->startThread();
-    
     my $ip = $self->_createVirtualMachine();
 
     $self->_generateSetupScript(SETUP_SCRIPT);

@@ -28,7 +28,7 @@ use File::Copy::Recursive qw(dircopy);
 
 use constant XEN_CONFIG_TEMPLATE => 'data/xen-config.tmpl';
 
-# Method: createImage
+# Method: createBaseImage
 #
 #   Overriden method that creates a new base image using the xen-create-image
 #   utility from xen-tools.
@@ -44,7 +44,7 @@ use constant XEN_CONFIG_TEMPLATE => 'data/xen-config.tmpl';
 #   boolean - Always returns true due to xen-create-image is broken and
 #             returns it although the creation process fails.
 #
-sub createImage # (%params)
+sub createBaseImage # (%params)
 {
     my ($self, %params) = @_;
     my $name = $params{name};

@@ -17,10 +17,10 @@ use strict;
 use warnings;
 
 use ANSTE::Scenario::Scenario;
+use ANSTE::Config;
 
 use Test::More tests => 25;
 
-use constant DATA => '../data';
 use constant SCENARIO => 'test.xml';
 
 sub testServer # (host)
@@ -93,5 +93,5 @@ sub test # (scenario)
 }
 
 my $scenario = new ANSTE::Scenario::Scenario;
-$scenario->loadFromFile(DATA, SCENARIO);
+$scenario->loadFromFile(SCENARIO);
 test($scenario);

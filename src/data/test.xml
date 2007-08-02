@@ -6,6 +6,7 @@
 	<host>
 		<name>hostName</name>
 		<desc>hostDesc</desc>
+        <baseimage>sarge-base</baseimage>
 		<network>
             <interface type="static">
                 <name>eth0</name>
@@ -28,6 +29,7 @@
 	<host>
 		<name>hostName</name>
 		<desc>hostDesc</desc>
+        <baseimage>sarge-base</baseimage>
 		<network type="dhcp">
             <interface type="dhcp">
                 <name>eth0</name>

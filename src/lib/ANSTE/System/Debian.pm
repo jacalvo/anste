@@ -91,6 +91,38 @@ sub installBasePackages
     return($ret);
 }
 
+# Method: resizeImage 
+#
+#   Overriden method that resizes a image file
+#   using resize2fs, checking it first with e2fsck.
+#
+# Parameters:
+#   
+#   image   - image file
+#   size    - new size
+#
+# Returns:
+#   
+#   boolean - indicates if the process has been successful
+#               
+sub resizeImage # (image, size)
+{
+    my ($self, $image, $size) = @_;
+
+    my ($ret, $tries) = (1, 3); 
+
+    # Sometimes it needs two (or more?) passes to work.
+    do {
+        $self->execute("e2fsck -f $image") or return 0;
+
+        $ret = $self->execute("resize2fs $image $size");
+
+        $tries++;
+    } while ($ret == 0 and $tries < 2);
+
+    return $ret ;
+}
+
 sub _installPackages # (list)
 {
     my ($self, $list) = @_;

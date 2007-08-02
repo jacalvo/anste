@@ -60,6 +60,9 @@ sub createImage
     $cmd->prepareSystem() or die 'Error preparing system.'; 
 
     $cmd->shutdown();
+
+    # TODO: Read the size from config.
+    $cmd->resize('500M') or die 'Error resizing image.';
 }
 
 1;

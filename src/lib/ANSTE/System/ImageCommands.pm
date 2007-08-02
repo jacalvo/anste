@@ -233,6 +233,22 @@ sub shutdown
     $virtualizer->shutdownImage($image);
 }
 
+sub resize # (size)
+{
+    my ($self, $size) = @_;
+
+    my $system = $self->{system};
+    my $virtualizer = $self->{virtualizer}; 
+    my $image = $self->{image}->name();
+
+    # Read images path from the config
+    my $config = ANSTE::Config->instance();
+    my $imagePath = $config->imagePath();
+
+    print "Resizing the image to $size\n";
+    $system->resizeImage($virtualizer->imageFile($imagePath, $image), $size);
+}
+
 sub _createVirtualMachine # (name)
 {
     my ($self, $name) = @_;

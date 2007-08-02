@@ -22,19 +22,12 @@ use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
 use ANSTE::Scenario::Scenario;
-use ANSTE::Deploy::HostDeployer;
-use ANSTE::Deploy::WaiterServer;
+use ANSTE::Deploy::ScenarioDeployer;
 
 use constant SCENARIO => 'scenario.xml';
 
 my $scenario = new ANSTE::Scenario::Scenario;
 $scenario->loadFromFile(SCENARIO);
 
-my $host = $scenario->hosts()->[0];
-
-# Starts Master Server thread
-my $server = new ANSTE::Deploy::WaiterServer();
-$server->startThread();
-
-my $deployer = new ANSTE::Deploy::HostDeployer($host);
+my $deployer = new ANSTE::Deploy::ScenarioDeployer($scenario);
 $deployer->deploy();

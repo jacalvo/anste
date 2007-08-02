@@ -20,10 +20,12 @@ use base 'ANSTE::Exceptions::Base';
 
 sub new 
 {
-	my ($class, $method, $caller) = @_;
+	my ($class) = @_;
+
+    my ($package, undef, $line, $method) = caller(2);
 
 	$self = $class->SUPER::new("Method '$method' not implemented in ".
-				               "'$caller'");
+				               "'$package:$line'\n");
 
 	bless ($self, $class);
 

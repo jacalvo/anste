@@ -120,4 +120,27 @@ sub installBasePackages
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: resizeImage 
+#
+#   Override this method with the system-specific
+#   commands to resize a image file.
+#
+# Parameters:
+#   
+#   image   - image file
+#   size    - new size
+#
+# Returns:
+#   
+#   boolean - indicates if the process has been successful
+#               
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub resizeImage # (image, size)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 1;
