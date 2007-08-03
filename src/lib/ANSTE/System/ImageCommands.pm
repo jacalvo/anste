@@ -24,6 +24,7 @@ use ANSTE::Comm::HostWaiter;
 use ANSTE::System::BaseScriptGen;
 use ANSTE::System::CommInstallGen;
 use ANSTE::System::HostInstallGen;
+use ANSTE::Deploy::Image;
 
 use Cwd;
 use File::Temp qw(tempfile tempdir);
@@ -62,16 +63,16 @@ sub create
 	my ($self) = @_;
 
     my $name = $self->{image}->name();
+    my $ip = $self->{image}->ip();
 
     # TODO: Autogenerate this 
     my $confFile = getcwd() . "/data/".XEN_TOOLS_CONFIG;
 
     my $virtualizer = $self->{virtualizer};
 
-    # TODO: Erradicate this fucking IP!!!
     $virtualizer->createBaseImage(name => $name,
-                                 ip => '192.168.45.191',
-                                 config => $confFile);
+                                  ip => $ip,
+                                  config => $confFile);
 }
 
 sub mount
@@ -181,8 +182,10 @@ sub prepareSystem
     my $image = $self->{image};
     
     my $client = new ANSTE::Comm::MasterClient;
-    # FIXME: hardcoded!!!
-    $client->connect('http://192.168.45.191:8000');
+
+    my $port = ANSTE::Config->instance()->anstedPort();
+    my $ip = $self->{image}->ip();
+    $client->connect("http://192.168.45.191:$port");
 
     my $name = $image->name();
 

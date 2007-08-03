@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use ANSTE::Scenario::Host;
+use ANSTE::Config;
 
 # Generates the scripts that installs ansted and anste-slave
 # in a base image.
@@ -50,16 +51,17 @@ sub writeScript # (file)
     print $file "# Receives the mount point of the image as an argument\n";
     print $file 'MOUNT=$1'."\n\n";
 
+    my $port = ANSTE::Config->instance->masterPort();
     my $masterIP = '192.168.45.111'; # FIXME: Get it well
 
-    print $file "MASTER_IP='$masterIP'\n\n";
+    print $file "MASTER='http://$masterIP:$port'\n\n";
 
     $self->_writeCopyFiles($file);
 
     $self->_writeHosts($file);
 
     print $file "# Stores the master's IP so anste-slave can read it\n";
-    print $file 'echo $MASTER_IP > $MOUNT/var/local/anste.master'."\n";
+    print $file 'echo $MASTER > $MOUNT/var/local/anste.master'."\n";
 }
 
 sub _writeCopyFiles # (file)

@@ -2,4 +2,8 @@
 <image>
 	<name>baseimage</name>
 	<desc>Debian GNU/Linux 3.1</desc>
+
+    <memory>256M</memory>
+
+    <size>500M</size>
 </image>

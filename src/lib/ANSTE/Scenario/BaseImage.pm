@@ -30,6 +30,8 @@ sub new # returns new BaseImage object
 	
 	$self->{name} = '';
 	$self->{desc} = '';
+	$self->{memory} = '';
+	$self->{size} = '';
 	$self->{packages} = new ANSTE::Scenario::Packages();
 
 	bless($self, $class);
@@ -39,40 +41,71 @@ sub new # returns new BaseImage object
 
 sub name # returns name string
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	return $self->{name};
 }
 
 sub setName # name string
 {
-	my $self = shift;	
-	my $name = shift;
+	my ($self, $name) = @_;	
+
 	$self->{name} = $name;
 }
 
 sub desc # returns desc string
 {
-	my $self = shift;
+	my ($self, $name) = @_;
+
 	return $self->{desc};
 }
 
 sub setDesc # desc string
 {
-	my $self = shift;	
-	my $desc = shift;
+	my ($self, $desc) = @_;	
+
 	$self->{desc} = $desc;
+}
+
+sub memory # returns memory string
+{
+	my ($self) = @_;
+
+	return $self->{memory};
+}
+
+sub setMemory # memory string
+{
+	my ($self, $memory) = @_;	
+
+	$self->{memory} = $memory;
+}
+
+sub size # returns size string
+{
+	my ($self) = @_;
+
+	return $self->{size};
+}
+
+sub setSize # size string
+{
+	my ($self, $size) = @_;	
+
+	$self->{size} = $size;
 }
 
 sub packages # returns Packages object
 {
-	my $self = shift;
+	my ($self) = @_;
+
 	return $self->{packages};
 }
 
 sub setPackages # (packages)
 {
-	my $self = shift;	
-	my $packages = shift;
+	my ($self, $packages) = @_;
+
 	$self->{packages} = $packages;
 }
 
@@ -90,13 +123,24 @@ sub loadFromFile # (filename)
 	my $nameNode = $image->getElementsByTagName('name', 0)->item(0);
 	my $name = $nameNode->getFirstChild()->getNodeValue();
 	$self->setName($name);
+
 	my $descNode = $image->getElementsByTagName('desc', 0)->item(0);
 	my $desc = $descNode->getFirstChild()->getNodeValue();
 	$self->setDesc($desc);
+
+	my $memoryNode = $image->getElementsByTagName('memory', 0)->item(0);
+	my $memory = $memoryNode->getFirstChild()->getNodeValue();
+	$self->setMemory($memory);
+
+	my $sizeNode = $image->getElementsByTagName('size', 0)->item(0);
+	my $size = $sizeNode->getFirstChild()->getNodeValue();
+	$self->setSize($size);
+
 	my $packagesNode = $image->getElementsByTagName('packages', 0)->item(0);
 	if($packagesNode){
 		$self->packages()->load($packagesNode);
 	}
+
     $doc->dispose();
     return(1);
 }

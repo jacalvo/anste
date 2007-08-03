@@ -21,6 +21,7 @@ use warnings;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Deploy::HostDeployer;
 use ANSTE::Deploy::WaiterServer;
+use ANSTE::Config;
 
 sub new # (scenario) returns new ScenarioDeployer object
 {
@@ -46,9 +47,13 @@ sub deploy
     my $server = new ANSTE::Deploy::WaiterServer();
     $server->startThread();
 
+    my $ipRange = ANSTE::Config->instance()->ipRange();
+
+    my $number = 0;
     foreach my $host (@{$scenario->hosts()}) {
         my $deployer = new ANSTE::Deploy::HostDeployer($host);
-        $deployer->startDeployThread();
+        my $ip = "$ipRange.$number";
+        $deployer->startDeployThread($ip);
         push(@deployers, $deployer);
     }
 

@@ -56,11 +56,11 @@ sub new # (host) returns new HostDeployer object
 	return $self;
 }
 
-sub startDeployThread
+sub startDeployThread # (ip)
 {
-    my ($self) = @_;
+    my ($self, $ip) = @_;
 
-    $self->{thread} = threads->create('deploy',$self);
+    $self->{thread} = threads->create('deploy', $self, $ip);
 }
 
 sub waitForFinish
@@ -70,15 +70,17 @@ sub waitForFinish
     $self->{thread}->join();
 }
 
-sub deploy 
+sub deploy # (ip)
 {
-    my ($self) = @_;
+    my ($self, $ip) = @_;
+
+    $self->{ip} = $ip;
    
     $self->_copyBaseImage() or die "Can't copy base image";
 
     $self->_updateHostname();
 
-    my $ip = $self->_createVirtualMachine();
+    $self->_createVirtualMachine();
 
     $self->_generateSetupScript(SETUP_SCRIPT);
     $self->_executeSetupScript($ip, SETUP_SCRIPT);
@@ -91,13 +93,15 @@ sub _copyBaseImage
     my $host = $self->{host};
     my $virtualizer = $self->{virtualizer};
 
-    my $baseimage = $host->baseImage()->name();
+    my $baseimage = $host->baseImage();
 
-    # TODO: Read memory from baseimage specification
-    # TODO: Erradicate this fucking IP!!!
-    my $newimage = new ANSTE::Deploy::Image(name => $host->name(),
-                                            memory => '256',
-                                            ip => '192.168.45.191');
+    my $name = $baseimage->name();
+    my $memory = $baseimage->memory();
+    my $ip = $self->{ip};
+
+    my $newimage = new ANSTE::Deploy::Image(name => $name,
+                                            memory => $memory,
+                                            ip => $ip);
 
     print "Creating a copy of the base image\n";
     $virtualizer->createImageCopy($baseimage, $newimage);
@@ -129,8 +133,7 @@ sub _createVirtualMachine # returns IP address string
     my $virtualizer = $self->{virtualizer};
 
     my $name = $host->name();
-    # FIXME: Hardcoded!!! (Get the ip of the secret communications interface)
-    my $ip = '192.168.45.191';
+    my $ip = $self->{ip};
 
     print "Creating virtual machine for host $name...\n"; 
     print "It will be accesible under $ip.\n"; 
@@ -142,8 +145,6 @@ sub _createVirtualMachine # returns IP address string
     my $waiter = ANSTE::Comm::HostWaiter->instance();
     $waiter->waitForReady($name);
     print "System is up\n";
-
-    return $ip; # Probably this will be removed
 }
 
 sub _generateSetupScript # (script)

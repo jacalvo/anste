@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 # Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,35 +13,65 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-use warnings;
+package ANSTE::Testing::TestSuite;
+
 use strict;
+use warnings;
 
-use FindBin qw($Bin);
-use lib "$Bin/../lib";
-
-use ANSTE::Deploy::ImageCreator;
-use ANSTE::Deploy::Image;
-use ANSTE::Config;
-
-use threads;
-use SOAP::Transport::HTTP;
-
-my $imageFile = $ARGV[0];
-
-sub usage
+sub new # returns new TestSuite object
 {
-    print "Usage: create-base-image <imagefile.xml>\n";
+	my $class = shift;
+	my $self = {};
+
+    $self->{name} = '';
+    $self->{desc} = '';
+    $self->{tests} = [];
+	
+	bless($self, $class);
+
+	return $self;
 }
 
-if (@ARGV < 1) {
-    usage();
-    exit(1);
+sub name # returns name string
+{
+	my ($self) = @_;
+
+	return $self->{name};
 }
 
-my $image = new ANSTE::Deploy::Image();
-$image->loadFromFile($imageFile);
-my $ipRange = ANSTE::Config->instance()->ipRange();
-$image->setIp("$ipRange.191");
+sub setName # name string
+{
+	my ($self, $name) = @_;	
 
-my $creator = new ANSTE::Deploy::ImageCreator($image);
-$creator->createImage();
+	$self->{name} = $name;
+}
+
+sub desc # returns desc string
+{
+	my ($self) = @_;
+
+	return $self->{desc};
+}
+
+sub setDesc # desc string
+{
+	my ($self, $desc) = @_;	
+
+	$self->{desc} = $desc;
+}
+
+sub tests # return tests list ref
+{
+    my ($self) = @_;
+
+    $self->{tests};
+}
+
+sub addTest # (test)
+{
+    my ($self, $test) = @_;
+
+    push(@{$self->{tests}}, $test);
+}
+
+1;

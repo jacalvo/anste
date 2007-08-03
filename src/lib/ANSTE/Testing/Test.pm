@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 # Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,19 +13,50 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-use warnings;
+package ANSTE::Testing::Test;
+
 use strict;
+use warnings;
 
-use FindBin qw($Bin);
-use lib "$Bin/../lib";
+sub new # returns new Test object
+{
+	my $class = shift;
+	my $self = {};
 
-use ANSTE::Scenario::BaseImage;
-use ANSTE::System::BaseScriptGen;
+    $self->{name} = '';
+    $self->{desc} = '';
+	
+	bless($self, $class);
 
-use constant IMAGE => 'sarge-ebox-base.xml';
+	return $self;
+}
 
-my $image = new ANSTE::Scenario::BaseImage;
-$image->loadFromFile(IMAGE);
-my $gen = new ANSTE::System::BaseScriptGen($image);
-my $file = \*STDOUT;
-$gen->writeScript($file);
+sub name # returns name string
+{
+	my ($self) = @_;
+
+	return $self->{name};
+}
+
+sub setName # name string
+{
+	my ($self, $name) = @_;	
+
+	$self->{name} = $name;
+}
+
+sub desc # returns desc string
+{
+	my ($self) = @_;
+
+	return $self->{desc};
+}
+
+sub setDesc # desc string
+{
+	my ($self, $desc) = @_;
+
+	$self->{desc} = $desc;
+}
+
+1;

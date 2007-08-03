@@ -20,7 +20,7 @@ use strict;
 
 use ANSTE::System::ImageCommands;
 use ANSTE::Comm::MasterServer;
-use ANSTE::Scenario::BaseImage;
+use ANSTE::Deploy::Image;
 use ANSTE::Deploy::WaiterServer;
 
 sub new # (image) returns new ImageCreator object
@@ -43,7 +43,7 @@ sub createImage
 
     my $cmd = new ANSTE::System::ImageCommands($image);
 
-    $cmd->create() or die 'Error creating base image.';
+#    $cmd->create() or die 'Error creating base image.';
 
     $cmd->mount() or die 'Error mounting image.';
 
@@ -62,7 +62,7 @@ sub createImage
     $cmd->shutdown();
 
     # TODO: Read the size from config.
-    $cmd->resize('500M') or die 'Error resizing image.';
+    $cmd->resize($image->size()) or die 'Error resizing image.';
 }
 
 1;

@@ -89,4 +89,11 @@ sub masterPort
     return $self->{config}->{'master'}->{'port'};
 }
 
+sub ipRange
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'comm'}->{'ip-range'};
+}
+
 1;

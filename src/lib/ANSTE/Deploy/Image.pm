@@ -15,6 +15,8 @@
 
 package ANSTE::Deploy::Image;
 
+use base 'ANSTE::Scenario::BaseImage';
+
 use strict;
 use warnings;
 
@@ -32,42 +34,32 @@ sub new # returns new Image object
 	return $self;
 }
 
-sub name # returns name string
-{
-	my $self = shift;
-	return $self->{name};
-}
-
-sub setName # name string
-{
-	my $self = shift;	
-	my $name = shift;
-	$self->{name} = $name;
-}
-
 sub ip # returns ip string
 {
 	my $self = shift;
+
 	return $self->{ip};
 }
 
-sub setDesc # ip string
+sub setIp # ip string
 {
 	my $self = shift;	
 	my $ip = shift;
+
 	$self->{ip} = $ip;
 }
 
 sub memory # returns memory string 
 {
-	my $self = shift;
+	my ($self) = shift;
+
 	return $self->{memory};
 }
 
 sub setMemory # (memory)
 {
-	my $self = shift;	
-	my $memory = shift;
+	my ($self, $memory) = @_;
+
 	$self->{memory} = $memory;
 }
 
