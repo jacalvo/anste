@@ -218,7 +218,7 @@ sub networkConfig # (network) returns string
 	$config .= "EOF\n";
 	$config .= "\n";
 	$config .= "# Bring up all the interfaces\n";
-	$config .= "ifup -a\n";
+	$config .= "ifup -a";
 
     return $config;
 }
@@ -281,6 +281,22 @@ sub createMountDirCommand # (path) returns string
     my ($self, $path) = @_;
 
     return 'mkdir -p $MOUNT' . $path;
+}
+
+# Method: firewallDefaultRules
+# FIXME documentation
+sub firewallDefaultRules # returns string
+{
+    my ($self) = @_;
+
+    my $config = '';
+
+    $config .= "iptables -F\n";
+    $config .= "iptables -P INPUT ACCEPT\n";
+    $config .= "iptables -P OUTPUT ACCEPT\n";
+    $config .= "iptables -P FORWARD ACCEPT";
+
+    return $config;
 }
 
 sub _interfaceConfig # (iface)

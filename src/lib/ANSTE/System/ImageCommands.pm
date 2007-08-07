@@ -216,6 +216,8 @@ sub prepareSystem
     # Execute post-install scripts
     print "Executing post scripts...\n";
     $self->_executeScripts($client, $image->postScripts());
+
+    return 1;
 }
 
 
@@ -302,6 +304,8 @@ sub _executeSetup # (client, script)
     my $image = $self->{image}->name();
     $ret = $waiter->waitForExecution($image);
     print "Execution finished with return value = $ret\n";
+
+    return ($ret);
 }
 
 1;

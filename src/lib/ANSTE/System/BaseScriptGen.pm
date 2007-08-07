@@ -51,6 +51,7 @@ sub writeScript # (file)
     $self->_writePreInstall($file);
 	$self->_writePackageInstall($file);
     $self->_writePostInstall($file);
+    $self->_writeFirewallRules($file);
 }
 
 sub _writePreInstall # (file)
@@ -87,7 +88,19 @@ sub _writePostInstall # (file)
 
     my $command = $system->cleanPackagesCommand();
 
-    print $file "$command\n";
+    print $file "$command\n\n";
+}
+
+sub _writeFirewallRules # (file)
+{
+    my ($self, $file) = @_;
+
+    my $system = $self->{system};
+
+    my $rules = $system->firewallDefaultRules();
+
+    print $file "# Set firewall configuration\n";
+    print $file "$rules\n"
 }
 
 1;

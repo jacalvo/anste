@@ -76,7 +76,7 @@ sub _writeNetworkConfig # (file)
     my $config = $system->networkConfig($network);
 
 	print $file "# Write network configuration\n";
-    print $file $config;
+    print $file "$config\n\n";
 }
 
 1;

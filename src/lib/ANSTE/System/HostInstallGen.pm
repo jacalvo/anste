@@ -21,9 +21,6 @@ use warnings;
 use ANSTE::Scenario::Host;
 use ANSTE::Config;
 
-# Generates the scripts that installs ansted and anste-slave
-# in a base image.
-
 sub new # (hostname) returns new CommInstallGen object
 {
 	my ($class, $hostname) = @_;
