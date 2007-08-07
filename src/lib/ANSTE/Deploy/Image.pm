@@ -23,7 +23,8 @@ use warnings;
 sub new # returns new Image object
 {
 	my ($class, %params) = @_;
-	my $self = {};
+
+	my $self = $class->SUPER::new();
 	
 	$self->{name} = $params{name};
 	$self->{ip} = $params{ip};

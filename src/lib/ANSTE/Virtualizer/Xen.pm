@@ -51,8 +51,6 @@ sub createBaseImage # (%params)
     my $ip = $params{ip};
     my $confFile = $params{config};
 
-    $ip = '192.168.50.1';
-
     my $command = "xen-create-image --hostname=$name" .
                   " --ip='$ip' --config=$confFile"; 
 

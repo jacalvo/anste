@@ -109,11 +109,11 @@ sub resizeImage # (image, size)
 {
     my ($self, $image, $size) = @_;
 
-    my ($ret, $tries) = (1, 3); 
+    my ($ret, $tries) = (1, 0); 
 
     # Sometimes it needs two (or more?) passes to work.
     do {
-        $self->execute("e2fsck -f $image") or return 0;
+        $self->execute("e2fsck -f $image");
 
         $ret = $self->execute("resize2fs $image $size");
 

@@ -43,7 +43,7 @@ sub createImage
 
     my $cmd = new ANSTE::System::ImageCommands($image);
 
-#    $cmd->create() or die 'Error creating base image.';
+    $cmd->create() or die 'Error creating base image.';
 
     $cmd->mount() or die 'Error mounting image.';
 
@@ -61,7 +61,6 @@ sub createImage
 
     $cmd->shutdown();
 
-    # TODO: Read the size from config.
     $cmd->resize($image->size()) or die 'Error resizing image.';
 }
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<image>
+	<name>imageName</name>
+	<desc>imageDesc</desc>
+
+    <memory>imageMemory</memory>
+
+    <size>imageSize</size>
+    
+    <packages>
+        <package>postfix</package>
+        <profile>ebox</profile>
+    </packages>
+</image>

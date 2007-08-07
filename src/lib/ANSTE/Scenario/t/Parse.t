@@ -19,7 +19,7 @@ use warnings;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Config;
 
-use Test::More tests => 25;
+use Test::More tests => 43;
 
 use constant SCENARIO => 'test.xml';
 
@@ -33,6 +33,7 @@ sub testServer # (host)
 
 	testNetwork($host->network());
 	testPackages($host->packages());
+    testBaseImage($host->baseImage());
 }
 
 sub testNetwork # (network)
@@ -60,6 +61,22 @@ sub testInterface # (interface)
         my $gateway = $iface->gateway();
         like($gateway, qr/^192/, 'gateway matchs /^192/');
     }
+}
+
+sub testBaseImage # (image)
+{
+    my ($image) = @_;
+
+	my $name = $image->name();
+    is($name, 'imageName', 'name = imageName');
+	my $desc = $image->desc();
+    is($desc, 'imageDesc', 'desc = imageDesc');
+	my $memory = $image->memory();
+    is($memory, 'imageMemory', 'memory = imageMemory');
+	my $size = $image->size();
+    is($size, 'imageSize', 'size = imageSize');
+
+	testPackages($image->packages());
 }
 
 sub testPackages # (packages)
