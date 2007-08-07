@@ -1,6 +1,0 @@
-deb http://192.168.45.4/debian/ sarge main contrib
-
-# ebox
-deb http://ebox-platform.com/debian/stable/ ebox/
-deb http://ebox-platform.com/debian/stable/ extra/
-deb http://ebox-platform.com/debian/sarge/stable/ security/

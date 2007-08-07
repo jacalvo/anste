@@ -11,4 +11,12 @@
         <package>postfix</package>
         <profile>ebox</profile>
     </packages>
+
+    <pre-install>
+        <script>write-ebox-sources.sh</script>
+    </pre-install>
+
+    <post-install>
+        <script>ebox-iptables.sh</script>
+    </post-install>
 </image>

@@ -19,7 +19,7 @@ use warnings;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Config;
 
-use Test::More tests => 43;
+use Test::More tests => 47;
 
 use constant SCENARIO => 'test.xml';
 
@@ -77,6 +77,10 @@ sub testBaseImage # (image)
     is($size, 'imageSize', 'size = imageSize');
 
 	testPackages($image->packages());
+
+    is(scalar(@{$image->preScripts()}), 2, 'pre-script count test');
+
+    is(scalar(@{$image->postScripts()}), 3, 'post-script count test');
 }
 
 sub testPackages # (packages)

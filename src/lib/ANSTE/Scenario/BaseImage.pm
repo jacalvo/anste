@@ -33,6 +33,8 @@ sub new # returns new BaseImage object
 	$self->{memory} = '';
 	$self->{size} = '';
 	$self->{packages} = new ANSTE::Scenario::Packages();
+    $self->{'pre-scripts'} = [];
+    $self->{'post-scripts'} = [];
 
 	bless($self, $class);
 
@@ -109,6 +111,20 @@ sub setPackages # (packages)
 	$self->{packages} = $packages;
 }
 
+sub preScripts # returns list
+{
+    my ($self) = @_;
+
+    return $self->{'pre-scripts'};
+}
+
+sub postScripts # returns list
+{
+    my ($self) = @_;
+
+    return $self->{'post-scripts'};
+}
+
 sub loadFromFile # (filename)
 {
 	my ($self, $filename) = @_;
@@ -141,8 +157,28 @@ sub loadFromFile # (filename)
 		$self->packages()->load($packagesNode);
 	}
 
+	my $preNode = $image->getElementsByTagName('pre-install', 0)->item(0);
+	if($preNode){
+        $self->_addScripts('pre-scripts', $preNode);
+	}
+
+	my $postNode = $image->getElementsByTagName('post-install', 0)->item(0);
+	if($postNode){
+        $self->_addScripts('post-scripts', $postNode);
+	}
+
     $doc->dispose();
     return(1);
+}
+
+sub _addScripts # (list, node)
+{
+    my ($self, $list, $node) = @_;
+
+	foreach my $scriptNode ($node->getElementsByTagName('script', 0)) {
+        my $script = $scriptNode->getFirstChild()->getNodeValue();
+    	push(@{$self->{$list}}, $script);
+    }
 }
 
 1;

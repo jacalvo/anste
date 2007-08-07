@@ -11,4 +11,15 @@
         <package>postfix</package>
         <profile>ebox</profile>
     </packages>
+
+    <pre-install>
+        <script>script1</script>
+        <script>script2</script>
+    </pre-install>
+
+    <post-install>
+        <script>script1</script>
+        <script>script2</script>
+        <script>script3</script>
+    </post-install>
 </image>

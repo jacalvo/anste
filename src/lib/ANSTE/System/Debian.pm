@@ -262,7 +262,7 @@ sub storeMasterAddress # (address) returns string
 {
     my ($self, $address) = @_;
 
-    return "echo $address > " . '$MOUNT/var/local/anste.manster'; 
+    return "echo $address > " . '$MOUNT/var/local/anste.master'; 
 }
 
 # Method: copyToMountCommand

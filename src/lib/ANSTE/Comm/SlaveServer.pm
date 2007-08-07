@@ -18,11 +18,14 @@ package ANSTE::Comm::SlaveServer;
 use strict;
 use warnings;
 
-my $DIR = "/tmp";
+my $DIR = '/tmp';
 
-sub put	# (name, content)
+sub put	# (file, content)
 {
-    my ($self, $name, $content) = @_;
+    my ($self, $file, $content) = @_;
+
+    my @parts = split('/', $file); 
+    my $name = $parts[-1];
 
     if (open(FILE, '>', "$DIR/$name")) { 
     	print FILE $content;
@@ -47,15 +50,17 @@ sub get	# (name)
     }
 }
 
-sub exec # (name, log)
+sub exec # (file, log)
 {
-    my ($self, $name, $log) = @_;
+    my ($self, $file, $log) = @_;
 
     my $pid = fork();
     if (not defined $pid) {
         die "Can't fork: $!";
     }
     elsif($pid == 0){
+        my @parts = split('/', $file); 
+        my $name = $parts[-1];
         chmod 0700, "$DIR/$name";
         my $command = "$DIR/$name";
         my $logfile = defined($log) ? "$DIR/$log" : "$DIR/out.log"; 

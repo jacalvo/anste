@@ -75,6 +75,20 @@ sub scenarioPath
     return $self->{config}->{'paths'}->{'scenarios'};
 }
 
+sub profilePath
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'paths'}->{'profiles'};
+}
+
+sub scriptPath
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'paths'}->{'scripts'};
+}
+
 sub anstedPort
 {
     my ($self) = @_;

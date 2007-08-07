@@ -51,10 +51,10 @@ sub load # (node)
 {
 	my ($self, $node) = @_;
     
-    my $dir = ANSTE::Config->instance()->scenarioPath();
+    my $dir = ANSTE::Config->instance()->profilePath();
 
 	foreach my $profile ($node->getElementsByTagName('profile', 0)) {
-		my $file = "$dir/profiles/".$profile->getFirstChild()->getNodeValue();
+		my $file = "$dir/".$profile->getFirstChild()->getNodeValue();
 		open(FILE, $file) or die "Error loading $file";
 		my @names;
 		chomp(@names = <FILE>);

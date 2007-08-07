@@ -191,7 +191,11 @@ sub prepareSystem
 
     $self->_createVirtualMachine($name);
 
-    my $setupScript = 'install.sh';
+    # Execute pre-install scripts
+    print "Executing pre scripts...\n";
+    $self->_executeScripts($client, $image->preScripts());
+
+    my $setupScript = '/tmp/install.sh';
     my $gen = new ANSTE::System::BaseScriptGen($image);
 
     my $FILE;
@@ -208,6 +212,10 @@ sub prepareSystem
     # TODO: Do all this file things in /tmp
     unlink($setupScript)
         or die "Can't remove $setupScript: $!";
+
+    # Execute post-install scripts
+    print "Executing post scripts...\n";
+    $self->_executeScripts($client, $image->postScripts());
 }
 
 
@@ -264,6 +272,19 @@ sub _createVirtualMachine # (name)
     my $waiter = ANSTE::Comm::HostWaiter->instance();
     $waiter->waitForReady($name);
     print "System is up\n";
+}
+
+sub _executeScripts # (client, list)
+{
+    my ($self, $client, $list) = @_;
+
+    my $image = $self->{image};
+
+    my $path = ANSTE::Config->instance()->scriptPath();
+
+    foreach my $script (@{$list}) {
+        $self->_executeSetup($client, "$path/$script");
+    }
 }
 
 sub _executeSetup # (client, script)
