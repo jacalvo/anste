@@ -3,7 +3,7 @@
 	<name>baseimage-ebox</name>
 	<desc>Debian GNU/Linux 3.1</desc>
 
-    <memory>256M</memory>
+    <memory>256</memory>
 
     <size>800M</size>
     

@@ -143,4 +143,136 @@ sub resizeImage # (image, size)
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: updatePackagesCommand
+#
+#   Overriden method that returns the Debian command
+#   to update packages database.
+#
+# Returns:
+#
+#   string - command string
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub updatePackagesCommand # returns string
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: updatePackagesCommand
+#
+#   Overriden method that returns the Debian command
+#   to clean packages cache.
+#
+# Returns:
+#
+#   string - command string
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub cleanPackagesCommand # returns string
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: installPackagesCommand 
+#
+#   Overriden method that returns the Debian command
+#   to install the given list of packages 
+#
+# Parameters:
+#   
+#   packages - list of packages
+#
+# Returns:
+#
+#   string - command string
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub installPackagesCommand # (packages) returns string
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: installVars
+#
+#   Overriden method that returns the environment variables needed 
+#   for the packages installation process.
+#
+# Returns:
+#
+#   string - contains the environment variables set commands
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub installVars # return strings
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+
+# Method: networkConfig
+# FIXME documentation
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub networkConfig # (network) returns string
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: hostnameConfig
+# FIXME documentation
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub hostnameConfig # (hostname) returns string
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: hostsConfig
+# FIXME documentation
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub hostsConfig # (hostname) returns string
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: storeMasterAddress
+# FIXME documentation
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub storeMasterAddress # (address) returns string
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: copyToMountCommand
+# FIXME documentation
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub copyToMountCommand # (orig, dest) returns string
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 1;

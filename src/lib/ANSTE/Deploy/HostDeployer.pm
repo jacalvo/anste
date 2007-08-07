@@ -95,7 +95,7 @@ sub _copyBaseImage
 
     my $baseimage = $host->baseImage();
 
-    my $name = $baseimage->name();
+    my $name = $host->name();
     my $memory = $baseimage->memory();
     my $ip = $self->{ip};
 

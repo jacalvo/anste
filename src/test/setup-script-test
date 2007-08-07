@@ -24,7 +24,7 @@ use lib "$Bin/../lib";
 use ANSTE::Scenario::Scenario;
 use ANSTE::System::SetupScriptGen;
 
-use constant SCENARIO => 'data/scenario.xml';
+use constant SCENARIO => 'scenario.xml';
 
 my $scenario = new ANSTE::Scenario::Scenario;
 $scenario->loadFromFile(SCENARIO);

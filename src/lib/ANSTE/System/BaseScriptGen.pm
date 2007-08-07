@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use ANSTE::Scenario::BaseImage;
+use ANSTE::Config;
 
 sub new # (image) returns new BaseScriptGen object
 {
@@ -27,6 +28,12 @@ sub new # (image) returns new BaseScriptGen object
 	my $self = {};
 	
 	$self->{image} = $image;
+    my $system = ANSTE::Config->instance()->system();
+
+    eval("use ANSTE::System::$system");
+    die "Can't load package $system: $@" if $@;
+
+    $self->{system} = "ANSTE::System::$system"->new();
 
 	bless($self, $class);
 
@@ -50,15 +57,12 @@ sub _writePreInstall # (file)
 {
     my ($self, $file) = @_;
 
-    print $file "export DEBIAN_FRONTEND=noninteractive\n\n";
+    my $system = $self->{system};
 
-    my $forceConfnew = 'Dpkg::Options::=--force-confnew';
-    my $forceConfdef = 'Dpkg::Options::=--force-confdef';
-    print $file "OPTIONS='-o $forceConfnew -o $forceConfdef';\n\n"; 
+    my $vars = $system->installVars();
+    print $file $vars;
 
-    # TODO: Get this via System::Debian or similar
-    my $command = 'apt-get update';
-    
+    my $command = $system->updatePackagesCommand();
     print $file "$command\n\n";
 }
 
@@ -66,18 +70,24 @@ sub _writePackageInstall # (file)
 {
 	my ($self, $file) = @_;
 
-	print $file "# Install packages\n";
-	#FIXME: my $command = $self->{system}->command("package-install");
-    my $command = 'apt-get install -y $OPTIONS';
+    my $system = $self->{system};
+
 	my @packages = @{$self->{image}->packages()->list()};
-	print $file "$command ".join(" ", @packages)."\n\n";
+
+	print $file "# Install packages\n";
+    my $command = $system->installPackagesCommand(@packages); 
+	print $file "$command\n\n";
 }
 
 sub _writePostInstall # (file)
 {
     my ($self, $file) = @_;
 
-    print $file "apt-get clean\n";
+    my $system = $self->{system};
+
+    my $command = $system->cleanPackagesCommand();
+
+    print $file "$command\n";
 }
 
 1;

@@ -157,9 +157,10 @@ sub imageFile # (path, name)
 #
 # Parameters:
 #
-#   baseimage - original image name
-#   newimage  - an <ANSTE::Deploy::Image> object with the configuration of
-#               the image
+#   baseimage - an <ANSTE::Deploy::BaseImage> object with the configuration
+#               of the base image
+#   newimage  - an <ANSTE::Deploy::Image> object with the configuration 
+#               of the new image
 #
 # Returns:
 #   

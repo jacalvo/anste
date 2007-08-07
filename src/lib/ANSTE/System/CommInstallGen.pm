@@ -31,6 +31,12 @@ sub new # (image) returns new CommInstallGen object
 	my $self = {};
 
     $self->{image} = $image;
+    my $system = ANSTE::Config->instance()->system();
+
+    eval("use ANSTE::System::$system");
+    die "Can't load package $system: $@" if $@;
+
+    $self->{system} = "ANSTE::System::$system"->new();
 	
 	bless($self, $class);
 
@@ -40,6 +46,8 @@ sub new # (image) returns new CommInstallGen object
 sub writeScript # (file)
 {
 	my ($self, $file) = @_;
+
+    my $system = $self->{system};
 
 	print $file "#!/bin/sh\n";
 	my $host = $self->{image}->name();
@@ -51,26 +59,28 @@ sub writeScript # (file)
     print $file "# Receives the mount point of the image as an argument\n";
     print $file 'MOUNT=$1'."\n\n";
 
+    $self->_writeCopyFiles($file);
+    $self->_writeHostsConfig($file);
+
     my $port = ANSTE::Config->instance->masterPort();
     my $masterIP = '192.168.45.111'; # FIXME: Get it well
+    my $MASTER = "http://$masterIP:$port";
 
-    print $file "MASTER='http://$masterIP:$port'\n\n";
-
-    $self->_writeCopyFiles($file);
-
-    $self->_writeHosts($file);
-
-    print $file "# Stores the master's IP so anste-slave can read it\n";
-    print $file 'echo $MASTER > $MOUNT/var/local/anste.master'."\n";
+    print $file "# Stores the master address so anste-slave can read it\n";
+    my $command = $system->storeMasterAddress($MASTER);
+    print $file "$command\n";
 }
 
 sub _writeCopyFiles # (file)
 {
     my ($self, $file) = @_;
 
+    my $system = $self->{system};
+
     print $file "# Copy necessary files\n";
     my $commPath = '/usr/local/lib/site_perl/ANSTE/Comm/';
-    print $file 'mkdir -p $MOUNT'."$commPath\n";
+    my $command = $system->createMountDirCommand($commPath);
+    print $file "$command\n";
 
     my %fileDest = ('bin/ansted' => '/usr/local/bin/',
                     'bin/anste-slave' => '/usr/local/bin',
@@ -78,30 +88,22 @@ sub _writeCopyFiles # (file)
                     'data/conf/ansted' => '/etc/init.d/');                 
     
     foreach my $orig (keys %fileDest) {
-        print $file "cp $orig ".'$MOUNT'."$fileDest{$orig}\n";
+        $command = $system->copyToMountCommand($orig, $fileDest{$orig});
+        print $file "$command\n";
     }
     print $file "\n";
 }
 
-sub _writeHosts # (file)
+sub _writeHostsConfig # (file)
 {
     my ($self, $file) = @_;
 
+    my $system = $self->{system};
     my $host = $self->{image}->name();
 
-    print $file "# Write /etc/hosts\n";
-    print $file 'cat << EOF > $MOUNT/etc/hosts'."\n";
-    print $file "127.0.0.1 localhost.localdomain localhost\n";
-    print $file "127.0.1.1 $host.localdomain $host\n";
-    print $file "\n";
-    print $file "# The following lines are desirable for IPv6 capable hosts\n";
-    print $file "::1     ip6-localhost ip6-loopback\n";
-    print $file "fe00::0 ip6-localnet\n";
-    print $file "ff00::0 ip6-mcastprefix\n";
-    print $file "ff02::1 ip6-allnodes\n";
-    print $file "ff02::2 ip6-allrouters\n";
-    print $file "ff02::3 ip6-allhosts\n";
-    print $file "EOF\n\n";
+    print $file "# Write hosts configuration\n";
+    my $config = $system->hostsConfig($host);
+    print $file "$config\n\n";
 }
 
 1;

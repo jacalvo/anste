@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use ANSTE::Scenario::Host;
+use ANSTE::Config;
 
 # Generates the scripts that installs ansted and anste-slave
 # in a base image.
@@ -30,6 +31,12 @@ sub new # (hostname) returns new CommInstallGen object
 	my $self = {};
 
     $self->{hostname} = $hostname;
+    my $system = ANSTE::Config->instance()->system();
+
+    eval("use ANSTE::System::$system");
+    die "Can't load package $system: $@" if $@;
+
+    $self->{system} = "ANSTE::System::$system"->new();
 	
 	bless($self, $class);
 
@@ -51,41 +58,32 @@ sub writeScript # (file)
     print $file "# Receives the mount point of the image as an argument\n";
     print $file 'MOUNT=$1'."\n\n";
 
-    $self->_writeHostname($file);
+    $self->_writeHostnameConfig($file);
 
-    $self->_writeHosts($file);
+    $self->_writeHostsConfig($file);
 }
 
-sub _writeHostname # (file)
+sub _writeHostnameConfig # (file)
 {
     my ($self, $file) = @_;
 
-    my $host = $self->{hostname};
+    my $system = $self->{system};
 
-    print $file "# Write /etc/hostname\n";
-    print $file "echo $host > ".'$MOUNT/etc/hostname'."\n\n";
+    print $file "# Write hostname config\n";
+    my $config = $system->hostnameConfig($self->{hostname});
+    print $file "$config\n\n";
 }
 
-# TODO: Generalize this through System::Debian, now this is repeated
-sub _writeHosts # (file)
+sub _writeHostsConfig # (file)
 {
     my ($self, $file) = @_;
 
+    my $system = $self->{system};
     my $host = $self->{hostname};
 
-    print $file "# Write /etc/hosts\n";
-    print $file 'cat << EOF > $MOUNT/etc/hosts'."\n";
-    print $file "127.0.0.1 localhost.localdomain localhost\n";
-    print $file "127.0.1.1 $host.localdomain $host\n";
-    print $file "\n";
-    print $file "# The following lines are desirable for IPv6 capable hosts\n";
-    print $file "::1     ip6-localhost ip6-loopback\n";
-    print $file "fe00::0 ip6-localnet\n";
-    print $file "ff00::0 ip6-mcastprefix\n";
-    print $file "ff02::1 ip6-allnodes\n";
-    print $file "ff02::2 ip6-allrouters\n";
-    print $file "ff02::3 ip6-allhosts\n";
-    print $file "EOF\n\n";
+    print $file "# Write hosts configuration\n";
+    my $config = $system->hostsConfig($host);
+    print $file "$config\n\n";
 }
 
 1;

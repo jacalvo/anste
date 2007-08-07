@@ -123,6 +123,187 @@ sub resizeImage # (image, size)
     return $ret ;
 }
 
+# Method: updatePackagesCommand
+#
+#   Overriden method that returns the Debian command
+#   to update packages database.
+#
+# Returns:
+#
+#   string - command string
+#
+sub updatePackagesCommand # returns string
+{
+    my ($self) = @_;
+
+    return 'apt-get update';
+}
+
+# Method: updatePackagesCommand
+#
+#   Overriden method that returns the Debian command
+#   to clean packages cache.
+#
+# Returns:
+#
+#   string - command string
+#
+sub cleanPackagesCommand # returns string
+{
+    my ($self) = @_;
+
+    return 'apt-get clean';
+}
+
+# Method: installPackagesCommand 
+#
+#   Overriden method that returns the Debian command
+#   to install the given list of packages 
+#
+# Parameters:
+#   
+#   packages - list of packages
+#
+# Returns:
+#
+#   string - command string
+#
+sub installPackagesCommand # (packages) returns string
+{
+    my ($self, @packages) = @_;
+
+    my $packages = join(' ', @packages);
+
+    return 'apt-get install -y $APT_OPTIONS ' . $packages;
+}
+
+# Method: installVars
+#
+#   Overriden method that returns the environment variables needed 
+#   for the packages installation process.
+#
+# Returns:
+#
+#   string - contains the environment variables set commands
+#
+sub installVars # return strings
+{
+    my ($self) = @_;
+
+    my $vars = '';
+
+    $vars .= "export DEBIAN_FRONTEND=noninteractive\n\n";
+    my $forceConfnew = 'Dpkg::Options::=--force-confnew';
+    my $forceConfdef = 'Dpkg::Options::=--force-confdef';
+    $vars .= "APT_OPTIONS='-o $forceConfnew -o $forceConfdef';\n\n"; 
+
+    return $vars;
+}
+
+
+# Method: networkConfig
+# FIXME documentation
+sub networkConfig # (network) returns string
+{
+    my ($self, $network) = @_;
+
+    my $config = '';
+	$config .= "cat << EOF > /etc/network/interfaces\n";
+    $config .= "auto lo\n";
+	$config .= "iface lo inet loopback\n";
+    foreach my $iface (@{$network->interfaces()}) {
+    	$config .= "\n";
+        $config .= $self->_interfaceConfig($iface);
+    }
+	$config .= "EOF\n";
+	$config .= "\n";
+	$config .= "# Bring up all the interfaces\n";
+	$config .= "ifup -a\n";
+
+    return $config;
+}
+
+# Method: hostnameConfig
+# FIXME documentation
+sub hostnameConfig # (hostname) returns string
+{
+    my ($self, $hostname) = @_;
+
+    return "echo $hostname > " . '$MOUNT/etc/hostname';
+}
+
+# Method: hostsConfig
+# FIXME documentation
+sub hostsConfig # (hostname) returns string
+{
+    my ($self, $hostname) = @_;
+
+    my $config = '';
+
+    $config .= 'cat << EOF > $MOUNT/etc/hosts'."\n";
+    $config .= "127.0.0.1 localhost.localdomain localhost\n";
+    $config .= "127.0.1.1 $hostname.localdomain $hostname\n";
+    $config .= "\n";
+    $config .= "# The following lines are desirable for IPv6 capable hosts\n";
+    $config .= "::1     ip6-localhost ip6-loopback\n";
+    $config .= "fe00::0 ip6-localnet\n";
+    $config .= "ff00::0 ip6-mcastprefix\n";
+    $config .= "ff02::1 ip6-allnodes\n";
+    $config .= "ff02::2 ip6-allrouters\n";
+    $config .= "ff02::3 ip6-allhosts\n";
+    $config .= "EOF";
+
+    return $config;
+}
+
+# Method: storeMasterAddress
+# FIXME documentation
+sub storeMasterAddress # (address) returns string
+{
+    my ($self, $address) = @_;
+
+    return "echo $address > " . '$MOUNT/var/local/anste.manster'; 
+}
+
+# Method: copyToMountCommand
+# FIXME documentation
+sub copyToMountCommand # (orig, dest) returns string
+{
+    my ($self, $orig, $dest) = @_;
+
+    return "cp $orig " . '$MOUNT' . $dest;
+}
+
+# Method: createMountDirCommand
+# FIXME documentation
+sub createMountDirCommand # (path) returns string
+{
+    my ($self, $path) = @_;
+
+    return 'mkdir -p $MOUNT' . $path;
+}
+
+sub _interfaceConfig # (iface)
+{
+    my ($self, $iface) = @_;
+
+    my $config = '';
+
+    my $name = $iface->name();
+	$config .= "auto $name\n";
+	if ($iface->type() == ANSTE::Scenario::NetworkInterface->IFACE_TYPE_DHCP) {
+        $config .= "iface $name inet dhcp\n";
+	} else {
+		my $address = $iface->address();
+		my $netmask = $iface->netmask();
+		my $gateway = $iface->gateway();
+		$config .= "iface $name inet static\n";
+		$config .= "address $address\n";
+		$config .= "netmask $netmask\n";
+		$config .= "gateway $gateway\n";
+	}
+}
+
 sub _installPackages # (list)
 {
     my ($self, $list) = @_;

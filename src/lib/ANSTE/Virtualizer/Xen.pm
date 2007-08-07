@@ -122,9 +122,10 @@ sub imageFile # (path, name)
 #
 # Parameters:
 #
-#   baseimage - original image name
-#   newimage  - an <ANSTE::Deploy::Image> object with the configuration of
-#               the image
+#   baseimage - an <ANSTE::Deploy::BaseImage> object with the configuration
+#               of the base image
+#   newimage  - an <ANSTE::Deploy::Image> object with the configuration 
+#               of the new image
 #
 # Returns:
 #   
@@ -136,9 +137,10 @@ sub createImageCopy # (baseimage, newimage)
 
     my $path = ANSTE::Config->instance()->imagePath();
 
-    my $imagename = $newimage->name();
+    my $basename = $baseimage->name();
+    my $newname = $newimage->name();
 
-    dircopy("$path/$baseimage", "$path/$imagename");
+    dircopy("$path/$basename", "$path/$newname");
 
     # TODO: Change /etc/hostname and /etc/hosts with the new values
 
@@ -147,7 +149,7 @@ sub createImageCopy # (baseimage, newimage)
 
     # Writes the xen configuration file
     my $FILE;
-    my $configFile = "/etc/xen/$imagename.cfg";
+    my $configFile = "/etc/xen/$newname.cfg";
     open($FILE, '>', $configFile) or return 0;
     print $FILE $config;
     close($FILE) or return 0; 

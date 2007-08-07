@@ -19,17 +19,21 @@ use strict;
 use warnings;
 
 use ANSTE::Scenario::Host;
+use ANSTE::Config;
 
-# TODO: Use System::Debian for implement this
-
-sub new # (host, system) returns new ServerScriptGen object
+sub new # (host) returns new ServerScriptGen object
 {
-	my ($class, $host, $system) = @_;
+	my ($class, $host) = @_;
 
 	my $self = {};
 	
 	$self->{host} = $host;
-	$self->{system} = $system;
+    my $system = ANSTE::Config->instance()->system();
+
+    eval("use ANSTE::System::$system");
+    die "Can't load package $system: $@" if $@;
+
+    $self->{system} = "ANSTE::System::$system"->new();
 
 	bless($self, $class);
 
@@ -54,50 +58,25 @@ sub _writePackageInstall # (file)
 {
 	my ($self, $file) = @_;
 
+    my $system = $self->{system};
+    
 	print $file "# Install packages\n";
-#	FIXME: my $command = $self->{system}->command("package-install");
-    my $command = 'apt-get install -y';
 	my @packages = @{$self->{host}->packages()->list()};
-	print $file "$command ".join(" ", @packages)."\n\n";
-}
-
-sub _writeInterface # (file, iface)
-{
-    my ($self, $file, $iface) = @_;
-
-    my $name = $iface->name();
-	print $file "auto $name\n";
-	if ($iface->type() == ANSTE::Scenario::NetworkInterface->IFACE_TYPE_DHCP) {
-		print $file "iface $name inet dhcp\n";
-	} else {
-		my $address = $iface->address();
-		my $netmask = $iface->netmask();
-		my $gateway = $iface->gateway();
-		print $file "iface $name inet static\n";
-		print $file "address $address\n";
-		print $file "netmask $netmask\n";
-		print $file "gateway $gateway\n";
-	}
+    my $command = $system->installPackagesCommand(@packages);
+	print $file "$command\n\n";
 }
 
 sub _writeNetworkConfig # (file)
 {
 	my ($self, $file) = @_;
 
+    my $system = $self->{system};
 	my $network = $self->{host}->network();
 
-	print $file "# Write /etc/network/interfaces\n";
-	print $file "cat << EOF > /etc/network/interfaces\n";
-	print $file "auto lo\n";
-	print $file "iface lo inet loopback\n";
-    foreach my $iface (@{$network->interfaces()}) {
-	    print $file "\n";
-        $self->_writeInterface($file, $iface);
-    }
-	print $file "EOF\n";
-	print $file "\n";
-	print $file "# Bring up all the interfaces\n";
-	print $file "ifup -a\n";
+    my $config = $system->networkConfig($network);
+
+	print $file "# Write network configuration\n";
+    print $file $config;
 }
 
 1;
