@@ -30,7 +30,7 @@
 		<name>hostName</name>
 		<desc>hostDesc</desc>
         <baseimage>test</baseimage>
-		<network type="dhcp">
+		<network>
             <interface type="dhcp">
                 <name>eth0</name>
             </interface>

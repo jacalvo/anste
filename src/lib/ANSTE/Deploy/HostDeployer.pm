@@ -29,7 +29,7 @@ use ANSTE::Config;
 
 use threads;
 
-use constant SETUP_SCRIPT => 'setup.sh';
+use constant SETUP_SCRIPT => '/tmp/setup.sh';
 
 sub new # (host) returns new HostDeployer object
 {
@@ -95,15 +95,15 @@ sub _copyBaseImage
 
     my $baseimage = $host->baseImage();
 
-    my $name = $host->name();
+    my $hostname = $host->name();
     my $memory = $baseimage->memory();
     my $ip = $self->{ip};
 
-    my $newimage = new ANSTE::Deploy::Image(name => $name,
+    my $newimage = new ANSTE::Deploy::Image(name => $hostname,
                                             memory => $memory,
                                             ip => $ip);
 
-    print "Creating a copy of the base image\n";
+    print "[$hostname] Creating a copy of the base image\n";
     $virtualizer->createImageCopy($baseimage, $newimage);
 }
 
@@ -111,16 +111,17 @@ sub _updateHostname
 {
     my ($self) = @_;
 
-    my $host = $self->{host};
+    my $hostname = $self->{host}->name();
 
-    print "Updating hostname on the new image\n";
+    print "[$hostname] Updating hostname on the new image\n";
 
-    my $image = new ANSTE::Deploy::Image(name => $host->name());                                        
+    my $image = new ANSTE::Deploy::Image(name => $hostname);
+
     my $cmd = new ANSTE::System::ImageCommands($image);
 
     $cmd->mount() or die "Can't mount image: $!";
 
-    $cmd->copyHostFiles($host->name()) or die "Can't copy files: $!";
+    $cmd->copyHostFiles($hostname) or die "Can't copy files: $!";
 
     $cmd->umount() or die "Can't unmount image: $!";
 }
@@ -132,19 +133,17 @@ sub _createVirtualMachine # returns IP address string
     my $host = $self->{host};
     my $virtualizer = $self->{virtualizer};
 
-    my $name = $host->name();
+    my $hostname = $host->name();
     my $ip = $self->{ip};
 
-    print "Creating virtual machine for host $name...\n"; 
-    print "It will be accesible under $ip.\n"; 
-    print "\n";
+    print "[$hostname] Creating virtual machine ($ip)\n"; 
 
-    $virtualizer->createVM($name) or die "Can't create VM $name: $!";
+    $virtualizer->createVM($hostname) or die "Can't create VM $hostname: $!";
 
-    print "Waiting for the system start...\n";
+    print "[$hostname] Waiting for the system start...\n";
     my $waiter = ANSTE::Comm::HostWaiter->instance();
-    $waiter->waitForReady($name);
-    print "System is up\n";
+    $waiter->waitForReady($hostname);
+    print "[$hostname] System is up\n";
 }
 
 sub _generateSetupScript # (script)
@@ -154,12 +153,15 @@ sub _generateSetupScript # (script)
     my $host = $self->{host};
     my $system = $self->{system};
 
-    print "Generating setup script...\n";
+    my $hostname = $host->name();
+
+    print "[$hostname] Generating setup script...\n";
     my $generator = new ANSTE::System::SetupScriptGen($host, $system);
     my $FILE;
     open($FILE, '>', $script) or die "Can't open file $script: $!";
     $generator->writeScript($FILE);
     close($FILE) or die "Can't close file $script: $!";
+    $generator->writeScript(\*STDOUT);
 }
 
 sub _executeSetupScript # (host, script)
@@ -172,32 +174,34 @@ sub _executeSetupScript # (host, script)
     my $PORT = ANSTE::Config->instance()->anstedPort(); 
     $client->connect("http://$host:$PORT");
 
-    print "Uploading setup script...\n";
+    my $hostname = $self->{host}->name();
+
+    print "[$hostname] Uploading setup script...\n";
     $client->put($script);
 
-    print "Executing setup script...\n";
+    print "[$hostname] Executing setup script...\n";
     $client->exec($script, "$script.out");
 
-    print "Script executed with the following output:\n";
+    print "[$hostname] Script executed with the following output:\n";
     $client->get("$script.out");
-    $self->_printOutput("$script.out");
+#FIXME    $self->_printOutput($hostname, "$script.out");
 
-    print "Deleting generated files...\n";
+    print "[$hostname] Deleting generated files...\n";
     $client->del($script);
     $client->del("$script.out");
     unlink($script);
     unlink("$script.out");
 }
 
-sub _printOutput # (file)
+sub _printOutput # (hostname, file)
 {
-    my ($self, $file) = @_;
+    my ($self, $hostname, $file) = @_;
 
     my $FILE;
     open($FILE, '<', $file) or die "Can't open file $file: $!";
     my @lines = <$FILE>;
-    foreach (@lines) {
-        print;
+    foreach my $line (@lines) {
+        print "[$hostname] $line";
     }
     print "\n";
     close($FILE) or die "Can't close file $file: $!";

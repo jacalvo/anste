@@ -21,15 +21,15 @@ use strict;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use ANSTE::Deploy::ImageCreator;
-use ANSTE::Deploy::Image;
+use ANSTE::Deploy::ScenarioDeployer;
+use ANSTE::Scenario::Scenario;
 use ANSTE::Config;
 
 my $imageFile = $ARGV[0];
 
 sub usage
 {
-    print "Usage: create-base-image <imagefile.xml>\n";
+    print "Usage: anste <scenario.xml>\n";
 }
 
 if (@ARGV < 1) {
@@ -37,10 +37,8 @@ if (@ARGV < 1) {
     exit(1);
 }
 
-my $image = new ANSTE::Deploy::Image();
-$image->loadFromFile($imageFile);
-my $ipRange = ANSTE::Config->instance()->ipRange();
-$image->setIp("$ipRange.191");
+my $scenario = new ANSTE::Scenario::Scenario;
+$scenario->loadFromFile($ARGV[0]);
 
-my $creator = new ANSTE::Deploy::ImageCreator($image);
-$creator->createImage();
+my $deployer = new ANSTE::Deploy::ScenarioDeployer($scenario);
+$deployer->deploy();

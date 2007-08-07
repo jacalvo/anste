@@ -49,18 +49,21 @@ sub deploy
 
     my $ipRange = ANSTE::Config->instance()->ipRange();
 
-    my $number = 0;
+    my $number = 191;
     foreach my $host (@{$scenario->hosts()}) {
         my $deployer = new ANSTE::Deploy::HostDeployer($host);
         my $ip = "$ipRange.$number";
+        my $hostname = $host->name();
+        print "[$hostname] starting\n";
         $deployer->startDeployThread($ip);
         push(@deployers, $deployer);
+        $number++;
     }
 
     foreach my $deployer (@deployers) {
         $deployer->waitForFinish();
         my $host = $deployer->{host}->name();
-        print "$host finished\n";
+        print "[$host] finished\n";
     }
 }
 

@@ -30,7 +30,7 @@
 		<name>hostname2</name>
 		<desc>Blah blah blah</desc>
         <baseimage>sarge-base</baseimage>
-		<network type="dhcp">
+		<network>
             <interface type="dhcp">
                 <name>eth0</name>
             </interface>
@@ -46,7 +46,7 @@
 		<name>hostname3</name>
 		<desc>Bleh bleh bleh</desc>
         <baseimage>sarge-ebox-base</baseimage>
-		<network type="dhcp">
+		<network>
             <interface type="dhcp">
                 <name>eth0</name>
             </interface>
