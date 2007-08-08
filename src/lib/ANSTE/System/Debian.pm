@@ -20,6 +20,8 @@ use base 'ANSTE::System::System';
 use strict;
 use warnings;
 
+use ANSTE::Config;
+
 # Method: mountImage 
 #
 #   Overriden method that executes mount with
@@ -217,8 +219,31 @@ sub networkConfig # (network) returns string
     }
 	$config .= "EOF\n";
 	$config .= "\n";
-	$config .= "# Bring up all the interfaces\n";
-	$config .= "ifup -a";
+
+    return $config;
+}
+
+sub initialNetworkConfig # (ip) returns string
+{
+    my ($self, $ip) = @_;
+
+    my $iface = 'eth0';
+    my $address = $ip;
+    my $netmask = '255.255.255.0';
+    # TODO: Separate this from here, pass a NetworkInterface
+    # object to this function and then call _interfaceConfig
+    my $gateway = ANSTE::Config->instance()->gateway(); 
+
+    my $config = '';
+	$config .= "cat << EOF > \$MOUNT/etc/network/interfaces\n";
+    $config .= "auto lo\n";
+	$config .= "iface lo inet loopback\n\n";
+	$config .= "auto $iface\n";
+	$config .= "iface $iface inet static\n";
+	$config .= "address $address\n";
+	$config .= "netmask $netmask\n";
+	$config .= "gateway $gateway\n";
+	$config .= "EOF";
 
     return $config;
 }

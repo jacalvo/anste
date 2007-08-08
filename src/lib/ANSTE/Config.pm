@@ -110,4 +110,11 @@ sub ipRange
     return $self->{config}->{'comm'}->{'ip-range'};
 }
 
+sub gateway
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'comm'}->{'gateway'};
+}
+
 1;

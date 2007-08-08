@@ -18,16 +18,17 @@ package ANSTE::System::HostInstallGen;
 use strict;
 use warnings;
 
-use ANSTE::Scenario::Host;
+use ANSTE::Deploy::Image;
 use ANSTE::Config;
 
-sub new # (hostname) returns new CommInstallGen object
+sub new # (image) returns new HostInstallGen object
 {
-	my ($class, $hostname) = @_;
+	my ($class, $image) = @_;
 
 	my $self = {};
 
-    $self->{hostname} = $hostname;
+    $self->{hostname} = $image->name();
+    $self->{ip} = $image->ip();
     my $system = ANSTE::Config->instance()->system();
 
     eval("use ANSTE::System::$system");
@@ -56,8 +57,8 @@ sub writeScript # (file)
     print $file 'MOUNT=$1'."\n\n";
 
     $self->_writeHostnameConfig($file);
-
     $self->_writeHostsConfig($file);
+	$self->_writeInitialNetworkConfig($file);
 }
 
 sub _writeHostnameConfig # (file)
@@ -80,6 +81,19 @@ sub _writeHostsConfig # (file)
 
     print $file "# Write hosts configuration\n";
     my $config = $system->hostsConfig($host);
+    print $file "$config\n\n";
+}
+
+sub _writeInitialNetworkConfig # (file)
+{
+	my ($self, $file) = @_;
+
+    my $system = $self->{system};
+	my $ip = $self->{ip};
+
+    my $config = $system->initialNetworkConfig($ip);
+
+	print $file "# Write initial network configuration\n";
     print $file "$config\n\n";
 }
 

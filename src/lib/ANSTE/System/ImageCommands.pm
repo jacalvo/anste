@@ -123,15 +123,16 @@ sub copyBaseFiles
     return $ret;
 }
 
-sub copyHostFiles # (hostname)
+sub copyHostFiles 
 {
-    my ($self, $hostname) = @_;
+    my ($self) = @_;
 
     my $mountPoint = $self->{mountPoint};
+    my $image = $self->{image};
     my $system = $self->{system};
 
     # Generates the installation script on a temporary file
-    my $gen = new ANSTE::System::HostInstallGen($hostname);
+    my $gen = new ANSTE::System::HostInstallGen($image);
     my ($fh, $filename) = tempfile() or die "Can't create temporary file: $!";
     $gen->writeScript($fh);
     close($fh) or die "Can't close temporary file: $!";

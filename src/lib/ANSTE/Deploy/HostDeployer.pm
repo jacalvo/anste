@@ -41,6 +41,7 @@ sub new # (host) returns new HostDeployer object
     my $config = ANSTE::Config->instance();
     my $system = $config->system();
     my $virtualizer = $config->virtualizer();
+    my $image = undef;
 
     eval("use ANSTE::System::$system");
     die "Can't load package $system: $@" if $@;
@@ -61,6 +62,7 @@ sub startDeployThread # (ip)
     my ($self, $ip) = @_;
 
     $self->{thread} = threads->create('deploy', $self, $ip);
+
 }
 
 sub waitForFinish
@@ -74,7 +76,13 @@ sub deploy # (ip)
 {
     my ($self, $ip) = @_;
 
-    $self->{ip} = $ip;
+    my $host = $self->{host};
+    my $hostname = $host->name();
+    my $memory = $host->baseImage()->memory();
+
+    $self->{image} = new ANSTE::Deploy::Image(name => $hostname,
+                                              memory => $memory,
+                                              ip => $ip);
    
     $self->_copyBaseImage() or die "Can't copy base image";
 
@@ -91,17 +99,11 @@ sub _copyBaseImage
     my ($self) = @_;
 
     my $host = $self->{host};
+    my $hostname = $host->name();
     my $virtualizer = $self->{virtualizer};
 
     my $baseimage = $host->baseImage();
-
-    my $hostname = $host->name();
-    my $memory = $baseimage->memory();
-    my $ip = $self->{ip};
-
-    my $newimage = new ANSTE::Deploy::Image(name => $hostname,
-                                            memory => $memory,
-                                            ip => $ip);
+    my $newimage = $self->{image}; 
 
     print "[$hostname] Creating a copy of the base image\n";
     $virtualizer->createImageCopy($baseimage, $newimage);
@@ -115,13 +117,13 @@ sub _updateHostname
 
     print "[$hostname] Updating hostname on the new image\n";
 
-    my $image = new ANSTE::Deploy::Image(name => $hostname);
+    my $image = $self->{image}; 
 
     my $cmd = new ANSTE::System::ImageCommands($image);
 
     $cmd->mount() or die "Can't mount image: $!";
 
-    $cmd->copyHostFiles($hostname) or die "Can't copy files: $!";
+    $cmd->copyHostFiles() or die "Can't copy files: $!";
 
     $cmd->umount() or die "Can't unmount image: $!";
 }
@@ -134,7 +136,7 @@ sub _createVirtualMachine # returns IP address string
     my $virtualizer = $self->{virtualizer};
 
     my $hostname = $host->name();
-    my $ip = $self->{ip};
+    my $ip = $self->{image}->ip();
 
     print "[$hostname] Creating virtual machine ($ip)\n"; 
 
