@@ -324,6 +324,17 @@ sub firewallDefaultRules # returns string
     return $config;
 }
 
+sub enableNAT # (iface)
+{
+    my ($self, $iface) = @_;
+
+    # TODO: Maybe this will need to be turned off after ANSTE deployment
+    $self->execute('echo 1 > /proc/sys/net/ipv4/ip_forward');
+    # TODO: This rule should be more restrictive
+#   $self->execute("iptables -t nat -A POSTROUTING -o $iface -j MASQUERADE");
+    #FIXME: Let's try first without it
+}
+
 sub _interfaceConfig # (iface)
 {
     my ($self, $iface) = @_;

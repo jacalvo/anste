@@ -59,6 +59,7 @@ sub writeScript # (file)
     $self->_writeHostnameConfig($file);
     $self->_writeHostsConfig($file);
 	$self->_writeInitialNetworkConfig($file);
+    $self->_writeMasterAddress($file);
 }
 
 sub _writeHostnameConfig # (file)
@@ -95,6 +96,22 @@ sub _writeInitialNetworkConfig # (file)
 
 	print $file "# Write initial network configuration\n";
     print $file "$config\n\n";
+}
+
+sub _writeMasterAddress # (file)
+{
+	my ($self, $file) = @_;
+
+    my $system = $self->{system};
+
+    my $config = ANSTE::Config->instance();
+    my $port = $config->masterPort();
+    my $masterIP = '192.168.45.139'; # FIXME
+    my $MASTER = "http://$masterIP:$port";
+
+    print $file "# Stores the master address so anste-slave can read it\n";
+    my $command = $system->storeMasterAddress($MASTER);
+    print $file "$command\n";
 }
 
 1;

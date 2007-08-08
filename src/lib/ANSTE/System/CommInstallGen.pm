@@ -62,8 +62,9 @@ sub writeScript # (file)
     $self->_writeCopyFiles($file);
     $self->_writeHostsConfig($file);
 
-    my $port = ANSTE::Config->instance->masterPort();
-    my $masterIP = '192.168.45.111'; # FIXME: Get it well
+    my $config = ANSTE::Config->instance();
+    my $port = $config->masterPort();
+    my $masterIP = '192.168.45.139'; # FIXME
     my $MASTER = "http://$masterIP:$port";
 
     print $file "# Stores the master address so anste-slave can read it\n";

@@ -134,6 +134,9 @@ sub _createVirtualMachine # returns IP address string
 
     my $host = $self->{host};
     my $virtualizer = $self->{virtualizer};
+    my $system = $self->{system};
+
+    $system->enableNAT('eth1'); # FIXME: interface hardcoded!!
 
     my $hostname = $host->name();
     my $ip = $self->{image}->ip();
