@@ -96,7 +96,7 @@ sub _writeCopyFiles # (file)
                     'bin/anste-slave' => '/usr/local/bin',
                     'lib/ANSTE/Comm/*.pm' => $commPath,
                     'lib/ANSTE/Exceptions/*.pm' => $excPath,
-                    'data/conf/ansted' => '/etc/init.d/');                 
+                    'scripts/ansted' => '/etc/init.d/');                 
     
     foreach my $orig (keys %fileDest) {
         $command = $system->copyToMountCommand($orig, $fileDest{$orig});
