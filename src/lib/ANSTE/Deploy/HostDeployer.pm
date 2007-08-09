@@ -29,6 +29,7 @@ use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 
 use threads;
+use Error qw(:try);
 
 use constant SETUP_SCRIPT => '/tmp/setup.sh';
 
@@ -133,9 +134,11 @@ sub _updateHostname
 
     $cmd->mount() or die "Can't mount image: $!";
 
-    $cmd->copyHostFiles() or die "Can't copy files: $!";
-
-    $cmd->umount() or die "Can't unmount image: $!";
+    try {
+        $cmd->copyHostFiles() or die "Can't copy files: $!";
+    } finally {
+        $cmd->umount() or die "Can't unmount image: $!";
+    };
 }
 
 sub _createVirtualMachine # returns IP address string
@@ -199,7 +202,7 @@ sub _executeSetupScript # (host, script)
 
     print "[$hostname] Script executed with the following output:\n";
     $client->get("$script.out");
-#FIXME    $self->_printOutput($hostname, "$script.out");
+    $self->_printOutput($hostname, "$script.out");
 
     print "[$hostname] Deleting generated files...\n";
     $client->del($script);

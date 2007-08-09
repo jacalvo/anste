@@ -20,7 +20,7 @@ use warnings;
 
 use ANSTE::Scenario::Scenario;
 use ANSTE::Deploy::HostDeployer;
-use ANSTE::Deploy::WaiterServer;
+use ANSTE::Comm::WaiterServer;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 
@@ -48,7 +48,7 @@ sub deploy
     my @deployers;
 
     # Starts Master Server thread
-    my $server = new ANSTE::Deploy::WaiterServer();
+    my $server = new ANSTE::Comm::WaiterServer();
     $server->startThread();
 
     my $ipRange = ANSTE::Config->instance()->ipRange();

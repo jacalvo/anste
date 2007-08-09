@@ -13,7 +13,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::System::CommInstallGen;
+package ANSTE::ScriptGen::CommInstallGen;
 
 use strict;
 use warnings;
@@ -88,10 +88,14 @@ sub _writeCopyFiles # (file)
     my $commPath = '/usr/local/lib/site_perl/ANSTE/Comm/';
     my $command = $system->createMountDirCommand($commPath);
     print $file "$command\n";
+    my $excPath = '/usr/local/lib/site_perl/ANSTE/Exceptions/';
+    $command = $system->createMountDirCommand($excPath);
+    print $file "$command\n";
 
     my %fileDest = ('bin/ansted' => '/usr/local/bin/',
                     'bin/anste-slave' => '/usr/local/bin',
                     'lib/ANSTE/Comm/*.pm' => $commPath,
+                    'lib/ANSTE/Exceptions/*.pm' => $excPath,
                     'data/conf/ansted' => '/etc/init.d/');                 
     
     foreach my $orig (keys %fileDest) {

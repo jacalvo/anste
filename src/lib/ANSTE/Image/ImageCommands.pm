@@ -13,7 +13,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::System::ImageCommands;
+package ANSTE::Image::ImageCommands;
 
 use warnings;
 use strict;
@@ -21,10 +21,10 @@ use strict;
 use ANSTE::Config;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::HostWaiter;
-use ANSTE::System::BaseScriptGen;
-use ANSTE::System::CommInstallGen;
-use ANSTE::System::HostInstallGen;
-use ANSTE::Deploy::Image;
+use ANSTE::ScriptGen::BaseScriptGen;
+use ANSTE::ScriptGen::CommInstallGen;
+use ANSTE::ScriptGen::HostInstallGen;
+use ANSTE::Image::Image;
 use ANSTE::Exceptions::MissingArgument;
 
 use Cwd;
@@ -111,7 +111,7 @@ sub copyBaseFiles
     my $system = $self->{system};
 
     # Generates the installation script on a temporary file
-    my $gen = new ANSTE::System::CommInstallGen($image);
+    my $gen = new ANSTE::ScriptGen::CommInstallGen($image);
     my ($fh, $filename) = tempfile() or die "Can't create temporary file: $!";
     $gen->writeScript($fh);
     close($fh) or die "Can't close temporary file: $!";
@@ -136,7 +136,7 @@ sub copyHostFiles
     my $system = $self->{system};
 
     # Generates the installation script on a temporary file
-    my $gen = new ANSTE::System::HostInstallGen($image);
+    my $gen = new ANSTE::ScriptGen::HostInstallGen($image);
     my ($fh, $filename) = tempfile() or die "Can't create temporary file: $!";
     $gen->writeScript($fh);
     close($fh) or die "Can't close temporary file: $!";
@@ -203,7 +203,7 @@ sub prepareSystem
     $self->_executeScripts($client, $image->preScripts());
 
     my $setupScript = '/tmp/install.sh';
-    my $gen = new ANSTE::System::BaseScriptGen($image);
+    my $gen = new ANSTE::ScriptGen::BaseScriptGen($image);
 
     my $FILE;
     open($FILE, '>', $setupScript) 

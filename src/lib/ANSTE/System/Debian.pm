@@ -91,7 +91,7 @@ sub installBasePackages
     $self->execute('apt-get update') 
         or die "apt-get update failed: $!";
 
-    my $ret = $self->_installPackages('libsoap-lite-perl');
+    my $ret = $self->_installPackages('libsoap-lite-perl liberror-perl');
 
     $self->execute('apt-get clean') 
         or die "apt-get clean failed: $!";

@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 # Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,32 +13,23 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-use warnings;
 use strict;
+use warnings;
 
-use FindBin qw($Bin);
-use lib "$Bin/../lib";
-
-use ANSTE::Image::ImageCreator;
 use ANSTE::Image::Image;
-use ANSTE::Config;
 
-my $imageFile = $ARGV[0];
+use Test::More tests => 5;
 
-sub usage
-{
-    print "Usage: create-base-image <imagefile.xml>\n";
-}
+my $image = new ANSTE::Image::Image(name => 'Name',
+                                    ip => '192.168.0.150',
+                                    memory => '256M');
 
-if (@ARGV < 1) {
-    usage();
-    exit(1);
-}
+is($image->name(), 'Name', 'image->name == Name');
+is($image->ip(), '192.168.0.150', 'image->ip == 192.168.0.150');
+is($image->memory(), '256M', 'image->memory == 256M');
 
-my $image = new ANSTE::Image::Image();
-$image->loadFromFile($imageFile);
-my $ipRange = ANSTE::Config->instance()->ipRange();
-$image->setIp("$ipRange.191");
+$image->setIp('192.168.0.160');
+is($image->ip(), '192.168.0.160', 'image set new ip');
 
-my $creator = new ANSTE::Image::ImageCreator($image);
-$creator->createImage();
+$image->setMemory('512M');
+is($image->memory(), '512M', 'image set new memory');

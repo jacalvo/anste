@@ -21,7 +21,7 @@ use strict;
 use warnings;
 
 use ANSTE::Config;
-use ANSTE::Deploy::Image;
+use ANSTE::Image::Image;
 use ANSTE::Exceptions::MissingArgument;
 
 use File::Copy;

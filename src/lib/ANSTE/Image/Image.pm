@@ -13,7 +13,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::Deploy::Image;
+package ANSTE::Image::Image;
 
 use base 'ANSTE::Scenario::BaseImage';
 
@@ -28,14 +28,15 @@ sub new # returns new Image object
 
 	my $self = $class->SUPER::new();
 
-    exists $params{name} or
-        throw ANSTE::Exceptions::MissingArgument('name');
-    exists $params{ip} or
-        throw ANSTE::Exceptions::MissingArgument('ip');
-	
-	$self->{name} = $params{name};
-	$self->{ip} = $params{ip};
-	$self->{memory} = $params{memory}; 
+    if (exists $params{name}) {
+    	$self->{name} = $params{name};
+    }
+    if (exists $params{ip}) {
+	    $self->{ip} = $params{ip};
+    }
+    if (exists $params{memory}) {
+    	$self->{memory} = $params{memory}; 
+    }
 
 	bless($self, $class);
 
@@ -44,15 +45,17 @@ sub new # returns new Image object
 
 sub ip # returns ip string
 {
-	my $self = shift;
+	my ($self) = @_;
 
 	return $self->{ip};
 }
 
 sub setIp # ip string
 {
-	my $self = shift;	
-	my $ip = shift;
+	my ($self, $ip) = @_;
+
+    defined $ip or
+        throw ANSTE::Exceptions::MissingArgument('ip');
 
 	$self->{ip} = $ip;
 }
@@ -67,6 +70,9 @@ sub memory # returns memory string
 sub setMemory # (memory)
 {
 	my ($self, $memory) = @_;
+
+    defined $memory or
+        throw ANSTE::Exceptions::MissingArgument('memory');
 
 	$self->{memory} = $memory;
 }

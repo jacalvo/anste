@@ -13,12 +13,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::System::HostInstallGen;
+package ANSTE::ScriptGen::HostInstallGen;
 
 use strict;
 use warnings;
 
-use ANSTE::Deploy::Image;
+use ANSTE::Image::Image;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 
