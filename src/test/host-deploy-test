@@ -25,7 +25,7 @@ use ANSTE::Scenario::Scenario;
 use ANSTE::Deploy::HostDeployer;
 use ANSTE::Deploy::WaiterServer;
 
-use constant SCENARIO => 'scenario.xml';
+use constant SCENARIO => 'small.xml';
 
 my $scenario = new ANSTE::Scenario::Scenario;
 $scenario->loadFromFile(SCENARIO);

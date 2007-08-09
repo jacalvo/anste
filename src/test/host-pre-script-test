@@ -21,13 +21,15 @@ use strict;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use ANSTE::Scenario::BaseImage;
-use ANSTE::System::CommInstallGen;
+use ANSTE::Image::Image;
+use ANSTE::ScriptGen::HostPreInstall;
 
-use constant IMAGE => 'sarge-ebox-base.xml';
+use constant HOSTNAME => 'hostname1';
+use constant IP => '192.168.45.192';
 
-my $image = new ANSTE::Scenario::BaseImage;
-$image->loadFromFile(IMAGE);
-my $gen = new ANSTE::System::CommInstallGen($image);
+my $image = new ANSTE::Image::Image(name => HOSTNAME,
+                                    ip => IP);
+
+my $gen = new ANSTE::ScriptGen::HostPreInstall($image);
 my $file = \*STDOUT;
 $gen->writeScript($file);

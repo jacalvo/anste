@@ -21,15 +21,15 @@ use strict;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use ANSTE::Deploy::Image;
-use ANSTE::System::HostInstallGen;
+use ANSTE::Scenario::Scenario;
+use ANSTE::ScriptGen::HostImageSetup;
 
-use constant HOSTNAME => 'hostname1';
-use constant IP => '192.168.45.192';
+use constant SCENARIO => 'scenario.xml';
 
-my $image = new ANSTE::Deploy::Image(name => HOSTNAME,
-                                     ip => IP);
-
-my $gen = new ANSTE::System::HostInstallGen($image);
+my $scenario = new ANSTE::Scenario::Scenario;
+$scenario->loadFromFile(SCENARIO);
+my $hosts = $scenario->hosts();
+my $gen = new ANSTE::ScriptGen::HostImageSetup($hosts->[0], 
+                                               $scenario->system());
 my $file = \*STDOUT;
 $gen->writeScript($file);

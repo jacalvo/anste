@@ -21,14 +21,13 @@ use strict;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use ANSTE::Scenario::Scenario;
-use ANSTE::System::SetupScriptGen;
+use ANSTE::Scenario::BaseImage;
+use ANSTE::ScriptGen::BaseImageSetup;
 
-use constant SCENARIO => 'scenario.xml';
+use constant IMAGE => 'sarge-ebox-base.xml';
 
-my $scenario = new ANSTE::Scenario::Scenario;
-$scenario->loadFromFile(SCENARIO);
-my $hosts = $scenario->hosts();
-my $gen = new ANSTE::System::SetupScriptGen($hosts->[0], $scenario->system());
+my $image = new ANSTE::Scenario::BaseImage;
+$image->loadFromFile(IMAGE);
+my $gen = new ANSTE::ScriptGen::BaseImageSetup($image);
 my $file = \*STDOUT;
 $gen->writeScript($file);

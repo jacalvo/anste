@@ -21,7 +21,7 @@ use strict;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use ANSTE::Image::ImageCreator;
+use ANSTE::Image::Creator;
 use ANSTE::Image::Image;
 use ANSTE::Config;
 
@@ -42,5 +42,5 @@ $image->loadFromFile($imageFile);
 my $ipRange = ANSTE::Config->instance()->ipRange();
 $image->setIp("$ipRange.191");
 
-my $creator = new ANSTE::Image::ImageCreator($image);
+my $creator = new ANSTE::Image::Creator($image);
 $creator->createImage();

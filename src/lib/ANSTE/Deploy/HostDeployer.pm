@@ -19,12 +19,12 @@ use strict;
 use warnings;
 
 use ANSTE::Scenario::Host;
-use ANSTE::System::ImageCommands;
-use ANSTE::System::SetupScriptGen;
+use ANSTE::Image::Commands;
+use ANSTE::ScriptGen::HostImageSetup;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::MasterServer;
 use ANSTE::Comm::HostWaiter;
-use ANSTE::Deploy::Image;
+use ANSTE::Image::Image;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 
@@ -91,9 +91,9 @@ sub deploy # (ip)
     my $hostname = $host->name();
     my $memory = $host->baseImage()->memory();
 
-    $self->{image} = new ANSTE::Deploy::Image(name => $hostname,
-                                              memory => $memory,
-                                              ip => $ip);
+    $self->{image} = new ANSTE::Image::Image(name => $hostname,
+                                             memory => $memory,
+                                             ip => $ip);
    
     $self->_copyBaseImage() or die "Can't copy base image";
 
@@ -130,7 +130,7 @@ sub _updateHostname
 
     my $image = $self->{image}; 
 
-    my $cmd = new ANSTE::System::ImageCommands($image);
+    my $cmd = new ANSTE::Image::Commands($image);
 
     $cmd->mount() or die "Can't mount image: $!";
 
@@ -169,12 +169,10 @@ sub _generateSetupScript # (script)
     my ($self, $script) = @_;
     
     my $host = $self->{host};
-    my $system = $self->{system};
-
     my $hostname = $host->name();
 
     print "[$hostname] Generating setup script...\n";
-    my $generator = new ANSTE::System::SetupScriptGen($host, $system);
+    my $generator = new ANSTE::ScriptGen::HostImageSetup($host);
     my $FILE;
     open($FILE, '>', $script) or die "Can't open file $script: $!";
     $generator->writeScript($FILE);

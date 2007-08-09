@@ -13,12 +13,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::Image::ImageCreator;
+package ANSTE::Image::Creator;
 
 use warnings;
 use strict;
 
-use ANSTE::Image::ImageCommands;
+use ANSTE::Image::Commands;
 use ANSTE::Comm::WaiterServer;
 use ANSTE::Image::Image;
 use ANSTE::Exceptions::MissingArgument;
@@ -46,7 +46,7 @@ sub createImage
 
     my $image = $self->{image};
 
-    my $cmd = new ANSTE::Image::ImageCommands($image);
+    my $cmd = new ANSTE::Image::Commands($image);
 
     $cmd->create() or die 'Error creating base image.';
 

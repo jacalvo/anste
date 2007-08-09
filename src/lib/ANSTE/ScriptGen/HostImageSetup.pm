@@ -13,7 +13,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::ScriptGen::SetupScriptGen;
+package ANSTE::ScriptGen::HostImageSetup;
 
 use strict;
 use warnings;
@@ -22,7 +22,7 @@ use ANSTE::Scenario::Host;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 
-sub new # (host) returns new ServerScriptGen object
+sub new # (host) returns new HostImageSetup object
 {
 	my ($class, $host) = @_;
 	my $self = {};
