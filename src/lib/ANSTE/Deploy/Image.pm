@@ -20,11 +20,18 @@ use base 'ANSTE::Scenario::BaseImage';
 use strict;
 use warnings;
 
+use ANSTE::Exceptions::MissingArgument;
+
 sub new # returns new Image object
 {
 	my ($class, %params) = @_;
 
 	my $self = $class->SUPER::new();
+
+    exists $params{name} or
+        throw ANSTE::Exceptions::MissingArgument('name');
+    exists $params{ip} or
+        throw ANSTE::Exceptions::MissingArgument('ip');
 	
 	$self->{name} = $params{name};
 	$self->{ip} = $params{ip};

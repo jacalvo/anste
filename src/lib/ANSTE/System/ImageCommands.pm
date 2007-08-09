@@ -25,6 +25,7 @@ use ANSTE::System::BaseScriptGen;
 use ANSTE::System::CommInstallGen;
 use ANSTE::System::HostInstallGen;
 use ANSTE::Deploy::Image;
+use ANSTE::Exceptions::MissingArgument;
 
 use Cwd;
 use File::Temp qw(tempfile tempdir);
@@ -36,6 +37,9 @@ sub new # (image) returns new Commands object
 {
 	my ($class, $image) = @_;
 	my $self = {};
+
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('image');
 
     $self->{mountPoint} = undef;
     $self->{image} = $image;
@@ -252,6 +256,9 @@ sub shutdown
 sub resize # (size)
 {
     my ($self, $size) = @_;
+
+    defined $size or
+        throw ANSTE::Exceptions::MissingArgument('size');
 
     my $system = $self->{system};
     my $virtualizer = $self->{virtualizer}; 

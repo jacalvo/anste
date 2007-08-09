@@ -20,12 +20,15 @@ use warnings;
 
 use ANSTE::Deploy::Image;
 use ANSTE::Config;
+use ANSTE::Exceptions::MissingArgument;
 
 sub new # (image) returns new HostInstallGen object
 {
 	my ($class, $image) = @_;
-
 	my $self = {};
+
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('image');
 
     $self->{hostname} = $image->name();
     $self->{ip} = $image->ip();
@@ -45,6 +48,9 @@ sub writeScript # (file)
 {
 	my ($self, $file) = @_;
 
+    defined $file or
+        throw ANSTE::Exceptions::MissingArgument('file');
+       
     my $hostname = $self->{hostname};
 
 	print $file "#!/bin/sh\n";

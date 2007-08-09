@@ -20,12 +20,15 @@ use warnings;
 
 use ANSTE::Scenario::Host;
 use ANSTE::Config;
+use ANSTE::Exceptions::MissingArgument;
 
 sub new # (host) returns new ServerScriptGen object
 {
 	my ($class, $host) = @_;
-
 	my $self = {};
+
+    defined $host or
+        throw ANSTE::Exceptions::MissingArgument('host');
 	
 	$self->{host} = $host;
     my $system = ANSTE::Config->instance()->system();
@@ -42,8 +45,11 @@ sub new # (host) returns new ServerScriptGen object
 
 sub writeScript # (file)
 {
-	my $self = shift;
-	my $file = shift;
+	my ($self, $file) = @_;
+
+    defined $file or
+        throw ANSTE::Exceptions::MissingArgument('file');
+
 	print $file "#!/bin/sh\n";
 	my $name = $self->{host}->name();
 	my $desc = $self->{host}->desc();

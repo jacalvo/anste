@@ -25,6 +25,7 @@ use constant CONFIG_FILE => 'data/anste.conf';
 my $singleton;
 
 # TODO: Return default values in case of undef
+# TODO: Add exception throwing when incorrect values in the file
 
 sub instance 
 {

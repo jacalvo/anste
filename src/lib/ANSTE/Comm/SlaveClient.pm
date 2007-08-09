@@ -18,6 +18,8 @@ package ANSTE::Comm::SlaveClient;
 use strict;
 use warnings;
 
+use ANSTE::Exceptions::MissingArgument;
+
 use SOAP::Lite; # +trace => 'debug'; 
 use Net::Domain qw(hostname);
 
@@ -25,7 +27,7 @@ use constant URI => "urn:ANSTE::Comm::MasterServer";
 
 sub new
 {
-    my $class = shift;
+    my ($class) = @_;
     my $self = {};
 
     $self->{soap} = undef;
@@ -38,6 +40,9 @@ sub new
 sub connect	# (host) 
 {
     my ($self, $host) = @_;
+
+    defined $host or
+        throw ANSTE::Exceptions::MissingArgument('host');
 
     $self->{soap} = new SOAP::Lite(uri => URI, 
                                    endpoint => $host, 
@@ -60,9 +65,12 @@ sub hostReady
     return($result eq 'OK');
 }
 
-sub executionFinished 
+sub executionFinished # (retValue)
 {
     my ($self, $retValue) = @_;
+
+    defined $retValue or
+        throw ANSTE::Exceptions::MissingArgument('retValue');
 
     my $soap = $self->{soap};
 

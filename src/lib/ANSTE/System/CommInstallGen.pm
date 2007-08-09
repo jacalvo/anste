@@ -20,6 +20,7 @@ use warnings;
 
 use ANSTE::Scenario::Host;
 use ANSTE::Config;
+use ANSTE::Exceptions::MissingArgument;
 
 # Generates the scripts that installs ansted and anste-slave
 # in a base image.
@@ -27,8 +28,10 @@ use ANSTE::Config;
 sub new # (image) returns new CommInstallGen object
 {
 	my ($class, $image) = @_;
-
 	my $self = {};
+
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('image');
 
     $self->{image} = $image;
     my $system = ANSTE::Config->instance()->system();
@@ -46,6 +49,9 @@ sub new # (image) returns new CommInstallGen object
 sub writeScript # (file)
 {
 	my ($self, $file) = @_;
+
+    defined $file or
+        throw ANSTE::Exceptions::MissingArgument('file');
 
     my $system = $self->{system};
 

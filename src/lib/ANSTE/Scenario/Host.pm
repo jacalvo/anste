@@ -21,6 +21,7 @@ use warnings;
 use ANSTE::Scenario::BaseImage;
 use ANSTE::Scenario::Network;
 use ANSTE::Scenario::Packages;
+use ANSTE::Exceptions::MissingArgument;
 
 use XML::DOM;
 
@@ -51,6 +52,9 @@ sub setName # name string
 {
 	my ($self, $name) = @_;	
 
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
 	$self->{name} = $name;
 }
 
@@ -63,6 +67,9 @@ sub desc # returns desc string
 sub setDesc # desc string
 {
 	my ($self, $desc) = @_;	
+
+    defined $desc or
+        throw ANSTE::Exceptions::MissingArgument('desc');
 
 	$self->{desc} = $desc;
 }
@@ -78,6 +85,9 @@ sub setBaseImage # (baseImage)
 {
 	my ($self, $baseImage) = @_;	
 
+    defined $baseImage or
+        throw ANSTE::Exceptions::MissingArgument('baseImage');
+
 	$self->{baseImage} = $baseImage;
 }
 
@@ -91,6 +101,9 @@ sub network # returns Network object
 sub setNetwork # (network)
 {
 	my ($self, $network) = @_;	
+
+    defined $network or
+        throw ANSTE::Exceptions::MissingArgument('network');
 
 	$self->{network} = $network;
 }
@@ -106,12 +119,18 @@ sub setPackages # (packages)
 {
 	my ($self, $packages) = @_;
 
+    defined $packages or
+        throw ANSTE::Exceptions::MissingArgument('packages');
+
 	$self->{packages} = $packages;
 }
 
 sub load # (node)
 {
 	my ($self, $node) = @_;
+
+    defined $node or
+        throw ANSTE::Exceptions::MissingArgument('node');
 
 	my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
 	my $name = $nameNode->getFirstChild()->getNodeValue();

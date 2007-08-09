@@ -18,6 +18,8 @@ package ANSTE::Scenario::NetworkInterface;
 use strict;
 use warnings;
 
+use ANSTE::Exceptions::MissingArgument;
+
 # Constants 
 use constant IFACE_TYPE_STATIC => 0;
 use constant IFACE_TYPE_DHCP => 1;
@@ -32,7 +34,7 @@ use constant IFACE_TYPE_DHCP => 1;
 #
 sub new # returns new NetworkInterface object
 {
-	my $class = shift;
+	my ($class) = @_;
 	my $self = {};
 	
 	$self->{type} = IFACE_TYPE_STATIC;
@@ -57,6 +59,9 @@ sub setName # (name)
 {
 	my ($self, $name) = @_;	
     
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
 	$self->{name} = $name;
 }
 
@@ -83,11 +88,11 @@ sub setTypeDHCP
 
 # Method: address
 #
-#       Get the interface address
+#   Get the interface address
 #
 # Returns:
 #
-#       string - the interface IP address
+#   string - the interface IP address
 #
 sub address # returns address string
 {
@@ -98,17 +103,20 @@ sub address # returns address string
 
 # Method: setAddress
 #
-#       Sets the interface address
+#   Sets the interface address
 #
 # Parameters:
 #
-#       address - IP address
+#   address - IP address
 #
 sub setAddress # address string
 {
 	my ($self, $address) = @_;	
 
-	# TODO: Check if it's a valid IP
+    defined $address or
+        throw ANSTE::Exceptions::MissingArgument('address');
+
+	# TODO: Check if it's a valid IP (and throw exception)
 	$self->{address} = $address;
 }
 
@@ -123,7 +131,10 @@ sub setNetmask # netmask string
 {
 	my ($self, $netmask) = @_;	
 
-	# TODO: Check if it's a valid IP
+    defined $netmask or
+        throw ANSTE::Exceptions::MissingArgument('netmask');
+
+	# TODO: Check if it's a valid IP (and throw exception)
 	$self->{netmask} = $netmask;
 }
 
@@ -138,13 +149,19 @@ sub setGateway # gateway string
 {
 	my ($self, $gateway) = @_;	
 
-	# TODO: Check if it's a valid IP
+    defined $gateway or
+        throw ANSTE::Exceptions::MissingArgument('gateway');
+
+	# TODO: Check if it's a valid IP (and throw exception)
 	$self->{gateway} = $gateway;
 }
 
 sub load # (node)
 {
 	my ($self, $node) = @_;
+
+    defined $node or
+        throw ANSTE::Exceptions::MissingArgument('node');
 
 	my $type = $node->getAttribute('type');
     my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
@@ -159,8 +176,10 @@ sub load # (node)
 		my $netmask = $netmaskNode->getFirstChild()->getNodeValue();
 		$self->setNetmask($netmask);
 		my $gatewayNode = $node->getElementsByTagName('gateway', 0)->item(0);
-		my $gateway = $gatewayNode->getFirstChild()->getNodeValue();
-		$self->setGateway($gateway);
+        if ($gatewayNode) {
+    		my $gateway = $gatewayNode->getFirstChild()->getNodeValue();
+            $self->setGateway($gateway);
+        }
 	} elsif ($type eq 'dhcp') {
 		$self->setTypeDHCP();
 	}

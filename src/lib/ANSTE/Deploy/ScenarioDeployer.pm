@@ -22,11 +22,15 @@ use ANSTE::Scenario::Scenario;
 use ANSTE::Deploy::HostDeployer;
 use ANSTE::Deploy::WaiterServer;
 use ANSTE::Config;
+use ANSTE::Exceptions::MissingArgument;
 
 sub new # (scenario) returns new ScenarioDeployer object
 {
 	my ($class, $scenario) = @_;
 	my $self = {};
+
+    defined $scenario or
+        throw ANSTE::Exceptions::MissingArgument('scenario');
 	
 	$self->{scenario} = $scenario;
 

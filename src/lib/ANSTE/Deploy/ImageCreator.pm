@@ -22,11 +22,15 @@ use ANSTE::System::ImageCommands;
 use ANSTE::Comm::MasterServer;
 use ANSTE::Deploy::Image;
 use ANSTE::Deploy::WaiterServer;
+use ANSTE::Exceptions::MissingArgument;
 
 sub new # (image) returns new ImageCreator object
 {
 	my ($class, $image) = @_;
 	my $self = {};
+
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('image');
 	
 	$self->{image} = $image;
 

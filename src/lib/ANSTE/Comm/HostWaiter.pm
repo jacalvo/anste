@@ -21,6 +21,8 @@ use warnings;
 use threads;
 use threads::shared;
 
+use ANSTE::Exceptions::MissingArgument;
+
 # Class: HostWaiter
 #
 # Informates when a slave host ends its boot process and finishes
@@ -71,6 +73,9 @@ sub waitForReady # (host)
 {
     my ($self, $host) = @_;
 
+    defined $host or
+        throw ANSTE::Exceptions::MissingArgument('host');
+
     $ready{$host} = 0;
     until ($ready{$host}) {
         _waitForEvent();
@@ -81,6 +86,9 @@ sub waitForReady # (host)
 sub waitForExecution # (host) returns retValue
 {
     my ($self, $host) = @_;
+
+    defined $host or
+        throw ANSTE::Exceptions::MissingArgument('host');
 
     $executed{$host} = 0;
     until ($executed{$host}) {

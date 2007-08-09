@@ -20,12 +20,15 @@ use warnings;
 
 use ANSTE::Scenario::BaseImage;
 use ANSTE::Config;
+use ANSTE::Exceptions::MissingArgument;
 
 sub new # (image) returns new BaseScriptGen object
 {
 	my ($class, $image) = @_;
-
 	my $self = {};
+
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('image');
 	
 	$self->{image} = $image;
     my $system = ANSTE::Config->instance()->system();
@@ -43,6 +46,9 @@ sub new # (image) returns new BaseScriptGen object
 sub writeScript # (file)
 {
 	my ($self, $file) = @_;
+
+    defined $file or
+        throw ANSTE::Exceptions::MissingArgument('file');
 
 	print $file "#!/bin/sh\n";
 	my $image = $self->{image}->name();

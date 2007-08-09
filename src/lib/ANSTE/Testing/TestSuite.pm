@@ -18,9 +18,11 @@ package ANSTE::Testing::TestSuite;
 use strict;
 use warnings;
 
+use ANSTE::Exceptions::MissingArgument;
+
 sub new # returns new TestSuite object
 {
-	my $class = shift;
+	my ($class) = @_;
 	my $self = {};
 
     $self->{name} = '';
@@ -43,6 +45,9 @@ sub setName # name string
 {
 	my ($self, $name) = @_;	
 
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
 	$self->{name} = $name;
 }
 
@@ -57,6 +62,9 @@ sub setDesc # desc string
 {
 	my ($self, $desc) = @_;	
 
+    defined $desc or
+        throw ANSTE::Exceptions::MissingArgument('desc');
+
 	$self->{desc} = $desc;
 }
 
@@ -70,6 +78,9 @@ sub tests # return tests list ref
 sub addTest # (test)
 {
     my ($self, $test) = @_;
+
+    defined $test or
+        throw ANSTE::Exceptions::MissingArgument('test');
 
     push(@{$self->{tests}}, $test);
 }

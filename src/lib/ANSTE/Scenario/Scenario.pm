@@ -20,12 +20,13 @@ use warnings;
 
 use ANSTE::Scenario::Host;
 use ANSTE::Config;
+use ANSTE::Exceptions::MissingArgument;
 
 use XML::DOM;
 
 sub new # returns new Scenario object
 {
-	my $class = shift;
+	my ($class) = @_;
 	my $self = {};
 	
 	$self->{name} = '';
@@ -50,6 +51,9 @@ sub setName # name string
 {
 	my ($self, $name) = @_;	
 
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
 	$self->{name} = $name;
 }
 
@@ -63,6 +67,9 @@ sub desc # returns desc string
 sub setDesc # desc string
 {
 	my ($self, $desc) = @_;	
+
+    defined $desc or
+        throw ANSTE::Exceptions::MissingArgument('desc');
 
 	$self->{desc} = $desc;
 }
@@ -78,6 +85,9 @@ sub setVirtualizer # (virtualizer)
 {
 	my ($self, $virtualizer) = @_;	
 
+    defined $virtualizer or
+        throw ANSTE::Exceptions::MissingArgument('virtualizer');
+
 	$self->{virtualizer} = $virtualizer;
 }
 
@@ -91,6 +101,9 @@ sub system # returns system package
 sub setSystem # (system)
 {
 	my ($self, $system) = @_;
+
+    defined $system or
+        throw ANSTE::Exceptions::MissingArgument('system');
 
 	$self->{system} = $system;
 }
@@ -106,6 +119,9 @@ sub addHost # (host)
 {
 	my ($self, $host) = @_;	
 
+    defined $host or
+        throw ANSTE::Exceptions::MissingArgument('host');
+
 	push(@{$self->{hosts}}, $host);
 }
 
@@ -113,6 +129,11 @@ sub addHost # (host)
 sub loadFromFile # (filename)
 {
 	my ($self, $filename) = @_;
+
+    defined $filename or
+        throw ANSTE::Exceptions::MissingArgument('filename');
+
+    # TODO: Throw exception if file doesn't exists
 
     my $dir = ANSTE::Config->instance()->scenarioPath();
 

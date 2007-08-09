@@ -20,6 +20,7 @@ use warnings;
 
 use ANSTE::Scenario::Packages;
 use ANSTE::Config;
+use ANSTE::Exceptions::MissingArgument;
 
 use XML::DOM;
 
@@ -52,12 +53,15 @@ sub setName # name string
 {
 	my ($self, $name) = @_;	
 
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
 	$self->{name} = $name;
 }
 
 sub desc # returns desc string
 {
-	my ($self, $name) = @_;
+	my ($self) = @_;
 
 	return $self->{desc};
 }
@@ -65,6 +69,9 @@ sub desc # returns desc string
 sub setDesc # desc string
 {
 	my ($self, $desc) = @_;	
+
+    defined $desc or
+        throw ANSTE::Exceptions::MissingArgument('desc');
 
 	$self->{desc} = $desc;
 }
@@ -80,6 +87,9 @@ sub setMemory # memory string
 {
 	my ($self, $memory) = @_;	
 
+    defined $memory or
+        throw ANSTE::Exceptions::MissingArgument('memory');
+
 	$self->{memory} = $memory;
 }
 
@@ -94,6 +104,9 @@ sub setSize # size string
 {
 	my ($self, $size) = @_;	
 
+    defined $size or
+        throw ANSTE::Exceptions::MissingArgument('size');
+
 	$self->{size} = $size;
 }
 
@@ -107,6 +120,9 @@ sub packages # returns Packages object
 sub setPackages # (packages)
 {
 	my ($self, $packages) = @_;
+
+    defined $packages or
+        throw ANSTE::Exceptions::MissingArgument('packages');
 
 	$self->{packages} = $packages;
 }
@@ -128,6 +144,11 @@ sub postScripts # returns list
 sub loadFromFile # (filename)
 {
 	my ($self, $filename) = @_;
+
+    defined $filename or
+        throw ANSTE::Exceptions::MissingArgument('filename');
+
+    # TODO: Throw exception if file doesn't exists
 
 	my $parser = new XML::DOM::Parser;
     my $config = ANSTE::Config->instance();

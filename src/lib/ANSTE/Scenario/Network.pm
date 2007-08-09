@@ -19,10 +19,11 @@ use strict;
 use warnings;
 
 use ANSTE::Scenario::NetworkInterface;
+use ANSTE::Exceptions::MissingArgument;
 
 sub new # returns new Network object
 {
-	my $class = shift;
+	my ($class) = @_;
 	my $self = {};
 	
     $self->{interfaces} = [];
@@ -43,12 +44,18 @@ sub addInterface # (interface)
 {
     my ($self, $interface) = @_;
 
+    defined $interface or
+        throw ANSTE::Exceptions::MissingArgument('interface');
+
     push(@{ $self->{interfaces} }, $interface);
 }
 
 sub load # (node)
 {
 	my ($self, $node) = @_;
+
+    defined $node or
+        throw ANSTE::Exceptions::MissingArgument('node');
 
     foreach my $element ($node->getElementsByTagName('interface', 0)) {
         my $interface = new ANSTE::Scenario::NetworkInterface;

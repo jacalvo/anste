@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use ANSTE::Exceptions::NotImplemented;
+use ANSTE::Exceptions::MissingArgument;
 
 # Constructor: new
 #   
@@ -30,7 +31,7 @@ use ANSTE::Exceptions::NotImplemented;
 #
 sub new
 {
-	my $class = shift;
+	my ($class) = @_;
 	my $self = {};
 	
 	bless($self, $class);
@@ -53,6 +54,10 @@ sub new
 sub execute # (command)
 {
     my ($self, $command) = @_;
+
+    defined $command or
+        throw ANSTE::Exceptions::MissingArgument('command');
+
     return system($command) == 0;
 }
 

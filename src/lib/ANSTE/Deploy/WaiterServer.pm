@@ -26,7 +26,7 @@ use SOAP::Transport::HTTP;
 
 sub new # returns new WaiterServer object
 {
-	my ($class, $image) = @_;
+	my ($class) = @_;
 	my $self = {};
 
 	bless($self, $class);

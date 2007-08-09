@@ -26,6 +26,7 @@ use ANSTE::Comm::MasterServer;
 use ANSTE::Comm::HostWaiter;
 use ANSTE::Deploy::Image;
 use ANSTE::Config;
+use ANSTE::Exceptions::MissingArgument;
 
 use threads;
 
@@ -35,6 +36,9 @@ sub new # (host) returns new HostDeployer object
 {
 	my ($class, $host) = @_;
 	my $self = {};
+
+    defined $host or
+        throw ANSTE::Exceptions::MissingArgument('host');
 
 	$self->{host} = $host;
 
@@ -61,6 +65,9 @@ sub startDeployThread # (ip)
 {
     my ($self, $ip) = @_;
 
+    defined $ip or
+        throw ANSTE::Exceptions::MissingArgument('ip');
+
     $self->{thread} = threads->create('deploy', $self, $ip);
 
 }
@@ -75,6 +82,9 @@ sub waitForFinish
 sub deploy # (ip)
 {
     my ($self, $ip) = @_;
+
+    defined $ip or
+        throw ANSTE::Exceptions::MissingArgument('ip');
 
     my $host = $self->{host};
     my $hostname = $host->name();

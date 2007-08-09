@@ -18,6 +18,8 @@ package ANSTE::Scenario::Packages;
 use strict;
 use warnings;
 
+use ANSTE::Exceptions::MissingArgument;
+
 use XML::DOM;
 
 sub new # returns new Packages object
@@ -44,6 +46,10 @@ sub add # (packages)
 {
 	my ($self, @packages) = @_;	
 
+    if ( @packages == 0) {
+        throw ANSTE::Exceptions::MissingArgument('packages');
+    }
+
 	push(@{$self->{list}}, @packages);
 }
 
@@ -51,6 +57,9 @@ sub load # (node)
 {
 	my ($self, $node) = @_;
     
+    defined $node or
+        throw ANSTE::Exceptions::MissingArgument('node');
+
     my $dir = ANSTE::Config->instance()->profilePath();
 
 	foreach my $profile ($node->getElementsByTagName('profile', 0)) {

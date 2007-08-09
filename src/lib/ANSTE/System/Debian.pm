@@ -21,6 +21,7 @@ use strict;
 use warnings;
 
 use ANSTE::Config;
+use ANSTE::Exceptions::MissingArgument;
 
 # Method: mountImage 
 #
@@ -39,6 +40,11 @@ use ANSTE::Config;
 sub mountImage # (image, mountPoint)
 {
     my ($self, $image, $mountPoint) = @_;
+
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('image');
+    defined $mountPoint or
+        throw ANSTE::Exceptions::MissingArgument('mountPoint');
 
     my $cmd = "mount -t ext3 -o loop $image $mountPoint";
 
@@ -61,6 +67,9 @@ sub mountImage # (image, mountPoint)
 sub unmount # (mountPoint)
 {
     my ($self, $mountPoint) = @_;
+
+    defined $mountPoint or
+        throw ANSTE::Exceptions::MissingArgument('mountPoint');
 
     $self->execute("umount $mountPoint");
 }
@@ -110,6 +119,11 @@ sub installBasePackages
 sub resizeImage # (image, size)
 {
     my ($self, $image, $size) = @_;
+
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('image');
+    defined $size or
+        throw ANSTE::Exceptions::MissingArgument('size');
 
     my ($ret, $tries) = (1, 0); 
 
@@ -209,6 +223,9 @@ sub networkConfig # (network) returns string
 {
     my ($self, $network) = @_;
 
+    defined $network or
+        throw ANSTE::Exceptions::MissingArgument('network');
+
     my $config = '';
 	$config .= "cat << EOF > /etc/network/interfaces\n";
     $config .= "auto lo\n";
@@ -226,6 +243,9 @@ sub networkConfig # (network) returns string
 sub initialNetworkConfig # (ip) returns string
 {
     my ($self, $ip) = @_;
+
+    defined $ip or
+        throw ANSTE::Exceptions::MissingArgument('ip');
 
     my $iface = 'eth0';
     my $address = $ip;
@@ -254,6 +274,9 @@ sub hostnameConfig # (hostname) returns string
 {
     my ($self, $hostname) = @_;
 
+    defined $hostname or
+        throw ANSTE::Exceptions::MissingArgument('hostname');
+
     return "echo $hostname > " . '$MOUNT/etc/hostname';
 }
 
@@ -262,6 +285,9 @@ sub hostnameConfig # (hostname) returns string
 sub hostsConfig # (hostname) returns string
 {
     my ($self, $hostname) = @_;
+
+    defined $hostname or
+        throw ANSTE::Exceptions::MissingArgument('hostname');
 
     my $config = '';
 
@@ -287,6 +313,9 @@ sub storeMasterAddress # (address) returns string
 {
     my ($self, $address) = @_;
 
+    defined $address or
+        throw ANSTE::Exceptions::MissingArgument('address');
+
     return "echo $address > " . '$MOUNT/var/local/anste.master'; 
 }
 
@@ -296,6 +325,11 @@ sub copyToMountCommand # (orig, dest) returns string
 {
     my ($self, $orig, $dest) = @_;
 
+    defined $orig or
+        throw ANSTE::Exceptions::MissingArgument('orig');
+    defined $dest or
+        throw ANSTE::Exceptions::MissingArgument('dest');
+
     return "cp $orig " . '$MOUNT' . $dest;
 }
 
@@ -304,6 +338,9 @@ sub copyToMountCommand # (orig, dest) returns string
 sub createMountDirCommand # (path) returns string
 {
     my ($self, $path) = @_;
+
+    defined $path or
+        throw ANSTE::Exceptions::MissingArgument('path');
 
     return 'mkdir -p $MOUNT' . $path;
 }
@@ -328,6 +365,9 @@ sub enableNAT # (iface)
 {
     my ($self, $iface) = @_;
 
+    defined $iface or
+        throw ANSTE::Exceptions::MissingArgument('iface');
+
     # TODO: Maybe this will need to be turned off after ANSTE deployment
     $self->execute('echo 1 > /proc/sys/net/ipv4/ip_forward');
     # TODO: This rule should be more restrictive
@@ -351,7 +391,9 @@ sub _interfaceConfig # (iface)
 		$config .= "iface $name inet static\n";
 		$config .= "address $address\n";
 		$config .= "netmask $netmask\n";
-		$config .= "gateway $gateway\n";
+		if ($gateway) {
+            $config .= "gateway $gateway\n";
+        }
 	}
 }
 

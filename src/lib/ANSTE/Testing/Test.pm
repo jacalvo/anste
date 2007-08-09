@@ -18,9 +18,11 @@ package ANSTE::Testing::Test;
 use strict;
 use warnings;
 
+use ANSTE::Exceptions::MissingArgument;
+
 sub new # returns new Test object
 {
-	my $class = shift;
+	my ($class) = @_;
 	my $self = {};
 
     $self->{name} = '';
@@ -42,6 +44,9 @@ sub setName # name string
 {
 	my ($self, $name) = @_;	
 
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
 	$self->{name} = $name;
 }
 
@@ -55,6 +60,9 @@ sub desc # returns desc string
 sub setDesc # desc string
 {
 	my ($self, $desc) = @_;
+
+    defined $desc or
+        throw ANSTE::Exceptions::MissingArgument('desc');
 
 	$self->{desc} = $desc;
 }

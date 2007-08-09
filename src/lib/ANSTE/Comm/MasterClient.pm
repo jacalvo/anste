@@ -18,13 +18,15 @@ package ANSTE::Comm::MasterClient;
 use strict;
 use warnings;
 
+use ANSTE::Exceptions::MissingArgument;
+
 use SOAP::Lite; # +trace => 'debug'; 
 
 use constant URI => 'urn:ANSTE::Comm::SlaveServer';
 
 sub new
 {
-    my $class = shift;
+    my ($class) = @_;
     my $self = {};
 
     $self->{soap} = undef;
@@ -38,6 +40,9 @@ sub connect	# (host)
 {
     my ($self, $host) = @_;
 
+    defined $host or
+        throw ANSTE::Exceptions::MissingArgument('host');
+
     $self->{soap} = new SOAP::Lite(uri => URI,
                                    proxy => $host,
                                    endpoint => $host); 
@@ -46,6 +51,11 @@ sub connect	# (host)
 sub put	# (file) returns boolean
 {
     my ($self, $file) = @_;
+
+    defined $file or
+        throw ANSTE::Exceptions::MissingArgument('file');
+
+    # TODO: Throw exception if file doesn't exists
 
     my $soap = $self->{soap};
 
@@ -68,6 +78,9 @@ sub put	# (file) returns boolean
 sub get	# (file)
 {
     my ($self, $file) = @_;
+
+    defined $file or
+        throw ANSTE::Exceptions::MissingArgument('file');
 
     my $soap = $self->{soap};
 
@@ -93,6 +106,9 @@ sub exec # (command, log) # - log optional
 {
     my ($self, $command, $log) = @_;
 
+    defined $command or
+        throw ANSTE::Exceptions::MissingArgument('command');
+
     my $soap = $self->{soap};
 
     my @args = (SOAP::Data->name('name' => $command));
@@ -110,6 +126,9 @@ sub exec # (command, log) # - log optional
 sub del	# (file)
 {
     my ($self, $file) = @_;
+
+    defined $file or
+        throw ANSTE::Exceptions::MissingArgument('file');
 
     my $soap = $self->{soap};
 

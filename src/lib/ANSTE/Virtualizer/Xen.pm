@@ -22,6 +22,7 @@ use warnings;
 
 use ANSTE::Config;
 use ANSTE::Deploy::Image;
+use ANSTE::Exceptions::MissingArgument;
 
 use File::Copy;
 use File::Copy::Recursive qw(dircopy);
@@ -47,6 +48,14 @@ use constant XEN_CONFIG_TEMPLATE => 'data/xen-config.tmpl';
 sub createBaseImage # (%params)
 {
     my ($self, %params) = @_;
+
+    exists $params{name} or
+        throw ANSTE::Exceptions::MissingArgument('name');
+    exists $params{ip} or
+        throw ANSTE::Exceptions::MissingArgument('ip');
+    exists $params{config} or
+        throw ANSTE::Exceptions::MissingArgument('config');
+
     my $name = $params{name};
     my $ip = $params{ip};
     my $confFile = $params{config};
@@ -73,6 +82,9 @@ sub shutdownImage # (image)
 {
     my ($self, $image) = @_;
 
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('image');
+
     $self->execute("xm destroy $image");
 }
 
@@ -91,6 +103,9 @@ sub shutdownImage # (image)
 sub createVM # (name)
 {
     my ($self, $name) = @_;
+
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
 
     $self->execute("xm create $name.cfg");
 }
@@ -111,6 +126,11 @@ sub createVM # (name)
 sub imageFile # (path, name)
 {
     my ($self, $path, $name) = @_;
+
+    defined $path or
+        throw ANSTE::Exceptions::MissingArgument('path');
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
 
     return "$path/$name/disk.img";
 }
@@ -134,6 +154,11 @@ sub imageFile # (path, name)
 sub createImageCopy # (baseimage, newimage)
 {
     my ($self, $baseimage, $newimage) = @_;
+
+    defined $baseimage or
+        throw ANSTE::Exceptions::MissingArgument('baseimage');
+    defined $newimage or
+        throw ANSTE::Exceptions::MissingArgument('newimage');
 
     my $path = ANSTE::Config->instance()->imagePath();
 
@@ -173,6 +198,9 @@ sub createImageCopy # (baseimage, newimage)
 sub deleteImage # (image)
 {
     my ($self, $image) = @_;
+
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('image');
 
     $self->execute("xen-delete-image $image");
 }
