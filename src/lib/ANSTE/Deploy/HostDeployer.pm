@@ -31,7 +31,7 @@ use ANSTE::Exceptions::MissingArgument;
 use threads;
 use Error qw(:try);
 
-use constant SETUP_SCRIPT => '/tmp/setup.sh';
+use constant SETUP_SCRIPT => 'setup.sh';
 
 sub new # (host) returns new HostDeployer object
 {

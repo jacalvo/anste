@@ -118,4 +118,81 @@ sub gateway
     return $self->{config}->{'comm'}->{'gateway'};
 }
 
+sub xenDir
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'xen-options'}->{'dir'};
+}
+
+sub xenInstallMethod
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'xen-options'}->{'install-method'};
+}
+
+sub xenSize
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'xen-options'}->{'size'};
+}
+
+sub xenMemory
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'xen-options'}->{'memory'};
+}
+
+sub xenNoSwap
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'xen-options'}->{'noswap'};
+}
+
+sub xenFS
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'xen-options'}->{'fs'};
+}
+
+sub xenDist
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'xen-options'}->{'dist'};
+}
+
+sub xenImage
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'xen-options'}->{'image'};
+}
+
+sub xenKernel
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'xen-options'}->{'kernel'};
+}
+
+sub xenInitrd
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'xen-options'}->{'initrd'};
+}
+
+sub xenMirror
+{
+    my ($self) = @_;
+
+    return $self->{config}->{'xen-options'}->{'mirror'};
+}
+
 1;

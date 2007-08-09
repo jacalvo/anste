@@ -71,7 +71,7 @@ sub execute # (command)
 #   name    -   name of the image type to be created
 #   ip      -   ip address that will be assigned to the image
 #   config  -   configuration file with different parameters 
-#               depending on the virtualizer
+#               depending on the virtualizer *(optional)*
 #
 # Returns:
 #   
@@ -188,7 +188,7 @@ sub createImageCopy # (baseimage, newimage)
 #
 # Parameters: 
 #   
-#   image - name of the image to be deleted
+#   image   - name of the image to be deleted
 #
 # Returns:
 #   

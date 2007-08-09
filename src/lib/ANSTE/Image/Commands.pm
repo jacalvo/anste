@@ -30,9 +30,6 @@ use ANSTE::Exceptions::MissingArgument;
 use Cwd;
 use File::Temp qw(tempfile tempdir);
 
-# TODO: autogenerate it!
-use constant XEN_TOOLS_CONFIG => 'conf/xen-tools.conf';
-
 sub new # (image) returns new Commands object
 {
 	my ($class, $image) = @_;
@@ -69,14 +66,10 @@ sub create
     my $name = $self->{image}->name();
     my $ip = $self->{image}->ip();
 
-    # TODO: Autogenerate this 
-    my $confFile = getcwd() . "/data/".XEN_TOOLS_CONFIG;
-
     my $virtualizer = $self->{virtualizer};
 
     $virtualizer->createBaseImage(name => $name,
-                                  ip => $ip,
-                                  config => $confFile);
+                                  ip => $ip);
 }
 
 sub mount

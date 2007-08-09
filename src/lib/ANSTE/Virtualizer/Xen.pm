@@ -24,6 +24,7 @@ use ANSTE::Config;
 use ANSTE::Image::Image;
 use ANSTE::Exceptions::MissingArgument;
 
+use File::Temp qw(tempfile);
 use File::Copy;
 use File::Copy::Recursive qw(dircopy);
 
@@ -38,7 +39,6 @@ use constant XEN_CONFIG_TEMPLATE => 'data/xen-config.tmpl';
 #   
 #   name    -   name of the image type to be created
 #   ip      -   ip address that will be assigned to the image
-#   config  -   path of the specific xen-tools.conf file 
 #
 # Returns:
 #
@@ -53,17 +53,18 @@ sub createBaseImage # (%params)
         throw ANSTE::Exceptions::MissingArgument('name');
     exists $params{ip} or
         throw ANSTE::Exceptions::MissingArgument('ip');
-    exists $params{config} or
-        throw ANSTE::Exceptions::MissingArgument('config');
 
     my $name = $params{name};
     my $ip = $params{ip};
-    my $confFile = $params{config};
+
+    my $confFile = _createXenToolsConfig();
 
     my $command = "xen-create-image --hostname=$name" .
                   " --ip='$ip' --config=$confFile"; 
 
     $self->execute($command);
+
+    unlink($confFile);
 }
 
 # Method: shutdownImage 
@@ -170,10 +171,12 @@ sub createImageCopy # (baseimage, newimage)
     # TODO: Change /etc/hostname and /etc/hosts with the new values
 
     # Creates the configuration file for the new image
-    my $config = $self->_createConfig($newimage, $path);
+    my $config = $self->_createImageConfig($newimage, $path);
 
     # Writes the xen configuration file
     my $FILE;
+    # TODO: Write this to another non-invasive location and
+    # then create the images at HostDeployer using the new path
     my $configFile = "/etc/xen/$newname.cfg";
     open($FILE, '>', $configFile) or return 0;
     print $FILE $config;
@@ -205,8 +208,46 @@ sub deleteImage # (image)
     $self->execute("xen-delete-image $image");
 }
 
+sub _createXenToolsConfig # returns filename
+{
+    my ($self) = @_;
 
-sub _createConfig # (image, path) returns config string
+    my ($fh, $filename) = tempfile();
+
+    my $config = ANSTE::Config->instance();
+
+    my $dir = $config->xenDir();
+    my $installMethod = $config->xenInstallMethod();
+    my $size = $config->xenSize();
+    my $memory = $config->xenMemory();
+    my $noSwap = $config->xenNoSwap();
+    my $dist = $config->xenDist();
+    my $image = $config->xenImage();
+    my $kernel = $config->xenKernel();
+    my $initrd = $config->xenInitrd();
+    my $mirror = $config->xenMirror();
+    my $gateway = $config->gateway();
+    my $netmask = '255.255.255.0';
+
+    print $fh "dir = $dir\n";
+    print $fh "install-method = $installMethod\n";
+    print $fh "size = $size\n";
+    print $fh "memory = $memory\n";
+    print $fh "noswap = $noSwap\n";
+    print $fh "dist = $dist\n";
+    print $fh "image = $image\n";
+    print $fh "kernel = $kernel\n";
+    print $fh "initrd = $initrd\n";
+    print $fh "mirror = $mirror\n";
+    print $fh "gateway = $gateway\n";
+    print $fh "netmask = $netmask\n";
+
+    close($fh);
+
+    return $filename;
+}
+
+sub _createImageConfig # (image, path) returns config string
 {
     my ($self, $image, $path) = @_;
 
