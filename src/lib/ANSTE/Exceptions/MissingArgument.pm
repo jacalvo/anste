@@ -31,7 +31,10 @@ sub new
 {
 	my ($class, $arg) = @_;
 
-	$self = $class->SUPER::new("Missing argument: $arg");
+    my ($package, undef, $line, $method) = caller(2);
+
+	$self = $class->SUPER::new("Missing argument '$arg' calling " .
+                               "method '$method' at '$package:$line'\n");
 
 	bless ($self, $class);
 

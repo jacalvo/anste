@@ -46,7 +46,7 @@ sub add # (packages)
 {
 	my ($self, @packages) = @_;	
 
-    if ( @packages == 0) {
+    if (not @packages) {
         throw ANSTE::Exceptions::MissingArgument('packages');
     }
 
