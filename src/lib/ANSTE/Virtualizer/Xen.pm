@@ -23,6 +23,7 @@ use warnings;
 use ANSTE::Config;
 use ANSTE::Image::Image;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidType;
 
 use File::Temp qw(tempfile);
 use File::Copy;
@@ -143,9 +144,9 @@ sub imageFile # (path, name)
 #
 # Parameters:
 #
-#   baseimage - an <ANSTE::Deploy::BaseImage> object with the configuration
+#   baseimage - an <ANSTE::Scenario::BaseImage> object with the configuration
 #               of the base image
-#   newimage  - an <ANSTE::Deploy::Image> object with the configuration 
+#   newimage  - an <ANSTE::Image::Image> object with the configuration 
 #               of the new image
 #
 # Returns:
@@ -160,6 +161,15 @@ sub createImageCopy # (baseimage, newimage)
         throw ANSTE::Exceptions::MissingArgument('baseimage');
     defined $newimage or
         throw ANSTE::Exceptions::MissingArgument('newimage');
+
+    if (not $baseimage->isa('ANSTE::Scenario::BaseImage')) {
+        throw EBox::Exception::InvalidType('baseimage',
+                                           'ANSTE::Scenario::BaseImage');
+    }
+    if (not $newimage->isa('ANSTE::Image::Image')) {
+        throw EBox::Exception::InvalidType('newimage',
+                                           'ANSTE::Image::Image');
+    }
 
     my $path = ANSTE::Config->instance()->imagePath();
 

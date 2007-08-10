@@ -26,6 +26,7 @@ use ANSTE::ScriptGen::BaseImageSetup;
 use ANSTE::ScriptGen::HostPreInstall;
 use ANSTE::Image::Image;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidType;
 
 use Cwd;
 use File::Temp qw(tempfile tempdir);
@@ -37,6 +38,11 @@ sub new # (image) returns new Commands object
 
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
+
+    if (not $image->isa('ANSTE::Image::Image')) {
+        throw EBox::Exception::InvalidType('image',
+                                           'ANSTE::Image::Image');
+    }
 
     $self->{mountPoint} = undef;
     $self->{image} = $image;

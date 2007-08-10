@@ -21,6 +21,8 @@ use warnings;
 use ANSTE::Scenario::Host;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidType;
+use ANSTE::Exceptions::InvalidFile;
 
 sub new # (host) returns new HostImageSetup object
 {
@@ -29,6 +31,11 @@ sub new # (host) returns new HostImageSetup object
 
     defined $host or
         throw ANSTE::Exceptions::MissingArgument('host');
+
+    if (not $host->isa('ANSTE::Scenario::Host')) {
+        throw ANSTE::Exceptions::InvalidType('host',
+                                            'ANSTE::Scenario::Host');
+    }
 	
 	$self->{host} = $host;
     my $system = ANSTE::Config->instance()->system();
@@ -49,6 +56,10 @@ sub writeScript # (file)
 
     defined $file or
         throw ANSTE::Exceptions::MissingArgument('file');
+
+    if (not -w $file) {
+        throw ANSTE::Exceptions::InvalidFile('file');
+    }
 
 	print $file "#!/bin/sh\n";
 	my $name = $self->{host}->name();

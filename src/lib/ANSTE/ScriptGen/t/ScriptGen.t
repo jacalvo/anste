@@ -26,8 +26,12 @@ use ANSTE::ScriptGen::BasePreInstall;
 use ANSTE::ScriptGen::BaseImageSetup;
 use ANSTE::ScriptGen::HostPreInstall;
 use ANSTE::ScriptGen::HostImageSetup;
+use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidType;
+use ANSTE::Exceptions::InvalidFile;
 
-use Test::More tests => 4;
+use Test::More tests => 7;
+use Error qw(:try);
 
 use constant IMAGE => 'sarge-ebox-base.xml';
 use constant SCENARIO => 'scenario.xml';
@@ -62,3 +66,21 @@ $gen = new ANSTE::ScriptGen::HostImageSetup($hosts->[0],
                                             $scenario->system());
 $gen->writeScript($file);
 pass('host setup script generation');
+
+# Test the exception throwing
+try {
+    $gen = new ANSTE::ScriptGen::BaseImageSetup($image);
+    $gen->writeScript('notFilehandle')
+} catch ANSTE::Exceptions::InvalidFile with {
+    pass('invalid file throwing');
+};
+try {
+    $gen = new ANSTE::ScriptGen::BaseImageSetup();
+} catch ANSTE::Exceptions::MissingArgument with {
+    pass('missing argument exception throwing');
+};
+try {
+    $gen = new ANSTE::ScriptGen::BaseImageSetup($scenario);
+} catch ANSTE::Exceptions::InvalidType with {
+    pass('invalid type exception throwing');
+};

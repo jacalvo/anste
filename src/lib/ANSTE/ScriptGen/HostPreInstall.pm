@@ -21,6 +21,8 @@ use warnings;
 use ANSTE::Image::Image;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidType;
+use ANSTE::Exceptions::InvalidFile;
 
 sub new # (image) returns new HostInstallGen object
 {
@@ -29,6 +31,11 @@ sub new # (image) returns new HostInstallGen object
 
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
+
+    if (not $image->isa('ANSTE::Image::Image')) {
+        throw ANSTE::Exceptions::InvalidType('image',
+                                             'ANSTE::Image::Image');
+    }
 
     $self->{hostname} = $image->name();
     $self->{ip} = $image->ip();
@@ -51,6 +58,10 @@ sub writeScript # (file)
     defined $file or
         throw ANSTE::Exceptions::MissingArgument('file');
        
+    if (not -w $file) {
+        throw ANSTE::Exceptions::InvalidFile('file');
+    }
+
     my $hostname = $self->{hostname};
 
 	print $file "#!/bin/sh\n";

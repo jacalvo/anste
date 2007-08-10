@@ -1,5 +1,4 @@
 # Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
-# Copyright (C) 2005 Warp Networks S.L., DBS Servicios Informaticos S.L.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -14,19 +13,18 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::Exceptions::InvalidType;
+package ANSTE::Exceptions::InvalidFile;
 
 use base 'ANSTE::Exceptions::Base';
 
 # Constructor: new
 #
-#     This exception is taken to say the type of an argument is not
-#     the correct one.
+#     This exception is taken to say an argument is not
+#     a valid file or filehandle.
 #
 # Parameters:
 #
 #     arg  - the mistaken argument
-#     type - the correct type
 #
 # Returns:
 #
@@ -34,16 +32,11 @@ use base 'ANSTE::Exceptions::Base';
 #
 sub new # (arg, type)
 {
-    my ($class, $arg, $type) = @_;
-
-
-    my $argType = ref ($arg);
-    $argType = 'scalar' unless ( $argType );
+    my ($class, $arg) = @_;
 
     my ($package, undef, $line, $method) = caller(2);
 
-    $self = $class->SUPER::new("Invalid type for argument: $arg with type " .
-	             		       "$argType , which should be $type in " .
+    $self = $class->SUPER::new("Argument '$arg' is not a file in " .
                                "method '$method' at '$package:$line'\n");
 
     bless ($self, $class);

@@ -21,6 +21,7 @@ use warnings;
 use ANSTE::Scenario::Packages;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidFile;
 
 use XML::DOM;
 
@@ -148,12 +149,15 @@ sub loadFromFile # (filename)
     defined $filename or
         throw ANSTE::Exceptions::MissingArgument('filename');
 
-    # TODO: Throw exception if file doesn't exists
+    my $dir = ANSTE::Config->instance()->imageTypePath();
+    my $file = "$dir/$filename";
+
+    if (not -r $file) {
+        throw ANSTE::Exceptions::InvalidFile('filename');
+    }
 
 	my $parser = new XML::DOM::Parser;
-    my $config = ANSTE::Config->instance();
-    my $dir = $config->imageTypePath();
-	my $doc = $parser->parsefile("$dir/$filename");
+	my $doc = $parser->parsefile("$file");
 
 	my $image = $doc->getDocumentElement();
 

@@ -22,6 +22,7 @@ use ANSTE::Scenario::BaseImage;
 use ANSTE::Scenario::Network;
 use ANSTE::Scenario::Packages;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidType;
 
 use XML::DOM;
 
@@ -131,6 +132,11 @@ sub load # (node)
 
     defined $node or
         throw ANSTE::Exceptions::MissingArgument('node');
+
+    if (not $node->isa('XML::DOM::Element')) {
+        throw ANSTE::Exceptions::InvalidType('node',
+                                             'XML::DOM::Element');
+    }
 
 	my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
 	my $name = $nameNode->getFirstChild()->getNodeValue();

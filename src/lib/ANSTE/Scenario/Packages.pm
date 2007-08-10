@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidType;
 
 use XML::DOM;
 
@@ -59,6 +60,11 @@ sub load # (node)
     
     defined $node or
         throw ANSTE::Exceptions::MissingArgument('node');
+
+    if (not $node->isa('XML::DOM::Element')) {
+        throw ANSTE::Exceptions::InvalidType('node',
+                                             'XML::DOM::Element');
+    }
 
     my $dir = ANSTE::Config->instance()->profilePath();
 

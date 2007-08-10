@@ -21,6 +21,8 @@ use warnings;
 use ANSTE::Scenario::BaseImage;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidType;
+use ANSTE::Exceptions::InvalidFile;
 
 sub new # (image) returns new BaseScriptGen object
 {
@@ -29,6 +31,11 @@ sub new # (image) returns new BaseScriptGen object
 
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
+
+    if (not $image->isa('ANSTE::Scenario::BaseImage')) {
+        throw ANSTE::Exceptions::InvalidType('image',
+                                            'ANSTE::Scenario::BaseImage');
+    }
 	
 	$self->{image} = $image;
     my $system = ANSTE::Config->instance()->system();
@@ -49,6 +56,10 @@ sub writeScript # (file)
 
     defined $file or
         throw ANSTE::Exceptions::MissingArgument('file');
+
+    if (not -w $file) {
+        throw ANSTE::Exceptions::InvalidFile('file');
+    }
 
 	print $file "#!/bin/sh\n";
 	my $image = $self->{image}->name();

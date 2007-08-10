@@ -20,6 +20,7 @@ use warnings;
 
 use ANSTE::Scenario::NetworkInterface;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidType;
 
 sub new # returns new Network object
 {
@@ -47,6 +48,11 @@ sub addInterface # (interface)
     defined $interface or
         throw ANSTE::Exceptions::MissingArgument('interface');
 
+    if (not $interface->isa('ANSTE::Scenario::NetworkInterface')) {
+        throw ANSTE::Exceptions::InvalidType('interface', 
+             'ANSTE::Scenario::NetworkInterface');
+    }
+
     push(@{ $self->{interfaces} }, $interface);
 }
 
@@ -56,6 +62,11 @@ sub load # (node)
 
     defined $node or
         throw ANSTE::Exceptions::MissingArgument('node');
+
+    if (not $node->isa('XML::DOM::Element')) {
+        throw ANSTE::Exceptions::InvalidType('node',
+                                             'XML::DOM::Element');
+    }
 
     foreach my $element ($node->getElementsByTagName('interface', 0)) {
         my $interface = new ANSTE::Scenario::NetworkInterface;

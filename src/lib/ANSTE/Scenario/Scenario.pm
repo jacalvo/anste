@@ -21,6 +21,7 @@ use warnings;
 use ANSTE::Scenario::Host;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidFile;
 
 use XML::DOM;
 
@@ -122,6 +123,11 @@ sub addHost # (host)
     defined $host or
         throw ANSTE::Exceptions::MissingArgument('host');
 
+    if (not $host->isa('ANSTE::Scenario::Host')) {
+        throw ANSTE::Exceptions::InvalidType('host',
+                                             'ANSTE::Scenario::Host');
+    }
+
 	push(@{$self->{hosts}}, $host);
 }
 
@@ -133,12 +139,15 @@ sub loadFromFile # (filename)
     defined $filename or
         throw ANSTE::Exceptions::MissingArgument('filename');
 
-    # TODO: Throw exception if file doesn't exists
-
     my $dir = ANSTE::Config->instance()->scenarioPath();
+    my $file = "$dir/$filename";
+
+    if (not -r $file) {
+        throw ANSTE::Exceptions::InvalidFile('filename');
+    }
 
 	my $parser = new XML::DOM::Parser;
-	my $doc = $parser->parsefile("$dir/$filename");
+	my $doc = $parser->parsefile($file);
 
 	my $scenario = $doc->getDocumentElement();
 

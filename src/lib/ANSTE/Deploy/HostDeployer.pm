@@ -27,6 +27,7 @@ use ANSTE::Comm::HostWaiter;
 use ANSTE::Image::Image;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidType;
 
 use threads;
 use Error qw(:try);
@@ -40,6 +41,11 @@ sub new # (host) returns new HostDeployer object
 
     defined $host or
         throw ANSTE::Exceptions::MissingArgument('host');
+
+    if (not $host->isa('ANSTE::Scenario::Host')) {
+        throw EBox::Exception::InvalidType('host',
+                                           'ANSTE::Scenario::Host');
+    }
 
 	$self->{host} = $host;
 

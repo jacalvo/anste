@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidType;
 
 # Constants 
 use constant IFACE_TYPE_STATIC => 0;
@@ -162,6 +163,11 @@ sub load # (node)
 
     defined $node or
         throw ANSTE::Exceptions::MissingArgument('node');
+
+    if (not $node->isa('XML::DOM::Element')) {
+        throw ANSTE::Exceptions::InvalidType('node',
+                                             'XML::DOM::Element');
+    }
 
 	my $type = $node->getAttribute('type');
     my $nameNode = $node->getElementsByTagName('name', 0)->item(0);

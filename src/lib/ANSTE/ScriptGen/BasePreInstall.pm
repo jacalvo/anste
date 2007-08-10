@@ -18,9 +18,11 @@ package ANSTE::ScriptGen::BasePreInstall;
 use strict;
 use warnings;
 
-use ANSTE::Scenario::Host;
+use ANSTE::Scenario::BaseImage;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidType;
+use ANSTE::Exceptions::InvalidFile;
 
 # Generates the scripts that installs ansted and anste-slave
 # in a base image.
@@ -32,6 +34,11 @@ sub new # (image) returns new CommInstallGen object
 
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
+
+    if (not $image->isa('ANSTE::Scenario::BaseImage')) {
+        throw ANSTE::Exceptions::InvalidType('image',
+                                            'ANSTE::Scenario::BaseImage');
+    }
 
     $self->{image} = $image;
     my $system = ANSTE::Config->instance()->system();
@@ -52,6 +59,10 @@ sub writeScript # (file)
 
     defined $file or
         throw ANSTE::Exceptions::MissingArgument('file');
+
+    if (not -w $file) {
+        throw ANSTE::Exceptions::InvalidFile('file');
+    }
 
     my $system = $self->{system};
 

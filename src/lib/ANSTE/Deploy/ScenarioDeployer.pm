@@ -23,6 +23,7 @@ use ANSTE::Deploy::HostDeployer;
 use ANSTE::Comm::WaiterServer;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidType;
 
 sub new # (scenario) returns new ScenarioDeployer object
 {
@@ -31,6 +32,11 @@ sub new # (scenario) returns new ScenarioDeployer object
 
     defined $scenario or
         throw ANSTE::Exceptions::MissingArgument('scenario');
+
+    if (not $scenario->isa('ANSTE::Scenario::Scenario')) {
+        throw EBox::Exception::InvalidType('scenario',
+                                           'ANSTE::Scenario::Scenario');
+    }
 	
 	$self->{scenario} = $scenario;
 
