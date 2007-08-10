@@ -21,24 +21,92 @@ use strict;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
+use ANSTE::Config;
+use ANSTE::Image::Creator;
+use ANSTE::Image::Image;
 use ANSTE::Deploy::ScenarioDeployer;
 use ANSTE::Scenario::Scenario;
-use ANSTE::Config;
+use ANSTE::Exceptions::InvalidFile;
 
-my $imageFile = $ARGV[0];
+use Getopt::Long;
+use Pod::Usage;
+use Error qw(:try);
 
-sub usage
+my $create = '';
+my $deploy = '';
+my $help = 0;
+
+
+GetOptions('create' => \$create,
+           'deploy' => \$deploy,
+           'help' => \$help) or pod2usage(2);
+
+pod2usage(1) if $help;           
+
+if (not $create and not $deploy) {
+    pod2usage("$0: No action specified.");
+}
+
+pod2usage("$0: No files given.") if @ARGV == 0;
+
+foreach my $file (@ARGV) {
+    if ($create) {
+        create($file);
+    }
+    elsif ($deploy) {
+        deploy($file);
+    }
+}
+
+sub create # (file)
 {
-    print "Usage: anste <scenario.xml>\n";
+    my ($file) = @_;
+
+    my $image = new ANSTE::Image::Image();
+
+    try {
+        $image->loadFromFile($file);
+    } catch ANSTE::Exceptions::InvalidFile with {
+        print STDERR "Can't load image $file.\n";
+        exit(1);
+    };
+
+    my $ipRange = ANSTE::Config->instance()->ipRange();
+    $image->setIp("$ipRange.191");
+
+    my $creator = new ANSTE::Image::Creator($image);
+    $creator->createImage();
 }
 
-if (@ARGV < 1) {
-    usage();
-    exit(1);
+sub deploy # (file)
+{
+    my ($file) = @_;
+
+    my $scenario = new ANSTE::Scenario::Scenario;
+    try {
+        $scenario->loadFromFile($file);
+    } catch ANSTE::Exceptions::InvalidFile with {
+        print STDERR "Can't load scenario $file.\n";
+        exit(1);
+    };
+
+    my $deployer = new ANSTE::Deploy::ScenarioDeployer($scenario);
+    $deployer->deploy();
 }
 
-my $scenario = new ANSTE::Scenario::Scenario;
-$scenario->loadFromFile($ARGV[0]);
+__END__
 
-my $deployer = new ANSTE::Deploy::ScenarioDeployer($scenario);
-$deployer->deploy();
+=head1 NAME
+
+anste - Advanced Network Service Testing Environment
+
+=head1 SYNOPSIS
+
+anste [options] [file ...]
+
+ Options:
+   -help       shows this help
+   -create     create a base image
+   -deploy     deploy a scenario
+
+=cut
