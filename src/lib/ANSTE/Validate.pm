@@ -18,9 +18,47 @@ package ANSTE::Validate;
 use strict;
 use warnings;
 
+sub path # (path)
+{
+    my ($path) = @_;
+
+    return -d $path;
+}
+
+sub system # (system)
+{
+    my ($system) = @_;
+
+    return 1; # FIXME
+
+    my $path = "ANSTE/System/$system.pm";
+    my $libPath = "lib/$path";
+
+    return -r "$path" or -r "$libPath";
+}
+
+sub virtualizer # (virtualizer)
+{
+    my ($virtualizer) = @_;
+
+    return 1; # FIXME
+
+    my $path = "ANSTE/Virtualizer/$virtualizer.pm";
+    my $libPath = "lib/$path";
+
+    return -r $path or -r $libPath; 
+}
+
+sub port # (port)
+{
+    my ($port) = @_;
+
+    return $port > 0 && $port <= 65535;
+}
+
 sub ip # (ip)
 {
-    my ($self, $ip) = @_;
+    my ($ip) = @_;
 
     if (not defined $ip) {
         return 0;

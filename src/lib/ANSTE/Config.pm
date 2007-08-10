@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use ANSTE::Exceptions::InvalidConfig;
+use ANSTE::Exceptions::NotFound;
 use ANSTE::Validate;
 
 use Config::Tiny;
@@ -49,63 +50,124 @@ sub system
 {
     my ($self) = @_;
 
-    return $self->_getOption('global', 'system');
+    my $system = $self->_getOption('global', 'system');
+
+    if (not ANSTE::Validate::system($system)) {
+        throw ANSTE::Exceptions::NotFound('System', 
+                                          $system);
+    }
+
+    return $system;
 }
 
 sub virtualizer
 {
     my ($self) = @_;
 
-    return $self->_getOption('global', 'virtualizer');
+    my $virtualizer = $self->_getOption('global', 'virtualizer');
+
+    if (not ANSTE::Validate::virtualizer($virtualizer)) {
+        throw ANSTE::Exceptions::NotFound('Virtualizer', 
+                                          $virtualizer);
+    }
+
+    return $virtualizer;
 }
 
 sub imagePath
 {
     my ($self) = @_;
 
-    return $self->_getOption('paths', 'images');
+    my $imagePath = $self->_getOption('paths', 'images');
+
+    if (not ANSTE::Validate::path($imagePath)) {
+        throw ANSTE::Exceptions::InvalidConfig('paths/images', $imagePath);
+    }
+
+    return $imagePath;
 }
 
 sub imageTypePath
 {
     my ($self) = @_;
 
-    return $self->_getOption('paths', 'image-types');
+    my $imageTypePath = $self->_getOption('paths', 'image-types');
+
+    if (not ANSTE::Validate::path($imageTypePath)) {
+        throw ANSTE::Exceptions::InvalidConfig('paths/image-types', $imageTypePath);
+    }
+
+    return $imageTypePath;
 }
 
 sub scenarioPath
 {
     my ($self) = @_;
 
-    return $self->_getOption('paths', 'scenarios');
+    my $scenarioPath = $self->_getOption('paths', 'scenarios');
+
+    if (not ANSTE::Validate::path($scenarioPath)) {
+        throw ANSTE::Exceptions::InvalidConfig('paths/scenarios',
+                                               $scenarioPath);
+    }
+
+    return $scenarioPath;
 }
 
 sub profilePath
 {
     my ($self) = @_;
 
-    return $self->_getOption('paths', 'profiles');
+    my $profilePath = $self->_getOption('paths', 'profiles');
+
+    if (not ANSTE::Validate::path($profilePath)) {
+        throw ANSTE::Exceptions::InvalidConfig('paths/profiles',
+                                               $profilePath);
+    }
+
+    return $profilePath;
 }
 
 sub scriptPath
 {
     my ($self) = @_;
 
-    return $self->_getOption('paths', 'scripts');
+    my $scriptPath = $self->_getOption('paths', 'scripts');
+
+    if (not ANSTE::Validate::path($scriptPath)) {
+        throw ANSTE::Exceptions::InvalidConfig('paths/scripts',
+                                               $scriptPath);
+    }
+
+    return $scriptPath;
 }
 
 sub anstedPort
 {
     my ($self) = @_;
 
-    return $self->_getOption('ansted', 'port');
+    my $anstedPort = $self->_getOption('ansted', 'port');
+
+    if (not ANSTE::Validate::port($anstedPort)) {
+        throw ANSTE::Exceptions::InvalidConfig('ansted/port',
+                                               $anstedPort);
+    }
+    
+    return $anstedPort;
 }
 
 sub masterPort
 {
     my ($self) = @_;
 
-    return $self->_getOption('master', 'port');
+    my $masterPort = $self->_getOption('master', 'port');
+
+    if (not ANSTE::Validate::port($masterPort)) {
+        throw ANSTE::Exceptions::InvalidConfig('master/port',
+                                               $masterPort);
+    }
+    
+    return $masterPort;
 }
 
 sub ipRange
@@ -133,6 +195,9 @@ sub gateway
 
     return $gateway;
 }
+
+# TODO: validate xen options (maybe they should be in separate class 
+# Virtualizer::XenConfig or similar)
 
 sub xenDir
 {
