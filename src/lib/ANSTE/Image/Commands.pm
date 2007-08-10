@@ -215,7 +215,6 @@ sub prepareSystem
 
     $self->_executeSetup($client, $setupScript);
 
-    # TODO: Do all this file things in /tmp
     unlink($setupScript)
         or die "Can't remove $setupScript: $!";
 

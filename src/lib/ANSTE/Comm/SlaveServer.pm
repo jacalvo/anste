@@ -40,7 +40,6 @@ sub get	# (name)
 {
     my ($self, $name) = @_;
 
-    # TODO: Check and forbid paths, only allow filenames stored in CWD
     if (open(FILE, '<', "$DIR/$name")) {
 	    chomp(my @lines = <FILE>);
 	    close FILE;

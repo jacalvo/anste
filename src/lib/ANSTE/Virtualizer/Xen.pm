@@ -109,7 +109,7 @@ sub createVM # (name)
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-    $self->execute("xm create $name.cfg");
+    $self->execute("xm create /tmp/$name.cfg");
 }
 
 # Method: imageFile
@@ -178,16 +178,12 @@ sub createImageCopy # (baseimage, newimage)
 
     dircopy("$path/$basename", "$path/$newname");
 
-    # TODO: Change /etc/hostname and /etc/hosts with the new values
-
     # Creates the configuration file for the new image
     my $config = $self->_createImageConfig($newimage, $path);
 
     # Writes the xen configuration file
     my $FILE;
-    # TODO: Write this to another non-invasive location and
-    # then create the images at HostDeployer using the new path
-    my $configFile = "/etc/xen/$newname.cfg";
+    my $configFile = "/tmp/$newname.cfg";
     open($FILE, '>', $configFile) or return 0;
     print $FILE $config;
     close($FILE) or return 0; 

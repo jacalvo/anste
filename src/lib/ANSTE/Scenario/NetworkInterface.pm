@@ -20,6 +20,8 @@ use warnings;
 
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
+use ANSTE::Exceptions::InvalidData;
+use ANSTE::Validate;
 
 # Constants 
 use constant IFACE_TYPE_STATIC => 0;
@@ -117,7 +119,10 @@ sub setAddress # address string
     defined $address or
         throw ANSTE::Exceptions::MissingArgument('address');
 
-	# TODO: Check if it's a valid IP (and throw exception)
+    if (not ANSTE::Validate::ip($address)) {
+        throw ANSTE::Exceptions::InvalidData('address', $address);
+    }
+
 	$self->{address} = $address;
 }
 
@@ -135,7 +140,10 @@ sub setNetmask # netmask string
     defined $netmask or
         throw ANSTE::Exceptions::MissingArgument('netmask');
 
-	# TODO: Check if it's a valid IP (and throw exception)
+    if (not ANSTE::Validate::ip($netmask)) {
+        throw ANSTE::Exceptions::InvalidData('netmask', $netmask);
+    }
+
 	$self->{netmask} = $netmask;
 }
 
@@ -153,7 +161,10 @@ sub setGateway # gateway string
     defined $gateway or
         throw ANSTE::Exceptions::MissingArgument('gateway');
 
-	# TODO: Check if it's a valid IP (and throw exception)
+    if (not ANSTE::Validate::ip($gateway)) {
+        throw ANSTE::Exceptions::InvalidData('gateway', $gateway);
+    }
+
 	$self->{gateway} = $gateway;
 }
 

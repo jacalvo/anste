@@ -18,6 +18,9 @@ package ANSTE::Config;
 use strict;
 use warnings;
 
+use ANSTE::Exceptions::InvalidConfig;
+use ANSTE::Validate;
+
 use Config::Tiny;
 
 use constant CONFIG_FILE => 'data/anste.conf';
@@ -109,14 +112,26 @@ sub ipRange
 {
     my ($self) = @_;
 
-    return $self->_getOption('comm', 'ip-range');
+    my $ipRange =  $self->_getOption('comm', 'ip-range');
+
+    if (not ANSTE::Validate::ipRange($ipRange)) {
+        throw ANSTE::Exceptions::InvalidConfig('ip-range', $ipRange);
+    }
+
+    return $ipRange;
 }
 
 sub gateway
 {
     my ($self) = @_;
 
-    return $self->_getOption('comm', 'gateway');
+    my $gateway =  $self->_getOption('comm', 'gateway');
+
+    if (not ANSTE::Validate::ip($gateway)) {
+        throw ANSTE::Exceptions::InvalidConfig('gateway', $gateway);
+    }
+
+    return $gateway;
 }
 
 sub xenDir

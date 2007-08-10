@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidFile;
 
 use SOAP::Lite; # +trace => 'debug'; 
 
@@ -55,7 +56,9 @@ sub put	# (file) returns boolean
     defined $file or
         throw ANSTE::Exceptions::MissingArgument('file');
 
-    # TODO: Throw exception if file doesn't exists
+    if (not -r $file) {
+        throw ANSTE::Exceptions::InvalidFile('file');
+    }
 
     my $soap = $self->{soap};
 
