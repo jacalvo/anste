@@ -56,9 +56,9 @@ sub createImage
 
     $cmd->create() or die 'Error creating base image.';
 
-    try {
-        $cmd->mount() or die 'Error mounting image.';
+    $cmd->mount() or die 'Error mounting image.';
 
+    try {
         $cmd->copyBaseFiles() or die 'Error copying files.';
 
         $cmd->installBasePackages() or die 'Error installing packages.';

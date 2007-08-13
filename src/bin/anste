@@ -71,8 +71,8 @@ sub create # (file)
         exit(1);
     };
 
-    my $ipRange = ANSTE::Config->instance()->ipRange();
-    $image->setIp("$ipRange.191");
+    my $address = ANSTE::Config->instance()->firstAddress();
+    $image->setIp($address);
 
     my $creator = new ANSTE::Image::Creator($image);
     $creator->createImage();

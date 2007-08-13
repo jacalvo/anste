@@ -109,7 +109,7 @@ sub createVM # (name)
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-    $self->execute("xm create /tmp/$name.cfg");
+    $self->execute("xm create $name.cfg");
 }
 
 # Method: imageFile
@@ -183,7 +183,7 @@ sub createImageCopy # (baseimage, newimage)
 
     # Writes the xen configuration file
     my $FILE;
-    my $configFile = "/tmp/$newname.cfg";
+    my $configFile = "/etc/xen/$newname.cfg";
     open($FILE, '>', $configFile) or return 0;
     print $FILE $config;
     close($FILE) or return 0; 

@@ -170,17 +170,17 @@ sub masterPort
     return $masterPort;
 }
 
-sub ipRange
+sub firstAddress
 {
     my ($self) = @_;
 
-    my $ipRange =  $self->_getOption('comm', 'ip-range');
+    my $firstAddress =  $self->_getOption('comm', 'first-address');
 
-    if (not ANSTE::Validate::ipRange($ipRange)) {
-        throw ANSTE::Exceptions::InvalidConfig('ip-range', $ipRange);
+    if (not ANSTE::Validate::ip($firstAddress)) {
+        throw ANSTE::Exceptions::InvalidConfig('first-address', $firstAddress);
     }
 
-    return $ipRange;
+    return $firstAddress;
 }
 
 sub gateway
@@ -194,6 +194,16 @@ sub gateway
     }
 
     return $gateway;
+}
+
+sub natIface
+{
+    my ($self) = @_;
+
+    # TODO: Validate if interface exists??
+    my $iface =  $self->_getOption('comm', 'nat-iface');
+
+    return $iface;
 }
 
 # TODO: validate xen options (maybe they should be in separate class 
@@ -294,6 +304,8 @@ sub _setDefaults
 {
     my ($self) = @_;
 
+    # TODO: Some options have to be mandatory and so don't have a default.
+
     $self->{default}->{'global'}->{'system'} = 'Debian';
     $self->{default}->{'global'}->{'virtualizer'} = 'Xen';
 
@@ -309,6 +321,7 @@ sub _setDefaults
 
     $self->{default}->{'comm'}->{'ip-range'} = '192.168.0';
     $self->{default}->{'comm'}->{'gateway'} = '192.168.0.1';
+    $self->{default}->{'comm'}->{'nat-iface'} = 'eth1';
 
     $self->{default}->{'xen-options'}->{'dir'} = '/home/xen';
     $self->{default}->{'xen-options'}->{'install-method'} = 'debootstrap';

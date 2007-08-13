@@ -189,9 +189,8 @@ sub prepareSystem
 
     my $config = ANSTE::Config->instance();
     my $port = $config->anstedPort();
-    my $host = $config->ipRange() . '.191'; #FIXME: hardcoded!
     my $ip = $self->{image}->ip();
-    $client->connect("http://$host:$port");
+    $client->connect("http://$ip:$port");
 
     my $name = $image->name();
 
@@ -277,7 +276,11 @@ sub _createVirtualMachine # (name)
     my $virtualizer = $self->{virtualizer};
     my $system = $self->{system};
 
-    $system->enableNAT('eth1'); # FIXME: interface hardcoded!!
+    my $addr = $self->{image}->ip();
+
+    my $iface = ANSTE::Config->instance()->natIface();
+
+    $system->enableNAT($iface, $addr);
 
     $virtualizer->createVM($name);
 

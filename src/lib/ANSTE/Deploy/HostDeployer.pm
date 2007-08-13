@@ -155,10 +155,11 @@ sub _createVirtualMachine # returns IP address string
     my $virtualizer = $self->{virtualizer};
     my $system = $self->{system};
 
-    $system->enableNAT('eth1'); # FIXME: interface hardcoded!!
-
     my $hostname = $host->name();
     my $ip = $self->{image}->ip();
+    my $iface = ANSTE::Config->instance()->natIface();
+
+    $system->enableNAT($iface, $ip);
 
     print "[$hostname] Creating virtual machine ($ip)\n"; 
 

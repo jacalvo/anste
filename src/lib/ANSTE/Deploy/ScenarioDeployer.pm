@@ -57,12 +57,15 @@ sub deploy
     my $server = new ANSTE::Comm::WaiterServer();
     $server->startThread();
 
-    my $ipRange = ANSTE::Config->instance()->ipRange();
+    my $firstAddress = ANSTE::Config->instance()->firstAddress();
 
-    my $number = 191;
+    # Separate the last number of the ip in order to increment it.
+    my ($base, $number) = 
+        $firstAddress =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3})\.(\d{1,3})$/;
+
     foreach my $host (@{$scenario->hosts()}) {
         my $deployer = new ANSTE::Deploy::HostDeployer($host);
-        my $ip = "$ipRange.$number";
+        my $ip = "$base.$number";
         my $hostname = $host->name();
         print "[$hostname] starting\n";
         $deployer->startDeployThread($ip);

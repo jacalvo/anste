@@ -361,17 +361,20 @@ sub firewallDefaultRules # returns string
     return $config;
 }
 
-sub enableNAT # (iface)
+sub enableNAT # (iface, sourceAddr)
 {
-    my ($self, $iface) = @_;
+    my ($self, $iface, $sourceAddr) = @_;
 
     defined $iface or
         throw ANSTE::Exceptions::MissingArgument('iface');
+    defined $sourceAddr or
+        throw ANSTE::Exceptions::MissingArgument('sourceAddr');
 
     # TODO: Maybe this will need to be turned off after ANSTE deployment
     $self->execute('echo 1 > /proc/sys/net/ipv4/ip_forward');
-    # TODO: This rule should be more restrictive
-    $self->execute("iptables -t nat -A POSTROUTING -o $iface -j MASQUERADE");
+
+    $self->execute("iptables -t nat -A POSTROUTING " .
+                   "-o $iface -s $sourceAddr -j MASQUERADE");
 }
 
 sub _interfaceConfig # (iface)

@@ -18,6 +18,15 @@ package ANSTE::Validate;
 use strict;
 use warnings;
 
+use Cwd;
+
+sub natural # (string)
+{
+    my ($string) = @_;
+
+    return $string =~ /^\d+$/;
+}
+
 sub path # (path)
 {
     my ($path) = @_;
@@ -29,31 +38,27 @@ sub system # (system)
 {
     my ($system) = @_;
 
-    return 1; # FIXME
-
     my $path = "ANSTE/System/$system.pm";
-    my $libPath = "lib/$path";
+    my $libPath = getcwd() . "/lib/ANSTE/System/$system.pm";
 
-    return -r "$path" or -r "$libPath";
+    return -f $path || -f $libPath;
 }
 
 sub virtualizer # (virtualizer)
 {
     my ($virtualizer) = @_;
 
-    return 1; # FIXME
-
     my $path = "ANSTE/Virtualizer/$virtualizer.pm";
-    my $libPath = "lib/$path";
+    my $libPath = getcwd() . "/lib/ANSTE/Virtualizer/$virtualizer.pm";
 
-    return -r $path or -r $libPath; 
+    return -f $path || -f $libPath; 
 }
 
 sub port # (port)
 {
     my ($port) = @_;
 
-    return $port > 0 && $port <= 65535;
+    return natural($port) && $port > 0 && $port <= 65535;
 }
 
 sub ip # (ip)
@@ -68,30 +73,6 @@ sub ip # (ip)
         $ip =~ /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
 
     if (@octets != 4) {
-        return 0;
-    }
-
-    foreach my $octect (@octets) {
-        if ($octect < 0 || $octect > 255) {
-            return 0;
-        }
-    }
-
-    return 1; 
-}
-
-sub ipRange # (ip)
-{
-    my ($self, $ip) = @_;
-
-    if (not defined $ip) {
-        return 0;
-    }
-
-    my @octets = 
-        $ip =~ /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
-
-    if (@octets != 3) {
         return 0;
     }
 
