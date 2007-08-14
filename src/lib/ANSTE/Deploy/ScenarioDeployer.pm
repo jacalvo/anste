@@ -70,6 +70,7 @@ sub deploy # returns hash ref with the ip of each host
         my $ip = "$base.$number";
         my $hostname = $host->name();
         $hostIP->{$hostname} = $ip;
+    
         print "[$hostname] starting\n";
         $deployer->startDeployThread($ip);
         push(@deployers, $deployer);

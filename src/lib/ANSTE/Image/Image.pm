@@ -20,6 +20,8 @@ use base 'ANSTE::Scenario::BaseImage';
 use strict;
 use warnings;
 
+use ANSTE::Scenario::Network;
+use ANSTE::Scenario::NetworkInterface;
 use ANSTE::Exceptions::MissingArgument;
 
 sub new # returns new Image object
@@ -37,6 +39,8 @@ sub new # returns new Image object
     if (exists $params{memory}) {
     	$self->{memory} = $params{memory}; 
     }
+
+    $self->{network} = undef;
 
 	bless($self, $class);
 
@@ -75,6 +79,40 @@ sub setMemory # (memory)
         throw ANSTE::Exceptions::MissingArgument('memory');
 
 	$self->{memory} = $memory;
+}
+
+sub network # returns Network object
+{
+	my ($self) = @_;
+
+	return $self->{network};
+}
+
+sub setNetwork # (network)
+{
+	my ($self, $network) = @_;	
+
+    defined $network or
+        throw ANSTE::Exceptions::MissingArgument('network');
+
+	$self->{network} = $network;
+}
+
+sub commInterface 
+{
+    my ($self) = @_;
+   
+    my $ip = $self->{ip};
+
+    my $iface = new ANSTE::Scenario::NetworkInterface();
+
+    $iface->setName('eth0');
+    $iface->setAddress($ip);
+    $iface->setNetmask('255.255.255.0');
+    my $gateway = ANSTE::Config->instance()->gateway();
+    $iface->setGateway($gateway);
+
+    return $iface;
 }
 
 1;

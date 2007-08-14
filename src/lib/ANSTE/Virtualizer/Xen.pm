@@ -269,8 +269,17 @@ sub _createImageConfig # (image, path) returns config string
     my $template = new Text::Template(SOURCE => XEN_CONFIG_TEMPLATE)
         or die "Couldnt' construct template: $Text::Template::ERROR";
 
+    my $ip = $image->{ip};
+
+    my $ifaceList = "'ip=$ip'";
+
+    foreach my $iface (@{$image->network()->interfaces()}) {
+        $ip = $iface->address();
+        $ifaceList .= ", 'ip=$ip'";    
+    }
+
     my %vars = (hostname => $image->name(),
-                ip => $image->ip(),
+                iface_list => $ifaceList,
                 memory => $image->memory(),
                 path => $path,
                 device => 'sda');

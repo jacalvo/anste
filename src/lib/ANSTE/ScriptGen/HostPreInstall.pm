@@ -36,9 +36,9 @@ sub new # (image) returns new HostInstallGen object
         throw ANSTE::Exceptions::InvalidType('image',
                                              'ANSTE::Image::Image');
     }
+    
+    $self->{image} = $image;
 
-    $self->{hostname} = $image->name();
-    $self->{ip} = $image->ip();
     my $system = ANSTE::Config->instance()->system();
 
     eval("use ANSTE::System::$system");
@@ -62,7 +62,7 @@ sub writeScript # (file)
         throw ANSTE::Exceptions::InvalidFile('file');
     }
 
-    my $hostname = $self->{hostname};
+    my $hostname = $self->{image}->name();
 
 	print $file "#!/bin/sh\n";
 	print $file "\n# Hostname configuration file\n";
@@ -82,9 +82,11 @@ sub _writeHostnameConfig # (file)
     my ($self, $file) = @_;
 
     my $system = $self->{system};
+    
+    my $hostname = $self->{image}->name();
 
     print $file "# Write hostname config\n";
-    my $config = $system->hostnameConfig($self->{hostname});
+    my $config = $system->hostnameConfig($hostname);
     print $file "$config\n\n";
 }
 
@@ -93,7 +95,7 @@ sub _writeHostsConfig # (file)
     my ($self, $file) = @_;
 
     my $system = $self->{system};
-    my $host = $self->{hostname};
+    my $host = $self->{image}->name();
 
     print $file "# Write hosts configuration\n";
     my $config = $system->hostsConfig($host);
@@ -105,9 +107,9 @@ sub _writeInitialNetworkConfig # (file)
 	my ($self, $file) = @_;
 
     my $system = $self->{system};
-	my $ip = $self->{ip};
+    my $iface = $self->{image}->commInterface();
 
-    my $config = $system->initialNetworkConfig($ip);
+    my $config = $system->initialNetworkConfig($iface);
 
 	print $file "# Write initial network configuration\n";
     print $file "$config\n\n";
@@ -121,7 +123,6 @@ sub _writeMasterAddress # (file)
 
     my $config = ANSTE::Config->instance();
     my $port = $config->masterPort();
-    # TODO: Not sure if this is correct
     my $masterIP = $config->gateway();
     my $MASTER = "http://$masterIP:$port";
 

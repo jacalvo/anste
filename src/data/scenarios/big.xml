@@ -9,7 +9,7 @@
         <baseimage>sarge-mini</baseimage>
 		<network>
             <interface type="static">
-                <name>eth0</name>
+                <name>eth1</name>
     			<address>192.168.2.1</address>
 	    		<netmask>255.255.255.0</netmask>
             </interface>
@@ -17,13 +17,13 @@
                 <destination>192.168.45.0</destination>
                 <gateway>*</gateway>
                 <netmask>255.255.255.0</netmask>
-                <iface>eth0</iface>
+                <iface>eth1</iface>
             </route>
             <route>
                 <destination>default</destination>
                 <gateway>jimbo</gateway>
                 <netmask>0.0.0.0</netmask>
-                <iface>eth0</iface>
+                <iface>eth1</iface>
             </route>
 		</network>
 		<packages>
@@ -38,7 +38,7 @@
         <baseimage>sarge-mini</baseimage>
 		<network>
             <interface type="static">
-                <name>eth0</name>
+                <name>eth1</name>
     			<address>192.168.2.2</address>
 	    		<netmask>255.255.255.0</netmask>
             </interface>
@@ -54,7 +54,7 @@
         <baseimage>sarge-mini</baseimage>
 		<network>
             <interface type="static">
-                <name>eth0</name>
+                <name>eth1</name>
     			<address>192.168.3.1</address>
 	    		<netmask>255.255.255.0</netmask>
             </interface>
@@ -71,7 +71,7 @@
         <baseimage>sarge-mini</baseimage>
 		<network>
             <interface type="static">
-                <name>eth0</name>
+                <name>eth1</name>
     			<address>192.168.3.2</address>
 	    		<netmask>255.255.255.0</netmask>
             </interface>

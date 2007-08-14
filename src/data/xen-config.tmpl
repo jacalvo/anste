@@ -44,7 +44,7 @@ name        = '{$hostname}'
   }    
   else
   {
-    $OUT .= "vif         = [ 'ip=$ip' ]"; 
+    $OUT .= "vif         = [ $iface_list ]"; 
   }
 }
 

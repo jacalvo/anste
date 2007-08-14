@@ -97,10 +97,14 @@ sub deploy # (ip)
     my $hostname = $host->name();
     my $memory = $host->baseImage()->memory();
 
-    $self->{image} = new ANSTE::Image::Image(name => $hostname,
-                                             memory => $memory,
-                                             ip => $ip);
-   
+    my $image = new ANSTE::Image::Image(name => $hostname,
+                                        memory => $memory,
+                                        ip => $ip);
+
+    $self->{image} = $image;
+
+    $image->setNetwork($host->network());
+
     print "[$hostname] Creating a copy of the base image\n";
     $self->_copyBaseImage() or die "Can't copy base image";
 
@@ -110,6 +114,10 @@ sub deploy # (ip)
     my $cmd = $self->{cmd};
     print "[$hostname] Creating virtual machine ($ip)\n"; 
     $cmd->createVirtualMachine();
+
+    # Add communications interface
+    my $commIface = $image->commInterface();
+    $host->network()->addInterface($commIface);
 
     print "[$hostname] Generating setup script...\n";
     $self->_generateSetupScript(SETUP_SCRIPT);

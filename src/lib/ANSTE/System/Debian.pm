@@ -22,6 +22,7 @@ use warnings;
 
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidType;
 
 # Method: mountImage 
 #
@@ -155,6 +156,15 @@ sub updatePackagesCommand # returns string
     return 'apt-get update';
 }
 
+# Method: enableInterfacesCommand
+# FIXME: documentation
+sub enableInterfacesCommand # returns string
+{
+    my ($self) = @_;
+
+    return 'ifup -a';
+}
+
 # Method: updatePackagesCommand
 #
 #   Overriden method that returns the Debian command
@@ -245,29 +255,25 @@ sub networkConfig # (network) returns string
     return $config;
 }
 
-sub initialNetworkConfig # (ip) returns string
+# Method: initialNetworkConfig
+# FIXME documentation
+sub initialNetworkConfig # (iface) returns string
 {
-    my ($self, $ip) = @_;
+    my ($self, $iface) = @_;
 
-    defined $ip or
-        throw ANSTE::Exceptions::MissingArgument('ip');
+    defined $iface or
+        throw ANSTE::Exceptions::MissingArgument('iface');
 
-    my $iface = 'eth0';
-    my $address = $ip;
-    my $netmask = '255.255.255.0';
-    # TODO: Separate this from here, pass a NetworkInterface
-    # object to this function and then call _interfaceConfig
-    my $gateway = ANSTE::Config->instance()->gateway(); 
+    if (not $iface->isa('ANSTE::Scenario::NetworkInterface')) {
+        throw ANSTE::Exceptions::InvalidType('iface',
+            'ANSTE::Scenario::NetworkInterface');
+    }
 
     my $config = '';
 	$config .= "cat << EOF > \$MOUNT/etc/network/interfaces\n";
     $config .= "auto lo\n";
 	$config .= "iface lo inet loopback\n\n";
-	$config .= "auto $iface\n";
-	$config .= "iface $iface inet static\n";
-	$config .= "address $address\n";
-	$config .= "netmask $netmask\n";
-	$config .= "gateway $gateway\n";
+    $config .= $self->_interfaceConfig($iface);
 	$config .= "EOF";
 
     return $config;
@@ -417,6 +423,8 @@ sub _interfaceConfig # (iface)
             $config .= "gateway $gateway\n";
         }
 	}
+
+    return $config;
 }
 
 sub _routeCommand # (route)

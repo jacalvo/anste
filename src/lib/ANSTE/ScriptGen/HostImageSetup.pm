@@ -94,6 +94,10 @@ sub _writeNetworkConfig # (file)
 
 	print $file "# Write network configuration\n";
     print $file "$config\n\n";
+
+    print $file "# Enable interfaces\n";
+    my $command = $system->enableInterfacesCommand();
+    print $file "$command\n\n";
 }
 
 1;
