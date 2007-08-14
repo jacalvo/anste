@@ -13,11 +13,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::Testing::TestSuite;
+package ANSTE::Test::Suite;
 
 use strict;
 use warnings;
 
+use ANSTE::Test::Test;
 use ANSTE::Exceptions::MissingArgument;
 
 use XML::DOM;
@@ -71,6 +72,23 @@ sub setDesc # desc string
 	$self->{desc} = $desc;
 }
 
+sub scenario # returns scenario string
+{
+	my ($self) = @_;
+
+	return $self->{scenario};
+}
+
+sub setScenario # scenario string
+{
+	my ($self, $scenario) = @_;	
+
+    defined $scenario or
+        throw ANSTE::Exceptions::MissingArgument('scenario');
+
+	$self->{scenario} = $scenario;
+}
+
 sub tests # return tests list ref
 {
     my ($self) = @_;
@@ -95,7 +113,7 @@ sub loadFromDir # (dirname)
     defined $dirname or
         throw ANSTE::Exceptions::MissingArgument('dirname');
 
-    my $dir = ANSTE::Config->instance()->suitePath();
+    my $dir = ANSTE::Config->instance()->testPath();
     my $file = "$dir/$dirname/suite.xml";
 
     if (not -r $file) {
@@ -122,7 +140,7 @@ sub loadFromDir # (dirname)
 
 	# Read the <test> elements 
 	foreach my $element ($suite->getElementsByTagName('test', 0)) {
-		my $test = new ANSTE::Testing::Test();
+		my $test = new ANSTE::Test::Test();
 		$test->load($element);
 		$self->addTest($test);
 	}

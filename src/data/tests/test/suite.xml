@@ -1,0 +1,19 @@
+<suite>
+    <name>suiteName</name>
+    <desc>suiteDesc</desc>
+    
+    <scenario>test.xml</scenario>
+
+    <test>
+        <name>testName</name>
+        <desc>testDesc</desc>
+        <dir>testDir</dir>
+    </test>
+
+    <test>
+        <name>testName</name>
+        <desc>testDesc</desc>
+        <dir>testDir</dir>
+    </test>
+
+</suite>

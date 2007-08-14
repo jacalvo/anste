@@ -29,7 +29,7 @@ sub testServer # (host)
 	my $name = $host->name();
     is($name, 'hostName', 'name = hostName');
 	my $desc = $host->desc();
-    is($desc, 'hostDesc', 'name = hostName');
+    is($desc, 'hostDesc', 'desc = hostDesc');
 
 	testNetwork($host->network());
 	testPackages($host->packages());
@@ -85,7 +85,7 @@ sub testBaseImage # (image)
 
 sub testPackages # (packages)
 {
-	my $packages = shift;
+	my ($packages) = @_;
 
 	print "Showing Packages...\n";
     ok(length(@{$packages->list()}) > 0, 'packages count test');
@@ -102,7 +102,7 @@ sub testPackages # (packages)
 
 sub test # (scenario)
 {
-	my $scenario = shift; 
+	my ($scenario) = @_;
 	my $name = $scenario->name();
     is($name, 'scenarioName', 'scenario name = scenarioName');
 	my $desc = $scenario->desc();
@@ -113,6 +113,6 @@ sub test # (scenario)
 	}
 }
 
-my $scenario = new ANSTE::Scenario::Scenario;
+my $scenario = new ANSTE::Scenario::Scenario();
 $scenario->loadFromFile(SCENARIO);
 test($scenario);

@@ -1,0 +1,24 @@
+<suite>
+    <name>Sample Test Suite</name>
+    <desc>Contains a set of tests</desc>
+    
+    <scenario>small.xml</scenario>
+
+    <test>
+        <name>Test 1</name>
+        <desc>Checks if the system is Linux</desc>
+        <dir>test1</dir>
+    </test>
+
+    <test>
+        <name>Test 2</name>
+        <desc>Checks if the Debian version is sarge</desc>
+        <dir>test2</dir>
+    </test>
+
+    <test>
+        <name>Test 3</name>
+        <desc>Checks if wget is installed</desc>
+        <dir>test3</dir>
+    </test>
+</suite>

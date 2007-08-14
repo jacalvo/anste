@@ -27,6 +27,8 @@ use ANSTE::Image::Image;
 use ANSTE::Deploy::ScenarioDeployer;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Exceptions::InvalidFile;
+use ANSTE::Test::Suite;
+use ANSTE::Test::Runner;
 
 use Getopt::Long;
 use Pod::Usage;
@@ -34,11 +36,13 @@ use Error qw(:try);
 
 my $create = '';
 my $deploy = '';
+my $test = '';
 my $help = 0;
 
 
 GetOptions('create' => \$create,
            'deploy' => \$deploy,
+           'test' => \$test,
            'help' => \$help) or pod2usage(2);
 
 pod2usage(1) if $help;           
@@ -55,6 +59,9 @@ foreach my $file (@ARGV) {
     }
     elsif ($deploy) {
         deploy($file);
+    }
+    elsif ($test) {
+        test($file);
     }
 }
 
@@ -92,6 +99,22 @@ sub deploy # (file)
 
     my $deployer = new ANSTE::Deploy::ScenarioDeployer($scenario);
     $deployer->deploy();
+}
+
+sub test # (file)
+{
+    my ($file) = @_;
+
+    my $suite = new ANSTE::Test::Suite;
+    try {
+        $suite->loadFromDir($file);
+    } catch ANSTE::Exceptions::InvalidFile with {
+        print STDERR "Can't load test suite $file.\n";
+        exit(1);
+    };
+
+    my $runner = new ANSTE::Test::Runner($suite);
+    $runner->run();
 }
 
 __END__
