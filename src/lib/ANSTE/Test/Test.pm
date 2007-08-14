@@ -20,6 +20,8 @@ use warnings;
 
 use ANSTE::Exceptions::MissingArgument;
 
+use XML::DOM;
+
 sub new # returns new Test object
 {
 	my ($class) = @_;
@@ -27,6 +29,7 @@ sub new # returns new Test object
 
     $self->{name} = '';
     $self->{desc} = '';
+    $self->{dir} = '';
 	
 	bless($self, $class);
 
@@ -65,6 +68,48 @@ sub setDesc # desc string
         throw ANSTE::Exceptions::MissingArgument('desc');
 
 	$self->{desc} = $desc;
+}
+
+sub dir # returns dir string
+{
+	my ($self) = @_;
+
+	return $self->{dir};
+}
+
+sub setDir # dir string
+{
+	my ($self, $dir) = @_;
+
+    defined $dir or
+        throw ANSTE::Exceptions::MissingArgument('dir');
+
+	$self->{dir} = $dir;
+}
+
+sub load # (node)
+{
+	my ($self, $node) = @_;
+
+    defined $node or
+        throw ANSTE::Exceptions::MissingArgument('node');
+
+    if (not $node->isa('XML::DOM::Element')) {
+        throw ANSTE::Exceptions::InvalidType('node',
+                                             'XML::DOM::Element');
+    }
+
+	my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
+	my $name = $nameNode->getFirstChild()->getNodeValue();
+	$self->setName($name);
+
+	my $descNode = $node->getElementsByTagName('desc', 0)->item(0);
+	my $desc = $descNode->getFirstChild()->getNodeValue();
+	$self->setDesc($desc);
+
+	my $dirNode = $node->getElementsByTagName('dir', 0)->item(0);
+	my $dir = $dirNode->getFirstChild()->getNodeValue();
+    $self->setDir($dir);
 }
 
 1;

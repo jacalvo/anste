@@ -20,6 +20,8 @@ use warnings;
 
 use ANSTE::Exceptions::MissingArgument;
 
+use XML::DOM;
+
 sub new # returns new TestSuite object
 {
 	my ($class) = @_;
@@ -27,6 +29,7 @@ sub new # returns new TestSuite object
 
     $self->{name} = '';
     $self->{desc} = '';
+    $self->{scenario} = '';
     $self->{tests} = [];
 	
 	bless($self, $class);
@@ -83,6 +86,48 @@ sub addTest # (test)
         throw ANSTE::Exceptions::MissingArgument('test');
 
     push(@{$self->{tests}}, $test);
+}
+
+sub loadFromDir # (dirname)
+{
+	my ($self, $dirname) = @_;
+
+    defined $dirname or
+        throw ANSTE::Exceptions::MissingArgument('dirname');
+
+    my $dir = ANSTE::Config->instance()->suitePath();
+    my $file = "$dir/$dirname/suite.xml";
+
+    if (not -r $file) {
+        throw ANSTE::Exceptions::InvalidFile($file);
+    }
+
+	my $parser = new XML::DOM::Parser;
+	my $doc = $parser->parsefile($file);
+
+	my $suite = $doc->getDocumentElement();
+
+	# Read name and description of the suite
+	my $nameNode = $suite->getElementsByTagName('name', 0)->item(0);
+	my $name = $nameNode->getFirstChild()->getNodeValue();
+	$self->setName($name);
+	my $descNode = $suite->getElementsByTagName('desc', 0)->item(0);
+	my $desc = $descNode->getFirstChild()->getNodeValue();
+	$self->setDesc($desc);
+
+    # Read the scenario filename
+	my $scenarioNode = $suite->getElementsByTagName('scenario', 0)->item(0);
+	my $scenario = $scenarioNode->getFirstChild()->getNodeValue();
+	$self->setScenario($scenario);
+
+	# Read the <test> elements 
+	foreach my $element ($suite->getElementsByTagName('test', 0)) {
+		my $test = new ANSTE::Testing::Test();
+		$test->load($element);
+		$self->addTest($test);
+	}
+
+	$doc->dispose();
 }
 
 1;

@@ -142,6 +142,19 @@ sub scriptPath
     return $scriptPath;
 }
 
+sub testPath
+{
+    my ($self) = @_;
+
+    my $testPath = $self->_getOption('paths', 'tests');
+
+    if (not ANSTE::Validate::path($testPath)) {
+        throw ANSTE::Exceptions::InvalidConfig('paths/tests', $testPath);
+    }
+
+    return $testPath;
+}
+
 sub anstedPort
 {
     my ($self) = @_;
