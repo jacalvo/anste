@@ -237,6 +237,11 @@ sub networkConfig # (network) returns string
 	$config .= "EOF\n";
 	$config .= "\n";
 
+    foreach my $route (@{$network->routes()}) {
+        $config .= $self->_routeCommand($route);
+        $config .= "\n";
+    }
+
     return $config;
 }
 
@@ -412,6 +417,28 @@ sub _interfaceConfig # (iface)
             $config .= "gateway $gateway\n";
         }
 	}
+}
+
+sub _routeCommand # (route)
+{
+    my ($self, $route) = @_;
+
+    my $dest = $route->destination();
+    my $gateway = $route->gateway();
+    my $netmask = $route->netmask();
+    my $iface = $route->iface();
+
+    my $command = '';
+
+    if ($dest eq 'default') {
+        $command = "route add default gw $gateway";
+    }
+    else {
+        $command = 
+            "route add -net $dest netmask $netmask gw $gateway dev $iface";
+    }
+
+    return $command;
 }
 
 sub _installPackages # (list)

@@ -19,13 +19,14 @@ use warnings;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Config;
 
-use Test::More tests => 47;
+use Test::More tests => 51;
 
 use constant SCENARIO => 'test.xml';
 
 sub testServer # (host)
 {
 	my ($host) = @_;
+
 	my $name = $host->name();
     is($name, 'hostName', 'name = hostName');
 	my $desc = $host->desc();
@@ -39,14 +40,20 @@ sub testServer # (host)
 sub testNetwork # (network)
 {
     my ($network) = @_;
+
 	foreach my $interface (@{$network->interfaces()}) {
 		testInterface($interface);
+	}
+
+	foreach my $route (@{$network->routes()}) {
+		testRoute($route);
 	}
 }
 
 sub testInterface # (interface)
 {
 	my ($iface) = @_;
+
 	my $type = ($iface->type() == 
                 ANSTE::Scenario::NetworkInterface::IFACE_TYPE_DHCP) ? 
                 'dhcp' : 
@@ -61,6 +68,20 @@ sub testInterface # (interface)
         my $gateway = $iface->gateway();
         like($gateway, qr/^192/, 'gateway matchs /^192/');
     }
+}
+
+sub testRoute # (route)
+{
+	my ($route) = @_;
+
+	my $destination = $route->destination();
+    is($destination, 'default', 'destination = default');
+	my $gateway = $route->gateway();
+    is($gateway, 'routeGateway', 'gateway = routeGateway');
+	my $netmask = $route->netmask();
+    is($netmask, '0.0.0.0', 'netmask = 0.0.0.0');
+	my $iface = $route->iface();
+    like($iface, qr/^eth/, 'interface name matchs /^eth/'); 
 }
 
 sub testBaseImage # (image)
@@ -103,6 +124,7 @@ sub testPackages # (packages)
 sub test # (scenario)
 {
 	my ($scenario) = @_;
+
 	my $name = $scenario->name();
     is($name, 'scenarioName', 'scenario name = scenarioName');
 	my $desc = $scenario->desc();

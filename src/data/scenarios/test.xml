@@ -20,6 +20,12 @@
 	    		<netmask>255.255.255.0</netmask>
 		    	<gateway>192.168.1.1</gateway>
             </interface>
+            <route>
+                <destination>default</destination>
+                <gateway>routeGateway</gateway>
+                <netmask>0.0.0.0</netmask>
+                <iface>eth1</iface>
+            </route>
 		</network>
 		<packages>
 			<profile>lamp-server</profile>

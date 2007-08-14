@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use ANSTE::Scenario::NetworkInterface;
+use ANSTE::Scenario::NetworkRoute;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 
@@ -28,6 +29,7 @@ sub new # returns new Network object
 	my $self = {};
 	
     $self->{interfaces} = [];
+    $self->{routes} = [];
 
 	bless($self, $class);
 
@@ -53,7 +55,29 @@ sub addInterface # (interface)
              'ANSTE::Scenario::NetworkInterface');
     }
 
-    push(@{ $self->{interfaces} }, $interface);
+    push(@{$self->{interfaces}}, $interface);
+}
+
+sub routes # returns routes list reference
+{
+    my ($self) = @_;
+
+    return $self->{routes};
+}
+
+sub addRoute # (route)
+{
+    my ($self, $route) = @_;
+
+    defined $route or
+        throw ANSTE::Exceptions::MissingArgument('route');
+
+    if (not $route->isa('ANSTE::Scenario::NetworkRoute')) {
+        throw ANSTE::Exceptions::InvalidType('route', 
+             'ANSTE::Scenario::NetworkRoute');
+    }
+
+    push(@{$self->{routes}}, $route);
 }
 
 sub load # (node)
@@ -69,9 +93,15 @@ sub load # (node)
     }
 
     foreach my $element ($node->getElementsByTagName('interface', 0)) {
-        my $interface = new ANSTE::Scenario::NetworkInterface;
+        my $interface = new ANSTE::Scenario::NetworkInterface();
         $interface->load($element);
         $self->addInterface($interface);
+    }
+
+    foreach my $element ($node->getElementsByTagName('route', 0)) {
+        my $route = new ANSTE::Scenario::NetworkRoute();
+        $route->load($element);
+        $self->addRoute($route);
     }
 }
 

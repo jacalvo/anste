@@ -24,7 +24,7 @@ use lib "$Bin/../lib";
 use ANSTE::Scenario::Scenario;
 use ANSTE::ScriptGen::HostImageSetup;
 
-use constant SCENARIO => 'scenario.xml';
+use constant SCENARIO => 'big.xml';
 
 my $scenario = new ANSTE::Scenario::Scenario;
 $scenario->loadFromFile(SCENARIO);
