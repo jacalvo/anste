@@ -70,6 +70,23 @@ sub setDesc # desc string
 	$self->{desc} = $desc;
 }
 
+sub host # returns host string
+{
+	my ($self) = @_;
+
+	return $self->{host};
+}
+
+sub setHost # host string
+{
+	my ($self, $host) = @_;
+
+    defined $host or
+        throw ANSTE::Exceptions::MissingArgument('host');
+
+	$self->{host} = $host;
+}
+
 sub dir # returns dir string
 {
 	my ($self) = @_;
@@ -106,6 +123,10 @@ sub load # (node)
 	my $descNode = $node->getElementsByTagName('desc', 0)->item(0);
 	my $desc = $descNode->getFirstChild()->getNodeValue();
 	$self->setDesc($desc);
+
+	my $hostNode = $node->getElementsByTagName('host', 0)->item(0);
+	my $host = $hostNode->getFirstChild()->getNodeValue();
+    $self->setHost($host);
 
 	my $dirNode = $node->getElementsByTagName('dir', 0)->item(0);
 	my $dir = $dirNode->getFirstChild()->getNodeValue();

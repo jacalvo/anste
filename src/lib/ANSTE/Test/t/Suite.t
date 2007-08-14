@@ -19,7 +19,7 @@ use warnings;
 use ANSTE::Test::Suite;
 use ANSTE::Config;
 
-use Test::More tests => 8; 
+use Test::More tests => 10; 
 
 use constant SUITE => 'test';
 
@@ -30,6 +30,8 @@ sub testTest # (test)
     is($name, 'testName', 'name = testName');
 	my $desc = $test->desc();
     is($desc, 'testDesc', 'desc = testDesc');
+	my $host = $test->host();
+    is($host, 'testHost', 'host = testHost');
 	my $dir = $test->dir();
     is($dir, 'testDir', 'dir = testDir');
 

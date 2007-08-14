@@ -33,6 +33,7 @@ use ANSTE::Test::Runner;
 use Getopt::Long;
 use Pod::Usage;
 use Error qw(:try);
+use Perl6::Junction qw(none);
 
 my $create = '';
 my $deploy = '';
@@ -47,7 +48,7 @@ GetOptions('create' => \$create,
 
 pod2usage(1) if $help;           
 
-if (not $create and not $deploy) {
+if (none($create, $deploy, $test)) {
     pod2usage("$0: No action specified.");
 }
 
@@ -89,7 +90,7 @@ sub deploy # (file)
 {
     my ($file) = @_;
 
-    my $scenario = new ANSTE::Scenario::Scenario;
+    my $scenario = new ANSTE::Scenario::Scenario();
     try {
         $scenario->loadFromFile($file);
     } catch ANSTE::Exceptions::InvalidFile with {
@@ -131,5 +132,6 @@ anste [options] [file ...]
    -help       shows this help
    -create     create a base image
    -deploy     deploy a scenario
+   -test       test a suite
 
 =cut

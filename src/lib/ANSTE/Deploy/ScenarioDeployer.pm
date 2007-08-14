@@ -45,13 +45,15 @@ sub new # (scenario) returns new ScenarioDeployer object
 	return $self;
 }
 
-sub deploy 
+sub deploy # returns hash ref with the ip of each host 
 {
     my ($self) = @_;
 
     my $scenario = $self->{scenario};
 
     my @deployers;
+
+    my $hostIP = {};
 
     # Starts Master Server thread
     my $server = new ANSTE::Comm::WaiterServer();
@@ -67,6 +69,7 @@ sub deploy
         my $deployer = new ANSTE::Deploy::HostDeployer($host);
         my $ip = "$base.$number";
         my $hostname = $host->name();
+        $hostIP->{$hostname} = $ip;
         print "[$hostname] starting\n";
         $deployer->startDeployThread($ip);
         push(@deployers, $deployer);
@@ -78,6 +81,8 @@ sub deploy
         my $host = $deployer->{host}->name();
         print "[$host] finished\n";
     }
+
+    return $hostIP; 
 }
 
 1;

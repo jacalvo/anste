@@ -7,18 +7,24 @@
     <test>
         <name>Test 1</name>
         <desc>Checks if the system is Linux</desc>
+        
+        <host>hostname1</host>
         <dir>test1</dir>
     </test>
 
     <test>
         <name>Test 2</name>
         <desc>Checks if the Debian version is sarge</desc>
+
+        <host>hostname1</host>
         <dir>test2</dir>
     </test>
 
     <test>
         <name>Test 3</name>
         <desc>Checks if wget is installed</desc>
+
+        <host>hostname1</host>
         <dir>test3</dir>
     </test>
 </suite>

@@ -7,12 +7,14 @@
     <test>
         <name>testName</name>
         <desc>testDesc</desc>
+        <host>testHost</host>
         <dir>testDir</dir>
     </test>
 
     <test>
         <name>testName</name>
         <desc>testDesc</desc>
+        <host>testHost</host>
         <dir>testDir</dir>
     </test>
 

@@ -23,13 +23,14 @@ use ANSTE::Exceptions::MissingArgument;
 
 use XML::DOM;
 
-sub new # returns new TestSuite object
+sub new # (dir) returns new TestSuite object
 {
-	my ($class) = @_;
+	my ($class, $dir) = @_;
 	my $self = {};
 
     $self->{name} = '';
     $self->{desc} = '';
+    $self->{dir} = '';
     $self->{scenario} = '';
     $self->{tests} = [];
 	
@@ -72,6 +73,23 @@ sub setDesc # desc string
 	$self->{desc} = $desc;
 }
 
+sub dir # returns dir string
+{
+	my ($self) = @_;
+
+	return $self->{dir};
+}
+
+sub setDir # dir string
+{
+	my ($self, $dir) = @_;	
+
+    defined $dir or
+        throw ANSTE::Exceptions::MissingArgument('dir');
+
+	$self->{dir} = $dir;
+}
+
 sub scenario # returns scenario string
 {
 	my ($self) = @_;
@@ -112,6 +130,8 @@ sub loadFromDir # (dirname)
 
     defined $dirname or
         throw ANSTE::Exceptions::MissingArgument('dirname');
+
+    $self->setDir($dirname);
 
     my $dir = ANSTE::Config->instance()->testPath();
     my $file = "$dir/$dirname/suite.xml";
