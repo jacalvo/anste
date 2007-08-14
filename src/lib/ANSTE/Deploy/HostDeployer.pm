@@ -101,12 +101,17 @@ sub deploy # (ip)
                                              memory => $memory,
                                              ip => $ip);
    
+    print "[$hostname] Creating a copy of the base image\n";
     $self->_copyBaseImage() or die "Can't copy base image";
 
+    print "[$hostname] Updating hostname on the new image\n";
     $self->_updateHostname();
 
-    $self->_createVirtualMachine();
+    my $cmd = $self->{cmd};
+    print "[$hostname] Creating virtual machine ($ip)\n"; 
+    $cmd->createVirtualMachine();
 
+    print "[$hostname] Generating setup script...\n";
     $self->_generateSetupScript(SETUP_SCRIPT);
     $self->_executeSetupScript($ip, SETUP_SCRIPT);
 }
@@ -115,14 +120,13 @@ sub _copyBaseImage
 {
     my ($self) = @_;
 
-    my $host = $self->{host};
-    my $hostname = $host->name();
     my $virtualizer = $self->{virtualizer};
+
+    my $host = $self->{host};
 
     my $baseimage = $host->baseImage();
     my $newimage = $self->{image}; 
 
-    print "[$hostname] Creating a copy of the base image\n";
     $virtualizer->createImageCopy($baseimage, $newimage);
 }
 
@@ -130,13 +134,11 @@ sub _updateHostname
 {
     my ($self) = @_;
 
-    my $hostname = $self->{host}->name();
-
-    print "[$hostname] Updating hostname on the new image\n";
-
     my $image = $self->{image}; 
 
     my $cmd = new ANSTE::Image::Commands($image);
+
+    $self->{cmd} = $cmd;
 
     $cmd->mount() or die "Can't mount image: $!";
 
@@ -147,30 +149,6 @@ sub _updateHostname
     };
 }
 
-sub _createVirtualMachine # returns IP address string
-{
-    my ($self) = @_;
-
-    my $host = $self->{host};
-    my $virtualizer = $self->{virtualizer};
-    my $system = $self->{system};
-
-    my $hostname = $host->name();
-    my $ip = $self->{image}->ip();
-    my $iface = ANSTE::Config->instance()->natIface();
-
-    $system->enableNAT($iface, $ip);
-
-    print "[$hostname] Creating virtual machine ($ip)\n"; 
-
-    $virtualizer->createVM($hostname) or die "Can't create VM $hostname: $!";
-
-    print "[$hostname] Waiting for the system start...\n";
-    my $waiter = ANSTE::Comm::HostWaiter->instance();
-    $waiter->waitForReady($hostname);
-    print "[$hostname] System is up\n";
-}
-
 sub _generateSetupScript # (script)
 {
     my ($self, $script) = @_;
@@ -178,7 +156,6 @@ sub _generateSetupScript # (script)
     my $host = $self->{host};
     my $hostname = $host->name();
 
-    print "[$hostname] Generating setup script...\n";
     my $generator = new ANSTE::ScriptGen::HostImageSetup($host);
     my $FILE;
     open($FILE, '>', $script) or die "Can't open file $script: $!";

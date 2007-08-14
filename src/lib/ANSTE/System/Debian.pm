@@ -371,9 +371,23 @@ sub enableNAT # (iface, sourceAddr)
         throw ANSTE::Exceptions::MissingArgument('sourceAddr');
 
     # TODO: Maybe this will need to be turned off after ANSTE deployment
+    # or better restored to its initial value
     $self->execute('echo 1 > /proc/sys/net/ipv4/ip_forward');
 
     $self->execute("iptables -t nat -A POSTROUTING " .
+                   "-o $iface -s $sourceAddr -j MASQUERADE");
+}
+
+sub disableNAT # (iface, sourceAddr)
+{
+    my ($self, $iface, $sourceAddr) = @_;
+
+    defined $iface or
+        throw ANSTE::Exceptions::MissingArgument('iface');
+    defined $sourceAddr or
+        throw ANSTE::Exceptions::MissingArgument('sourceAddr');
+
+    $self->execute("iptables -t nat -D POSTROUTING " .
                    "-o $iface -s $sourceAddr -j MASQUERADE");
 }
 

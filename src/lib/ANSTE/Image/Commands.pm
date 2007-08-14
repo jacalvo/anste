@@ -192,9 +192,7 @@ sub prepareSystem
     my $ip = $self->{image}->ip();
     $client->connect("http://$ip:$port");
 
-    my $name = $image->name();
-
-    $self->_createVirtualMachine($name);
+    $self->createVirtualMachine();
 
     # Execute pre-install scripts
     print "Executing pre scripts...\n";
@@ -243,11 +241,16 @@ sub shutdown
 {
     my ($self) = @_;
 
-    my $image = $self->{image}->name();
+    my $image = $self->{image};
     my $virtualizer = $self->{virtualizer}; 
+    my $system = $self->{system};
 
     # TODO: Maybe this could be done more softly sending poweroff :)
-    $virtualizer->shutdownImage($image);
+    $virtualizer->shutdownImage($image->name());
+
+    # Delete the NAT rule for this image
+    my $iface = ANSTE::Config->instance()->natIface();
+    $system->disableNAT($iface, $image->ip());
 }
 
 sub resize # (size)
@@ -269,13 +272,14 @@ sub resize # (size)
     $system->resizeImage($virtualizer->imageFile($imagePath, $image), $size);
 }
 
-sub _createVirtualMachine # (name)
+sub createVirtualMachine
 {
-    my ($self, $name) = @_;
+    my ($self) = @_;
 
     my $virtualizer = $self->{virtualizer};
     my $system = $self->{system};
 
+    my $name = $self->{image}->name();
     my $addr = $self->{image}->ip();
 
     my $iface = ANSTE::Config->instance()->natIface();

@@ -63,6 +63,13 @@ sub createBaseImage # (%params)
     my $command = "xen-create-image --hostname=$name" .
                   " --ip='$ip' --config=$confFile"; 
 
+    print "Showing xen-tools.conf:\n";
+    open(FILE, '<', $confFile);
+    foreach(<FILE>) {
+        print;
+    }
+    close(FILE);
+
     $self->execute($command);
 
     unlink($confFile);
