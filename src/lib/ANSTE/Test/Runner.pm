@@ -24,17 +24,19 @@ use ANSTE::Deploy::ScenarioDeployer;
 use ANSTE::Test::Suite;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::HostWaiter;
+use ANSTE::Report::Result;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
 
 use Error qw(:try);
 
-sub new # returns new Runner object
+sub new # (suite) returns new Runner object
 {
 	my ($class, $suite) = @_;
 	my $self = {};
 
     $self->{suite} = undef;
+    $self->{result} = new ANSTE::Report::Result();
 
 	bless($self, $class);
 
@@ -66,6 +68,13 @@ sub runSuite # (suite)
     $deployer->shutdown();
 }
 
+sub result # returns result object
+{
+    my ($self) = @_;
+
+    return $self->{result};
+}
+
 sub _loadScenario # (file)
 {
     my ($self, $file) = @_;
@@ -87,15 +96,20 @@ sub _runTests
 
     my $suite = $self->{suite};
 
-    my $name = $suite->name();
+    my $suiteName = $suite->name();
 
-    print "\n\nRunning test suite: $name\n\n";
+    my $result = $self->{result};
+
+    print "\n\nRunning test suite: $suiteName\n\n";
 
     foreach my $test (@{$suite->tests()}) {
-        $name = $test->name();
-        print "Running test: $name\n";
+        $testName = $test->name();
+        print "Running test: $testName\n";
         my $ret = $self->_runTest($test);
         print "Result: $ret\n\n";
+
+        # Adds the test result
+        $result->add($suiteName, $testName, $ret);
     }
 }
 
