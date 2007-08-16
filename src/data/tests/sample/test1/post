@@ -1,0 +1,3 @@
+#!/bin/sh
+
+rm /tmp/ANSTE_PRE_TEST

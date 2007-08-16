@@ -39,6 +39,7 @@ sub new # (scenario) returns new ScenarioDeployer object
     }
 	
 	$self->{scenario} = $scenario;
+    $self->{deployers} = [];
 
 	bless($self, $class);
 
@@ -50,8 +51,6 @@ sub deploy # returns hash ref with the ip of each host
     my ($self) = @_;
 
     my $scenario = $self->{scenario};
-
-    my @deployers;
 
     my $hostIP = {};
 
@@ -73,17 +72,33 @@ sub deploy # returns hash ref with the ip of each host
     
         print "[$hostname] starting\n";
         $deployer->startDeployThread($ip);
-        push(@deployers, $deployer);
+        push(@{$self->{deployers}}, $deployer);
         $number++;
     }
 
-    foreach my $deployer (@deployers) {
+    foreach my $deployer (@{$self->{deployers}}) {
+        use Data::Dumper;
+        print Dumper($deployer);
         $deployer->waitForFinish();
+        print "FINISHED\n";
+        use Data::Dumper;
+        print Dumper($deployer);
         my $host = $deployer->{host}->name();
         print "[$host] finished\n";
     }
 
     return $hostIP; 
+}
+
+sub shutdown
+{
+    my ($self) = @_;
+
+    my $deployers = $self->{deployers};
+
+    foreach my $deployer (@{$deployers}) {
+        $deployer->shutdown();
+    }
 }
 
 1;

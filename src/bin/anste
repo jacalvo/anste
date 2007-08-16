@@ -114,8 +114,8 @@ sub test # (file)
         exit(1);
     };
 
-    my $runner = new ANSTE::Test::Runner($suite);
-    $runner->run();
+    my $runner = new ANSTE::Test::Runner();
+    $runner->runSuite($suite);
 }
 
 __END__

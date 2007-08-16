@@ -29,35 +29,44 @@ use ANSTE::Exceptions::InvalidFile;
 
 use Error qw(:try);
 
-sub new # (suite) returns new Runner object
+sub new # returns new Runner object
 {
 	my ($class, $suite) = @_;
 	my $self = {};
 
-    defined $suite or
-        throw ANSTE::Exceptions::MissingArgument('suite');
+    $self->{suite} = undef;
 
-    $self->{suite} = $suite;
-	
 	bless($self, $class);
 
 	return $self;
 }
 
-sub run
+sub runDir # (dir)
 {
-    my ($self) = @_;
+    my ($self, $dir) = @_;
 
-    my $suite = $self->{suite};
-
-    my $scenario = $suite->scenario();
-
-    $self->{hostIP} = $self->_deploy($scenario);
-
-    $self->_runSuite();
+    # FIXME: Not implemented
 }
 
-sub _deploy # (file)
+sub runSuite # (suite)
+{
+    my ($self, $suite) = @_;
+
+    $self->{suite} = $suite;
+
+    my $scenarioFile = $suite->scenario();
+
+    my $scenario = $self->_loadScenario($scenarioFile);
+
+    my $deployer = new ANSTE::Deploy::ScenarioDeployer($scenario);
+    $self->{hostIP} = $deployer->deploy();
+
+    $self->_runTests();
+
+    $deployer->shutdown();
+}
+
+sub _loadScenario # (file)
 {
     my ($self, $file) = @_;
 
@@ -68,12 +77,11 @@ sub _deploy # (file)
         print STDERR "Can't load scenario $file.\n";
         exit(1);
     };
-
-    my $deployer = new ANSTE::Deploy::ScenarioDeployer($scenario);
-    $deployer->deploy();
+    
+    return $scenario;
 }
 
-sub _runSuite
+sub _runTests
 {
     my ($self) = @_;
 
@@ -97,13 +105,30 @@ sub _runTest # (test)
 
     my $hostname = $test->host();
 
-    my $path = ANSTE::Config->instance()->testPath();
+    my $suitePath = ANSTE::Config->instance()->testPath();
     my $suiteDir = $self->{suite}->dir();
     my $testDir = $test->dir();
 
-    my $testScript = "$path/$suiteDir/$testDir/test";
+    my $path = "$suitePath/$suiteDir/$testDir";
+
+    # Run pre-test script if exists
+    if (-r "$path/pre") {
+        $self->_runScript($hostname, "$path/pre");
+    }
     
-    $self->_runScript($hostname, $testScript);
+    # Run the test itself
+    if (not -r "$path/test") {
+        throw ANSTE::Exceptions::NotFound('Test script',
+                                          "$suiteDir/$testDir/test");
+    }
+    my $ret = $self->_runScript($hostname, "$path/test");
+
+    # Run pre-test script if exists
+    if (-r "$path/post") {
+        $self->_runScript($hostname, "$path/post");
+    }
+
+    return $ret;
 }
 
 sub _runScript # (hostname, script)

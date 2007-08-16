@@ -19,12 +19,12 @@ use strict;
 use warnings;
 
 use ANSTE::Scenario::Host;
-use ANSTE::Image::Commands;
 use ANSTE::ScriptGen::HostImageSetup;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::MasterServer;
 use ANSTE::Comm::HostWaiter;
 use ANSTE::Image::Image;
+use ANSTE::Image::Commands;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
@@ -48,11 +48,12 @@ sub new # (host) returns new HostDeployer object
     }
 
 	$self->{host} = $host;
+    $self->{image} = undef;
+    $self->{cmd} = undef;
 
     my $config = ANSTE::Config->instance();
     my $system = $config->system();
     my $virtualizer = $config->virtualizer();
-    my $image = undef;
 
     eval("use ANSTE::System::$system");
     die "Can't load package $system: $@" if $@;
@@ -75,8 +76,20 @@ sub startDeployThread # (ip)
     defined $ip or
         throw ANSTE::Exceptions::MissingArgument('ip');
 
-    $self->{thread} = threads->create('deploy', $self, $ip);
+    my $host = $self->{host};
+    my $hostname = $host->name();
+    my $memory = $host->baseImage()->memory();
+    my $image = new ANSTE::Image::Image(name => $hostname,
+                                        memory => $memory,
+                                        ip => $ip);
+    $image->setNetwork($host->network());
 
+    my $cmd = new ANSTE::Image::Commands($image);
+
+    $self->{image} = $image;
+    $self->{cmd} = $cmd;
+
+    $self->{thread} = threads->create('_deploy', $self);
 }
 
 sub waitForFinish
@@ -86,24 +99,16 @@ sub waitForFinish
     $self->{thread}->join();
 }
 
-sub deploy # (ip)
+sub _deploy
 {
-    my ($self, $ip) = @_;
+    my ($self) = @_;
 
-    defined $ip or
-        throw ANSTE::Exceptions::MissingArgument('ip');
+    my $image = $self->{image};
+    my $cmd = $self->{cmd};
 
     my $host = $self->{host};
     my $hostname = $host->name();
-    my $memory = $host->baseImage()->memory();
-
-    my $image = new ANSTE::Image::Image(name => $hostname,
-                                        memory => $memory,
-                                        ip => $ip);
-
-    $self->{image} = $image;
-
-    $image->setNetwork($host->network());
+    my $ip = $image->ip();
 
     print "[$hostname] Creating a copy of the base image\n";
     $self->_copyBaseImage() or die "Can't copy base image";
@@ -111,7 +116,6 @@ sub deploy # (ip)
     print "[$hostname] Updating hostname on the new image\n";
     $self->_updateHostname();
 
-    my $cmd = $self->{cmd};
     print "[$hostname] Creating virtual machine ($ip)\n"; 
     $cmd->createVirtualMachine();
 
@@ -122,6 +126,19 @@ sub deploy # (ip)
     print "[$hostname] Generating setup script...\n";
     $self->_generateSetupScript(SETUP_SCRIPT);
     $self->_executeSetupScript($ip, SETUP_SCRIPT);
+}
+
+sub shutdown
+{
+    my ($self) = @_;
+
+    my $cmd = $self->{cmd};
+
+    my $host = $self->{host};
+    my $hostname = $host->name();
+
+    print "[$hostname] shutting down\n";
+    $cmd->shutdown();
 }
 
 sub _copyBaseImage
@@ -142,11 +159,7 @@ sub _updateHostname
 {
     my ($self) = @_;
 
-    my $image = $self->{image}; 
-
-    my $cmd = new ANSTE::Image::Commands($image);
-
-    $self->{cmd} = $cmd;
+    my $cmd = $self->{cmd};
 
     $cmd->mount() or die "Can't mount image: $!";
 
