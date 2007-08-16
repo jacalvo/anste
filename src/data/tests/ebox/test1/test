@@ -1,0 +1,12 @@
+#!/bin/sh
+
+SYSTEM=$(uname -s)
+
+echo "The system is $SYSTEM"
+
+if [ "$SYSTEM" == "Linux" ]
+then
+    exit 0
+else
+    exit 1
+fi

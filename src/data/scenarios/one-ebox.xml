@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario>
+	<name>One eBox scenario</name>
+	<desc>Only one machine with ebox installed.</desc>
+
+	<host>
+		<name>ebox-test</name>
+		<desc>Host used to test that ebox works properly.</desc>
+        <baseimage>sarge-ebox-base</baseimage>
+		<network>
+            <interface type="static">
+                <name>eth1</name>
+    			<address>192.168.2.1</address>
+	    		<netmask>255.255.255.0</netmask>
+            </interface>
+		</network>
+		<packages>
+            <package>wget</package>
+		</packages>
+	</host>
+</scenario>

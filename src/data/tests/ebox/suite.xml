@@ -1,0 +1,43 @@
+<suite>
+    <name>One eBox machine Test Suite</name>
+    <desc>Contains a set of tests to ensure
+    that a ebox image works ok.
+    </desc>
+    
+    <scenario>one-ebox.xml</scenario>
+
+    <test>
+        <name>Test 1</name>
+        <desc>Checks if the system is Linux</desc>
+        
+        <host>ebox-test</host>
+        <dir>test1</dir>
+    </test>
+
+    <test>
+        <name>Test 2</name>
+        <desc>Checks if the Debian version is sarge</desc>
+
+        <host>ebox-test</host>
+        <dir>test2</dir>
+    </test>
+
+    <test>
+        <name>Test 3</name>
+        <desc>Checks if wget is installed</desc>
+
+        <host>ebox-test</host>
+        <dir>test3</dir>
+    </test>
+
+    <test>
+        <name>Add User</name>
+        <desc>Adds an user through the ebox web interface
+        and checks if addedd correctly in LDAP database
+        </desc>
+
+        <host>ebox-test</host>
+        <dir>test-adduser</dir>
+        <selenium>ebox-create-user.html</selenium>
+    </test>        
+</suite>
