@@ -1,0 +1,43 @@
+#!/usr/bin/perl
+
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License, version 2, as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+use warnings;
+use strict;
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+
+use ANSTE::Report::Result;
+use ANSTE::Report::HTMLWriter;
+
+
+my $result = new ANSTE::Report::Result();
+
+$result->add('Suite 1', 'Test 1', 1);
+$result->add('Suite 1', 'Test 2', 1);
+$result->add('Suite 1', 'Test 3', 0);
+$result->add('Suite 1', 'Test 4', 1);
+$result->add('Suite 1', 'Test 5', 1);
+
+$result->add('Suite 2', 'Test 1', 1);
+$result->add('Suite 2', 'Test 2', 1);
+$result->add('Suite 2', 'Test 3', 1);
+$result->add('Suite 2', 'Test 4', 1);
+$result->add('Suite 2', 'Test 5', 0);
+
+my $writer = new ANSTE::Report::HTMLWriter($result);
+$writer->write(\*STDOUT);

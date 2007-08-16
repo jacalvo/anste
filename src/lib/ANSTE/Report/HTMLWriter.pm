@@ -13,7 +13,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::Report::TextWriter;
+package ANSTE::Report::HTMLWriter;
 
 use base 'ANSTE::Report::Writer';
 
@@ -29,7 +29,12 @@ sub writeHeader
 
     my $file = $self->{file};
 
-    print $file "Beginning test report\n\n";
+    print $file "<html>\n";
+    print $file "<head>\n";
+    print $file "<title>ANSTE Test report</title>\n";
+    print $file "</head>\n";
+    print $file "<body>\n";
+    print $file "<h1>ANSTE Test report</h1>\n";
 }    
 
 sub writeEnd
@@ -38,7 +43,8 @@ sub writeEnd
 
     my $file = $self->{file};
 
-    print $file "Ending test report\n";
+    print $file "</body>\n";
+    print $file "</html>\n";
 }    
 
 sub writeSuiteHeader # (suite)
@@ -47,7 +53,8 @@ sub writeSuiteHeader # (suite)
 
     my $file = $self->{file};
 
-    print $file "\t$suite\n";
+    print $file "<h2>$suite</h2>\n";
+    print $file "<ul>\n";
 }    
 
 sub writeSuiteEnd
@@ -56,7 +63,7 @@ sub writeSuiteEnd
 
     my $file = $self->{file};
 
-    print $file "\n";
+    print $file "</ul>\n";
 }    
 
 sub writeTestResult # (test, result)
@@ -65,9 +72,10 @@ sub writeTestResult # (test, result)
 
     my $file = $self->{file};
 
-    my $resultStr = $result == 1 ? 'OK' : 'ERROR';
+    my $resultStr = $result == 1 ? "<font color='#00FF00'>OK</font>" : 
+                                   "<font color='#FF0000'>ERROR</font>";
 
-    print $file "\t\t$test: $resultStr\n";
+    print $file "<li> $test: $resultStr </li>\n";
 }    
 
 1;
