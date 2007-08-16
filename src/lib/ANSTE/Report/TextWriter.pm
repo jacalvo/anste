@@ -65,7 +65,7 @@ sub writeTestResult # (test, result)
 
     my $file = $self->{file};
 
-    my $resultStr = $result == 1 ? 'OK' : 'ERROR';
+    my $resultStr = $result == 0 ? 'OK' : 'ERROR';
 
     print $file "\t\t$test: $resultStr\n";
 }    

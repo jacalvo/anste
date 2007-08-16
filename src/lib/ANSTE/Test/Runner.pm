@@ -103,7 +103,7 @@ sub _runTests
     print "\n\nRunning test suite: $suiteName\n\n";
 
     foreach my $test (@{$suite->tests()}) {
-        $testName = $test->name();
+        my $testName = $test->name();
         print "Running test: $testName\n";
         my $ret = $self->_runTest($test);
         print "Result: $ret\n\n";

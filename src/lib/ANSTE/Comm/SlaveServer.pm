@@ -96,7 +96,7 @@ sub _executeSavingLog # (command, log)
     open(STDOUT, "> $log")     or return 1;
     open(STDERR, '>&STDOUT')   or return 1;
 
-    my $ret = system($command) or return 1;
+    my $ret = system($command);
 
     # Close the redirected filehandles
     close(STDOUT)              or return 1;

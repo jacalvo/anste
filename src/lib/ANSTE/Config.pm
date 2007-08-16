@@ -219,6 +219,15 @@ sub natIface
     return $iface;
 }
 
+sub reportWriter
+{
+    my ($self) = @_;
+
+    my $writer = $self->_getOption('report', 'writer');
+
+    return $writer;
+}
+
 # TODO: validate xen options (maybe they should be in separate class 
 # Virtualizer::XenConfig or similar)
 
@@ -335,6 +344,8 @@ sub _setDefaults
     $self->{default}->{'comm'}->{'ip-range'} = '192.168.0';
     $self->{default}->{'comm'}->{'gateway'} = '192.168.0.1';
     $self->{default}->{'comm'}->{'nat-iface'} = 'eth1';
+
+    $self->{default}->{'report'}->{'writer'} = 'Text';
 
     $self->{default}->{'xen-options'}->{'dir'} = '/home/xen';
     $self->{default}->{'xen-options'}->{'install-method'} = 'debootstrap';

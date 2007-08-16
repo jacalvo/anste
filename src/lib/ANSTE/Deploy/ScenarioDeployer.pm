@@ -77,12 +77,7 @@ sub deploy # returns hash ref with the ip of each host
     }
 
     foreach my $deployer (@{$self->{deployers}}) {
-        use Data::Dumper;
-        print Dumper($deployer);
         $deployer->waitForFinish();
-        print "FINISHED\n";
-        use Data::Dumper;
-        print Dumper($deployer);
         my $host = $deployer->{host}->name();
         print "[$host] finished\n";
     }

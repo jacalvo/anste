@@ -72,7 +72,7 @@ sub writeTestResult # (test, result)
 
     my $file = $self->{file};
 
-    my $resultStr = $result == 1 ? "<font color='#00FF00'>OK</font>" : 
+    my $resultStr = $result == 0 ? "<font color='#00FF00'>OK</font>" : 
                                    "<font color='#FF0000'>ERROR</font>";
 
     print $file "<li> $test: $resultStr </li>\n";
