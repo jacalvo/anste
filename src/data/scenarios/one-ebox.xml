@@ -17,5 +17,9 @@
 		<packages>
             <package>wget</package>
 		</packages>
+
+        <post-install>
+            <script>ebox-iptables.sh</script>
+        </post-install>
 	</host>
 </scenario>

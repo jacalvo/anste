@@ -196,7 +196,7 @@ sub prepareSystem
 
     # Execute pre-install scripts
     print "Executing pre scripts...\n";
-    $self->_executeScripts($client, $image->preScripts());
+    $self->executeScripts($image->preScripts());
 
     my $setupScript = '/tmp/install.sh';
     my $gen = new ANSTE::ScriptGen::BaseImageSetup($image);
@@ -217,7 +217,7 @@ sub prepareSystem
 
     # Execute post-install scripts
     print "Executing post scripts...\n";
-    $self->_executeScripts($client, $image->postScripts());
+    $self->executeScripts($image->postScripts());
 
     return 1;
 }
@@ -294,11 +294,18 @@ sub createVirtualMachine
     print "System is up\n";
 }
 
-sub _executeScripts # (client, list)
+sub executeScripts # (list)
 {
-    my ($self, $client, $list) = @_;
+    my ($self, $list) = @_;
 
     my $image = $self->{image};
+
+    my $client = new ANSTE::Comm::MasterClient;
+
+    my $config = ANSTE::Config->instance();
+    my $port = $config->anstedPort();
+    my $ip = $self->{image}->ip();
+    $client->connect("http://$ip:$port");
 
     my $path = ANSTE::Config->instance()->scriptPath();
 

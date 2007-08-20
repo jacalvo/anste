@@ -36,6 +36,8 @@ sub new # returns new Host object
     $self->{baseImage} = new ANSTE::Scenario::BaseImage;
 	$self->{network} = new ANSTE::Scenario::Network;
 	$self->{packages} = new ANSTE::Scenario::Packages;
+    $self->{'pre-scripts'} = [];
+    $self->{'post-scripts'} = [];
 
 	bless($self, $class);
 
@@ -126,6 +128,20 @@ sub setPackages # (packages)
 	$self->{packages} = $packages;
 }
 
+sub preScripts # returns list
+{
+    my ($self) = @_;
+
+    return $self->{'pre-scripts'};
+}
+
+sub postScripts # returns list
+{
+    my ($self) = @_;
+
+    return $self->{'post-scripts'};
+}
+
 sub load # (node)
 {
 	my ($self, $node) = @_;
@@ -154,10 +170,32 @@ sub load # (node)
 	if($networkNode){
 		$self->network()->load($networkNode);
 	}
+
 	my $packagesNode = $node->getElementsByTagName('packages', 0)->item(0);
 	if($packagesNode){
 		$self->packages()->load($packagesNode);
 	}
+
+	my $preNode = $node->getElementsByTagName('pre-install', 0)->item(0);
+	if($preNode){
+        $self->_addScripts('pre-scripts', $preNode);
+	}
+
+	my $postNode = $node->getElementsByTagName('post-install', 0)->item(0);
+	if($postNode){
+        $self->_addScripts('post-scripts', $postNode);
+	}
 }
+
+sub _addScripts # (list, node)
+{
+    my ($self, $list, $node) = @_;
+
+	foreach my $scriptNode ($node->getElementsByTagName('script', 0)) {
+        my $script = $scriptNode->getFirstChild()->getNodeValue();
+    	push(@{$self->{$list}}, $script);
+    }
+}
+
 
 1;
