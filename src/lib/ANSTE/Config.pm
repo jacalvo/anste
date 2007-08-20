@@ -20,6 +20,7 @@ use warnings;
 
 use ANSTE::Exceptions::InvalidConfig;
 use ANSTE::Exceptions::NotFound;
+use ANSTE::Exceptions::MissingConfig;
 use ANSTE::Validate;
 
 use Config::Tiny;
@@ -228,6 +229,47 @@ sub reportWriter
     return $writer;
 }
 
+sub seleniumRCjar
+{
+    my ($self) = @_;
+
+    my $jar = $self->_getOption('selenium', 'rc-jar');
+
+    if (not defined $jar) {
+        throw ANSTE::Exceptions::MissingConfig('selenium/rc-jar');
+    }                                          
+    if (not ANSTE::Validate::file($jar)) {
+        throw ANSTE::Exceptions::InvalidConfig('selenium/rc-jar', $jar);
+    }
+
+    return $jar;
+}
+
+sub seleniumBrowser
+{
+    my ($self) = @_;
+
+    my $browser = $self->_getOption('selenium', 'browser');
+
+    # TODO: validate browser??
+    #
+    return $browser;
+}
+
+sub seleniumResultPath
+{
+    my ($self) = @_;
+
+    my $path = $self->_getOption('selenium', 'result-path');
+
+    if (not ANSTE::Validate::path($path)) {
+        throw ANSTE::Exceptions::InvalidConfig('selenium/result-path', 
+                                               $path);
+    }
+
+    return $path;
+}
+
 # TODO: validate xen options (maybe they should be in separate class 
 # Virtualizer::XenConfig or similar)
 
@@ -346,6 +388,9 @@ sub _setDefaults
     $self->{default}->{'comm'}->{'nat-iface'} = 'eth1';
 
     $self->{default}->{'report'}->{'writer'} = 'Text';
+
+    $self->{default}->{'selenium'}->{'browser'} = '*firefox';
+    $self->{default}->{'selenium'}->{'result-path'} = '/tmp';
 
     $self->{default}->{'xen-options'}->{'dir'} = '/home/xen';
     $self->{default}->{'xen-options'}->{'install-method'} = 'debootstrap';

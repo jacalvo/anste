@@ -30,6 +30,7 @@ sub new # returns new Test object
     $self->{name} = '';
     $self->{desc} = '';
     $self->{dir} = '';
+    $self->{seleniumFiles} = [];
 	
 	bless($self, $class);
 
@@ -104,6 +105,20 @@ sub setDir # dir string
 	$self->{dir} = $dir;
 }
 
+sub seleniumFiles # returns list ref
+{
+    my ($self) = @_;
+
+    return $self->{seleniumFiles};
+}
+
+sub addSeleniumFile # (file)
+{
+    my ($self, $file) = @_;
+
+   	push(@{$self->{seleniumFiles}}, $file);
+}
+
 sub load # (node)
 {
 	my ($self, $node) = @_;
@@ -131,6 +146,14 @@ sub load # (node)
 	my $dirNode = $node->getElementsByTagName('dir', 0)->item(0);
 	my $dir = $dirNode->getFirstChild()->getNodeValue();
     $self->setDir($dir);
+
+	my $selenium = $node->getElementsByTagName('selenium', 0)->item(0);
+    if ($selenium) {
+    	foreach my $fileNode ($selenium->getElementsByTagName('file', 0)) {
+            my $file = $fileNode->getFirstChild()->getNodeValue();
+            $self->addSeleniumFile($file);
+        }
+	}
 }
 
 1;

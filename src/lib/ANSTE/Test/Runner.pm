@@ -37,6 +37,12 @@ sub new # (suite) returns new Runner object
 
     $self->{suite} = undef;
     $self->{result} = new ANSTE::Report::Result();
+    my $system = ANSTE::Config->instance()->system();
+
+    eval("use ANSTE::System::$system");
+    die "Can't load package $system: $@" if $@;
+
+    $self->{system} = "ANSTE::System::$system"->new();
 
 	bless($self, $class);
 
@@ -129,6 +135,11 @@ sub _runTest # (test)
     if (-r "$path/pre") {
         $self->_runScript($hostname, "$path/pre");
     }
+
+    # Run selenium scripts
+    foreach my $file (@{$test->seleniumFiles()}) {
+        $self->_runSeleniumRC($hostname, "$path/$file");
+    }
     
     # Run the test itself
     if (not -r "$path/test") {
@@ -163,6 +174,33 @@ sub _runScript # (hostname, script)
     $client->del($script);
     
     return $ret;
+}
+
+sub _runSeleniumRC # (hostname, file)
+{
+    my ($self, $hostname, $file) = @_;
+
+    my $system = $self->{system};
+
+    # TODO: Include the URL of the test in XMLs
+    my $ip = $self->{hostIP}->{$hostname};
+    my $url = "http://$ip";
+
+    my $config = ANSTE::Config->instance();
+
+    my $jar = $config->seleniumRCjar();
+    my $browser = $config->seleniumBrowser();
+    my $path = $config->seleniumResultPath();
+
+    $system->executeSelenium(jar => $jar, 
+                             browser => $browser, 
+                             url => $url, 
+                             testFile => $file, 
+                             resultPath => $path);
+
+    # TODO: Translate the selenium results into our
+    # own result format.
+
 }
 
 1;

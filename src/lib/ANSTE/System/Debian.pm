@@ -372,6 +372,8 @@ sub firewallDefaultRules # returns string
     return $config;
 }
 
+# Method: enableNAT
+# FIXME: documentation
 sub enableNAT # (iface, sourceAddr)
 {
     my ($self, $iface, $sourceAddr) = @_;
@@ -389,6 +391,8 @@ sub enableNAT # (iface, sourceAddr)
                    "-o $iface -s $sourceAddr -j MASQUERADE");
 }
 
+# Method: disableNAT
+# FIXME: documentation
 sub disableNAT # (iface, sourceAddr)
 {
     my ($self, $iface, $sourceAddr) = @_;
@@ -400,6 +404,35 @@ sub disableNAT # (iface, sourceAddr)
 
     $self->execute("iptables -t nat -D POSTROUTING " .
                    "-o $iface -s $sourceAddr -j MASQUERADE");
+}
+
+# Method: executeSelenium
+# FIXME: documentation
+sub executeSelenium # (%params)
+{
+    my ($self, %params) = @_;
+
+    exists $params{jar} or
+        throw ANSTE::Exceptions::MissingArgument('jar');
+    exists $params{browser} or
+        throw ANSTE::Exceptions::MissingArgument('browser');
+    exists $params{url} or
+        throw ANSTE::Exceptions::MissingArgument('url');
+    exists $params{testFile} or
+        throw ANSTE::Exceptions::MissingArgument('testFile');
+    exists $params{resultPath} or
+        throw ANSTE::Exceptions::MissingArgument('resultPath');
+
+    my $jar = $params{jar};
+    my $browser = $params{browser};
+    my $url = $params{url};
+    my $testFile = $params{testFile};
+    my $resultPath = $params{resultPath};
+
+    my $cmd = 'java -jar ' . $jar . ' -htmlSuite "' . $browser . '" ' .
+              '"' . $url . '" "' . $testFile . '" "' . $resultPath . '"';
+
+    $self->execute($cmd);
 }
 
 sub _interfaceConfig # (iface)

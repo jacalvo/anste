@@ -128,14 +128,14 @@ sub setPackages # (packages)
 	$self->{packages} = $packages;
 }
 
-sub preScripts # returns list
+sub preScripts # returns list ref
 {
     my ($self) = @_;
 
     return $self->{'pre-scripts'};
 }
 
-sub postScripts # returns list
+sub postScripts # returns list ref
 {
     my ($self) = @_;
 

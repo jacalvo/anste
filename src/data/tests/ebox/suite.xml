@@ -38,6 +38,8 @@
 
         <host>ebox-test</host>
         <dir>test-adduser</dir>
-        <selenium>ebox-create-user.html</selenium>
+        <selenium>
+            <file>ebox-create-user.html</file>
+        </selenium>
     </test>        
 </suite>

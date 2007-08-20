@@ -34,6 +34,13 @@ sub path # (path)
     return -d $path;
 }
 
+sub file # (file)
+{
+    my ($file) = @_;
+
+    return -f $file;
+}
+
 sub system # (system)
 {
     my ($system) = @_;
