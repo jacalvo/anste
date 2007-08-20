@@ -117,13 +117,13 @@ sub test # (file)
     my $runner = new ANSTE::Test::Runner();
     $runner->runSuite($suite);
 
-    my $result = $runner->result();
+    my $report = $runner->report();
     my $package = ANSTE::Config->instance()->reportWriter() . 'Writer';
 
     eval("use ANSTE::Report::$package");
     die "Can't load package $package: $@" if $@;
 
-    my $writer = "ANSTE::Report::$package"->new($result);
+    my $writer = "ANSTE::Report::$package"->new($report);
 
     $writer->write(\*STDOUT);
 }

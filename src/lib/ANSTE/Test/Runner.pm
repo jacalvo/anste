@@ -24,7 +24,7 @@ use ANSTE::Deploy::ScenarioDeployer;
 use ANSTE::Test::Suite;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::HostWaiter;
-use ANSTE::Report::Result;
+use ANSTE::Report::Report;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
 
@@ -36,7 +36,7 @@ sub new # (suite) returns new Runner object
 	my $self = {};
 
     $self->{suite} = undef;
-    $self->{result} = new ANSTE::Report::Result();
+    $self->{report} = new ANSTE::Report::Report();
     my $system = ANSTE::Config->instance()->system();
 
     eval("use ANSTE::System::$system");
@@ -71,14 +71,14 @@ sub runSuite # (suite)
 
     $self->_runTests();
 
-    $deployer->shutdown();
+#FIXME:    $deployer->shutdown();
 }
 
-sub result # returns result object
+sub report # returns report object
 {
     my ($self) = @_;
 
-    return $self->{result};
+    return $self->{report};
 }
 
 sub _loadScenario # (file)
@@ -104,19 +104,25 @@ sub _runTests
 
     my $suiteName = $suite->name();
 
-    my $result = $self->{result};
+    my $report = $self->{report};
 
     print "\n\nRunning test suite: $suiteName\n\n";
+
+    my $suiteResult = new ANSTE::Report::SuiteResult();
+    $suiteResult->setName($suiteName);
 
     foreach my $test (@{$suite->tests()}) {
         my $testName = $test->name();
         print "Running test: $testName\n";
-        my $ret = $self->_runTest($test);
+        my $testResult = $self->_runTest($test);
+        my $ret = $testResult->value();
         print "Result: $ret\n\n";
 
-        # Adds the test result
-        $result->add($suiteName, $testName, $ret);
+        # Adds the test report
+        $suiteResult->add($testResult);
     }
+
+    $report->add($suiteResult);
 }
 
 sub _runTest # (test)
@@ -136,9 +142,19 @@ sub _runTest # (test)
         $self->_runScript($hostname, "$path/pre");
     }
 
+    my $logPath = ANSTE::Config->instance()->logPath();
+    
+    # Create logs directory
+    mkdir $logPath;
+    mkdir "$logPath/selenium";
+    mkdir "$logPath/out";
+
+    my $name = $test->name();
+    my $log = "$logPath/selenium/$name.html";
+
     # Run selenium scripts
     foreach my $file (@{$test->seleniumFiles()}) {
-        $self->_runSeleniumRC($hostname, "$path/$file");
+        $self->_runSeleniumRC($hostname, "$path/$file", $log);
     }
     
     # Run the test itself
@@ -146,19 +162,25 @@ sub _runTest # (test)
         throw ANSTE::Exceptions::NotFound('Test script',
                                           "$suiteDir/$testDir/test");
     }
-    my $ret = $self->_runScript($hostname, "$path/test");
+    $log = "$logPath/out/$name.log";
+    my $ret = $self->_runScript($hostname, "$path/test", $log);
 
     # Run pre-test script if exists
     if (-r "$path/post") {
         $self->_runScript($hostname, "$path/post");
     }
 
-    return $ret;
+    my $testResult = new ANSTE::Report::TestResult();
+    $testResult->setName($test->name());
+    $testResult->setValue($ret);
+    $testResult->setFile($log);
+
+    return $testResult;
 }
 
-sub _runScript # (hostname, script)
+sub _runScript # (hostname, script, log?)
 {
-    my ($self, $hostname, $script) = @_;
+    my ($self, $hostname, $script, $log) = @_;
 
     my $client = new ANSTE::Comm::MasterClient();
 
@@ -168,17 +190,27 @@ sub _runScript # (hostname, script)
     $client->connect("http://$ip:$port");
 
     $client->put($script);
-    $client->exec($script);
+    if (defined $log) {
+        $client->exec($script, $log);
+    }
+    else {
+        $client->exec($script);
+    }
     my $waiter = ANSTE::Comm::HostWaiter->instance();
     my $ret = $waiter->waitForExecution($hostname);
     $client->del($script);
+
+    if (defined $log) {
+        $client->get($log);
+#TODO:        $client->del($log);
+    }
     
     return $ret;
 }
 
-sub _runSeleniumRC # (hostname, file)
+sub _runSeleniumRC # (hostname, file, log)
 {
-    my ($self, $hostname, $file) = @_;
+    my ($self, $hostname, $file, $log) = @_;
 
     my $system = $self->{system};
 
@@ -190,17 +222,15 @@ sub _runSeleniumRC # (hostname, file)
 
     my $jar = $config->seleniumRCjar();
     my $browser = $config->seleniumBrowser();
-    my $result = $config->seleniumResultFile();
 
-    $system->executeSelenium(jar => $jar, 
+    $system->executeSelenium(jar => $jar,
                              browser => $browser, 
                              url => $url, 
                              testFile => $file, 
-                             resultFile => $result);
+                             resultFile => $log);
 
-    # TODO: Translate the selenium results into our
-    # own result format.
-
+    # TODO: Translate the selenium reports into our
+    # own report format.
 }
 
 1;

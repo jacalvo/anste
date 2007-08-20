@@ -156,6 +156,19 @@ sub testPath
     return $testPath;
 }
 
+sub logPath
+{
+    my ($self) = @_;
+
+    my $logPath = $self->_getOption('paths', 'logs');
+
+    if (not ANSTE::Validate::directoryWritable($logPath)) {
+        throw ANSTE::Exceptions::InvalidConfig('paths/logs', $logPath);
+    }
+
+    return $logPath;
+}
+
 sub anstedPort
 {
     my ($self) = @_;
@@ -254,20 +267,6 @@ sub seleniumBrowser
     # TODO: validate browser??
     #
     return $browser;
-}
-
-sub seleniumResultFile
-{
-    my ($self) = @_;
-
-    my $file = $self->_getOption('selenium', 'result-file');
-
-    if (not ANSTE::Validate::fileWritable($file)) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/result-file', 
-                                               $file);
-    }
-
-    return $file;
 }
 
 # TODO: validate xen options (maybe they should be in separate class 

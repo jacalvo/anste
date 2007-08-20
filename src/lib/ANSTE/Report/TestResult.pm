@@ -13,44 +13,76 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::Report::Result;
+package ANSTE::Report::TestResult;
 
 use strict;
 use warnings;
 
 use ANSTE::Exceptions::MissingArgument;
 
-sub new # returns new Result object
+sub new # returns new TestResult object
 {
 	my ($class) = @_;
 	my $self = {};
 
-    $self->{result} = {};
+    $self->{name} = '';
+    $self->{value} = undef;
+    $self->{file} = undef;
 
 	bless($self, $class);
 
 	return $self;
 }
 
-sub add # (suite, test, result)
+sub name # returns name string
 {
-    my ($self, $suite, $test, $result) = @_;
+	my ($self) = @_;
 
-    defined $suite or
-        throw ANSTE::Exceptions::MissingArgument('suite');
-    defined $test or
-        throw ANSTE::Exceptions::MissingArgument('test');
-    defined $result or
-        throw ANSTE::Exceptions::MissingArgument('result');
-
-    $self->{result}->{$suite}{$test} = $result;        
+	return $self->{name};
 }
 
-sub get # returns hash ref {suite}{test} = result
+sub setName # name string
+{
+	my ($self, $name) = @_;	
+
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
+	$self->{name} = $name;
+}
+
+sub value # returns value
 {
     my ($self) = @_;
 
-    return $self->{result};
+    return $self->{value};
+}
+
+sub setValue # (value)
+{
+    my ($self, $value) = @_;
+
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    $self->{value} = $value;        
+}
+
+sub file # returns file
+{
+    my ($self) = @_;
+
+    return $self->{file};
+}
+
+sub setFile # (file)
+{
+    my ($self, $file) = @_;
+
+    defined $file or
+        throw ANSTE::Exceptions::MissingArgument('file');
+
+    $self->{file} = $file;        
 }
 
 1;

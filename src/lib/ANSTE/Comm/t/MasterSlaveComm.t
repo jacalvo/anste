@@ -19,7 +19,7 @@ use warnings;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::SlaveServer;
 
-use Test::More tests => 4;
+use Test::More tests => 14;
 use SOAP::Transport::HTTP;
 
 use constant PORT => 8000;
@@ -41,15 +41,58 @@ ok($client->connect(SERVER), 'server connect');
 
 my $FILE;
 
+# Basic tests with single paths
 ok(open($FILE, '>', 'true.sh'), 'create true.sh');
-print $FILE '#!/bin/sh\n';
-print $FILE 'true\n';
+print $FILE "#!/bin/sh\n";
+print $FILE "true\n";
 close($FILE);
 ok($client->put('true.sh'), 'put true.sh');
+
+ok($client->exec('true.sh', 'out.log'), 'put true.sh');
+
+# Wait for execution finish
+sleep 1;
+
+ok($client->get('out.log'));
 
 unlink('true.sh');
 
 ok($client->del('true.sh'), 'del true.sh');
+
+unlink('out.log');
+
+ok($client->del('out.log'), 'del out.log');
+
+# Tests with more complex paths
+my $DIR = 'anste-testdir';
+mkdir $DIR;
+
+my $FILE2;
+
+ok(open($FILE2, '>', "$DIR/test.sh"), 'create DIR/test.sh');
+print $FILE2 "#!/bin/sh\n";
+print $FILE2 "echo 1234\n";
+close($FILE2);
+ok($client->put("$DIR/test.sh"), 'put DIR/test.sh');
+
+ok($client->exec("$DIR/test.sh", "$DIR/out.log"), 'put DIR/test.sh');
+
+# Wait for execution finish
+sleep 1;
+
+ok($client->get("$DIR/out.log"));
+
+is(-s "$DIR/out.log", 5, 'size(out.log) == 5');
+
+unlink("$DIR/test.sh");
+
+ok($client->del("$DIR/test.sh"), 'del DIR/test.sh');
+
+unlink("$DIR/out.log");
+
+ok($client->del("$DIR/out.log"), 'del DIR/out.log');
+
+rmdir $DIR;
 
 # Terminates with the server process
 kill(9, $pid);

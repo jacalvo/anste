@@ -18,14 +18,15 @@ package ANSTE::Comm::SlaveServer;
 use strict;
 use warnings;
 
+use File::Basename;
+
 my $DIR = '/tmp';
 
 sub put	# (file, content)
 {
     my ($self, $file, $content) = @_;
 
-    my @parts = split('/', $file); 
-    my $name = $parts[-1];
+    my $name = fileparse($file);
 
     if (open(FILE, '>', "$DIR/$name")) { 
     	print FILE $content;
@@ -36,9 +37,11 @@ sub put	# (file, content)
     }
 }
 
-sub get	# (name)
+sub get	# (file)
 {
-    my ($self, $name) = @_;
+    my ($self, $file) = @_;
+
+    my $name = fileparse($file); 
 
     if (open(FILE, '<', "$DIR/$name")) {
 	    chomp(my @lines = <FILE>);
@@ -58,12 +61,18 @@ sub exec # (file, log)
         die "Can't fork: $!";
     }
     elsif($pid == 0){
-        my @parts = split('/', $file); 
-        my $name = $parts[-1];
+        my $name = fileparse($file); 
         chmod 0700, "$DIR/$name";
         my $command = "$DIR/$name";
-        my $logfile = defined($log) ? "$DIR/$log" : "$DIR/out.log"; 
-        my $ret = _executeSavingLog($command, $logfile);
+        my $ret;
+        if (defined $log) {
+            my $log = fileparse($log);
+            my $logfile = "$DIR/$log";
+            $ret = $self->_executeSavingLog($command, $logfile);
+        }
+        else {
+            $ret = $self->_execute($command);
+        }
         # FIXME: This isn't cool.
         exec("/usr/local/bin/anste-slave finished $ret");
         exit(0);
@@ -73,9 +82,11 @@ sub exec # (file, log)
     }
 }
 
-sub del	# (name)
+sub del	# (file)
 {
-    my ($self, $name) = @_;
+    my ($self, $file) = @_;
+
+    my $name = fileparse($file); 
 
     if(unlink "$DIR/$name") {
     	return 'OK';
@@ -84,9 +95,16 @@ sub del	# (name)
     }
 }
 
+sub _execute # (command)
+{
+    my ($self, $command) = @_;
+
+    return system($command);
+}
+
 sub _executeSavingLog # (command, log)
 {
-    my ($command, $log) = @_;
+    my ($self, $command, $log) = @_;
 
     # Take copies of the file descriptors
     open(OLDOUT, '>&STDOUT')   or return 1;

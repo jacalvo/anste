@@ -7,7 +7,7 @@
     <scenario>one-ebox.xml</scenario>
 
     <test>
-        <name>Test 1</name>
+        <name>Test1</name>
         <desc>Checks if the system is Linux</desc>
         
         <host>ebox-test</host>
@@ -15,7 +15,7 @@
     </test>
 
     <test>
-        <name>Test 2</name>
+        <name>Test2</name>
         <desc>Checks if the Debian version is sarge</desc>
 
         <host>ebox-test</host>
@@ -23,7 +23,7 @@
     </test>
 
     <test>
-        <name>Test 3</name>
+        <name>Test3</name>
         <desc>Checks if wget is installed</desc>
 
         <host>ebox-test</host>
@@ -31,7 +31,7 @@
     </test>
 
     <test>
-        <name>Add User</name>
+        <name>AddUser</name>
         <desc>Adds an user through the ebox web interface
         and checks if addedd correctly in LDAP database
         </desc>

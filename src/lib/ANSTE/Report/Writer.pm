@@ -18,19 +18,19 @@ package ANSTE::Report::Writer;
 use strict;
 use warnings;
 
-use ANSTE::Report::Result;
+use ANSTE::Report::Report;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::NotImplemented;
 
-sub new # (result) returns new Write object
+sub new # (report) returns new Write object
 {
-	my ($class, $result) = @_;
+	my ($class, $report) = @_;
 	my $self = {};
 
-    defined $result or
-        throw ANSTE::Exceptions::MissingArgument('result');
+    defined $report or
+        throw ANSTE::Exceptions::MissingArgument('report');
 
-    $self->{result} = $result;
+    $self->{report} = $report;
     $self->{file} = undef;
 
 	bless($self, $class);
@@ -46,12 +46,13 @@ sub write # (file)
 
     $self->writeHeader();
 
-    my $results = $self->{result}->get();
+    my $report = $self->{report};
 
-    foreach my $suite (keys %{$results}) {
-        $self->writeSuiteHeader($suite);
-        foreach my $test (keys %{$results->{$suite}}) {
-            $self->writeTestResult($test, $results->{$suite}->{$test});
+    foreach my $suite (@{$report->suites()}) {
+        $self->writeSuiteHeader($suite->name());
+        foreach my $test (@{$suite->tests()}) {
+            $self->writeTestResult($test->name(), 
+                                   $test->value());
         }
         $self->writeSuiteEnd();
     }

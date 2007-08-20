@@ -49,6 +49,13 @@ sub fileWritable # (file)
     return -w dirname($file);
 }
 
+sub directoryWritable # (dir)
+{
+    my ($dir) = @_;
+
+    return -w dirname($dir);
+}
+
 sub system # (system)
 {
     my ($system) = @_;
