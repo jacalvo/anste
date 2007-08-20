@@ -29,6 +29,8 @@ use ANSTE::Scenario::Scenario;
 use ANSTE::Exceptions::InvalidFile;
 use ANSTE::Test::Suite;
 use ANSTE::Test::Runner;
+use ANSTE::Report::TextWriter;
+use ANSTE::Report::HTMLWriter;
 
 use Getopt::Long;
 use Pod::Usage;
@@ -123,9 +125,16 @@ sub test # (file)
     eval("use ANSTE::Report::$package");
     die "Can't load package $package: $@" if $@;
 
-    my $writer = "ANSTE::Report::$package"->new($report);
+    my $txtWriter = new ANSTE::Report::TextWriter($report); 
+    $txtWriter->write(\*STDOUT);
 
-    $writer->write(\*STDOUT);
+    # TODO: This should be optional
+    print "Writing HTML reports...\n";
+    my $htmlWriter = new ANSTE::Report::HTMLWriter($report);
+    my $FILE;
+    open($FILE, '>', '/tmp/anste-logs/report.html');
+    $htmlWriter->write($FILE);
+    close($FILE);
 }
 
 __END__

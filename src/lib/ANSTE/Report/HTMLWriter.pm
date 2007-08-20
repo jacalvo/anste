@@ -66,16 +66,18 @@ sub writeSuiteEnd
     print $file "</ul>\n";
 }    
 
-sub writeTestResult # (test, result)
+sub writeTestResult # (test, result, file)
 {
-    my ($self, $test, $result) = @_;
+    my ($self, $test, $result, $file) = @_;
 
-    my $file = $self->{file};
+    my $filehandle = $self->{file};
 
     my $resultStr = $result == 0 ? "<font color='#00FF00'>OK</font>" : 
                                    "<font color='#FF0000'>ERROR</font>";
 
-    print $file "<li> $test: $resultStr </li>\n";
+    $resultStr = "<a href=\"$file\">" . $resultStr . "</a>";
+
+    print $filehandle "<li> $test: $resultStr </li>\n";
 }    
 
 1;

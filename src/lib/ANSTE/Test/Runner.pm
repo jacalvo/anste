@@ -150,20 +150,22 @@ sub _runTest # (test)
     mkdir "$logPath/out";
 
     my $name = $test->name();
-    my $log = "$logPath/selenium/$name.html";
 
-    # Run selenium scripts
-    foreach my $file (@{$test->seleniumFiles()}) {
-        $self->_runSeleniumRC($hostname, "$path/$file", $log);
+    my ($log, $ret);
+
+    # Run the test itself either it's a selenium one or a normal one 
+    if ($test->selenium()) {
+        $log = "$logPath/selenium/$name.html";
+        $ret = $self->_runSeleniumRC($hostname, "$path/suite.html", $log);
     }
-    
-    # Run the test itself
-    if (not -r "$path/test") {
-        throw ANSTE::Exceptions::NotFound('Test script',
-                                          "$suiteDir/$testDir/test");
+    else {
+        if (not -r "$path/test") {
+            throw ANSTE::Exceptions::NotFound('Test script',
+                                              "$suiteDir/$testDir/test");
+        }
+        $log = "$logPath/out/$name.txt";
+        $ret = $self->_runScript($hostname, "$path/test", $log);
     }
-    $log = "$logPath/out/$name.log";
-    my $ret = $self->_runScript($hostname, "$path/test", $log);
 
     # Run pre-test script if exists
     if (-r "$path/post") {
@@ -223,14 +225,16 @@ sub _runSeleniumRC # (hostname, file, log)
     my $jar = $config->seleniumRCjar();
     my $browser = $config->seleniumBrowser();
 
-    $system->executeSelenium(jar => $jar,
-                             browser => $browser, 
-                             url => $url, 
-                             testFile => $file, 
-                             resultFile => $log);
+    my $ret = $system->executeSelenium(jar => $jar,
+                                       browser => $browser, 
+                                       url => $url, 
+                                       testFile => $file, 
+                                       resultFile => $log);
 
     # TODO: Translate the selenium reports into our
     # own report format.
+
+    return $ret;
 }
 
 1;

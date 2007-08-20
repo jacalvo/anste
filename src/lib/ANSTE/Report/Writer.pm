@@ -52,7 +52,8 @@ sub write # (file)
         $self->writeSuiteHeader($suite->name());
         foreach my $test (@{$suite->tests()}) {
             $self->writeTestResult($test->name(), 
-                                   $test->value());
+                                   $test->value(),
+                                   $test->file());
         }
         $self->writeSuiteEnd();
     }

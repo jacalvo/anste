@@ -30,7 +30,7 @@ sub new # returns new Test object
     $self->{name} = '';
     $self->{desc} = '';
     $self->{dir} = '';
-    $self->{seleniumFiles} = [];
+    $self->{selenium} = 0;
 	
 	bless($self, $class);
 
@@ -105,18 +105,18 @@ sub setDir # dir string
 	$self->{dir} = $dir;
 }
 
-sub seleniumFiles # returns list ref
+sub selenium # returns boolean
 {
     my ($self) = @_;
 
-    return $self->{seleniumFiles};
+    return $self->{selenium};
 }
 
-sub addSeleniumFile # (file)
+sub setSelenium
 {
-    my ($self, $file) = @_;
+    my ($self) = @_;
 
-   	push(@{$self->{seleniumFiles}}, $file);
+    $self->{selenium} = 1;
 }
 
 sub load # (node)
@@ -129,6 +129,11 @@ sub load # (node)
     if (not $node->isa('XML::DOM::Element')) {
         throw ANSTE::Exceptions::InvalidType('node',
                                              'XML::DOM::Element');
+    }
+
+	my $type = $node->getAttribute('type');
+    if ($type eq 'selenium') {
+        $self->setSelenium();
     }
 
 	my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
@@ -146,14 +151,6 @@ sub load # (node)
 	my $dirNode = $node->getElementsByTagName('dir', 0)->item(0);
 	my $dir = $dirNode->getFirstChild()->getNodeValue();
     $self->setDir($dir);
-
-	my $selenium = $node->getElementsByTagName('selenium', 0)->item(0);
-    if ($selenium) {
-    	foreach my $fileNode ($selenium->getElementsByTagName('file', 0)) {
-            my $file = $fileNode->getFirstChild()->getNodeValue();
-            $self->addSeleniumFile($file);
-        }
-	}
 }
 
 1;
