@@ -39,7 +39,7 @@
         <host>ebox-test</host>
         <dir>test-adduser</dir>
         <selenium>
-            <file>ebox-create-user.html</file>
+            <file>ebox-test-suite.html</file>
         </selenium>
     </test>        
 </suite>

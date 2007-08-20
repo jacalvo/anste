@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use Cwd;
+use File::Basename;
 
 sub natural # (string)
 {
@@ -34,11 +35,18 @@ sub path # (path)
     return -d $path;
 }
 
-sub file # (file)
+sub fileReadable # (file)
 {
     my ($file) = @_;
 
-    return -f $file;
+    return -r $file;
+}
+
+sub fileWritable # (file)
+{
+    my ($file) = @_;
+
+    return -w dirname($file);
 }
 
 sub system # (system)

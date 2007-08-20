@@ -420,17 +420,18 @@ sub executeSelenium # (%params)
         throw ANSTE::Exceptions::MissingArgument('url');
     exists $params{testFile} or
         throw ANSTE::Exceptions::MissingArgument('testFile');
-    exists $params{resultPath} or
-        throw ANSTE::Exceptions::MissingArgument('resultPath');
+    exists $params{resultFile} or
+        throw ANSTE::Exceptions::MissingArgument('resultFile');
 
     my $jar = $params{jar};
     my $browser = $params{browser};
     my $url = $params{url};
     my $testFile = $params{testFile};
-    my $resultPath = $params{resultPath};
+    my $resultFile = $params{resultFile};
 
     my $cmd = 'java -jar ' . $jar . ' -htmlSuite "' . $browser . '" ' .
-              '"' . $url . '" "' . $testFile . '" "' . $resultPath . '"';
+              '"' . $url . '" "' . $testFile . '" "' . $resultFile . '" ' .
+              '-multiWindow';
 
     $self->execute($cmd);
 }

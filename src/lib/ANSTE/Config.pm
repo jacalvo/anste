@@ -238,7 +238,7 @@ sub seleniumRCjar
     if (not defined $jar) {
         throw ANSTE::Exceptions::MissingConfig('selenium/rc-jar');
     }                                          
-    if (not ANSTE::Validate::file($jar)) {
+    if (not ANSTE::Validate::fileReadable($jar)) {
         throw ANSTE::Exceptions::InvalidConfig('selenium/rc-jar', $jar);
     }
 
@@ -256,18 +256,18 @@ sub seleniumBrowser
     return $browser;
 }
 
-sub seleniumResultPath
+sub seleniumResultFile
 {
     my ($self) = @_;
 
-    my $path = $self->_getOption('selenium', 'result-path');
+    my $file = $self->_getOption('selenium', 'result-file');
 
-    if (not ANSTE::Validate::path($path)) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/result-path', 
-                                               $path);
+    if (not ANSTE::Validate::fileWritable($file)) {
+        throw ANSTE::Exceptions::InvalidConfig('selenium/result-file', 
+                                               $file);
     }
 
-    return $path;
+    return $file;
 }
 
 # TODO: validate xen options (maybe they should be in separate class 

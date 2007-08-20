@@ -190,13 +190,13 @@ sub _runSeleniumRC # (hostname, file)
 
     my $jar = $config->seleniumRCjar();
     my $browser = $config->seleniumBrowser();
-    my $path = $config->seleniumResultPath();
+    my $result = $config->seleniumResultFile();
 
     $system->executeSelenium(jar => $jar, 
                              browser => $browser, 
                              url => $url, 
                              testFile => $file, 
-                             resultPath => $path);
+                             resultFile => $result);
 
     # TODO: Translate the selenium results into our
     # own result format.
