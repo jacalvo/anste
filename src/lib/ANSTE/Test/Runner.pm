@@ -210,7 +210,7 @@ sub _runScript # (hostname, script, log?)
     return $ret;
 }
 
-sub _runSeleniumRC # (hostname, file, log)
+sub _runSeleniumRC # (hostname, file, log) returns result 
 {
     my ($self, $hostname, $file, $log) = @_;
 
@@ -225,16 +225,34 @@ sub _runSeleniumRC # (hostname, file, log)
     my $jar = $config->seleniumRCjar();
     my $browser = $config->seleniumBrowser();
 
-    my $ret = $system->executeSelenium(jar => $jar,
-                                       browser => $browser, 
-                                       url => $url, 
-                                       testFile => $file, 
-                                       resultFile => $log);
+    $system->executeSelenium(jar => $jar,
+                             browser => $browser, 
+                             url => $url, 
+                             testFile => $file, 
+                             resultFile => $log);
 
-    # TODO: Translate the selenium reports into our
-    # own report format.
+    return $self->_seleniumResult($log);
+}
 
-    return $ret;
+sub _seleniumResult # (logfile)
+{
+    my ($self, $logfile) = @_;
+
+    my $LOG;
+    open($LOG, '<', $logfile);
+    foreach my $line (<$LOG>) {
+        if ($line =~ /^<td>passed/) {
+            close($LOG);
+            return 0;
+        }
+        elsif ($line =~ /^<td>failed/) {
+            close($LOG);
+            return 1;
+        }
+    }
+    close($LOG);
+
+    return 2;
 }
 
 1;
