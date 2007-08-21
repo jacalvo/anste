@@ -25,6 +25,7 @@
 
         <post-install>
             <script>ebox-iptables.sh</script>
+            <script>ebox-import-network.sh</script>
         </post-install>
 	</host>
 </scenario>

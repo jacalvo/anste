@@ -320,15 +320,12 @@ sub _executeSetup # (client, script)
 
     my $waiter = ANSTE::Comm::HostWaiter->instance();
 
-    print "Trying to put $script\n";
-    my $ret = $client->put($script);
-    print "Server returned $ret\n";
-    print "Trying to exec $script\n";
-    $ret = $client->exec($script);
-    print "Server returned $ret\n";
+    print "Executing $script...\n";
+    $client->put($script) or print "Upload failed\n";
+    $client->exec($script) or print "Failed\n";
     my $image = $self->{image}->name();
-    $ret = $waiter->waitForExecution($image);
-    print "Execution finished with return value = $ret\n";
+    my $ret = $waiter->waitForExecution($image);
+    print "Execution finished. Return value = $ret.\n";
 
     return ($ret);
 }

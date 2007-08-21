@@ -129,12 +129,14 @@ sub test # (file)
     $txtWriter->write(\*STDOUT);
 
     # TODO: This should be optional
-    print "Writing HTML reports...\n";
+    my $PATH = '/tmp/anste-logs';
+    print "\nWriting HTML reports to $PATH...";
     my $htmlWriter = new ANSTE::Report::HTMLWriter($report);
     my $FILE;
-    open($FILE, '>', '/tmp/anste-logs/report.html');
+    open($FILE, '>', "$PATH/report.html");
     $htmlWriter->write($FILE);
     close($FILE);
+    print "Done.\n";
 }
 
 __END__

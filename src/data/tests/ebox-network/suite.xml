@@ -1,0 +1,26 @@
+<suite>
+    <name>One eBox machine Test Suite</name>
+    <desc>Contains a set of tests to ensure
+    that a ebox image works ok.
+    </desc>
+    
+    <scenario>one-ebox.xml</scenario>
+
+    <test type="selenium">
+        <name>RemoveGateway</name>
+        <desc>Remote the default gateway on the anste's communication
+        interface.
+        </desc>
+
+        <host>ebox-test</host>
+        <dir>test-removegw</dir>
+    </test>        
+
+    <test type="selenium">
+        <name>AddGateway</name>
+        <desc>Adds the default gateway on the external interface</desc>
+
+        <host>ebox-test</host>
+        <dir>test-addgw</dir>
+    </test>
+</suite>

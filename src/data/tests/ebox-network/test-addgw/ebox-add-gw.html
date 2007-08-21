@@ -1,0 +1,84 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ebox-removegw</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">ebox-removegw</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/ebox/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Network</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Gateways</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Adding a new gateway</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>gatewaytable_name</td>
+	<td>default</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>gatewaytable_ip</td>
+	<td>192.168.3.128</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>gatewaytable_interface</td>
+	<td>label=eth2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>gatewaytable_upload</td>
+	<td>1024</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>gatewaytable_download</td>
+	<td>1024</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>gatewaytable_default</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Gateway list</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>192.168.3.128</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
