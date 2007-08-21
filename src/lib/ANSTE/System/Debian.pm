@@ -23,6 +23,7 @@ use warnings;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
+use ANSTE::Exceptions::InvalidFile;
 
 # Method: mountImage 
 #
@@ -436,6 +437,38 @@ sub executeSelenium # (%params)
               '-multiWindow';
 
     $self->execute($cmd);
+}
+
+sub startVideoRecording # (filename)
+{
+    my ($self, $filename) = @_;
+
+    if (not ANSTE::Validate::fileWritable($filename)) {
+        throw ANSTE::Exceptions::InvalidFile($filename);
+    }
+
+    my $pid = fork();
+    defined $pid or die "Can't fork: $!";
+
+    if ($pid == 0) {
+        # TODO: Personalize
+        my $command = 'recordmydesktop';
+        exec($command, $filename);
+    }
+    else {
+        $self->{videoPid} = $pid;
+    }
+}
+
+sub stopVideoRecording
+{
+    my ($self) = @_;
+
+    my $pid = $self->{videoPid};
+
+    kill 15, $pid;
+
+    waitpid($pid, 0);
 }
 
 sub _interfaceConfig # (iface)

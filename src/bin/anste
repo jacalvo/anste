@@ -41,6 +41,7 @@ my $create = '';
 my $deploy = '';
 my $test = '';
 my $out = '';
+my $video = '';
 my $help = 0;
 
 
@@ -48,6 +49,7 @@ GetOptions('create' => \$create,
            'deploy' => \$deploy,
            'test' => \$test,
            'out=s' => \$out,
+           'video' => \$video,
            'help' => \$help) or pod2usage(2);
 
 pod2usage(1) if $help;           
@@ -58,6 +60,8 @@ if (none($create, $deploy, $test)) {
 
 pod2usage("$0: No files given.") if @ARGV == 0;
 
+my $config = ANSTE::Config->instance();
+
 foreach my $file (@ARGV) {
     if ($create) {
         create($file);
@@ -67,7 +71,10 @@ foreach my $file (@ARGV) {
     }
     elsif ($test) {
         if ($out) {
-            ANSTE::Config->instance()->setLogPath($out);
+            $config->setLogPath($out);
+        }
+        if ($video) {
+            $config->setSeleniumVideo(1);
         }
         test($file);
     }
@@ -86,7 +93,7 @@ sub create # (file)
         exit(1);
     };
 
-    my $address = ANSTE::Config->instance()->firstAddress();
+    my $address = $config->firstAddress();
     $image->setIp($address);
 
     my $creator = new ANSTE::Image::Creator($image);
@@ -125,7 +132,7 @@ sub test # (file)
     $runner->runSuite($suite);
 
     my $report = $runner->report();
-    my $package = ANSTE::Config->instance()->reportWriter() . 'Writer';
+    my $package = $config->reportWriter() . 'Writer';
 
     eval("use ANSTE::Report::$package");
     die "Can't load package $package: $@" if $@;
@@ -133,7 +140,7 @@ sub test # (file)
     my $txtWriter = new ANSTE::Report::TextWriter($report); 
     $txtWriter->write(\*STDOUT);
 
-    my $LOGPATH = ANSTE::Config->instance()->logPath();
+    my $LOGPATH = $config->logPath();
     print "\nWriting HTML reports to $LOGPATH...";
     my $htmlWriter = new ANSTE::Report::HTMLWriter($report);
     my $FILE;
@@ -159,5 +166,6 @@ anste [options] [file ...]
    -deploy     deploy a scenario
    -test       test a suite
    -out dir    report output directory
+   -video      save video recording of selenium tests
 
 =cut

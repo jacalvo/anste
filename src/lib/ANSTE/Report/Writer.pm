@@ -53,7 +53,8 @@ sub write # (file)
         foreach my $test (@{$suite->tests()}) {
             $self->writeTestResult($test->name(), 
                                    $test->value(),
-                                   $test->file());
+                                   $test->log(),
+                                   $test->video());
         }
         $self->writeSuiteEnd();
     }

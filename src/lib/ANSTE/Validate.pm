@@ -28,6 +28,13 @@ sub natural # (string)
     return $string =~ /^\d+$/;
 }
 
+sub boolean # (value)
+{
+    my ($value) = @_;
+
+    return $value == 0 || $value == 1;
+}
+
 sub path # (path)
 {
     my ($path) = @_;

@@ -285,6 +285,48 @@ sub seleniumBrowser
     return $browser;
 }
 
+sub seleniumVideo
+{
+    my ($self) = @_;
+
+    my $video = $self->_getOption('selenium', 'video');
+
+    if (not ANSTE::Validate::boolean($video)) {
+        throw ANSTE::Exceptions::InvalidConfig('selenium/video', $video);
+    }
+
+    return $video;
+}
+
+sub setSeleniumVideo # (value)
+{
+    my ($self, $value) = @_;
+
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not ANSTE::Validate::boolean($value)) {
+        throw ANSTE::Exceptions::InvalidOption('selenium/video', 
+                                               $value);
+    }
+
+    $self->{override}->{'selenium'}->{'video'} = $value;
+}
+
+sub seleniumRecordAll
+{
+    my ($self) = @_;
+
+    my $all = $self->_getOption('selenium', 'record-all');
+
+    if (not ANSTE::Validate::boolean($all)) {
+        throw ANSTE::Exceptions::InvalidConfig('selenium/record-all',
+                                               $all);
+    }
+
+    return $all;
+}
+
 # TODO: validate xen options (maybe they should be in separate class 
 # Virtualizer::XenConfig or similar)
 
@@ -412,6 +454,8 @@ sub _setDefaults
 
     $self->{default}->{'selenium'}->{'browser'} = '*firefox';
     $self->{default}->{'selenium'}->{'result-path'} = '/tmp';
+    $self->{default}->{'selenium'}->{'video'} = 0;
+    $self->{default}->{'selenium'}->{'record-all'} = 0;
 
     $self->{default}->{'xen-options'}->{'dir'} = '/home/xen';
     $self->{default}->{'xen-options'}->{'install-method'} = 'debootstrap';

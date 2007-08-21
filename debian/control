@@ -1,0 +1,16 @@
+Source: anste
+Section: admin
+Priority: extra
+Maintainer: José A. Calvo <jacalvo@debian.org>
+Build-Depends: debhelper (>= 5), liberror-perl (>=0.15-8), libxml-dom-perl (>=1.43-4), libfile-copy-recursive-perl (>=0.33-1), libsoap-lite-perl (>=0.69-2)
+Standards-Version: 3.7.2
+
+Package: anste
+Architecture: any
+Depends: ${perl:Depends}, ${shlibs:Depends}, liberror-perl (>=0.15-8), libxml-dom-perl (>=1.43-4), libfile-copy-recursive-perl (>=0.33-1), libsoap-lite-perl (>=0.69-2)
+Description: Advanced Network Service Testing Environment
+ ANSTE is a testing environment for advanced network services, mainly intended
+ to automatize the integration tests of eBox Platform, furthermore it could be
+ used to other similar purposes.
+ .
+ URL: http://public.warp.es/anste/

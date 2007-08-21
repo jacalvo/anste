@@ -27,7 +27,8 @@ sub new # returns new TestResult object
 
     $self->{name} = '';
     $self->{value} = undef;
-    $self->{file} = undef;
+    $self->{log} = undef;
+    $self->{video} = undef;
 
 	bless($self, $class);
 
@@ -68,21 +69,38 @@ sub setValue # (value)
     $self->{value} = $value;        
 }
 
-sub file # returns file
+sub log # returns log
 {
     my ($self) = @_;
 
-    return $self->{file};
+    return $self->{log};
 }
 
-sub setFile # (file)
+sub setLog # (log)
 {
-    my ($self, $file) = @_;
+    my ($self, $log) = @_;
 
-    defined $file or
-        throw ANSTE::Exceptions::MissingArgument('file');
+    defined $log or
+        throw ANSTE::Exceptions::MissingArgument('log');
 
-    $self->{file} = $file;        
+    $self->{log} = $log;        
+}
+
+sub video # returns video
+{
+    my ($self) = @_;
+
+    return $self->{video};
+}
+
+sub setVideo # (video)
+{
+    my ($self, $video) = @_;
+
+    defined $video or
+        throw ANSTE::Exceptions::MissingArgument('video');
+
+    $self->{video} = $video;        
 }
 
 1;

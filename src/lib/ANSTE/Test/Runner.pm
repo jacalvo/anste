@@ -71,7 +71,7 @@ sub runSuite # (suite)
 
     $self->_runTests();
 
-#FIXME:    $deployer->shutdown();
+    $deployer->shutdown();
 }
 
 sub report # returns report object
@@ -129,9 +129,12 @@ sub _runTest # (test)
 {
     my ($self, $test) = @_;
 
+    my $system = $self->{system};
     my $hostname = $test->host();
 
-    my $suitePath = ANSTE::Config->instance()->testPath();
+    my $config = ANSTE::Config->instance();
+
+    my $suitePath = $config->testPath();
     my $suiteDir = $self->{suite}->dir();
     my $testDir = $test->dir();
 
@@ -142,21 +145,46 @@ sub _runTest # (test)
         $self->_runScript($hostname, "$path/pre");
     }
 
-    my $logPath = ANSTE::Config->instance()->logPath();
+    my $logPath = $config->logPath();
     
-    # Create logs directory
+    # Create directories
     mkdir $logPath;
     mkdir "$logPath/selenium";
     mkdir "$logPath/out";
+    mkdir "$logPath/video" if $config->seleniumVideo();
 
     my $name = $test->name();
 
     my ($log, $ret);
 
+    my $testResult = new ANSTE::Report::TestResult();
+    $testResult->setName($test->name());
+
     # Run the test itself either it's a selenium one or a normal one 
     if ($test->selenium()) {
+        my $video;
+        if ($config->seleniumVideo()) {
+            $video = "$logPath/video/$name.ogg";
+            print "Starting video recording for test $name.\n";
+            $system->startVideoRecording($video);
+        }
+
         $log = "$logPath/selenium/$name.html";
         $ret = $self->_runSeleniumRC($hostname, "$path/suite.html", $log);
+
+        if ($config->seleniumVideo()) {
+            print "Ending video recording for test $name.\n";
+            $system->stopVideoRecording();
+
+            # If test was correct and record all videos option
+            # is not activated, delete the video
+            if (!$config->seleniumRecordAll() && $ret == 0) {
+                unlink($video);
+            } 
+            else {
+                $testResult->setVideo($video);
+            }
+        }            
     }
     else {
         if (not -r "$path/test") {
@@ -172,10 +200,8 @@ sub _runTest # (test)
         $self->_runScript($hostname, "$path/post");
     }
 
-    my $testResult = new ANSTE::Report::TestResult();
-    $testResult->setName($test->name());
     $testResult->setValue($ret);
-    $testResult->setFile($log);
+    $testResult->setLog($log);
 
     return $testResult;
 }

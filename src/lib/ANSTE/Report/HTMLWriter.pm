@@ -66,9 +66,10 @@ sub writeSuiteEnd
     print $file "</ul>\n";
 }    
 
-sub writeTestResult # (test, result, file)
+# TODO: named parameters
+sub writeTestResult # (test, result, file, video)
 {
-    my ($self, $test, $result, $file) = @_;
+    my ($self, $test, $result, $file, $video) = @_;
 
     my $filehandle = $self->{file};
 
@@ -77,7 +78,12 @@ sub writeTestResult # (test, result, file)
 
     $resultStr = "<a href=\"$file\">" . $resultStr . "</a>";
 
+    if ($video) {
+        $resultStr .= " (<a href=\"$video\">video</a>)";
+    }
+
     print $filehandle "<li> $test: $resultStr </li>\n";
+
 }    
 
 1;
