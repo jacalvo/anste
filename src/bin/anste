@@ -40,12 +40,14 @@ use Perl6::Junction qw(none);
 my $create = '';
 my $deploy = '';
 my $test = '';
+my $out = '';
 my $help = 0;
 
 
 GetOptions('create' => \$create,
            'deploy' => \$deploy,
            'test' => \$test,
+           'out=s' => \$out,
            'help' => \$help) or pod2usage(2);
 
 pod2usage(1) if $help;           
@@ -64,6 +66,9 @@ foreach my $file (@ARGV) {
         deploy($file);
     }
     elsif ($test) {
+        if ($out) {
+            ANSTE::Config->instance()->setLogPath($out);
+        }
         test($file);
     }
 }
@@ -128,12 +133,11 @@ sub test # (file)
     my $txtWriter = new ANSTE::Report::TextWriter($report); 
     $txtWriter->write(\*STDOUT);
 
-    # TODO: This should be optional
-    my $PATH = '/tmp/anste-logs';
-    print "\nWriting HTML reports to $PATH...";
+    my $LOGPATH = ANSTE::Config->instance()->logPath();
+    print "\nWriting HTML reports to $LOGPATH...";
     my $htmlWriter = new ANSTE::Report::HTMLWriter($report);
     my $FILE;
-    open($FILE, '>', "$PATH/report.html");
+    open($FILE, '>', "$LOGPATH/report.html");
     $htmlWriter->write($FILE);
     close($FILE);
     print "Done.\n";
@@ -154,5 +158,6 @@ anste [options] [file ...]
    -create     create a base image
    -deploy     deploy a scenario
    -test       test a suite
+   -out dir    report output directory
 
 =cut

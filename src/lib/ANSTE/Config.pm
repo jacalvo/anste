@@ -19,8 +19,10 @@ use strict;
 use warnings;
 
 use ANSTE::Exceptions::InvalidConfig;
+use ANSTE::Exceptions::InvalidOption;
 use ANSTE::Exceptions::NotFound;
 use ANSTE::Exceptions::MissingConfig;
+use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Validate;
 
 use Config::Tiny;
@@ -167,6 +169,20 @@ sub logPath
     }
 
     return $logPath;
+}
+
+sub setLogPath # (logPath)
+{
+    my ($self, $logPath) = @_;
+
+    defined $logPath or
+        throw ANSTE::Exceptions::MissingArgument('logPath');
+
+    if (not ANSTE::Validate::directoryWritable($logPath)) {
+        throw ANSTE::Exceptions::InvalidOption('paths/logs', $logPath);
+    }
+
+    $self->{override}->{'paths'}->{'logs'} = $logPath;
 }
 
 sub anstedPort
@@ -353,14 +369,20 @@ sub _getOption # (section, option)
 {
     my ($self, $section, $option) = @_;
 
-    my $config = $self->{config}->{$section}->{$option};
+    # First we check if the option has been overriden
+    my $overriden = $self->{override}->{$section}->{$option};
+    if(defined $overriden) {
+        return $overriden;
+    }
 
-    # TODO: Manage overriden options (by passing parameters, etc)
+    # If not we look it in the configuration file
+    my $config = $self->{config}->{$section}->{$option};
     if (defined $config) {
         return $config;
-    } else {
-        return $self->{default}->{$section}->{$option};
     }
+    
+    # If not in config, return default value.
+    return $self->{default}->{$section}->{$option};
 }
 
 sub _setDefaults
