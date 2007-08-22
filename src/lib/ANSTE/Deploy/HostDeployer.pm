@@ -111,7 +111,12 @@ sub _deploy
     my $ip = $image->ip();
 
     print "[$hostname] Creating a copy of the base image...\n";
-    $self->_copyBaseImage() or die "Can't copy base image";
+    try {
+        $self->_copyBaseImage() or die "Can't copy base image";
+    } catch ANSTE::Exceptions::NotFound with {
+        die "Base image not found, automatic creation not implemented\n";
+        # Here we should call copyBase again, after the base is created
+    };
 
     print "[$hostname] Updating hostname on the new image...\n";
     $self->_updateHostname();
@@ -148,8 +153,21 @@ sub shutdown
     my $host = $self->{host};
     my $hostname = $host->name();
 
-    print "[$hostname] shutting down\n";
+    print "[$hostname] shutting down...\n";
     $cmd->shutdown();
+}
+
+sub deleteImage
+{
+    my ($self) = @_;
+
+    my $virtualizer = $self->{virtualizer};
+
+    my $host = $self->{host};
+    my $hostname = $host->name();
+
+    print "[$hostname] deleting image...\n";
+    $virtualizer->deleteImage($hostname);
 }
 
 sub _copyBaseImage

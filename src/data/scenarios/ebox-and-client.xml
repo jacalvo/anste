@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario>
+	<name>eBox and client</name>
+	<desc>One eBox machine and a user client machine</desc>
+
+	<host>
+		<name>ebox-server</name>
+		<desc>eBox server</desc>
+        <baseimage>sarge-ebox-base</baseimage>
+		<network>
+            <interface type="static">
+                <name>eth1</name>
+    			<address>192.168.2.1</address>
+	    		<netmask>255.255.255.0</netmask>
+            </interface>
+            <interface type="static">
+                <name>eth2</name>
+    			<address>192.168.3.1</address>
+	    		<netmask>255.255.255.0</netmask>
+    			<gateway>192.168.3.128</gateway>
+            </interface>
+		</network>
+
+        <post-install>
+            <script>ebox-iptables.sh</script>
+            <script>ebox-import-network.sh</script>
+        </post-install>
+	</host>
+
+    <host>
+        <name>test-client</name>
+		<desc>simple client host</desc>
+        <baseimage>sarge-mini</baseimage>
+
+        <network>
+         <interface type="static">
+            <name>eth1</name>
+    		<address>192.168.2.2</address>
+	    	<netmask>255.255.255.0</netmask>
+         </interface>
+        </network>
+
+		<packages>
+            <package>wget</package>
+		</packages>
+    </host>
+</scenario>

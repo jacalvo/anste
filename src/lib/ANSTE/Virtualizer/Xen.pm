@@ -24,6 +24,7 @@ use ANSTE::Config;
 use ANSTE::Image::Image;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
+use ANSTE::Exceptions::NotFound;
 
 use File::Temp qw(tempfile);
 use File::Copy;
@@ -182,6 +183,10 @@ sub createImageCopy # (baseimage, newimage)
 
     my $basename = $baseimage->name();
     my $newname = $newimage->name();
+
+    if (not -r $self->imageFile($path, $basename)) {
+        throw ANSTE::Exceptions::NotFound('Image', $basename);
+    }
 
     dircopy("$path/$basename", "$path/$newname");
 

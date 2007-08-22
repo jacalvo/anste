@@ -1,0 +1,53 @@
+<suite>
+    <name>eBox Proxy tests</name>
+    <desc>Contains a set of tests to ensure
+    that a ebox image works ok.
+    </desc>
+    
+    <scenario>ebox-and-client.xml</scenario>
+
+    <test type="selenium">
+        <name>ConfigNetwork</name>
+        <desc>
+        Set the interface as external, etc.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-net</dir>
+    </test>        
+
+    <test type="selenium">
+        <name>ConfigProxy</name>
+        <desc>
+        Config the proxy and forbid a host.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-proxy</dir>
+    </test>        
+
+    <test>
+        <name>TestWget</name>
+        <desc>Checks if wget is installed in the client</desc>
+
+        <host>test-client</host>
+        <dir>test-wget</dir>
+    </test>
+
+
+    <test>
+        <name>Download</name>
+        <desc>Try to download a file of an allowed host</desc>
+
+        <host>test-client</host>
+        <dir>download</dir>
+    </test>
+
+    <test>
+        <name>ForbidDownload</name>
+        <desc>Try to download a file of an forbidden host</desc>
+
+        <host>test-client</host>
+        <dir>forbid-download</dir>
+    </test>
+</suite>

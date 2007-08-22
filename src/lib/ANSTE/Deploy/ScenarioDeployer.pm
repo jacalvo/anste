@@ -93,6 +93,7 @@ sub shutdown
 
     foreach my $deployer (@{$deployers}) {
         $deployer->shutdown();
+        $deployer->deleteImage();
     }
 }
 

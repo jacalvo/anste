@@ -1,0 +1,49 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>config-proxy</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">config-proxy</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/ebox/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=HTTP proxy</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(@href, '/ebox/Squid/Index')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>active</td>
+	<td>label=Enabled</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>change</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>policy</td>
+	<td>label=Filter</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>document.forms[1].change</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
