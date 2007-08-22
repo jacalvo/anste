@@ -70,7 +70,7 @@ sub deploy # returns hash ref with the ip of each host
         my $hostname = $host->name();
         $hostIP->{$hostname} = $ip;
     
-        print "[$hostname] starting\n";
+        print "[$hostname] Starting deployment...\n";
         $deployer->startDeployThread($ip);
         push(@{$self->{deployers}}, $deployer);
         $number++;
@@ -79,7 +79,7 @@ sub deploy # returns hash ref with the ip of each host
     foreach my $deployer (@{$self->{deployers}}) {
         $deployer->waitForFinish();
         my $host = $deployer->{host}->name();
-        print "[$host] finished\n";
+        print "[$host] Deployment finished.\n";
     }
 
     return $hostIP; 

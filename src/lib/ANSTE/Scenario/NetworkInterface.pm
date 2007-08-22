@@ -168,6 +168,13 @@ sub setGateway # gateway string
 	$self->{gateway} = $gateway;
 }
 
+sub removeGateway
+{
+    my ($self) = @_;
+
+    $self->{gateway} = '';
+}
+
 sub load # (node)
 {
 	my ($self, $node) = @_;

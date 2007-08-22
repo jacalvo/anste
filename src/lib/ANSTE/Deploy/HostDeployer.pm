@@ -110,17 +110,20 @@ sub _deploy
     my $hostname = $host->name();
     my $ip = $image->ip();
 
-    print "[$hostname] Creating a copy of the base image\n";
+    print "[$hostname] Creating a copy of the base image...\n";
     $self->_copyBaseImage() or die "Can't copy base image";
 
-    print "[$hostname] Updating hostname on the new image\n";
+    print "[$hostname] Updating hostname on the new image...\n";
     $self->_updateHostname();
 
-    print "[$hostname] Creating virtual machine ($ip)\n"; 
+    print "[$hostname] Creating virtual machine ($ip)...\n"; 
     $cmd->createVirtualMachine();
 
     # Add communications interface
     my $commIface = $image->commInterface();
+    # This gateway is not needed anymore
+    # and may conflict with the real one.
+    $commIface->removeGateway();
     $host->network()->addInterface($commIface);
 
     # Execute pre-install scripts
