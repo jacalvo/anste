@@ -22,8 +22,8 @@ use ANSTE::Comm::SlaveServer;
 use Test::More tests => 14;
 use SOAP::Transport::HTTP;
 
-use constant PORT => 8000;
-use constant SERVER => 'http://localhost:8000';
+use constant PORT => '8000';
+use constant SERVER => 'localhost';
 
 # Starts slave server in a separate process
 my $pid = fork();
@@ -37,7 +37,7 @@ if ($pid == 0) {
 sleep 1;
 
 my $client = new ANSTE::Comm::MasterClient;
-ok($client->connect(SERVER), 'server connect');
+ok($client->connect('http://' . SERVER . ':' . PORT), 'server connect');
 
 my $FILE;
 
@@ -48,12 +48,12 @@ print $FILE "true\n";
 close($FILE);
 ok($client->put('true.sh'), 'put true.sh');
 
-ok($client->exec('true.sh', 'out.log'), 'put true.sh');
+ok($client->exec('true.sh', 'out.log'), 'exec true.sh');
 
 # Wait for execution finish
 sleep 1;
 
-ok($client->get('out.log'));
+ok($client->get('out.log'), 'get out.log');
 
 unlink('true.sh');
 

@@ -1,0 +1,106 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use EBox;
+use EBox::Validate;
+use English qw(-no-match-variables);
+
+use constant GCONFTOOL_PATH => '/usr/bin/gconftool';
+
+checkRootUser();
+
+EBox::init();
+checkGconftool();
+
+changeAdminPort(80);
+# FIXME: ansted port is hardcoded
+addService('ansted', 'tcp', 8000);
+enableService('ansted');
+
+sub changeAdminPort
+{
+    my ($port) = @_;
+
+    my $p1 = " --type integer --set /ebox/modules/apache/port '$port'";
+    my $p2 = " --type integer --set /ebox/modules/firewall/services/administration/port '$port'";
+    my $cmd = GCONFTOOL_PATH . $p1 . $p2;
+    print "Executing $cmd..\n";
+    system $cmd;
+}
+
+sub addService
+{
+  my ($name, $protocol, $port) = @_;
+
+  my $serviceDirectory = "/ebox/modules/firewall/services/$name";
+
+  my @gconftoolParams = (
+             " --type string --set $serviceDirectory/name '$name'",
+             " --type string --set $serviceDirectory/protocol '$protocol'",
+             " --type integer  --set $serviceDirectory/port '$port'",    
+             " --type boolean --set $serviceDirectory/internal 'false'",
+            );
+
+  foreach my $params (@gconftoolParams) {
+    my $cmd = GCONFTOOL_PATH . $params;
+    print "Executing $cmd..\n";
+    system $cmd;
+    if ($? != 0) {
+      print STDERR "Error updating GConf. Trying to clean it..\n";
+      my $cmd = GCONFTOOL_PATH . " --recursive-unset $serviceDirectory";
+      system $cmd;
+      ($? == 0) or print STDERR "Clean up failed. Please do it manually\n";
+      
+      die "Service addition failed";
+    }
+  }
+
+  print "Service $name added to firewall's service list\n";
+}
+
+sub enableService
+{
+  my ($name) = @_;
+
+  my $serviceDirectory = "/ebox/modules/firewall/objects/_global/services/$name";
+
+  my @gconftoolParams = (
+             " --type string --set $serviceDirectory/policy 'allow'",
+             " --type string --set $serviceDirectory/name '$name'",
+            );
+
+  foreach my $params (@gconftoolParams) {
+    my $cmd = GCONFTOOL_PATH . $params;
+    print "Executing $cmd..\n";
+    system $cmd;
+    if ($? != 0) {
+      print STDERR "Error updating GConf. Trying to clean it..\n";
+      my $cmd = GCONFTOOL_PATH . " --recursive-unset $serviceDirectory";
+      system $cmd;
+      ($? == 0) or print STDERR "Clean up failed. Please do it manually\n";
+      
+      die "Service enabling failed";
+    }
+  }
+
+  print "Service $name enabled\n";
+}
+
+sub checkRootUser
+{
+  if ($EUID != 0) {
+    die "This script must be executed by the root user";
+  }
+}
+
+
+sub checkGconftool
+{
+  if (not -x GCONFTOOL_PATH) {
+    die "Unable to find gconftool-2 application. The script looked in the path " . GCONFTOOL_PATH . "\n";
+  }
+}
+
+
+1;
+

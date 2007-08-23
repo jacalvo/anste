@@ -1,16 +1,5 @@
 #!/bin/sh
 
-# Wait for ebox start
-sleep 10
-
-# FIXME: Change this to only add rules that enable anste communication
-for i in INPUT OUTPUT FORWARD
-do
-    iptables -P $i ACCEPT
-done
-
-iptables -I INPUT -j ACCEPT
-
 # Temporary workaround
 cat << EOF > /usr/share/ebox/stubs/apache.mas
 <%args>
@@ -58,7 +47,7 @@ AddModule mod_perl.c
 #AddModule mod_ssl.c
 # end modules
 
-Port <% 80 %>
+Port <% \$port %>
 User <% \$user %>
 Group <% \$group %>
 
@@ -93,8 +82,7 @@ HostnameLookups Off
 ErrorLog /var/lib/ebox/log/error.log
 LogLevel warn
 
-LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{fore
-nsic-id}n\"" combined
+LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{forensic-id}n\"" combined
 
 CustomLog /var/lib/ebox/log/access.log combined
 

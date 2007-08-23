@@ -17,6 +17,7 @@
     </pre-install>
 
     <post-install>
-        <script>ebox-iptables.sh</script>
+        <script>add-services-to-ebox-firewall</script>
+        <script>ebox-non-ssl.sh</script>
     </post-install>
 </image>

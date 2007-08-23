@@ -37,6 +37,8 @@
             <name>eth1</name>
     		<address>192.168.2.2</address>
 	    	<netmask>255.255.255.0</netmask>
+            <!-- ebox is the gateway -->
+            <gateway>192.168.2.1</gateway>
          </interface>
         </network>
 
