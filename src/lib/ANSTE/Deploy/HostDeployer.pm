@@ -25,6 +25,7 @@ use ANSTE::Comm::MasterServer;
 use ANSTE::Comm::HostWaiter;
 use ANSTE::Image::Image;
 use ANSTE::Image::Commands;
+use ANSTE::Image::Creator;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
@@ -114,8 +115,15 @@ sub _deploy
     try {
         $self->_copyBaseImage() or die "Can't copy base image";
     } catch ANSTE::Exceptions::NotFound with {
-        die "Base image not found, automatic creation not implemented\n";
-        # Here we should call copyBase again, after the base is created
+        if (ANSTE::Config->instance->autoCreateImages()) {
+            print "[$hostname] Base image not found, creating...\n";
+            my $creator = new ANSTE::Image::Creator($host->baseImage());
+            $creator->createImage();
+            $self->_copyBaseImage() or die "Can't copy base image";
+            print "[$hostname] Base image created.\n";
+        } else {
+            die "[$hostname] Base image not found, can't continue.";
+        }
     };
 
     print "[$hostname] Updating hostname on the new image...\n";

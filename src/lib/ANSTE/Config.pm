@@ -249,6 +249,21 @@ sub natIface
     return $iface;
 }
 
+sub autoCreateImages
+{
+    my ($self) = @_;
+
+    # TODO: Make this overridable in command line??
+    my $auto = $self->_getOption('deploy', 'auto-create-images');
+
+    if (not ANSTE::Validate::boolean($auto)) {
+        throw ANSTE::Exceptions::InvalidConfig('deploy/auto-create-images', 
+                                               $auto);
+    }
+
+    return $auto;
+}
+
 sub reportWriter
 {
     my ($self) = @_;
@@ -449,6 +464,8 @@ sub _setDefaults
     $self->{default}->{'comm'}->{'ip-range'} = '192.168.0';
     $self->{default}->{'comm'}->{'gateway'} = '192.168.0.1';
     $self->{default}->{'comm'}->{'nat-iface'} = 'eth1';
+
+    $self->{default}->{'deploy'}->{'auto-create-images'} = 0;
 
     $self->{default}->{'report'}->{'writer'} = 'Text';
 

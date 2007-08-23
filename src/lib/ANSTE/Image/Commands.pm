@@ -39,9 +39,9 @@ sub new # (image) returns new Commands object
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
 
-    if (not $image->isa('ANSTE::Image::Image')) {
-        throw EBox::Exception::InvalidType('image',
-                                           'ANSTE::Image::Image');
+    if (not $image->isa('ANSTE::Scenario::BaseImage')) {
+        throw ANSTE::Exceptions::InvalidType('image',
+                                             'ANSTE::Scenario::BaseImage');
     }
 
     $self->{mountPoint} = undef;
@@ -65,12 +65,28 @@ sub new # (image) returns new Commands object
 	return $self;
 }
 
+sub ip
+{
+    my ($self) = @_;
+
+    my $image = $self->{image};
+
+    # FIXME: When creating more than one baseimages at once
+    # could be IP issues...
+    my $ip = $image->isa('ANSTE::Image::Image') ? 
+             $image->ip() : 
+             ANSTE::Config->instance()->firstAddress();
+    
+    return $ip;
+}
+
 sub create
 {
 	my ($self) = @_;
 
-    my $name = $self->{image}->name();
-    my $ip = $self->{image}->ip();
+    my $image = $self->{image};
+    my $name = $image->name();
+    my $ip = $self->ip();
 
     my $virtualizer = $self->{virtualizer};
 
@@ -189,7 +205,7 @@ sub prepareSystem
 
     my $config = ANSTE::Config->instance();
     my $port = $config->anstedPort();
-    my $ip = $self->{image}->ip();
+    my $ip = $self->ip();
     $client->connect("http://$ip:$port");
 
     $self->createVirtualMachine();
@@ -250,7 +266,7 @@ sub shutdown
 
     # Delete the NAT rule for this image
     my $iface = ANSTE::Config->instance()->natIface();
-    $system->disableNAT($iface, $image->ip());
+    $system->disableNAT($iface, $self->ip());
 }
 
 sub resize # (size)
@@ -280,7 +296,7 @@ sub createVirtualMachine
     my $system = $self->{system};
 
     my $name = $self->{image}->name();
-    my $addr = $self->{image}->ip();
+    my $addr = $self->ip();
 
     my $iface = ANSTE::Config->instance()->natIface();
 
@@ -304,7 +320,7 @@ sub executeScripts # (list)
 
     my $config = ANSTE::Config->instance();
     my $port = $config->anstedPort();
-    my $ip = $self->{image}->ip();
+    my $ip = $self->ip();
     $client->connect("http://$ip:$port");
 
     my $path = ANSTE::Config->instance()->scriptPath();

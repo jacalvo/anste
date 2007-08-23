@@ -24,6 +24,8 @@ use ANSTE::Config;
 use threads;
 use SOAP::Transport::HTTP;
 
+my $thread = undef;
+
 sub new # returns new WaiterServer object
 {
 	my ($class) = @_;
@@ -38,8 +40,8 @@ sub startThread # returns thread object
 {
     my ($self) = @_;
 
-    my $thread = threads->create('_startServer');
-
+    $thread = threads->create('_startServer') unless defined $thread;
+    
     return($thread);
 }
 

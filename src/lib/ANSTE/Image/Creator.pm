@@ -34,9 +34,9 @@ sub new # (image) returns new ImageCreator object
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
 
-    if (not $image->isa('ANSTE::Image::Image')) {
-        throw EBox::Exception::InvalidType('image',
-                                           'ANSTE::Image::Image');
+    if (not $image->isa('ANSTE::Scenario::BaseImage')) {
+        throw ANSTE::Exceptions::InvalidType('image',
+                                             'ANSTE::Scenario::BaseImage');
     }
 	
 	$self->{image} = $image;
