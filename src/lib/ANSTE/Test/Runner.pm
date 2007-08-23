@@ -71,7 +71,7 @@ sub runSuite # (suite)
 
     $self->_runTests();
 
-    $deployer->shutdown();
+#FIXME:    $deployer->shutdown();
 }
 
 sub report # returns report object

@@ -1,0 +1,83 @@
+#!/usr/bin/perl
+
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License, version 2, as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+use warnings;
+use strict;
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+
+use ANSTE::Validate;
+use ANSTE::Comm::MasterClient;
+use ANSTE::Comm::WaiterServer;
+use ANSTE::Comm::HostWaiter;
+
+use Term::ReadLine;
+use Perl6::Slurp;
+use Error qw(:try);
+
+my $term = new Term::ReadLine('anste-master');
+
+use constant PORT => '8000';
+use constant SERVER => '192.168.0.191';
+
+my $server = new ANSTE::Comm::WaiterServer();
+$server->startThread();
+
+my $waiter = ANSTE::Comm::HostWaiter->instance();
+
+my $prompt = ">> ";
+my $OUT = $term->OUT || \*STDOUT;
+my $cmd;
+while (defined($cmd = $term->readline($prompt))) {
+    next if not $cmd;
+    if (not ANSTE::Validate::fileReadable($cmd)) {
+        print $OUT "Filename: *$cmd*\n";
+        print $OUT "File not found\n";
+        next;
+    }
+    try {
+        my $result = execute($cmd);
+        print $OUT $result, "\n";
+        $term->addhistory($cmd);
+    } catch Error with {
+        my $E = shift;
+        my $msg = $E->stringify();
+        print $OUT "Execution error: $msg\n";
+    };
+}
+
+sub execute # (cmd)
+{
+    my ($cmd) = @_;
+
+    my $client = new ANSTE::Comm::MasterClient;
+    $client->connect('http://' . SERVER . ':' . PORT);
+
+    $client->put($cmd);
+    $client->exec($cmd);
+    $waiter->waitForAnyExecution();
+#    $client->get('out.log');
+#    my $content = slurp '<out.log';
+#    $client->del('out.log');
+#    $client->del($cmd);
+#    unlink 'out.log';
+    
+    my $content = "SHIT";
+    return $content;
+}
+

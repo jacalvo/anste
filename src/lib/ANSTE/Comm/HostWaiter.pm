@@ -94,7 +94,19 @@ sub waitForExecution # (host) returns retValue
     until ($executed{$host}) {
         _waitForEvent();
     }
-    return($returnValue);
+    return $returnValue;
+}
+
+sub waitForAnyExecution # returns retValue
+{
+    my ($self) = @_;
+
+    use Perl6::Junction qw(any);
+
+    until (any (values %executed)) {
+        _waitForEvent();
+    }
+    return $returnValue;
 }
 
 sub _waitForEvent

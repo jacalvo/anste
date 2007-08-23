@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use EBox;
 use EBox::Validate;
+use EBox::Global;
 use English qw(-no-match-variables);
 
 use constant GCONFTOOL_PATH => '/usr/bin/gconftool';
@@ -13,9 +14,12 @@ EBox::init();
 checkGconftool();
 
 changeAdminPort(80);
-# FIXME: ansted port is hardcoded
+# FIXME: ansted and master ports are hardcoded
 addService('ansted', 'tcp', 8000);
 enableService('ansted');
+
+my $fw = EBox::Global->modInstance('firewall');
+$fw->addOutputRule('tcp', '8001');
 
 sub changeAdminPort
 {

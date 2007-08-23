@@ -23,6 +23,8 @@ use lib "$Bin/../lib";
 
 use ANSTE::Comm::SlaveClient;
 
+use Error qw(:try);
+
 use constant MASTER => '/var/local/anste.master';
 use constant PORT => 8001;
 
@@ -56,7 +58,13 @@ else {
 sub handleReady
 {
     my $client = getClient();
-    my $ok = $client->hostReady();
+    my $ok;
+    try {
+        $ok = $client->hostReady();
+    } catch Error with {
+        sleep 5;
+        $ok = $client->hostReady();
+    };
     exit(!$ok);
 }
 
@@ -64,7 +72,13 @@ sub handleFinished
 {
     my $client = getClient();
     my $ret = $ARGV[1];
-    my $ok = $client->executionFinished($ret);
+    my $ok;
+    try {
+        $ok = $client->executionFinished($ret);
+    } catch Error with {
+        sleep 5;
+        $ok = $client->executionFinished($ret);
+    };
     exit(!$ok);
 }
 

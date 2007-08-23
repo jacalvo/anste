@@ -22,8 +22,8 @@
 		</network>
 
         <post-install>
-            <script>ebox-iptables.sh</script>
             <script>ebox-import-network.sh</script>
+            <script>ebox-wait-start.sh</script>
         </post-install>
 	</host>
 
