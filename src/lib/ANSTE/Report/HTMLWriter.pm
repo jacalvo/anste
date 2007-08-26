@@ -76,7 +76,9 @@ sub writeTestResult # (test, result, file, video)
     my $resultStr = $result == 0 ? "<font color='#00FF00'>OK</font>" : 
                                    "<font color='#FF0000'>ERROR</font>";
 
-    $resultStr = "<a href=\"$file\">" . $resultStr . "</a>";
+    if ($file) {
+        $resultStr = "<a href=\"$file\">" . $resultStr . "</a>";
+    }        
 
     if ($video) {
         $resultStr .= " (<a href=\"$video\">video</a>)";
