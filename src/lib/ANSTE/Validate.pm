@@ -114,4 +114,14 @@ sub ip # (ip)
     return 1; 
 }
 
+sub suite # (suite)
+{
+    my ($suite) = @_;
+
+    my $dir = ANSTE::Config->instance()->testPath();
+    my $file = "$dir/$suite/suite.xml";
+
+    return -r $file;
+}
+
 1;

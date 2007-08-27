@@ -49,22 +49,27 @@ sub new # returns new Runner object
 	return $self;
 }
 
-sub runDir # (dir)
+sub runDir # (suites)
 {
-    my ($self, $dir) = @_;
+    my ($self, $suites) = @_;
+
+    my $path = ANSTE::Config->instance()->testPath(); 
 
     my $DIR;
-    opendir($DIR, $dir) or die "Can't open directory $dir";
-
+    opendir($DIR, "$path/$suites") or die "Can't open directory $suites";
     my @dirs = readdir($DIR);
+    closedir($DIR);
 
     if (@dirs == 0) {
-        die "There isn't any test suite in $dir";
+        die "There isn't any test suite in $suites";
     }
 
-    foreach my $suite (@dirs) {
+    foreach my $dir (@dirs) {
+        # Skip all directorys beginning with dot.
+        next if $dir =~ /^\./;
         my $suite = new ANSTE::Test::Suite;
-        $suite->loadFromDir($suite);
+        my $suiteDir = "$suites/$dir";
+        $suite->loadFromDir($suiteDir);
         $self->runSuite($suite);
     }
 }
@@ -79,12 +84,19 @@ sub runSuite # (suite)
 
     my $scenario = $self->_loadScenario($scenarioFile);
 
+    my $sceName = $scenario->name();
+    my $suiteName = $suite->name();
+    print "Deploying scenario $sceName for suite $suiteName...\n";
+
     my $deployer = new ANSTE::Deploy::ScenarioDeployer($scenario);
     $self->{hostIP} = $deployer->deploy();
+
+    print "Finished deployment of scenario $sceName.\n";
 
     $self->_runTests();
 
     $deployer->shutdown();
+    print "Finished testing of suite $suiteName.\n\n";
 }
 
 sub report # returns report object

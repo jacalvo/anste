@@ -254,6 +254,7 @@ sub _createXenToolsConfig # returns filename
     print $fh "noswap = $noSwap\n";
     print $fh "dist = $dist\n";
     print $fh "image = $image\n";
+    print $fh "cache = no\n";
     print $fh "kernel = $kernel\n";
     print $fh "initrd = $initrd\n";
     print $fh "mirror = $mirror\n";
