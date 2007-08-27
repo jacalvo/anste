@@ -223,7 +223,9 @@ sub deleteImage # (image)
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
 
-    $self->execute("xen-delete-image $image");
+    my $xenDir = ANSTE::Config->instance()->xenDir();
+
+    $self->execute("xen-delete-image $image --dir $xenDir");
 }
 
 sub _createXenToolsConfig # returns filename
