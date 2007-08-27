@@ -1,7 +1,10 @@
 #!/bin/sh
 
+echo "Setting the proxy"
 export http_proxy="192.168.2.1:3128"
-wget -t 0 www.marca.com
 
-# We want to fail, so negate the return of wget
-[ ! $? ]
+echo "HTTP request to www.marca.com"
+wget -t 0 www.marca.com -O output.html
+
+echo "Checking if access was denied"
+grep "Access has been Denied" output.html 

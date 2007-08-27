@@ -49,6 +49,13 @@ sub connect	# (host)
                                    endpoint => $host); 
 }
 
+sub connected # returns boolean
+{
+    my ($self) = @_;
+
+    return defined($self->{soap});
+}
+
 sub put	# (file) returns boolean
 {
     my ($self, $file) = @_;

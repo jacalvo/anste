@@ -52,7 +52,7 @@ sub get	# (file)
     }
 }
 
-sub exec # (file, log)
+sub exec # (file, log?)
 {
     my ($self, $file, $log) = @_;
 

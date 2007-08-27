@@ -32,26 +32,26 @@ use Error qw(:try);
 
 my $term = new Term::ReadLine('anste-master');
 
-use constant PORT => '8000';
-use constant SERVER => '192.168.0.191';
+use constant DEFAULT_PORT => 8000;
+
+use constant HELP => "Commands available:\n" .
+                     "connect <host> [port]\n" .
+                     "exec <file>\n" .
+                     "quit\n";
 
 my $server = new ANSTE::Comm::WaiterServer();
 $server->startThread();
 
 my $waiter = ANSTE::Comm::HostWaiter->instance();
+my $client = new ANSTE::Comm::MasterClient;
 
 my $prompt = ">> ";
 my $OUT = $term->OUT || \*STDOUT;
 my $cmd;
 while (defined($cmd = $term->readline($prompt))) {
     next if not $cmd;
-    if (not ANSTE::Validate::fileReadable($cmd)) {
-        print $OUT "Filename: *$cmd*\n";
-        print $OUT "File not found\n";
-        next;
-    }
     try {
-        my $result = execute($cmd);
+        my $result = _parseCmd($cmd);
         print $OUT $result, "\n";
         $term->addhistory($cmd);
     } catch Error with {
@@ -61,23 +61,64 @@ while (defined($cmd = $term->readline($prompt))) {
     };
 }
 
-sub execute # (cmd)
+# TODO: Check number of arguments, etc.
+sub _parseCmd
 {
     my ($cmd) = @_;
 
-    my $client = new ANSTE::Comm::MasterClient;
-    $client->connect('http://' . SERVER . ':' . PORT);
+    my ($name, @args) = split(/ /, $cmd);
 
-    $client->put($cmd);
-    $client->exec($cmd);
+    if ($name eq 'connect') {
+        _connect($args[0], $args[1]);
+    }
+    elsif ($name eq 'exec') {
+        _execute($args[0]);
+    }
+    elsif ($name eq 'help') {
+        return HELP;
+    }
+    elsif ($name eq 'quit') {
+        exit 0;
+    }
+    else {
+        return "Command not recognised";
+    }
+}
+
+sub _connect # (host, port)
+{
+    my ($host, $port) = @_;
+
+    if (not $port) {
+        $port = DEFAULT_PORT;
+    }
+
+    $client->connect("http://$host:$port");
+
+    return "OK";
+}
+
+sub _execute # (file)
+{
+    my ($file) = @_;
+
+    if (not $client->connected()) {
+        return "Not connected";
+    }
+
+    if (not ANSTE::Validate::fileReadable($file)) {
+        return "File $file not found";
+    }
+
+    $client->put($file);
+    $client->exec($file, 'out.log');
     $waiter->waitForAnyExecution();
-#    $client->get('out.log');
-#    my $content = slurp '<out.log';
-#    $client->del('out.log');
-#    $client->del($cmd);
-#    unlink 'out.log';
+    $client->get('out.log');
+    my $content = slurp '<out.log';
+    $client->del('out.log');
+    $client->del($cmd);
+    unlink 'out.log';
     
-    my $content = "SHIT";
-    return $content;
+    return "Output:\n$content";
 }
 
