@@ -30,9 +30,9 @@ use ANSTE::Exceptions::InvalidFile;
 
 use Error qw(:try);
 
-sub new # (suite) returns new Runner object
+sub new # returns new Runner object
 {
-	my ($class, $suite) = @_;
+	my ($class) = @_;
 	my $self = {};
 
     $self->{suite} = undef;
@@ -53,7 +53,20 @@ sub runDir # (dir)
 {
     my ($self, $dir) = @_;
 
-    # FIXME: Not implemented
+    my $DIR;
+    opendir($DIR, $dir) or die "Can't open directory $dir";
+
+    my @dirs = readdir($DIR);
+
+    if (@dirs == 0) {
+        die "There isn't any test suite in $dir";
+    }
+
+    foreach my $suite (@dirs) {
+        my $suite = new ANSTE::Test::Suite;
+        $suite->loadFromDir($suite);
+        $self->runSuite($suite);
+    }
 }
 
 sub runSuite # (suite)
@@ -71,7 +84,7 @@ sub runSuite # (suite)
 
     $self->_runTests();
 
-#FIXME:    $deployer->shutdown();
+    $deployer->shutdown();
 }
 
 sub report # returns report object
@@ -165,7 +178,7 @@ sub _runTest # (test)
         my $video;
         if ($config->seleniumVideo()) {
             $video = "$logPath/video/$name.ogg";
-            print "Starting video recording for test $name.\n";
+            print "Starting video recording for test $name...\n";
             $system->startVideoRecording($video);
         }
 
@@ -173,8 +186,9 @@ sub _runTest # (test)
         $ret = $self->_runSeleniumRC($hostname, "$path/suite.html", $log);
 
         if ($config->seleniumVideo()) {
-            print "Ending video recording for test $name.\n";
+            print "Ending video recording for test $name... ";
             $system->stopVideoRecording();
+            print "Done.\n";
 
             # If test was correct and record all videos option
             # is not activated, delete the video
@@ -230,7 +244,7 @@ sub _runScript # (hostname, script, log?)
 
     if (defined $log) {
         $client->get($log);
-#TODO:        $client->del($log);
+        $client->del($log);
     }
     
     return $ret;

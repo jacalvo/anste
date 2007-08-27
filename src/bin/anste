@@ -120,16 +120,21 @@ sub test # (file)
 {
     my ($file) = @_;
 
-    my $suite = new ANSTE::Test::Suite;
+    my $runner = new ANSTE::Test::Runner();
+
     try {
-        $suite->loadFromDir($file);
+        if (ANSTE::Validate::suite($file)) {
+            my $suite = new ANSTE::Test::Suite;
+            $suite->loadFromDir($file);
+            $runner->runSuite($suite);
+        }
+        else {
+            $runner->runDir($file)
+        }
     } catch ANSTE::Exceptions::InvalidFile with {
         print STDERR "Can't load test suite $file.\n";
         exit(1);
     };
-
-    my $runner = new ANSTE::Test::Runner();
-    $runner->runSuite($suite);
 
     my $report = $runner->report();
     my $package = $config->reportWriter() . 'Writer';

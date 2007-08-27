@@ -304,10 +304,10 @@ sub createVirtualMachine
 
     $virtualizer->createVM($name);
 
-    print "Waiting for the system start...\n";
+    print "[$name] Waiting for the system start...\n";
     my $waiter = ANSTE::Comm::HostWaiter->instance();
     $waiter->waitForReady($name);
-    print "System is up\n";
+    print "[$name] System is up.\n";
 }
 
 sub executeScripts # (list)

@@ -434,7 +434,7 @@ sub executeSelenium # (%params)
 
     my $cmd = 'java -jar ' . $jar . ' -htmlSuite "' . $browser . '" ' .
               '"' . $url . '" "' . $testFile . '" "' . $resultFile . '" ' .
-              '-multiWindow';
+              '-multiWindow &> /dev/null';
 
     $self->execute($cmd);
 }

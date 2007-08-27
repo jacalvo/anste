@@ -219,7 +219,6 @@ sub _generateSetupScript # (script)
     open($FILE, '>', $script) or die "Can't open file $script: $!";
     $generator->writeScript($FILE);
     close($FILE) or die "Can't close file $script: $!";
-    $generator->writeScript(\*STDOUT);
 }
 
 sub _executeSetupScript # (host, script)
