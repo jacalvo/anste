@@ -18,6 +18,7 @@ package ANSTE::Report::SuiteResult;
 use strict;
 use warnings;
 
+use ANSTE::Test::Suite;
 use ANSTE::Report::TestResult;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
@@ -27,7 +28,7 @@ sub new # returns new SuiteResult object
 	my ($class) = @_;
 	my $self = {};
 
-    $self->{name} = '';
+    $self->{suite} = '';
     $self->{tests} = [];
 
 	bless($self, $class);
@@ -35,21 +36,26 @@ sub new # returns new SuiteResult object
 	return $self;
 }
 
-sub name # returns name string
+sub suite # returns suite string
 {
 	my ($self) = @_;
 
-	return $self->{name};
+	return $self->{suite};
 }
 
-sub setName # name string
+sub setSuite # suite string
 {
-	my ($self, $name) = @_;	
+	my ($self, $suite) = @_;	
 
-    defined $name or
-        throw ANSTE::Exceptions::MissingArgument('name');
+    defined $suite or
+        throw ANSTE::Exceptions::MissingArgument('suite');
 
-	$self->{name} = $name;
+    if (not $suite->isa('ANSTE::Test::Suite')) {
+        throw ANSTE::Exceptions::InvalidType('suite',
+                                             'ANSTE::Test::Suite');
+    }
+
+	$self->{suite} = $suite;
 }
 
 sub add # (test)

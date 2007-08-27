@@ -109,7 +109,7 @@ sub _runTests
     print "\n\nRunning test suite: $suiteName\n\n";
 
     my $suiteResult = new ANSTE::Report::SuiteResult();
-    $suiteResult->setName($suiteName);
+    $suiteResult->setSuite($suite);
 
     foreach my $test (@{$suite->tests()}) {
         my $testName = $test->name();
@@ -158,7 +158,7 @@ sub _runTest # (test)
     my ($log, $ret);
 
     my $testResult = new ANSTE::Report::TestResult();
-    $testResult->setName($test->name());
+    $testResult->setTest($test);
 
     # Run the test itself either it's a selenium one or a normal one 
     if ($test->selenium()) {

@@ -453,6 +453,9 @@ sub startVideoRecording # (filename)
     if ($pid == 0) {
         # TODO: Personalize
         my $command = 'recordmydesktop';
+        # Exec without output
+        open(STDOUT, '> /dev/null');
+        open(STDERR, '>&STDOUT');
         exec($command, $filename);
     }
     else {

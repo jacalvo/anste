@@ -47,14 +47,20 @@ sub writeEnd
     print $file "</html>\n";
 }    
 
-sub writeSuiteHeader # (suite)
+sub writeSuiteHeader # (name, desc)
 {
-    my ($self, $suite) = @_;
+    my ($self, $name, $desc) = @_;
 
     my $file = $self->{file};
 
-    print $file "<h2>$suite</h2>\n";
-    print $file "<ul>\n";
+    print $file "<h2>$name</h2>\n";
+    print $file "<h3>$desc</h3>\n";
+    print $file "<table border='1'>\n";
+    print $file "<th><tr>\n";
+    print $file "<td>Test</td>\n";
+    print $file "<td>Description</td>\n";
+    print $file "<td>Result</td>\n";
+    print $file "</tr></th>\n";
 }    
 
 sub writeSuiteEnd
@@ -63,19 +69,30 @@ sub writeSuiteEnd
 
     my $file = $self->{file};
 
-    print $file "</ul>\n";
+    print $file "</table>\n";
 }    
 
 # TODO: named parameters
-sub writeTestResult # (test, result, file, video)
+# Parameters:
+# name
+# desc
+# value
+# log
+# video
+sub writeTestResult # (%params)
 {
-    my ($self, $test, $result, $file, $video) = @_;
+    my ($self, %params) = @_;
+
+    my $name = $params{name};
+    my $desc = $params{desc};
+    my $result = $params{value};
+    my $file = $params{log};
+    my $video = $params{video};
 
     my $filehandle = $self->{file};
 
     my $resultStr = $result == 0 ? "<font color='#00FF00'>OK</font>" : 
                                    "<font color='#FF0000'>ERROR</font>";
-
     if ($file) {
         $resultStr = "<a href=\"$file\">" . $resultStr . "</a>";
     }        
@@ -84,8 +101,15 @@ sub writeTestResult # (test, result, file, video)
         $resultStr .= " (<a href=\"$video\">video</a>)";
     }
 
-    print $filehandle "<li> $test: $resultStr </li>\n";
+    if (not $desc) {
+        $desc = '&nbsp;';
+    }
 
+    print $filehandle "<tr>\n" . 
+                      "<td>$name</td>\n" .
+                      "<td>$desc</td>\n" .
+                      "<td>$resultStr</td>\n" .
+                      "</tr>\n";
 }    
 
 1;

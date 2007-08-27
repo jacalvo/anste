@@ -18,14 +18,16 @@ package ANSTE::Report::TestResult;
 use strict;
 use warnings;
 
+use ANSTE::Test::Test;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidType;
 
 sub new # returns new TestResult object
 {
 	my ($class) = @_;
 	my $self = {};
 
-    $self->{name} = '';
+    $self->{test} = undef;
     $self->{value} = undef;
     $self->{log} = undef;
     $self->{video} = undef;
@@ -35,21 +37,26 @@ sub new # returns new TestResult object
 	return $self;
 }
 
-sub name # returns name string
+sub test # returns test string
 {
 	my ($self) = @_;
 
-	return $self->{name};
+	return $self->{test};
 }
 
-sub setName # name string
+sub setTest # test string
 {
-	my ($self, $name) = @_;	
+	my ($self, $test) = @_;	
 
-    defined $name or
-        throw ANSTE::Exceptions::MissingArgument('name');
+    defined $test or
+        throw ANSTE::Exceptions::MissingArgument('test');
 
-	$self->{name} = $name;
+    if (not $test->isa('ANSTE::Test::Test')) {
+        throw ANSTE::Exceptions::InvalidType('test',
+                                             'ANSTE::Test::Test');
+    }
+
+	$self->{test} = $test;
 }
 
 sub value # returns value

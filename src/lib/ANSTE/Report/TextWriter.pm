@@ -59,15 +59,21 @@ sub writeSuiteEnd
     print $file "\n";
 }    
 
-sub writeTestResult # (test, result)
+# Parameters: 
+# name
+# value
+sub writeTestResult # (%params)
 {
-    my ($self, $test, $result) = @_;
+    my ($self, %params) = @_;
+
+    my $name = $params{name};
+    my $result = $params{value};
 
     my $file = $self->{file};
 
     my $resultStr = $result == 0 ? 'OK' : 'ERROR';
 
-    print $file "\t\t$test: $resultStr\n";
+    print $file "\t\t$name: $resultStr\n";
 }    
 
 1;

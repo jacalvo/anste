@@ -49,12 +49,17 @@ sub write # (file)
     my $report = $self->{report};
 
     foreach my $suite (@{$report->suites()}) {
-        $self->writeSuiteHeader($suite->name());
+        my $name = $suite->suite()->name();
+        my $desc = $suite->suite()->desc();
+        $self->writeSuiteHeader($name, $desc);
         foreach my $test (@{$suite->tests()}) {
-            $self->writeTestResult($test->name(), 
-                                   $test->value(),
-                                   $test->log(),
-                                   $test->video());
+            $name = $test->test()->name();
+            $desc = $test->test()->desc();
+            $self->writeTestResult(name => $name,
+                                   desc => $desc,
+                                   value => $test->value(),
+                                   log => $test->log(),
+                                   video => $test->video());
         }
         $self->writeSuiteEnd();
     }
@@ -62,7 +67,7 @@ sub write # (file)
     $self->writeEnd();
 }
 
-sub writeHeader 
+sub writeHeader
 {
     throw ANSTE::Exceptions::NotImplemented();
 }    
@@ -72,7 +77,7 @@ sub writeEnd
     throw ANSTE::Exceptions::NotImplemented();
 }    
 
-sub writeSuiteHeader
+sub writeSuiteHeader # (name, desc)
 {
     throw ANSTE::Exceptions::NotImplemented();
 }    
@@ -82,7 +87,13 @@ sub writeSuiteEnd
     throw ANSTE::Exceptions::NotImplemented();
 }    
 
-sub writeTestResult
+# Parameters:
+# name
+# desc
+# value
+# log
+# video
+sub writeTestResult # (%params)
 {
     throw ANSTE::Exceptions::NotImplemented();
 }    

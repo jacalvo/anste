@@ -30,54 +30,84 @@ use ANSTE::Report::HTMLWriter;
 my $report = new ANSTE::Report::Report();
 
 my $suite = new ANSTE::Report::SuiteResult();
-$suite->setName('Suite 1');
+my $s = new ANSTE::Test::Suite();
+$s->setName('Suite 1');
+$s->setDesc('Here goes the suite description');
+$suite->setSuite($s);
+
 my $test = new ANSTE::Report::TestResult();
-$test->setName('Test 1');
+my $t = new ANSTE::Test::Test();
+$t->setName('Test 2');
+$t->setDesc('Here goes the test description');
+$test->setTest($t);
 $test->setValue(1);
 $suite->add($test);
+
 $test = new ANSTE::Report::TestResult();
-$test->setName('Test 2');
+$t = new ANSTE::Test::Test();
+$t->setName('Test 3');
+$t->setDesc('Here goes the test description');
+$test->setTest($t);
 $test->setValue(0);
 $suite->add($test);
+
 $test = new ANSTE::Report::TestResult();
-$test->setName('Test 3');
-$test->setValue(0);
-$suite->add($test);
-$test = new ANSTE::Report::TestResult();
-$test->setName('Test 4');
+$t = new ANSTE::Test::Test();
+$t->setName('Test 4');
+$t->setDesc('Here goes the test description');
+$test->setTest($t);
 $test->setValue(1);
 $suite->add($test);
+
 $test = new ANSTE::Report::TestResult();
-$test->setName('Test 5');
+$t = new ANSTE::Test::Test();
+$t->setName('Test 5');
+$t->setDesc('Here goes the test description');
+$test->setTest($t);
 $test->setValue(0);
 $suite->add($test);
+
 $report->add($suite);
 
 $suite = new ANSTE::Report::SuiteResult();
-$suite->setName('Suite 2');
+$s = new ANSTE::Test::Suite();
+$s->setName('Suite 2');
+$s->setDesc('Here goes the suite description');
+$suite->setSuite($s);
+
 $test = new ANSTE::Report::TestResult();
-$test->setName('Test 1');
+$t = new ANSTE::Test::Test();
+$t->setName('Test 2');
+$t->setDesc('Here goes the test description');
+$test->setTest($t);
 $test->setValue(0);
 $suite->add($test);
+
 $test = new ANSTE::Report::TestResult();
-$test->setName('Test 2');
+$t = new ANSTE::Test::Test();
+$t->setName('Test 3');
+$t->setDesc('Here goes the test description');
+$test->setTest($t);
 $test->setValue(0);
 $suite->add($test);
+
 $test = new ANSTE::Report::TestResult();
-$test->setName('Test 3');
-$test->setValue(1);
+$t = new ANSTE::Test::Test();
+$t->setName('Test 4');
+$t->setDesc('Here goes the test description');
+$test->setTest($t);
+$test->setValue(0);
 $suite->add($test);
+
 $test = new ANSTE::Report::TestResult();
-$test->setName('Test 4');
-$test->setValue(1);
-$suite->add($test);
-$test = new ANSTE::Report::TestResult();
-$test->setName('Test 5');
+$t = new ANSTE::Test::Test();
+$t->setName('Test 5');
+$t->setDesc('Here goes the test description');
+$test->setTest($t);
 $test->setValue(1);
 $suite->add($test);
 
 $report->add($suite);
-
 
 my $writer = new ANSTE::Report::HTMLWriter($report);
 $writer->write(\*STDOUT);
