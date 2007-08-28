@@ -17,12 +17,12 @@ package ANSTE::Exceptions::InvalidConfig;
 
 use base 'ANSTE::Exceptions::Base';
 
-sub new # (option, value)
+sub new # (option, value, file)
 {
-	my ($class, $option, $value) = @_;
+	my ($class, $option, $value, $file) = @_;
 
 	$self = $class->SUPER::new("Invalid value for option $option: " .
-                               "'$value' in configuration file\n");
+                               "'$value' in configuration file $file\n");
 
 	bless ($self, $class);
 	return $self;

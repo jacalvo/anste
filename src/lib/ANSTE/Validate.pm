@@ -67,20 +67,28 @@ sub system # (system)
 {
     my ($system) = @_;
 
-    my $path = "ANSTE/System/$system.pm";
-    my $libPath = getcwd() . "/lib/ANSTE/System/$system.pm";
-
-    return -f $path || -f $libPath;
+    foreach my $path (@INC) {
+        my $file = "$path/ANSTE/System/$system.pm";
+        if (-r $file) {
+            return 1;
+            last;
+        }
+    }
+    return 0;
 }
 
 sub virtualizer # (virtualizer)
 {
     my ($virtualizer) = @_;
 
-    my $path = "ANSTE/Virtualizer/$virtualizer.pm";
-    my $libPath = getcwd() . "/lib/ANSTE/Virtualizer/$virtualizer.pm";
-
-    return -f $path || -f $libPath; 
+    foreach my $path (@INC) {
+        my $file = "$path/ANSTE/Virtualizer/$virtualizer.pm";
+        if (-r $file) {
+            return 1;
+            last;
+        }
+    }
+    return 0;
 }
 
 sub port # (port)

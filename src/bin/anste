@@ -54,7 +54,7 @@ GetOptions('create' => \$create,
 
 pod2usage(1) if $help;           
 
-if (none($create, $deploy, $test)) {
+if (none($create, $deploy, $test) == 1) {
     pod2usage("$0: No action specified.");
 }
 

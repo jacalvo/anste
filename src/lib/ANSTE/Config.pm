@@ -43,6 +43,7 @@ sub instance
             my $file = "$path/" . CONFIG_FILE;
             if (-r $file) {
                 $self->{config} = Config::Tiny->read($file);
+                $self->{confFile} = $file;
                 last;
             }
         }
@@ -90,7 +91,9 @@ sub imagePath
     my $imagePath = $self->_getOption('paths', 'images');
 
     if (not ANSTE::Validate::path($imagePath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/images', $imagePath);
+        throw ANSTE::Exceptions::InvalidConfig('paths/images', 
+                                               $imagePath,
+                                               $self->{confFile});
     }
 
     return $imagePath;
@@ -103,7 +106,9 @@ sub imageTypePath
     my $imageTypePath = $self->_getOption('paths', 'image-types');
 
     if (not ANSTE::Validate::path($imageTypePath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/image-types', $imageTypePath);
+        throw ANSTE::Exceptions::InvalidConfig('paths/image-types',
+                                               $imageTypePath,
+                                               $self->{confFile});
     }
 
     return $imageTypePath;
@@ -117,7 +122,8 @@ sub scenarioPath
 
     if (not ANSTE::Validate::path($scenarioPath)) {
         throw ANSTE::Exceptions::InvalidConfig('paths/scenarios',
-                                               $scenarioPath);
+                                               $scenarioPath,
+                                               $self->{confFile});
     }
 
     return $scenarioPath;
@@ -131,7 +137,8 @@ sub profilePath
 
     if (not ANSTE::Validate::path($profilePath)) {
         throw ANSTE::Exceptions::InvalidConfig('paths/profiles',
-                                               $profilePath);
+                                               $profilePath,
+                                               $self->{confFile});
     }
 
     return $profilePath;
@@ -145,7 +152,8 @@ sub scriptPath
 
     if (not ANSTE::Validate::path($scriptPath)) {
         throw ANSTE::Exceptions::InvalidConfig('paths/scripts',
-                                               $scriptPath);
+                                               $scriptPath,
+                                               $self->{confFile});
     }
 
     return $scriptPath;
@@ -158,7 +166,9 @@ sub testPath
     my $testPath = $self->_getOption('paths', 'tests');
 
     if (not ANSTE::Validate::path($testPath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/tests', $testPath);
+        throw ANSTE::Exceptions::InvalidConfig('paths/tests', 
+                                               $testPath,
+                                               $self->{confFile});
     }
 
     return $testPath;
@@ -171,7 +181,9 @@ sub logPath
     my $logPath = $self->_getOption('paths', 'logs');
 
     if (not ANSTE::Validate::directoryWritable($logPath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/logs', $logPath);
+        throw ANSTE::Exceptions::InvalidConfig('paths/logs',
+                                               $logPath,
+                                               $self->{confFile});
     }
 
     return $logPath;
@@ -199,7 +211,8 @@ sub anstedPort
 
     if (not ANSTE::Validate::port($anstedPort)) {
         throw ANSTE::Exceptions::InvalidConfig('ansted/port',
-                                               $anstedPort);
+                                               $anstedPort,
+                                               $self->{confFile});
     }
     
     return $anstedPort;
@@ -213,7 +226,8 @@ sub masterPort
 
     if (not ANSTE::Validate::port($masterPort)) {
         throw ANSTE::Exceptions::InvalidConfig('master/port',
-                                               $masterPort);
+                                               $masterPort,
+                                               $self->{confFile});
     }
     
     return $masterPort;
@@ -226,7 +240,9 @@ sub firstAddress
     my $firstAddress =  $self->_getOption('comm', 'first-address');
 
     if (not ANSTE::Validate::ip($firstAddress)) {
-        throw ANSTE::Exceptions::InvalidConfig('first-address', $firstAddress);
+        throw ANSTE::Exceptions::InvalidConfig('first-address', 
+                                               $firstAddress,
+                                               $self->{confFile});
     }
 
     return $firstAddress;
@@ -239,7 +255,9 @@ sub gateway
     my $gateway =  $self->_getOption('comm', 'gateway');
 
     if (not ANSTE::Validate::ip($gateway)) {
-        throw ANSTE::Exceptions::InvalidConfig('gateway', $gateway);
+        throw ANSTE::Exceptions::InvalidConfig('gateway', 
+                                               $gateway,
+                                               $self->{confFile});
     }
 
     return $gateway;
@@ -264,7 +282,8 @@ sub autoCreateImages
 
     if (not ANSTE::Validate::boolean($auto)) {
         throw ANSTE::Exceptions::InvalidConfig('deploy/auto-create-images', 
-                                               $auto);
+                                               $auto,
+                                               $self->{confFile});
     }
 
     return $auto;
@@ -289,7 +308,9 @@ sub seleniumRCjar
         throw ANSTE::Exceptions::MissingConfig('selenium/rc-jar');
     }                                          
     if (not ANSTE::Validate::fileReadable($jar)) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/rc-jar', $jar);
+        throw ANSTE::Exceptions::InvalidConfig('selenium/rc-jar', 
+                                               $jar,
+                                               $self->{confFile});
     }
 
     return $jar;
@@ -313,7 +334,9 @@ sub seleniumVideo
     my $video = $self->_getOption('selenium', 'video');
 
     if (not ANSTE::Validate::boolean($video)) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/video', $video);
+        throw ANSTE::Exceptions::InvalidConfig('selenium/video',
+                                               $video,
+                                               $self->{confFile});
     }
 
     return $video;
@@ -342,7 +365,8 @@ sub seleniumRecordAll
 
     if (not ANSTE::Validate::boolean($all)) {
         throw ANSTE::Exceptions::InvalidConfig('selenium/record-all',
-                                               $all);
+                                               $all,
+                                               $self->{confFile});
     }
 
     return $all;
