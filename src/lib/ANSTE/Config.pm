@@ -27,11 +27,11 @@ use ANSTE::Validate;
 
 use Config::Tiny;
 
-use constant CONFIG_FILE => 'data/anste.conf';
+use constant CONFIG_FILE => 'anste.conf';
+
+my @CONFIG_PATHS = ('/etc/anste', '/usr/local/etc/anste', 'data');
 
 my $singleton;
-
-# TODO: Add exception throwing when incorrect values in the file
 
 sub instance 
 {
@@ -39,7 +39,13 @@ sub instance
     unless (defined $singleton) {
         my $self = {};
 
-        $self->{config} = Config::Tiny->read(CONFIG_FILE);
+        foreach my $path (@CONFIG_PATHS) {
+            my $file = "$path/" . CONFIG_FILE;
+            if (-r $file) {
+                $self->{config} = Config::Tiny->read($file);
+                last;
+            }
+        }
         
         $singleton = bless($self, $class);
 
@@ -447,15 +453,16 @@ sub _setDefaults
     my ($self) = @_;
 
     # TODO: Some options have to be mandatory and so don't have a default.
+    my $data = '/usr/share/anste';
 
     $self->{default}->{'global'}->{'system'} = 'Debian';
     $self->{default}->{'global'}->{'virtualizer'} = 'Xen';
 
     $self->{default}->{'paths'}->{'images'} = '/home/xen/domains';
-    $self->{default}->{'paths'}->{'image-types'} = 'data/images';
-    $self->{default}->{'paths'}->{'scenarios'} = 'data/scenarios';
-    $self->{default}->{'paths'}->{'profiles'} = 'data/profiles';
-    $self->{default}->{'paths'}->{'scripts'} = 'data/scripts';
+    $self->{default}->{'paths'}->{'image-types'} = "$data/images";
+    $self->{default}->{'paths'}->{'scenarios'} = "$data/scenarios";
+    $self->{default}->{'paths'}->{'profiles'} = "$data/profiles";
+    $self->{default}->{'paths'}->{'scripts'} = "$data/scripts";
 
     $self->{default}->{'ansted'}->{'port'} = '8000';
 
@@ -464,6 +471,7 @@ sub _setDefaults
     $self->{default}->{'comm'}->{'ip-range'} = '192.168.0';
     $self->{default}->{'comm'}->{'gateway'} = '192.168.0.1';
     $self->{default}->{'comm'}->{'nat-iface'} = 'eth1';
+    $self->{default}->{'comm'}->{'first-address'} = '192.168.0.191';
 
     $self->{default}->{'deploy'}->{'auto-create-images'} = 0;
 
