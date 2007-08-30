@@ -86,17 +86,17 @@ sub runSuite # (suite)
 
     my $sceName = $scenario->name();
     my $suiteName = $suite->name();
-    print "Deploying scenario $sceName for suite $suiteName...\n";
+    print "Deploying scenario '$sceName' for suite '$suiteName'...\n";
 
     my $deployer = new ANSTE::Deploy::ScenarioDeployer($scenario);
     $self->{hostIP} = $deployer->deploy();
 
-    print "Finished deployment of scenario $sceName.\n";
+    print "Finished deployment of scenario '$sceName'.\n";
 
     $self->_runTests();
 
     $deployer->shutdown();
-    print "Finished testing of suite $suiteName.\n\n";
+    print "Finished testing of suite '$suiteName'.\n\n";
 }
 
 sub report # returns report object

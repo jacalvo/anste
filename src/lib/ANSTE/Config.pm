@@ -519,6 +519,7 @@ sub _setDefaults
     $self->{default}->{'paths'}->{'profiles'} = "$data/profiles";
     $self->{default}->{'paths'}->{'scripts'} = "$data/scripts";
     $self->{default}->{'paths'}->{'deploy'} = "$data/deploy";
+    $self->{default}->{'paths'}->{'tests'} = "$data/tests";
 
     $self->{default}->{'ansted'}->{'port'} = '8000';
 

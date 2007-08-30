@@ -1,0 +1,33 @@
+The Web-GUI testing support requires a selenium-rc version that isn't released
+yet. So yo must get it via the OpenQA oficial Subversion repostiory:
+
+svn co https://svn.openqa.org/svn/selenium-rc/trunk
+
+To build it you need to get Maven: 
+
+http://maven.apache.org/download.html
+
+Once you have maven, uncompressed and with the JAVA_HOME variable set properly
+get in to the trunk of selenium-rc and then into the selenium-server directory 
+and do:
+
+/path/to/maven/bin/mvn install
+
+This process could be long. I hope soon we'll have a selenium-rc Debian
+package to avoid this :)
+
+Move the generated file target/selenium-server-VERSION-SNAPSHOT-standalone.jar
+to a better place (and name) and finally specify the path of your recently 
+obtained .jar into the ANSTE config.
+
+Something like this in /etc/anste/anste.conf:
+
+[selenium]
+rc-jar = /home/josh/selenium-rc/selenium-server.jar
+browser = *firefox /home/josh/firefox/firefox-bin
+
+You should also specify the path of your browser in this manner.
+
+Good luck!
+
+You can contact me on <jacalvo@warp.es> and I'll try to answer your questions.
