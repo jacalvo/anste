@@ -94,6 +94,7 @@ sub _writeCopyFiles # (file)
 
     my $system = $self->{system};
 
+    my $deployPath = ANSTE::Config->instance->deployPath();
     print $file "# Copy necessary files\n";
     my $commPath = '/usr/local/lib/site_perl/ANSTE/Comm/';
     my $command = $system->createMountDirCommand($commPath);
@@ -102,11 +103,11 @@ sub _writeCopyFiles # (file)
     $command = $system->createMountDirCommand($excPath);
     print $file "$command\n";
 
-    my %fileDest = ('bin/ansted' => '/usr/local/bin/',
-                    'bin/anste-slave' => '/usr/local/bin',
-                    'lib/ANSTE/Comm/*.pm' => $commPath,
-                    'lib/ANSTE/Exceptions/*.pm' => $excPath,
-                    'scripts/ansted' => '/etc/init.d/');                 
+    my %fileDest = ("$deployPath/bin/ansted" => '/usr/local/bin/',
+                    "$deployPath/bin/anste-slave" => '/usr/local/bin',
+                    "$deployPath/modules/ANSTE/Comm/*.pm" => $commPath,
+                    "$deployPath/modules/ANSTE/Exceptions/*.pm" => $excPath,
+                    "$deployPath/scripts/ansted" => '/etc/init.d/');                 
     
     foreach my $orig (keys %fileDest) {
         $command = $system->copyToMountCommand($orig, $fileDest{$orig});

@@ -73,7 +73,7 @@ sub unmount # (mountPoint)
     defined $mountPoint or
         throw ANSTE::Exceptions::MissingArgument('mountPoint');
 
-    $self->execute("umount $mountPoint");
+    $self->execute("umount -d $mountPoint");
 }
 
 # Method: installBasePackages 

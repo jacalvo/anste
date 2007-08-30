@@ -30,7 +30,7 @@ use File::Temp qw(tempfile);
 use File::Copy;
 use File::Copy::Recursive qw(dircopy);
 
-use constant XEN_CONFIG_TEMPLATE => 'data/xen-config.tmpl';
+use constant XEN_CONFIG_TEMPLATE => 'xen-config.tmpl';
 
 # Method: createBaseImage
 #
@@ -274,7 +274,10 @@ sub _createImageConfig # (image, path) returns config string
 
     use Text::Template;
 
-    my $template = new Text::Template(SOURCE => XEN_CONFIG_TEMPLATE)
+    my $confPath = ANSTE::Config->instance()->configPath();
+    my $confFile = "$confPath/" . XEN_CONFIG_TEMPLATE;
+
+    my $template = new Text::Template(SOURCE => $confFile)
         or die "Couldnt' construct template: $Text::Template::ERROR";
 
     my $ip = $image->{ip};

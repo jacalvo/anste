@@ -197,8 +197,13 @@ sub _updateHostname
     my ($self) = @_;
 
     my $cmd = $self->{cmd};
-
-    $cmd->mount() or die "Can't mount image: $!";
+    
+    try {
+        $cmd->mount() or die "Can't mount image: $!";
+    } catch Error with {
+        $cmd->deleteMountPoint();
+        die "Can't mount image.";
+    };
 
     try {
         $cmd->copyHostFiles() or die "Can't copy files: $!";

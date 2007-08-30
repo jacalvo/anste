@@ -30,6 +30,7 @@ use Config::Tiny;
 use constant CONFIG_FILE => 'anste.conf';
 
 my @CONFIG_PATHS = ('/etc/anste', '/usr/local/etc/anste', 'data');
+my @DATA_PATHS = ('/usr/share/anste', '/usr/local/share/anste', 'data');
 
 my $singleton;
 
@@ -43,7 +44,15 @@ sub instance
             my $file = "$path/" . CONFIG_FILE;
             if (-r $file) {
                 $self->{config} = Config::Tiny->read($file);
+                $self->{confPath} = $path;
                 $self->{confFile} = $file;
+                last;
+            }
+        }
+
+        foreach my $path (@DATA_PATHS) {
+            if (-d $path) {
+                $self->{dataPath} = $path;
                 last;
             }
         }
@@ -54,6 +63,13 @@ sub instance
     }
 
     return $singleton;
+}
+
+sub configPath
+{
+    my ($self) = @_;
+
+    return $self->{confPath};
 }
 
 sub system
@@ -157,6 +173,21 @@ sub scriptPath
     }
 
     return $scriptPath;
+}
+
+sub deployPath
+{
+    my ($self) = @_;
+
+    my $deployPath = $self->_getOption('paths', 'deploy');
+
+    if (not ANSTE::Validate::path($deployPath)) {
+        throw ANSTE::Exceptions::InvalidConfig('paths/deploy',
+                                               $deployPath,
+                                               $self->{confFile});
+    }
+
+    return $deployPath;
 }
 
 sub testPath
@@ -477,7 +508,7 @@ sub _setDefaults
     my ($self) = @_;
 
     # TODO: Some options have to be mandatory and so don't have a default.
-    my $data = '/usr/share/anste';
+    my $data = $self->{dataPath};
 
     $self->{default}->{'global'}->{'system'} = 'Debian';
     $self->{default}->{'global'}->{'virtualizer'} = 'Xen';
@@ -487,6 +518,7 @@ sub _setDefaults
     $self->{default}->{'paths'}->{'scenarios'} = "$data/scenarios";
     $self->{default}->{'paths'}->{'profiles'} = "$data/profiles";
     $self->{default}->{'paths'}->{'scripts'} = "$data/scripts";
+    $self->{default}->{'paths'}->{'deploy'} = "$data/deploy";
 
     $self->{default}->{'ansted'}->{'port'} = '8000';
 

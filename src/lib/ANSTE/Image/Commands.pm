@@ -100,7 +100,8 @@ sub mount
 
     my $name = $self->{image}->name();
 
-    $self->{mountPoint} = tempdir() or die "Can't create temp directory: $!";
+    $self->{mountPoint} = tempdir(CLEANUP => 1) 
+        or die "Can't create temp directory: $!";
 
     my $mountPoint = $self->{mountPoint};
 
@@ -251,6 +252,15 @@ sub umount
     rmdir($mountPoint) or die "Can't remove mount directory: $!";
 
     return($ret);
+}
+
+sub deleteMountPoint
+{
+    my ($self) = @_;
+    
+    my $mountPoint = $self->{mountPoint};
+    
+    rmdir($mountPoint);
 }
 
 sub shutdown

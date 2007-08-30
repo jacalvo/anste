@@ -32,3 +32,10 @@ install: dist
 	cp -a $(EXPORT)/data/tests/ebox $(DESTDIR)$(DATADIR)/tests
 	cp -a $(EXPORT)/data/tests/sample $(DESTDIR)$(DATADIR)/tests
 	cp -a $(EXPORT)/lib $(DESTDIR)$(LIBPERL)
+	install -d $(DESTDIR)$(DATADIR)/deploy
+	install -d $(DESTDIR)$(DATADIR)/deploy/modules
+	ln -s $(DESTDIR)$(LIBPERL)/ANSTE $(DESTDIR)$(DATADIR)/deploy/modules/ANSTE
+	install -d $(DESTDIR)$(DATADIR)/deploy/bin
+	install $(EXPORT)/data/deploy/bin/* $(DESTDIR)$(DATADIR)/deploy/bin
+	install -d $(DESTDIR)$(DATADIR)/deploy/scripts
+	install $(EXPORT)/data/deploy/scripts/* $(DESTDIR)$(DATADIR)/deploy/scripts
