@@ -31,9 +31,12 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 
 use threads;
+use threads::shared;
 use Error qw(:try);
 
 use constant SETUP_SCRIPT => 'setup.sh';
+
+my $lockMount : shared;
 
 sub new # (host) returns new HostDeployer object
 {
@@ -126,8 +129,12 @@ sub _deploy
         }
     };
 
-    print "[$hostname] Updating hostname on the new image...\n";
-    $self->_updateHostname();
+    # Critical section here to prevent mount errors with loop device busy
+    { 
+        lock($lockMount);
+        print "[$hostname] Updating hostname on the new image...\n";
+        $self->_updateHostname();
+    };
 
     print "[$hostname] Creating virtual machine ($ip)...\n"; 
     $cmd->createVirtualMachine();
