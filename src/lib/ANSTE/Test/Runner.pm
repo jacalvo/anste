@@ -89,13 +89,15 @@ sub runSuite # (suite)
     print "Deploying scenario '$sceName' for suite '$suiteName'...\n";
 
     my $deployer = new ANSTE::Deploy::ScenarioDeployer($scenario);
-    $self->{hostIP} = $deployer->deploy();
+    try {
+        $self->{hostIP} = $deployer->deploy();
 
-    print "Finished deployment of scenario '$sceName'.\n";
+        print "Finished deployment of scenario '$sceName'.\n";
 
-    $self->_runTests();
-
-    $deployer->shutdown();
+        $self->_runTests();
+    } finally {
+#        $deployer->shutdown();
+    };
     print "Finished testing of suite '$suiteName'.\n\n";
 }
 

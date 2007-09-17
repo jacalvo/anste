@@ -456,7 +456,7 @@ sub startVideoRecording # (filename)
         # Exec without output
         open(STDOUT, '> /dev/null');
         open(STDERR, '>&STDOUT');
-        exec($command, $filename);
+        exec($command, '--overwrite', '-o', $filename);
     }
     else {
         $self->{videoPid} = $pid;

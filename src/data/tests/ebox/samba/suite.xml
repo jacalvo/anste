@@ -1,0 +1,35 @@
+<suite>
+    <name>eBox Samba tests</name>
+    <desc>Contains samba-related tests.</desc>
+    
+    <scenario>ebox-and-client.xml</scenario>
+
+    <test type="selenium">
+        <name>ConfigNetwork</name>
+        <desc>
+        Set the interface as external, etc.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-net</dir>
+    </test>        
+
+    <test type="selenium">
+        <name>ConfigFileServer</name>
+        <desc>
+        Enables file sharing service and sets working mode
+        to File server.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-fileserver</dir>
+    </test>        
+
+    <test>
+        <name>YetAnotherWgetTest</name>
+        <desc>This is silly</desc>
+
+        <host>test-client</host>
+        <dir>test-wget</dir>
+    </test>        
+</suite>

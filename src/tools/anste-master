@@ -37,6 +37,7 @@ use constant DEFAULT_PORT => 8000;
 use constant HELP => "Commands available:\n" .
                      "connect <host> [port]\n" .
                      "exec <file>\n" .
+                     "put <file>\n" .
                      "quit\n";
 
 my $server = new ANSTE::Comm::WaiterServer();
@@ -74,6 +75,9 @@ sub _parseCmd
     elsif ($name eq 'exec') {
         _execute($args[0]);
     }
+    elsif ($name eq 'put') {
+        _put($args[0]);
+    }
     elsif ($name eq 'help') {
         return HELP;
     }
@@ -98,7 +102,7 @@ sub _connect # (host, port)
     return "OK";
 }
 
-sub _execute # (file)
+sub _put # (file)
 {
     my ($file) = @_;
 
@@ -111,6 +115,15 @@ sub _execute # (file)
     }
 
     $client->put($file);
+    
+    return 'OK';
+}
+
+sub _execute # (file)
+{
+    my ($file) = @_;
+
+    _put($file);
     $client->exec($file, 'out.log');
     $waiter->waitForAnyExecution();
     $client->get('out.log');

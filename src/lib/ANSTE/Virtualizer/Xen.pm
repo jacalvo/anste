@@ -61,7 +61,9 @@ sub createBaseImage # (%params)
 
     my $confFile = _createXenToolsConfig();
 
-    my $command = "xen-create-image --hostname=$name" .
+    my $dir = ANSTE::Config->instance()->xenDir();
+
+    my $command = "xen-create-image --dir=$dir --hostname=$name" .
                   " --ip='$ip' --config=$confFile"; 
 
     print "Showing xen-tools.conf:\n";
