@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Wait a maximum of 20 seconds for apache start
-for i in `seq 1 20`
+# Wait a maximum of 30 seconds for apache start
+for i in `seq 1 30`
 do
-    # TODO: Do this with wget, with time options so we
-    # don't need a loop
-    netstat -a | grep www | grep LISTEN
-    if [ $? ]
+    rm index.html
+    wget http://localhost
+    if [ -f index.html ]
     then
+        rm index.html
         exit 0
     else
         sleep 1 

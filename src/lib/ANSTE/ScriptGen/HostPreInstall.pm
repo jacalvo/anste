@@ -124,7 +124,7 @@ sub _writeMasterAddress # (file)
     my $config = ANSTE::Config->instance();
     my $port = $config->masterPort();
     my $masterIP = $config->gateway();
-    my $MASTER = "http://$masterIP:$port";
+    my $MASTER = "$masterIP:$port";
 
     print $file "# Stores the master address so anste-slave can read it\n";
     my $command = $system->storeMasterAddress($MASTER);

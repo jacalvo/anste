@@ -1,6 +1,21 @@
 #!/bin/sh
 # Start/stop the Advanced Network Service Testing Environment daemon.
 
+function notify_ready
+{
+    # Wait for network ready
+    for i in `seq 1 20`
+    do
+        ping -c1 `cat /var/local/anste.master | cut -f1 -d:` &> /dev/null
+        if [ $? ]
+        then
+            break 
+        else
+            sleep 1
+        fi
+    done        
+    /usr/local/bin/anste-slave ready
+}
 
 if [ ! -x /usr/local/bin/ansted ]
 then
@@ -13,7 +28,7 @@ start)	echo -n "Starting ANSTE daemon"
         start-stop-daemon --start --quiet --pidfile /var/run/ansted.pid --name ansted --startas /usr/local/bin/ansted
         echo "." 
         echo -n "Notifying readiness to ANSTE master"
-        /usr/local/bin/anste-slave ready
+        notify_ready
         echo "."
 	;;
 stop)   echo -n "Stopping ANSTE daemon"	

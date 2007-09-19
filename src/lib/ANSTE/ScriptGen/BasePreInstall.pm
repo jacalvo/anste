@@ -81,7 +81,7 @@ sub writeScript # (file)
     my $port = $config->masterPort();
     # TODO: Not sure if this is correct
     my $masterIP = $config->gateway();
-    my $MASTER = "http://$masterIP:$port";
+    my $MASTER = "$masterIP:$port";
 
     print $file "# Stores the master address so anste-slave can read it\n";
     my $command = $system->storeMasterAddress($MASTER);

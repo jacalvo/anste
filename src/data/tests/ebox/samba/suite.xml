@@ -26,10 +26,30 @@
     </test>        
 
     <test>
-        <name>YetAnotherWgetTest</name>
-        <desc>This is silly</desc>
+        <name>TestSmbClient</name>
+        <desc>Puts and gets a file into the created user account</desc>
 
         <host>test-client</host>
-        <dir>test-wget</dir>
+        <dir>test-smbclient</dir>
+    </test>        
+
+    <test type="selenium">
+        <name>ChangeQuota</name>
+        <desc>
+        Changes the user quota to 1MB.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>change-quota</dir>
+    </test>        
+
+    <test>
+        <name>TestQuota</name>
+        <desc>Try to put a 4MB file in the user share and ensure
+        this cannot be done.
+        </desc>
+
+        <host>test-client</host>
+        <dir>test-quota</dir>
     </test>        
 </suite>

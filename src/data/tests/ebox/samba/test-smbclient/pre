@@ -1,0 +1,4 @@
+#!/bin/sh
+
+export DEBIAN_FRONTEND=NONINTERACTIVE
+apt-get install smbclient --assume-yes

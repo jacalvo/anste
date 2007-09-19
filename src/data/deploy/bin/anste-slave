@@ -87,8 +87,9 @@ sub getClient
     # Read the master host from file
     my $fh;
     open($fh, '<', MASTER) or die "Can't open file: $!";
-    my $URL;
-    chomp($URL = <$fh>);
+    my $URL = 'http://';
+    $URL .= <$fh>;
+    chomp($URL);
     close($fh) or die "Can't close file: $!";
 
     # Create and return the client object
