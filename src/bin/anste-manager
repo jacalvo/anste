@@ -22,6 +22,7 @@ use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
 use ANSTE::Manager::Server;
+use ANSTE::Manager::JobLauncher;
 
 use POSIX qw(setsid);
 use SOAP::Transport::HTTP;
@@ -40,6 +41,15 @@ sub daemonize {
 }
 
 #daemonize();
-my $daemon = new SOAP::Transport::HTTP::Daemon(LocalPort => PORT, Reuse => 1);
-$daemon->dispatch_to('ANSTE::Manager::Server');
-$daemon->handle();
+threads->create('_startServer') or die "Can't create thread: $!";
+
+my $launcher = new ANSTE::Manager::JobLauncher();
+$launcher->waitAndLaunch();
+
+sub _startServer
+{
+    my $daemon = new SOAP::Transport::HTTP::Daemon(LocalPort => PORT, 
+                                                   Reuse => 1);
+    $daemon->dispatch_to('ANSTE::Manager::Server');
+    $daemon->handle();
+}

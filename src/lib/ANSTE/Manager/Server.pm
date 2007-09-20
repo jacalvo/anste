@@ -18,51 +18,31 @@ package ANSTE::Manager::Server;
 use strict;
 use warnings;
 
+use ANSTE::Manager::Job;
+use ANSTE::Manager::MailNotifier;
+use ANSTE::Manager::JobWaiter;
+
+use threads::shared;
+
 sub addJob # (user, test)
 {
     my ($self, $user, $test) = @_;
+
+    my $job = new ANSTE::Manager::Job($user, $test);
+    $job->setEmail('josh@localhost');
 
     open(FILE, '>>', "/tmp/ANSTE_MANAGER");
   	print FILE "$user: $test\n";
    	close FILE or die "Can't close: $!";
     print "Added test '$test' from user '$user'\n";
+
+    my $waiter = ANSTE::Manager::JobWaiter->instance();
+    $waiter->jobReceived($job);
+
+    my $mail = new ANSTE::Manager::MailNotifier();
+    $mail->sendNotify($job);
+
    	return 'OK';
-}
-
-sub _execute # (command)
-{
-    my ($self, $command) = @_;
-
-    return system($command);
-}
-
-sub _executeSavingLog # (command, log)
-{
-    my ($self, $command, $log) = @_;
-
-    # Take copies of the file descriptors
-    open(OLDOUT, '>&STDOUT')   or return 1;
-    open(OLDERR, '>&STDERR')   or return 1;
-
-    # Redirect stdout and stderr
-    open(STDOUT, "> $log")     or return 1;
-    open(STDERR, '>&STDOUT')   or return 1;
-
-    my $ret = system($command);
-
-    # Close the redirected filehandles
-    close(STDOUT)              or return 1;
-    close(STDERR)              or return 1;
-
-    # Restore stdout and stderr
-    open(STDERR, '>&OLDERR')   or return 1;
-    open(STDOUT, '>&OLDOUT')   or return 1;
-
-    # Avoid leaks by closing the independent copies
-    close(OLDOUT)              or return 1;
-    close(OLDERR)              or return 1;
-
-    return $ret;
 }
 
 1;

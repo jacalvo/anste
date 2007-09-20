@@ -21,12 +21,14 @@ use warnings;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 
-sub new # (user, test) returns new Job object
+sub new # (user, test, email) returns new Job object
 {
-	my ($class, $user, $test) = @_;
+	my ($class, $user, $test, $email) = @_;
 	my $self = {};
 	
+	$self->{user} = $user;
 	$self->{test} = $test;
+	$self->{email} = $email;
 
 	bless($self, $class);
 
@@ -65,6 +67,23 @@ sub setTest # test string
         throw ANSTE::Exceptions::MissingArgument('test');
 
 	$self->{test} = $test;
+}
+
+sub email # returns email string
+{
+	my ($self) = @_;
+
+	return $self->{email};
+}
+
+sub setEmail # email string
+{
+	my ($self, $email) = @_;	
+
+    defined $email or
+        throw ANSTE::Exceptions::MissingArgument('email');
+
+	$self->{email} = $email;
 }
 
 1;

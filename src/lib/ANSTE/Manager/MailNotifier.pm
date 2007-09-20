@@ -13,45 +13,49 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::Manager::Queue;
+package ANSTE::Manager::MailNotifier;
 
 use strict;
 use warnings;
 
 use ANSTE::Manager::Job;
-use ANSTE::Config;
-use ANSTE::Exceptions::MissingArgument;
 
-sub new # () returns new Queue object
+use Mail::Sender;
+
+sub new # () returns new MailNotifier object
 {
 	my ($class) = @_;
 	my $self = {};
 	
-	$self->{list} = [];
-
 	bless($self, $class);
 
 	return $self;
 }
 
-# Extracts the new job from the queue
-sub nextJob # returns job
-{
-	my ($self) = @_;
+sub sendNotify # (job)
+{    
+    my ($self, $job) = @_;
 
-    my $job = shift @{$self->{list}};
+    my $user = $job->user();
+    my $test = $job->test();
+    my $email = $job->email();
 
-	return $job;
-}
+    my $subject = 'ANSTE Job Notification';
 
-sub addJob # (job)
-{
-	my ($self, $job) = @_;	
+    # TODO: Get real domain
+    my $sender = new Mail::Sender {from => 'anste-no-reply@localhost',
+                                     smtp => 'localhost'};
+    ref($sender) or 
+        die "Error($sender) : $Mail::Sender::Error\n";
 
-    defined $user or
-        throw ANSTE::Exceptions::MissingArgument('job');
+    ref($sender->Open({to => $email, subject => $subject})) or
+        die "Error: $Mail::Sender::Error\n";
 
-	push(@{$self->{list}}, $job);
+    my $FH = $sender->GetHandle();
+    print $FH "Hello $user,\n";
+    print $FH "Your $test test is done!!\n";
+     
+    $sender->Close;
 }
 
 1;
