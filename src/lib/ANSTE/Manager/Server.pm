@@ -13,86 +13,20 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::Comm::SlaveServer;
+package ANSTE::Manager::Server;
 
 use strict;
 use warnings;
 
-use File::Basename;
-
-my $DIR = '/tmp';
-
-sub put	# (file, content)
+sub addJob # (user, test)
 {
-    my ($self, $file, $content) = @_;
+    my ($self, $user, $test) = @_;
 
-    my $name = fileparse($file);
-
-    if (open(FILE, '>', "$DIR/$name")) { 
-    	print FILE $content;
-    	close FILE or die "Can't close: $!";
-    	return 'OK';
-    } else {
-	    return 'ERR';
-    }
-}
-
-sub get	# (file)
-{
-    my ($self, $file) = @_;
-
-    my $name = fileparse($file); 
-
-    if (open(FILE, '<', "$DIR/$name")) {
-	    chomp(my @lines = <FILE>);
-	    close FILE;
-	    return join("\n", @lines)."\n";
-    } else {
-	    return 'ERR';
-    }
-}
-
-sub exec # (file, log?)
-{
-    my ($self, $file, $log) = @_;
-
-    my $pid = fork();
-    if (not defined $pid) {
-        die "Can't fork: $!";
-    }
-    elsif($pid == 0){
-        my $name = fileparse($file); 
-        chmod 0700, "$DIR/$name";
-        my $command = "$DIR/$name";
-        my $ret;
-        if (defined $log) {
-            my $log = fileparse($log);
-            my $logfile = "$DIR/$log";
-            $ret = $self->_executeSavingLog($command, $logfile);
-        }
-        else {
-            $ret = $self->_execute($command);
-        }
-        # FIXME: This isn't cool.
-        exec("/usr/local/bin/anste-slave finished $ret");
-        exit(0);
-    }
-    else {
-        return 'OK';
-    }
-}
-
-sub del	# (file)
-{
-    my ($self, $file) = @_;
-
-    my $name = fileparse($file); 
-
-    if(unlink "$DIR/$name") {
-    	return 'OK';
-    } else {
-	    return 'ERR';
-    }
+    open(FILE, '>>', "/tmp/ANSTE_MANAGER");
+  	print FILE "$user: $test\n";
+   	close FILE or die "Can't close: $!";
+    print "Added test '$test' from user '$user'\n";
+   	return 'OK';
 }
 
 sub _execute # (command)

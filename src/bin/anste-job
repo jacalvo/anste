@@ -1,0 +1,62 @@
+#!/usr/bin/perl
+
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License, version 2, as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+use strict;
+use warnings;
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+
+use ANSTE::Manager::Client;
+
+#use Error qw(:try);
+
+use constant PORT => 8666;
+
+sub usage
+{
+    print "Usage: anste-job <user> <test>\n";
+}
+
+if (@ARGV < 2) {
+    usage();
+    exit(1);
+}
+
+addJob($ARGV[0], $ARGV[1]);
+
+sub addJob # (user, test)
+{
+    my ($user, $test) = @_;
+
+    my $client = getClient();
+    my $ok = $client->addJob($user, $test);
+    exit(!$ok);
+}
+
+# TODO: Read server IP from commandline
+sub getClient 
+{
+    my $HOST = 'localhost';
+
+    my $URL = "http://$HOST:" . PORT;
+
+    # Create and return the client object
+    my $client = new ANSTE::Manager::Client();
+    $client->connect($URL);
+    return $client;
+}
