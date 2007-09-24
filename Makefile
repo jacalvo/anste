@@ -8,16 +8,16 @@ LIBPERL = $(PREFIX)/share/perl5
 VERSION = `cat VERSION`
 EXPORT = anste-$(VERSION)
 
+distclean:
+	rm -rf $(EXPORT)
+	rm -f anste-$(VERSION).tar.gz
+
 export:
 	svn export . $(EXPORT) 
 	find $(EXPORT)/src/lib -name 't' -print | xargs rm -rf
 
 dist: export
 	tar cvvzf anste-$(VERSION).tar.gz $(EXPORT)
-
-distclean:
-	rm -rf $(EXPORT)
-	rm -f anste-$(VERSION).tar.gz
 
 install-anste:
 	install -d $(DESTDIR)$(SBINDIR)
@@ -77,4 +77,4 @@ install-anste-job:
 	install -m755 src/bin/anste-job $(DESTDIR)$(BINDIR)
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/lib/ANSTE/Manager/Client.pm $(DESTDIR)$(LIBPERL)
+	install -m644 src/lib/ANSTE/Manager/Client.pm $(DESTDIR)$(LIBPERL)/ANSTE/Manager
