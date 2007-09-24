@@ -60,7 +60,7 @@ sub exec # (file, log?)
     if (not defined $pid) {
         die "Can't fork: $!";
     }
-    elsif($pid == 0){
+    elsif ($pid == 0){
         my $name = fileparse($file); 
         chmod 0700, "$DIR/$name";
         my $command = "$DIR/$name";

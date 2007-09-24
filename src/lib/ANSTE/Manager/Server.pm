@@ -31,9 +31,6 @@ sub addJob # (user, test)
     # FIXME: get the email by command line...
     $job->setEmail('josh@localhost');
 
-    open(FILE, '>>', "/tmp/ANSTE_MANAGER");
-  	print FILE "$user: $test\n";
-   	close FILE or die "Can't close: $!";
     print "Added test '$test' from user '$user'\n";
 
     my $waiter = ANSTE::Manager::JobWaiter->instance();

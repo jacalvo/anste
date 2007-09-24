@@ -20,6 +20,7 @@ use warnings;
 
 use ANSTE::Manager::JobWaiter;
 use ANSTE::Manager::MailNotifier;
+use ANSTE::Manager::Config;
 use ANSTE::Exceptions::MissingArgument;
 
 sub new # () returns new JobLauncher object
@@ -53,55 +54,48 @@ sub _launch # (job)
     my $user = $job->user();
 
 
-    my $DIR = '/tmp/anste-out';
+    my $EXDIR = ANSTE::Manager::Config->instance()->executionLog(); 
+    my $TESTDIR = ANSTE::Manager::Config->instance()->resultLog(); 
 
-    mkdir $DIR;
-    mkdir "$DIR/$test";
+    if (not -d $EXDIR) {
+        mkdir($EXDIR) or die "Can't mkdir: $!";
+    }
+    my $execlog = "$test.log";
+    $execlog =~ tr{/}{-};
 
+    if (not -d $TESTDIR) {
+        mkdir($TESTDIR) or die "Can't mkdir: $!";
+    }
+    my $testlog = "$test-results";
+    $testlog =~ tr{/}{-};
+   
     print "Running test '$test' from user '$user'...\n";
-    system("bin/anste -t $test");
+    my $command = "bin/anste -t $test -o $TESTDIR/$testlog";
+    $self->_executeSavingLog($command, "$EXDIR/$execlog");
     print "Execution of test '$test' from user '$user' finished.\n";
-
-#FIXME    $self->_executeSavingLog("anste -t $test", "$DIR/$test.log");
 
     my $mail = new ANSTE::Manager::MailNotifier();
     $mail->sendNotify($job);
-}
-
-sub _execute # (command)
-{
-    my ($self, $command) = @_;
-
-    return system($command);
 }
 
 sub _executeSavingLog # (command, log)
 {
     my ($self, $command, $log) = @_;
 
-    # Take copies of the file descriptors
-    open(OLDOUT, '>&STDOUT')   or return 1;
-    open(OLDERR, '>&STDERR')   or return 1;
+    my $pid = fork();
+    if (not defined $pid) {
+        die "Can't fork: $!";
+    }
+    elsif ($pid == 0) {
+        # Redirect stdout and stderr
+        open(STDOUT, "> $log")     or return 1;
+        open(STDERR, '>&STDOUT')   or return 1;
 
-    # Redirect stdout and stderr
-    open(STDOUT, "> $log")     or return 1;
-    open(STDERR, '>&STDOUT')   or return 1;
-
-    my $ret = system($command);
-
-    # Close the redirected filehandles
-    close(STDOUT)              or return 1;
-    close(STDERR)              or return 1;
-
-    # Restore stdout and stderr
-    open(STDERR, '>&OLDERR')   or return 1;
-    open(STDOUT, '>&OLDOUT')   or return 1;
-
-    # Avoid leaks by closing the independent copies
-    close(OLDOUT)              or return 1;
-    close(OLDERR)              or return 1;
-
-    return $ret;
+        exec($command);
+    }
+    else {
+        waitpid($pid, 0);
+    }
 }
 
 1;

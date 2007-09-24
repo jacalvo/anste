@@ -10,20 +10,22 @@
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp
 
-	$(MAKE) cleandist
+	$(MAKE) distclean
 
 	dh_clean
 
-install:
+build:
+
+install: build
 	dh_testdir
 	dh_testroot
 	dh_clean -k
 	dh_installdirs
+	for pkg in `dh_listpackages` ; do \
+		$(MAKE) DESTDIR=`pwd`/debian/$$pkg PREFIX=/usr install-$$pkg ; \
+	done
 
-	$(MAKE) DESTDIR=`pwd`/debian/`dh_listpackages` PREFIX=/usr install
-	dh_install
 
 # Build architecture-independent files here.
 binary-indep: install
@@ -42,9 +44,5 @@ binary-indep: install
 	dh_md5sums
 	dh_builddeb
 
-# Build architecture-dependent files here.
-binary-arch: install
-# We have nothing to do by default.
-
-binary: clean binary-indep binary-arch
-.PHONY: clean binary-indep binary-arch binary install
+binary: binary-indep
+.PHONY: clean binary-indep binary-indep-manager binary-indep-job binary install install-manager install-job

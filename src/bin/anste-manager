@@ -23,11 +23,10 @@ use lib "$Bin/../lib";
 
 use ANSTE::Manager::Server;
 use ANSTE::Manager::JobLauncher;
+use ANSTE::Manager::Config;
 
 use POSIX qw(setsid);
 use SOAP::Transport::HTTP;
-
-use constant PORT => 8666;
 
 sub daemonize {
     chdir('/')                  or die "Can't chdir to /: $!";
@@ -48,7 +47,9 @@ $launcher->waitAndLaunch();
 
 sub _startServer
 {
-    my $daemon = new SOAP::Transport::HTTP::Daemon(LocalPort => PORT, 
+    my $port = ANSTE::Manager::Config->instance()->listenPort();
+
+    my $daemon = new SOAP::Transport::HTTP::Daemon(LocalPort => $port,
                                                    Reuse => 1);
     $daemon->dispatch_to('ANSTE::Manager::Server');
     $daemon->handle();
