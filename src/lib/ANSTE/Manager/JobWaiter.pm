@@ -55,16 +55,10 @@ sub jobReceived # (job)
 
     my $queue = $self->{queue};
 
-    my $user = $job->user();
-    my $email = $job->email();
-    print "JOB RECEIVED $job user=$user email=$email\n";
-
     lock($lock);
-    print "locked\n";
     my $str = freeze($job);
     push(@queue, $str);
     cond_signal($lock);
-    print "signaled\n";
 }
 
 sub waitForJob # returns job
@@ -74,14 +68,13 @@ sub waitForJob # returns job
     my $queue = $self->{queue};
 
     if (not @queue) {
-        print "no stuff here, waiting for job\n";
         lock($lock);
         cond_wait($lock);
     } 
 
-    my $job = thaw(shift(@queue)); 
-    print "there is stuff!!!\n";
-    return($job);
+    # thaw returns array so we return the object inside
+    my @job = thaw(shift(@queue)); 
+    return($job[0]);
 }
 
 1;

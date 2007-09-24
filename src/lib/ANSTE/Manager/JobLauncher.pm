@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use ANSTE::Manager::JobWaiter;
+use ANSTE::Manager::MailNotifier;
 use ANSTE::Exceptions::MissingArgument;
 
 sub new # () returns new JobLauncher object
@@ -35,13 +36,11 @@ sub waitAndLaunch
 {
 	my ($self) = @_;
 
-    print "STARTING JOB LAUNCHER\n";
+    print "Waiting for jobs...\n";
     my $waiter = ANSTE::Manager::JobWaiter->instance();
 
     my $job;
-    print "WAITING FOR A BLOWJOB\n";
     while ($job = $waiter->waitForJob()) {
-        print "LAUNCHING $job\n";
         $self->_launch($job); 
     }
 }
@@ -49,15 +48,24 @@ sub waitAndLaunch
 sub _launch # (job)
 {
 	my ($self, $job) = @_;	
-
+    
     my $test = $job->test();
+    my $user = $job->user();
+
 
     my $DIR = '/tmp/anste-out';
 
     mkdir $DIR;
     mkdir "$DIR/$test";
 
-    $self->_executeSavingLog("anste -t $test", "$DIR/$test.log");
+    print "Running test '$test' from user '$user'...\n";
+    system("bin/anste -t $test");
+    print "Execution of test '$test' from user '$user' finished.\n";
+
+#FIXME    $self->_executeSavingLog("anste -t $test", "$DIR/$test.log");
+
+    my $mail = new ANSTE::Manager::MailNotifier();
+    $mail->sendNotify($job);
 }
 
 sub _execute # (command)
@@ -70,7 +78,6 @@ sub _execute # (command)
 sub _executeSavingLog # (command, log)
 {
     my ($self, $command, $log) = @_;
-    print "EXECUTING $command\n";
 
     # Take copies of the file descriptors
     open(OLDOUT, '>&STDOUT')   or return 1;

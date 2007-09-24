@@ -19,7 +19,6 @@ use strict;
 use warnings;
 
 use ANSTE::Manager::Job;
-use ANSTE::Manager::MailNotifier;
 use ANSTE::Manager::JobWaiter;
 
 use threads::shared;
@@ -29,6 +28,7 @@ sub addJob # (user, test)
     my ($self, $user, $test) = @_;
 
     my $job = new ANSTE::Manager::Job($user, $test);
+    # FIXME: get the email by command line...
     $job->setEmail('josh@localhost');
 
     open(FILE, '>>', "/tmp/ANSTE_MANAGER");
@@ -38,9 +38,6 @@ sub addJob # (user, test)
 
     my $waiter = ANSTE::Manager::JobWaiter->instance();
     $waiter->jobReceived($job);
-
-    my $mail = new ANSTE::Manager::MailNotifier();
-    $mail->sendNotify($job);
 
    	return 'OK';
 }

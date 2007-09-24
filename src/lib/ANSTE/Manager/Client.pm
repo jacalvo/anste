@@ -20,8 +20,7 @@ use warnings;
 
 use ANSTE::Exceptions::MissingArgument;
 
-#use SOAP::Lite; # +trace => 'debug'; 
-use SOAP::Lite +trace => 'debug'; 
+use SOAP::Lite; # +trace => 'debug'; 
 
 use constant URI => 'urn:ANSTE::Manager::Server';
 

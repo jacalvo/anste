@@ -45,7 +45,13 @@ sub addJob # (user, test)
 
     my $client = getClient();
     my $ok = $client->addJob($user, $test);
-    exit(!$ok);
+    if ($ok) {
+        print "Ok.\n";
+        exit(0);
+    } else {
+        print "Error.\n";
+        exit(1);
+    }
 }
 
 # TODO: Read server IP from commandline
