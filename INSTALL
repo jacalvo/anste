@@ -1,3 +1,15 @@
-To install ANSTE simply do make install :D
+To install ANSTE simply do make install.
 
-Soon will be a Debian package available.
+Then copy the provided configuration file conf/anste.conf to
+/etc/anste and change it until it suits your needs.
+(do the same for anste-manager.conf if you want to use anste-manager)
+
+If you want to install only anste, anste-manager or anste-job
+there are also rules in the Makefile for each one:
+
+make install-anste
+make install-anste-manager
+make install-anste-job
+
+Soon will be Debian packages available in a repository, but you
+can build your own ones with the provided debian/rules script.

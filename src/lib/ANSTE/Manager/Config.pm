@@ -29,8 +29,7 @@ use Config::Tiny;
 
 use constant CONFIG_FILE => 'anste-manager.conf';
 
-#my @CONFIG_PATHS = ('/etc/anste', '/usr/local/etc/anste', 'data');
-my @CONFIG_PATHS = ('data', '/etc/anste', '/usr/local/etc/anste');
+my @CONFIG_PATHS = ('data/conf', '/etc/anste', '/usr/local/etc/anste');
 
 my $singleton;
 

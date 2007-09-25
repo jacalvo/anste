@@ -29,10 +29,8 @@ use Config::Tiny;
 
 use constant CONFIG_FILE => 'anste.conf';
 
-#my @CONFIG_PATHS = ('/etc/anste', '/usr/local/etc/anste', 'data');
-#my @DATA_PATHS = ('/usr/share/anste', '/usr/local/share/anste', 'data');
-my @CONFIG_PATHS = ('data', '/etc/anste', '/usr/local/etc/anste');
-my @DATA_PATHS = ('data', '/usr/share/anste', '/usr/local/share/anste');
+my @CONFIG_PATHS = ('data/conf', '/etc/anste', '/usr/local/etc/anste');
+my @DATA_PATHS = ('data/', '/usr/share/anste', '/usr/local/share/anste');
 
 my $singleton;
 
@@ -205,6 +203,21 @@ sub testPath
     }
 
     return $testPath;
+}
+
+sub templatePath
+{
+    my ($self) = @_;
+
+    my $templatePath = $self->_getOption('paths', 'templates');
+
+    if (not ANSTE::Validate::path($templatePath)) {
+        throw ANSTE::Exceptions::InvalidConfig('paths/templates', 
+                                               $templatePath,
+                                               $self->{confFile});
+    }
+
+    return $templatePath;
 }
 
 sub logPath
@@ -522,6 +535,7 @@ sub _setDefaults
     $self->{default}->{'paths'}->{'scripts'} = "$data/scripts";
     $self->{default}->{'paths'}->{'deploy'} = "$data/deploy";
     $self->{default}->{'paths'}->{'tests'} = "$data/tests";
+    $self->{default}->{'paths'}->{'templates'} = "$data/templates";
 
     $self->{default}->{'ansted'}->{'port'} = '8000';
 

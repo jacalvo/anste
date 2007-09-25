@@ -276,8 +276,8 @@ sub _createImageConfig # (image, path) returns config string
 
     use Text::Template;
 
-    my $confPath = ANSTE::Config->instance()->configPath();
-    my $confFile = "$confPath/" . XEN_CONFIG_TEMPLATE;
+    my $tmplPath = ANSTE::Config->instance()->templatePath();
+    my $confFile = "$tmplPath/" . XEN_CONFIG_TEMPLATE;
 
     my $template = new Text::Template(SOURCE => $confFile)
         or die "Couldnt' construct template: $Text::Template::ERROR";
