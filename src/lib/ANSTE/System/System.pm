@@ -18,6 +18,7 @@ package ANSTE::System::System;
 use strict;
 use warnings;
 
+use ANSTE::Config;
 use ANSTE::Exceptions::NotImplemented;
 use ANSTE::Exceptions::MissingArgument;
 
@@ -58,8 +59,41 @@ sub execute # (command)
     defined $command or
         throw ANSTE::Exceptions::MissingArgument('command');
 
+    if (not ANSTE::Config->instance()->verbose()) {
+        $command .= ' &> /dev/null';
+    }
     return system($command) == 0;
 }
+
+sub _executeSavingLog # (command, log)
+{
+    my ($self, $command, $log) = @_;
+
+    # Take copies of the file descriptors
+    open(OLDOUT, '>&STDOUT')   or return 1;
+    open(OLDERR, '>&STDERR')   or return 1;
+
+    # Redirect stdout and stderr
+    open(STDOUT, "> $log")     or return 1;
+    open(STDERR, '>&STDOUT')   or return 1;
+
+    my $ret = system($command);
+
+    # Close the redirected filehandles
+    close(STDOUT)              or return 1;
+    close(STDERR)              or return 1;
+
+    # Restore stdout and stderr
+    open(STDERR, '>&OLDERR')   or return 1;
+    open(STDOUT, '>&OLDOUT')   or return 1;
+
+    # Avoid leaks by closing the independent copies
+    close(OLDOUT)              or return 1;
+    close(OLDERR)              or return 1;
+
+    return $ret;
+}
+
 
 # Method: mountImage 
 #

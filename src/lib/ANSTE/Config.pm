@@ -100,6 +100,36 @@ sub virtualizer
     return $virtualizer;
 }
 
+sub verbose
+{
+    my ($self) = @_;
+
+    my $verbose = $self->_getOption('global', 'verbose');
+
+    if (not ANSTE::Validate::boolean($verbose)) {
+        throw ANSTE::Exceptions::InvalidConfig('global/verbose', 
+                                               $verbose,
+                                               $self->{confFile});
+    }
+
+    return $verbose;
+}
+
+sub setVerbose # (value)
+{
+    my ($self, $value) = @_;
+
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not ANSTE::Validate::boolean($value)) {
+        throw ANSTE::Exceptions::InvalidOption('global/verbose', 
+                                               $value);
+    }
+
+    $self->{override}->{'global'}->{'verbose'} = $value;
+}
+
 sub imagePath
 {
     my ($self) = @_;
@@ -527,6 +557,7 @@ sub _setDefaults
 
     $self->{default}->{'global'}->{'system'} = 'Debian';
     $self->{default}->{'global'}->{'virtualizer'} = 'Xen';
+    $self->{default}->{'global'}->{'verbose'} = 1;
 
     $self->{default}->{'paths'}->{'images'} = '/home/xen/domains';
     $self->{default}->{'paths'}->{'image-types'} = "$data/images";

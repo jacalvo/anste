@@ -18,6 +18,7 @@ package ANSTE::Comm::MasterClient;
 use strict;
 use warnings;
 
+use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
 
@@ -93,6 +94,7 @@ sub get	# (file)
         throw ANSTE::Exceptions::MissingArgument('file');
 
     my $soap = $self->{soap};
+    my $config = ANSTE::Config->instance();
 
     # Sends the request 
     my $response = $soap->get(SOAP::Data->name('name' => $file));
@@ -107,7 +109,7 @@ sub get	# (file)
     	open(FILE, ">", $file) or die "Can't open(): $!";
     	print FILE $content;
     	close FILE;
-    	print "File $file written\n";
+    	print "File $file written\n" if $config->verbose();
         return 1;
     }
 }

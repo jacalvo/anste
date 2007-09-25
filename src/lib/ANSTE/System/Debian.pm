@@ -442,6 +442,7 @@ sub executeSelenium # (%params)
 sub startVideoRecording # (filename)
 {
     my ($self, $filename) = @_;
+    print "TRYING TO RECORD SHIT\n";
 
     if (not ANSTE::Validate::fileWritable($filename)) {
         throw ANSTE::Exceptions::InvalidFile($filename);

@@ -243,23 +243,31 @@ sub _executeSetupScript # (host, script)
     my $PORT = ANSTE::Config->instance()->anstedPort(); 
     $client->connect("http://$host:$PORT");
 
+    my $verbose = ANSTE::Config->instance()->verbose();
+
     my $hostname = $self->{host}->name();
 
-    print "[$hostname] Uploading setup script...\n";
+    if (not $verbose) {
+        print "[$hostname] Executing setup...\n";
+    }
+
+    print "[$hostname] Uploading setup script...\n" if $verbose;
     $client->put($script);
 
-    print "[$hostname] Executing setup script...\n";
+    print "[$hostname] Executing setup script...\n" if $verbose;
     $client->exec($script, "$script.out");
 
-    print "[$hostname] Script executed with the following output:\n";
-    $client->get("$script.out");
-    $self->_printOutput($hostname, "$script.out");
+    if ($verbose) {
+        print "[$hostname] Script executed with the following output:\n";
+        $client->get("$script.out");
+        $self->_printOutput($hostname, "$script.out");
+    }
 
-    print "[$hostname] Deleting generated files...\n";
+    print "[$hostname] Deleting generated files...\n" if $verbose;
     $client->del($script);
     $client->del("$script.out");
     unlink($script);
-    unlink("$script.out");
+    unlink("$script.out") if $verbose;
 }
 
 sub _printOutput # (hostname, file)

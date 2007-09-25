@@ -43,6 +43,7 @@ my $test = '';
 my $out = '';
 my $video = '';
 my $help = 0;
+my $quiet = 0;
 
 
 GetOptions('create' => \$create,
@@ -50,6 +51,7 @@ GetOptions('create' => \$create,
            'test' => \$test,
            'out=s' => \$out,
            'video' => \$video,
+           'quiet' => \$quiet,
            'help' => \$help) or pod2usage(2);
 
 pod2usage(1) if $help;           
@@ -61,6 +63,10 @@ if (none($create, $deploy, $test) == 1) {
 pod2usage("$0: No files given.") if @ARGV == 0;
 
 my $config = ANSTE::Config->instance();
+
+if ($quiet) {
+    $config->setVerbose(0);
+}
 
 foreach my $file (@ARGV) {
     if ($create) {
@@ -166,11 +172,12 @@ anste - Advanced Network Service Testing Environment
 anste [options] [file ...]
 
  Options:
-   -help       shows this help
-   -create     create a base image
-   -deploy     deploy a scenario
-   -test       test a suite
-   -out dir    report output directory
-   -video      save video recording of selenium tests
+   -help      shows this help
+   -create    create a base image
+   -deploy    deploy a scenario
+   -test      test a suite
+   -out dir   report output directory
+   -video     save video recording of selenium tests
+   -quiet     do not show output of commands
 
 =cut

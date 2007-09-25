@@ -18,6 +18,7 @@ package ANSTE::Virtualizer::Virtualizer;
 use strict;
 use warnings;
 
+use ANSTE::Config;
 use ANSTE::Exceptions::NotImplemented;
 use ANSTE::Exceptions::MissingArgument;
 
@@ -58,6 +59,9 @@ sub execute # (command)
     defined $command or
         throw ANSTE::Exceptions::MissingArgument('command');
 
+    if (not ANSTE::Config->instance()->verbose()) {
+        $command .= ' &> /dev/null';
+    }
     return system($command) == 0;
 }
 

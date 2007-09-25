@@ -187,12 +187,14 @@ sub _runTest # (test)
     my $testResult = new ANSTE::Report::TestResult();
     $testResult->setTest($test);
 
+    my $verbose = $config->verbose();
+
     # Run the test itself either it's a selenium one or a normal one 
     if ($test->selenium()) {
         my $video;
         if ($config->seleniumVideo()) {
             $video = "$logPath/video/$name.ogg";
-            print "Starting video recording for test $name...\n";
+            print "Starting video recording for test $name...\n" if $verbose;
             $system->startVideoRecording($video);
         }
 
@@ -200,9 +202,9 @@ sub _runTest # (test)
         $ret = $self->_runSeleniumRC($hostname, "$path/suite.html", $log);
 
         if ($config->seleniumVideo()) {
-            print "Ending video recording for test $name... ";
+            print "Ending video recording for test $name... " if $verbose;
             $system->stopVideoRecording();
-            print "Done.\n";
+            print "Done.\n" if $verbose; 
 
             # If test was correct and record all videos option
             # is not activated, delete the video
