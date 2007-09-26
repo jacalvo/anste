@@ -23,46 +23,72 @@ use lib "$Bin/../lib";
 
 use ANSTE::Manager::Client;
 
-#use Error qw(:try);
+use Getopt::Long;
+use Pod::Usage;
 
 use constant PORT => 8666;
 
-sub usage
-{
-    print "Usage: anste-job <user> <test>\n";
+my $server = 'localhost';
+my $port = PORT;
+my $user = `whoami`;
+my $mail = '';
+my $help = 0;
+
+
+GetOptions('server=s' => \$server,
+           'port=i' => \$port,
+           'user=s' => \$user,
+           'mail=s' => \$mail,
+           'help' => \$help) or pod2usage(2);
+
+pod2usage(1) if $help;           
+
+pod2usage("$0: No tests given.") if @ARGV == 0;
+
+foreach my $test (@ARGV) {
+    addJob($test);
 }
+exit(0);
 
-if (@ARGV < 2) {
-    usage();
-    exit(1);
-}
-
-addJob($ARGV[0], $ARGV[1]);
-
-sub addJob # (user, test)
+sub addJob # (test)
 {
-    my ($user, $test) = @_;
+    my ($test) = @_;
 
     my $client = getClient();
-    my $ok = $client->addJob($user, $test);
+    my $ok = $client->addJob($user, $test, $mail);
     if ($ok) {
-        print "Ok.\n";
-        exit(0);
+        print "Job $test sent.\n";
     } else {
-        print "Error.\n";
-        exit(1);
+        die "Error sending job $test.";
     }
 }
 
-# TODO: Read server IP from commandline
+
 sub getClient 
 {
-    my $HOST = 'localhost';
-
-    my $URL = "http://$HOST:" . PORT;
+    my $URL = "http://$server:$port";
 
     # Create and return the client object
     my $client = new ANSTE::Manager::Client();
     $client->connect($URL);
     return $client;
 }
+
+__END__
+
+=head1 NAME
+
+anste-job - ANSTE job sender
+
+=head1 SYNOPSIS
+
+anste-job [options] [test ...]
+
+ Options:
+   -help             shows this help
+   -server <host>    host to connect (default: localhost) 
+   -port <port>      port to connect (default: 8666)
+   -user <username>  remote user (default: your local username)
+   -mail <address>   email address if you want notification when job finishes
+
+=cut

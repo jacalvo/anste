@@ -74,8 +74,10 @@ sub _launch # (job)
     $self->_executeSavingLog($command, "$EXDIR/$execlog");
     print "Execution of test '$test' from user '$user' finished.\n";
 
-    my $mail = new ANSTE::Manager::MailNotifier();
-    $mail->sendNotify($job);
+    if ($job->email()) {
+        my $mail = new ANSTE::Manager::MailNotifier();
+        $mail->sendNotify($job);
+    }        
 }
 
 sub _executeSavingLog # (command, log)

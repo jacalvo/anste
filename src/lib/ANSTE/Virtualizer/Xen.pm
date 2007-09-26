@@ -280,7 +280,7 @@ sub _createImageConfig # (image, path) returns config string
     my $confFile = "$tmplPath/" . XEN_CONFIG_TEMPLATE;
 
     my $template = new Text::Template(SOURCE => $confFile)
-        or die "Couldnt' construct template: $Text::Template::ERROR";
+        or die "Couldn't construct template: $Text::Template::ERROR";
 
     my $ip = $image->{ip};
 

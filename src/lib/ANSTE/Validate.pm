@@ -18,6 +18,10 @@ package ANSTE::Validate;
 use strict;
 use warnings;
 
+use ANSTE::Config;
+
+use Mail::RFC822::Address;
+
 use Cwd;
 use File::Basename;
 
@@ -98,6 +102,27 @@ sub port # (port)
     return natural($port) && $port > 0 && $port <= 65535;
 }
 
+sub host # (host)
+{
+    my ($host) = @_;
+
+    # Could be an ip
+    if ($host =~ m/^[\d.]+$/) {
+        return ip($host);
+    }
+    else { # Or a domain name
+        # Rules taken from ebox-platform (EBox::Validate::_checkDomainName)
+        ($host =~ /^\w/) or return 0;
+        ($host =~ /\w$/) or return 0;
+        ($host =~ /\.-/) and return 0;
+        ($host =~ /-\./) and return 0;
+        ($host =~ /\.\./) and return 0;
+        ($host =~ /_/) and return 0;
+        ($host =~ /^[-\.\w]+$/) or return 0;
+        return 1;
+    }
+}
+
 sub ip # (ip)
 {
     my ($ip) = @_;
@@ -122,12 +147,29 @@ sub ip # (ip)
     return 1; 
 }
 
+sub email # (address)
+{
+    my ($address) = @_;
+
+    return Mail::RFC822::Address::valid($address);
+}
+
 sub suite # (suite)
 {
     my ($suite) = @_;
 
     my $dir = ANSTE::Config->instance()->testPath();
     my $file = "$dir/$suite/suite.xml";
+
+    return -r $file;
+}
+
+sub template # (template)
+{
+    my ($template) = @_;
+
+    my $dir = ANSTE::Config->instance()->templatePath();
+    my $file = "$dir/$template";
 
     return -r $file;
 }

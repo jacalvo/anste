@@ -55,9 +55,10 @@ sub connected # returns boolean
     return defined($self->{soap});
 }
 
-sub addJob # (user, test) returns boolean
+# mail - optional
+sub addJob # (user, test, mail) returns boolean
 {
-    my ($self, $user, $test) = @_;
+    my ($self, $user, $test, $mail) = @_;
 
     defined $user or
         throw ANSTE::Exceptions::MissingArgument('user');
@@ -67,7 +68,8 @@ sub addJob # (user, test) returns boolean
     my $soap = $self->{soap};
 
     my $response = $soap->addJob(SOAP::Data->name('user' => $user),
-                                 SOAP::Data->name('test' => $test));
+                                 SOAP::Data->name('test' => $test),
+                                 SOAP::Data->name('mail' => $mail));
     if ($response->fault) {
     	die "SOAP request failed: $!";
     }

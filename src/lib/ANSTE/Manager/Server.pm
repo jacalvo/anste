@@ -23,13 +23,14 @@ use ANSTE::Manager::JobWaiter;
 
 use threads::shared;
 
-sub addJob # (user, test)
+sub addJob # (user, test, mail)
 {
-    my ($self, $user, $test) = @_;
+    my ($self, $user, $test, $mail) = @_;
 
     my $job = new ANSTE::Manager::Job($user, $test);
-    # FIXME: get the email by command line...
-    $job->setEmail('josh@localhost');
+    if ($mail) {
+        $job->setEmail($mail);
+    }
 
     print "Added test '$test' from user '$user'\n";
 

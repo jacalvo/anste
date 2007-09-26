@@ -109,6 +109,66 @@ sub resultLog
     return $resultLog;
 }
 
+sub mailAddress 
+{
+    my ($self) = @_;
+
+    my $email = $self->_getOption('mail', 'address');
+
+    if (not ANSTE::Validate::email($email)) {
+        throw ANSTE::Exceptions::InvalidConfig('mail/address',
+                                               $email,
+                                               $self->{confFile});
+    }
+    
+    return $email;
+}
+
+sub mailSmtp
+{
+    my ($self) = @_;
+
+    my $smtp = $self->_getOption('mail', 'smtp');
+
+    if (not ANSTE::Validate::host($smtp)) {
+        throw ANSTE::Exceptions::InvalidConfig('mail/stmp',
+                                               $smtp,
+                                               $self->{confFile});
+    }
+    
+    return $smtp;
+}
+
+sub mailSubject
+{
+    my ($self) = @_;
+
+    my $subject = $self->_getOption('mail', 'subject');
+
+    if (not $subject) {
+        throw ANSTE::Exceptions::InvalidConfig('mail/subject',
+                                               $subject,
+                                               $self->{confFile});
+    }
+    
+    return $subject;
+}
+
+sub mailTemplate
+{
+    my ($self) = @_;
+
+    my $template = $self->_getOption('mail', 'template');
+
+    if (not ANSTE::Validate::template("$template")) {
+        throw ANSTE::Exceptions::InvalidConfig('mail/template',
+                                               $template,
+                                               $self->{confFile});
+    }
+    
+    return $template;
+}
+
 sub _getOption # (section, option)
 {
     my ($self, $section, $option) = @_;
@@ -140,6 +200,11 @@ sub _setDefaults
 
     $self->{default}->{'logs'}->{'execution'} = '/tmp/anste-out';
     $self->{default}->{'logs'}->{'result'} = '/tmp/anste-logs';
+
+    $self->{default}->{'mail'}->{'address'} = 'anste-noreply@foo.bar';
+    $self->{default}->{'mail'}->{'smtp'} = 'localhost';
+    $self->{default}->{'mail'}->{'subject'} = 'ANSTE Job Notification';
+    $self->{default}->{'mail'}->{'subject'} = 'mail.tmpl'
 }
 
 1;

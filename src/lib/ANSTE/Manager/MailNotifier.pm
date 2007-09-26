@@ -18,9 +18,12 @@ package ANSTE::Manager::MailNotifier;
 use strict;
 use warnings;
 
+use ANSTE::Config;
 use ANSTE::Manager::Job;
+use ANSTE::Manager::Config;
 
 use Mail::Sender;
+use Text::Template;
 
 sub new # () returns new MailNotifier object
 {
@@ -40,20 +43,29 @@ sub sendNotify # (job)
     my $test = $job->test();
     my $email = $job->email();
 
-    my $subject = 'ANSTE Job Notification';
+    my $config = ANSTE::Manager::Config->instance();
+    my $subject = $config->mailSubject();
+    my $address = $config->mailAddress();
+    my $smtp = $config->mailSmtp();
+    my $templFile = $config->mailTemplate();
 
-    # TODO: Get real domain
-    my $sender = new Mail::Sender {from => 'anste-no-reply@localhost',
-                                     smtp => 'localhost'};
+    my $sender = new Mail::Sender {from => $address, smtp => $smtp};
     ref($sender) or 
         die "Error($sender) : $Mail::Sender::Error\n";
 
     ref($sender->Open({to => $email, subject => $subject})) or
         die "Error: $Mail::Sender::Error\n";
 
-    my $FH = $sender->GetHandle();
-    print $FH "Hello $user,\n";
-    print $FH "Your $test test is done!!\n";
+    my $tmplPath = ANSTE::Config->instance()->templatePath();
+    my $template = new Text::Template(SOURCE => "$tmplPath/$templFile")
+        or die "Couldn't construct template: $Text::Template::ERROR";
+
+    my %vars = (user => $user, test => $test);
+
+    my $body = $template->fill_in(HASH => \%vars)
+        or die "Couldn't fill in the template: $Text::Template::ERROR";
+
+    print {$sender->GetHandle()} $body;
      
     $sender->Close;
 }
