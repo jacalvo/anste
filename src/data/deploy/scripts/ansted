@@ -6,7 +6,9 @@ function notify_ready
     # Wait for network ready
     for i in `seq 1 20`
     do
-        ping -c1 `cat /var/local/anste.master | cut -f1 -d:` &> /dev/null
+        HOST=`cat /var/local/anste.master | cut -f1 -d:`
+        PORT=`cat /var/local/anste.master | cut -f2 -d:`
+        hping2 -c 1 -p $PORT $HOST &> /dev/null
         if [ $? ]
         then
             break 
@@ -14,7 +16,18 @@ function notify_ready
             sleep 1
         fi
     done        
-    /usr/local/bin/anste-slave ready
+    # Try to notify
+    for i in `seq 1 5`
+    do
+        /usr/local/bin/anste-slave ready
+        if [ $? ]
+        then
+            break
+        else
+            sleep 1
+            echo -n "Retrying notification to ANSTE master" 
+        fi
+    done
 }
 
 if [ ! -x /usr/local/bin/ansted ]

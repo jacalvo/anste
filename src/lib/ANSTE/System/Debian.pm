@@ -90,10 +90,12 @@ sub installBasePackages
 {
     my ($self) = @_;
 
+    my @PACKAGES = ('libsoap-lite-perl', 'liberror-perl', 'hping2');
+
     $self->execute('apt-get update') 
         or die "apt-get update failed: $!";
 
-    my $ret = $self->_installPackages('libsoap-lite-perl liberror-perl');
+    my $ret = $self->_installPackages(@PACKAGES);
 
     $self->execute('apt-get clean') 
         or die "apt-get clean failed: $!";
@@ -524,7 +526,7 @@ sub _routeCommand # (route)
 
 sub _installPackages # (list)
 {
-    my ($self, $list) = @_;
+    my ($self, @list) = @_;
 
     $ENV{DEBIAN_FRONTEND} = 'noninteractive';
 
@@ -532,6 +534,7 @@ sub _installPackages # (list)
     my $forceDef = '-o DPkg::Options::=--force-confdef';
     my $options = "-y $forceNew $forceDef";
 
+    my $list = join(' ', @list);
     my $command = "apt-get install $options $list";
 
     $self->execute($command);

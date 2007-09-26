@@ -13,3 +13,8 @@ make install-anste-job
 
 Soon will be Debian packages available in a repository, but you
 can build your own ones with the provided debian/rules script.
+
+If you are going to use anste-manager is very recommendable to have
+HTTP and SMTP servers running on the machine. You can configure the path 
+where the results should be stored in anste-manager.conf.
+

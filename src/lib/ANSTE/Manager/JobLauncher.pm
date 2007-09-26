@@ -55,7 +55,7 @@ sub _launch # (job)
 
 
     my $EXDIR = ANSTE::Manager::Config->instance()->executionLog(); 
-    my $TESTDIR = ANSTE::Manager::Config->instance()->resultLog(); 
+    my $WWWDIR = ANSTE::Manager::Config->instance()->wwwDir(); 
 
     if (not -d $EXDIR) {
         mkdir($EXDIR) or die "Can't mkdir: $!";
@@ -63,14 +63,16 @@ sub _launch # (job)
     my $execlog = "$test.log";
     $execlog =~ tr{/}{-};
 
-    if (not -d $TESTDIR) {
-        mkdir($TESTDIR) or die "Can't mkdir: $!";
+    my $userdir = "$WWWDIR/$user";
+
+    if (not -d $userdir) {
+        mkdir($userdir) or die "Can't mkdir: $!";
     }
     my $testlog = "$test-results";
     $testlog =~ tr{/}{-};
    
     print "Running test '$test' from user '$user'...\n";
-    my $command = "bin/anste -t $test -o $TESTDIR/$testlog";
+    my $command = "bin/anste -t $test -o $userdir/$testlog";
     $self->_executeSavingLog($command, "$EXDIR/$execlog");
     print "Execution of test '$test' from user '$user' finished.\n";
 

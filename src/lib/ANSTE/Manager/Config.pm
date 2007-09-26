@@ -160,13 +160,43 @@ sub mailTemplate
 
     my $template = $self->_getOption('mail', 'template');
 
-    if (not ANSTE::Validate::template("$template")) {
+    if (not ANSTE::Validate::template($template)) {
         throw ANSTE::Exceptions::InvalidConfig('mail/template',
                                                $template,
                                                $self->{confFile});
     }
     
     return $template;
+}
+
+sub wwwDir
+{
+    my ($self) = @_;
+
+    my $dir = $self->_getOption('www', 'dir');
+
+    if (not ANSTE::Validate::path($dir)) {
+        throw ANSTE::Exceptions::InvalidConfig('www/dir',
+                                               $dir,
+                                               $self->{confFile});
+    }
+    
+    return $dir;
+}
+
+sub wwwHost
+{
+    my ($self) = @_;
+
+    my $host = $self->_getOption('www', 'host');
+
+    if (not ANSTE::Validate::host($host)) {
+        throw ANSTE::Exceptions::InvalidConfig('www/host',
+                                               $host,
+                                               $self->{confFile});
+    }
+    
+    return $host;
 }
 
 sub _getOption # (section, option)
@@ -204,7 +234,10 @@ sub _setDefaults
     $self->{default}->{'mail'}->{'address'} = 'anste-noreply@foo.bar';
     $self->{default}->{'mail'}->{'smtp'} = 'localhost';
     $self->{default}->{'mail'}->{'subject'} = 'ANSTE Job Notification';
-    $self->{default}->{'mail'}->{'subject'} = 'mail.tmpl'
+    $self->{default}->{'mail'}->{'subject'} = 'mail.tmpl';
+
+    $self->{default}->{'www'}->{'host'} = 'localhost';
+    $self->{default}->{'www'}->{'dir'} = '/var/www/anste';
 }
 
 1;

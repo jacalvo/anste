@@ -212,9 +212,10 @@ sub _runTest # (test)
                 unlink($video);
             } 
             else {
-                $testResult->setVideo($video);
+                $testResult->setVideo("video/$name.ogg");
             }
         }            
+        $testResult->setLog("out/$name.html");
     }
     else {
         if (not -r "$path/test") {
@@ -223,6 +224,7 @@ sub _runTest # (test)
         }
         $log = "$logPath/out/$name.txt";
         $ret = $self->_runScript($hostname, "$path/test", $log);
+        $testResult->setLog("out/$name.txt");
     }
 
     # Run pre-test script if exists
@@ -231,7 +233,6 @@ sub _runTest # (test)
     }
 
     $testResult->setValue($ret);
-    $testResult->setLog($log);
 
     return $testResult;
 }

@@ -48,6 +48,7 @@ sub sendNotify # (job)
     my $address = $config->mailAddress();
     my $smtp = $config->mailSmtp();
     my $templFile = $config->mailTemplate();
+    my $wwwHost = $config->wwwHost();
 
     my $sender = new Mail::Sender {from => $address, smtp => $smtp};
     ref($sender) or 
@@ -60,7 +61,11 @@ sub sendNotify # (job)
     my $template = new Text::Template(SOURCE => "$tmplPath/$templFile")
         or die "Couldn't construct template: $Text::Template::ERROR";
 
-    my %vars = (user => $user, test => $test);
+    my $results = "http://$wwwHost/anste/$user/$test-results/";
+
+    my %vars = (user => $user,
+                test => $test,
+                results => $results);
 
     my $body = $template->fill_in(HASH => \%vars)
         or die "Couldn't fill in the template: $Text::Template::ERROR";
