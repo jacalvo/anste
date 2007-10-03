@@ -33,7 +33,28 @@ sub new # () returns new RSSWriter object
 	return $self;
 }
 
-sub write # (job, result)
+sub writeChannel # (user)
+{
+    my ($self, $user) = @_;
+
+    my $rss = new XML::RSS(version => '2.0');
+
+    my $config = ANSTE::Manager::Config->instance();
+    my $host = $config->wwwHost();
+    my $path = $config->wwwDir();
+
+    my $file = "$path/$user/feed.xml";
+    my $url = "http://$host/anste/$user";
+
+    if (not -r $file) {
+        $rss->channel(title => "ANSTE tests for user $user",
+                      link => $url,
+                      description => "Tests results for user $user");
+        $rss->save($file);
+    }
+}
+
+sub writeItem # (job, result)
 {
     my ($self, $job, $result) = @_;
 
@@ -47,23 +68,14 @@ sub write # (job, result)
     my $path = $config->wwwDir();
 
     my $file = "$path/$user/feed.xml";
-    my $url = "http://$host/anste/$user";
+    my $url = "http://$host/anste/$user/$result";
     my $title = "Your test $test has finished";
 
     if (-r $file) {
         $rss->parsefile($file);
-        $rss->add_item(title => $title, link => "$url/$test", mode => 'insert');
+        $rss->add_item(title => $title, link => "$url", mode => 'insert');
+        $rss->save($file);
     }
-    else {
-
-        $rss->channel(title => "ANSTE tests for user $user",
-                      link => $url,
-                      description => "Tests results for user $user");
-        $rss->add_item(title => $title, link => "$url/$result");
-    }
-
-
-    $rss->save($file);
 }
 
 

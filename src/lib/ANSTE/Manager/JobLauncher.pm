@@ -64,16 +64,11 @@ sub _launch # (job)
     my $execlog = "$test.log";
     $execlog =~ tr{/}{-};
 
-    my $userdir = "$WWWDIR/$user";
-
-    if (not -d $userdir) {
-        mkdir($userdir) or die "Can't mkdir: $!";
-    }
     my $testlog = "$test-results";
     $testlog =~ tr{/}{-};
    
     print "Running test '$test' from user '$user'...\n";
-    my $command = "bin/anste -t $test -o $userdir/$testlog";
+    my $command = "bin/anste -t $test -o $WWWDIR/$user/$testlog";
     $self->_executeSavingLog($command, "$EXDIR/$execlog");
     print "Execution of test '$test' from user '$user' finished.\n";
 
@@ -83,7 +78,7 @@ sub _launch # (job)
     }        
 
     my $rss = new ANSTE::Manager::RSSWriter();
-    $rss->write($job, $testlog);
+    $rss->writeItem($job, $testlog);
 }
 
 sub _executeSavingLog # (command, log)

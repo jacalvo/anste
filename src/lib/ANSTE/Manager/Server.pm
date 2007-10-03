@@ -20,6 +20,8 @@ use warnings;
 
 use ANSTE::Manager::Job;
 use ANSTE::Manager::JobWaiter;
+use ANSTE::Manager::RSSWriter;
+use ANSTE::Manager::Config;
 
 use threads::shared;
 
@@ -33,6 +35,15 @@ sub addJob # (user, test, mail)
     }
 
     print "Added test '$test' from user '$user'\n";
+
+    my $WWWDIR = ANSTE::Manager::Config->instance()->wwwDir(); 
+    my $userdir = "$WWWDIR/$user";
+
+    if (not -d $userdir) {
+        mkdir($userdir) or die "Can't mkdir: $!";
+    }
+    my $rss = new ANSTE::Manager::RSSWriter();
+    $rss->writeChannel($user);
 
     my $waiter = ANSTE::Manager::JobWaiter->instance();
     $waiter->jobReceived($job);
