@@ -215,7 +215,7 @@ sub _runTest # (test)
                 $testResult->setVideo("video/$name.ogg");
             }
         }            
-        $testResult->setLog("out/$name.html");
+        $testResult->setLog("selenium/$name.html");
     }
     else {
         if (not -r "$path/test") {

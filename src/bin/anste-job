@@ -31,6 +31,7 @@ use constant PORT => 8666;
 my $server = 'localhost';
 my $port = PORT;
 my $user = `whoami`;
+chomp($user);
 my $mail = '';
 my $help = 0;
 
@@ -58,6 +59,14 @@ sub addJob # (test)
     my $ok = $client->addJob($user, $test, $mail);
     if ($ok) {
         print "Job $test sent.\n";
+        if ($mail) {
+            print "You will be notified at $mail\n";
+        } else {
+            # TODO: Get this from the server.
+            my $url = "http://localhost/anste/$user/feed.xml";
+            print "No mail address provided.\n" .
+                  "You can subscribe to the results at $url\n"; 
+        }
     } else {
         die "Error sending job $test.";
     }

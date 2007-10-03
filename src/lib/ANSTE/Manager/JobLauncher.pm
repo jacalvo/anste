@@ -20,6 +20,7 @@ use warnings;
 
 use ANSTE::Manager::JobWaiter;
 use ANSTE::Manager::MailNotifier;
+use ANSTE::Manager::RSSWriter;
 use ANSTE::Manager::Config;
 use ANSTE::Exceptions::MissingArgument;
 
@@ -80,6 +81,9 @@ sub _launch # (job)
         my $mail = new ANSTE::Manager::MailNotifier();
         $mail->sendNotify($job);
     }        
+
+    my $rss = new ANSTE::Manager::RSSWriter();
+    $rss->write($job, $testlog);
 }
 
 sub _executeSavingLog # (command, log)
