@@ -21,36 +21,68 @@ use warnings;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use ANSTE::Manager::Server;
-use ANSTE::Manager::JobLauncher;
-use ANSTE::Manager::Config;
+use ANSTE::Manager::AdminClient;
 
-use POSIX qw(setsid);
-use SOAP::Transport::HTTP;
+use Getopt::Long;
+use Pod::Usage;
 
-sub daemonize {
-    chdir('/')                  or die "Can't chdir to /: $!";
-    open(STDIN, '/dev/null')    or die "Can't read /dev/null: $!";
-    open(STDOUT, '>>/dev/null') or die "Can't write to /dev/null: $!";
-    open(STDERR, '>>/dev/null') or die "Can't write to /dev/null: $!";
-    defined(my $pid = fork)     or die "Can't fork: $!";
-    exit if $pid;
-    setsid()                    or die "Can't start a new session: $!";
-    umask 0;
+use constant PORT => 8777;
+
+my $server = 'localhost';
+my $port = PORT;
+my $help = 0;
+
+
+GetOptions('server=s' => \$server,
+           'port=i' => \$port,
+           'help' => \$help) or pod2usage(2);
+
+pod2usage(1) if $help;           
+
+pod2usage("$0: No command given.") if @ARGV == 0;
+
+my $command = $ARGV[0];
+
+if ($command eq 'list') {
+    list();
 }
+else {
+    print "Command not recognized\n";
+    exit(1);
+}
+exit(0);
 
-#daemonize();
-threads->create('_startServer') or die "Can't create thread: $!";
-
-my $launcher = new ANSTE::Manager::JobLauncher();
-$launcher->waitAndLaunch();
-
-sub _startServer
+sub list
 {
-    my $port = ANSTE::Manager::Config->instance()->listenPort();
-
-    my $daemon = new SOAP::Transport::HTTP::Daemon(LocalPort => $port,
-                                                   Reuse => 1);
-    $daemon->dispatch_to('ANSTE::Manager::Server');
-    $daemon->handle();
+    my $client = getClient();
+    my $list = $client->list();
+    print $list;
 }
+
+
+sub getClient 
+{
+    my $URL = "http://$server:$port";
+
+    # Create and return the client object
+    my $client = new ANSTE::Manager::AdminClient();
+    $client->connect($URL);
+    return $client;
+}
+
+__END__
+
+=head1 NAME
+
+anste-manager - ANSTE manager
+
+=head1 SYNOPSIS
+
+anste-manager [options] list 
+
+ Options:
+   -help             shows this help
+   -server <host>    host to connect (default: localhost) 
+   -port <port>      port to connect (default: 8667)
+
+=cut

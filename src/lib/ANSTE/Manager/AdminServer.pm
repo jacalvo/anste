@@ -13,40 +13,37 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::Manager::Server;
+package ANSTE::Manager::AdminServer;
 
 use strict;
 use warnings;
 
-use ANSTE::Manager::Job;
 use ANSTE::Manager::JobWaiter;
-use ANSTE::Manager::RSSWriter;
-use ANSTE::Manager::Config;
 
-sub addJob # (user, test, mail)
+use FreezeThaw qw(thaw);
+
+sub list # returns job queue
 {
-    my ($self, $user, $test, $mail) = @_;
-
-    my $job = new ANSTE::Manager::Job($user, $test);
-    if ($mail) {
-        $job->setEmail($mail);
-    }
-
-    print "Added test '$test' from user '$user'\n";
-
-    my $WWWDIR = ANSTE::Manager::Config->instance()->wwwDir(); 
-    my $userdir = "$WWWDIR/$user";
-
-    if (not -d $userdir) {
-        mkdir($userdir) or die "Can't mkdir: $!";
-    }
-    my $rss = new ANSTE::Manager::RSSWriter();
-    $rss->writeChannel($user);
+    my ($self) = @_;
 
     my $waiter = ANSTE::Manager::JobWaiter->instance();
-    $waiter->jobReceived($job);
 
-   	return 'OK';
+    my $list = '' ;
+    my $number = 1;
+    my $current = $waiter->current();
+    if ($current) {
+        my @job = thaw($current);
+        my $job = $job[0];
+        $list = "$number) " . $job->toStr() . " (Running)\n";
+        $number++;
+    }
+    foreach my $item (@{$waiter->queue()}) {
+        my @job = thaw($item);
+        my $job = $job[0];
+        $list .= "$number) " . $job->toStr() . "\n";
+        $number++;
+    }
+    return $list ? $list : "No jobs.\n";
 }
 
 1;

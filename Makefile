@@ -83,6 +83,7 @@ uninstall-anste:
 install-anste-manager:
 	install -d $(DESTDIR)$(SBINDIR)
 	install -m755 src/bin/anste-manager $(DESTDIR)$(SBINDIR)
+	install -m755 src/bin/anste-managerd $(DESTDIR)$(SBINDIR)
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE/Manager
 	install -m644 src/lib/ANSTE/Manager/JobLauncher.pm \
@@ -100,6 +101,7 @@ install-anste-manager:
 
 uninstall-anste-manager:
 	rm -f $(DESTDIR)$(SBINDIR)/anste-manager
+	rm -f $(DESTDIR)$(SBINDIR)/anste-managerd
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/JobLauncher.pm
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/Job.pm
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/JobWaiter.pm

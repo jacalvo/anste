@@ -1,0 +1,67 @@
+#!/usr/bin/perl
+
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License, version 2, as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+use strict;
+use warnings;
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+
+use ANSTE::Manager::Server;
+use ANSTE::Manager::JobLauncher;
+use ANSTE::Manager::Config;
+
+use POSIX qw(setsid);
+use SOAP::Transport::HTTP;
+
+sub daemonize {
+    chdir('/')                  or die "Can't chdir to /: $!";
+    open(STDIN, '/dev/null')    or die "Can't read /dev/null: $!";
+    open(STDOUT, '>>/dev/null') or die "Can't write to /dev/null: $!";
+    open(STDERR, '>>/dev/null') or die "Can't write to /dev/null: $!";
+    defined(my $pid = fork)     or die "Can't fork: $!";
+    exit if $pid;
+    setsid()                    or die "Can't start a new session: $!";
+    umask 0;
+}
+
+#daemonize();
+threads->create('_startServer') or die "Can't create thread: $!";
+threads->create('_startAdminServer') or die "Can't create thread: $!";
+
+my $launcher = new ANSTE::Manager::JobLauncher();
+$launcher->waitAndLaunch();
+
+sub _startServer
+{
+    my $port = ANSTE::Manager::Config->instance()->clientPort();
+
+    my $daemon = new SOAP::Transport::HTTP::Daemon(LocalPort => $port,
+                                                   Reuse => 1);
+    $daemon->dispatch_to('ANSTE::Manager::Server');
+    $daemon->handle();
+}
+
+sub _startAdminServer
+{
+    my $port = ANSTE::Manager::Config->instance()->adminPort();
+
+    my $daemon = new SOAP::Transport::HTTP::Daemon(LocalPort => $port,
+                                                   Reuse => 1);
+    $daemon->dispatch_to('ANSTE::Manager::AdminServer');
+    $daemon->handle();
+}

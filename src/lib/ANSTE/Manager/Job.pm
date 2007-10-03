@@ -86,4 +86,20 @@ sub setEmail # email string
 	$self->{email} = $email;
 }
 
+sub toStr # returns string
+{
+    my ($self) = @_;
+	
+    my $user = $self->{user};
+	my $test = $self->{test};
+	my $email = $self->{email};
+
+    if ($email) {
+        return "$user ($email): $test";
+    }
+    else {
+        return "$user: $test";
+    }
+}
+
 1;

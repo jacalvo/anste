@@ -64,19 +64,34 @@ sub configPath
     return $self->{confPath};
 }
 
-sub listenPort
+sub clientPort
 {
     my ($self) = @_;
 
-    my $listenPort = $self->_getOption('listen', 'port');
+    my $clientPort = $self->_getOption('client', 'port');
 
-    if (not ANSTE::Validate::port($listenPort)) {
-        throw ANSTE::Exceptions::InvalidConfig('listen/port',
-                                               $listenPort,
+    if (not ANSTE::Validate::port($clientPort)) {
+        throw ANSTE::Exceptions::InvalidConfig('client/port',
+                                               $clientPort,
                                                $self->{confFile});
     }
     
-    return $listenPort;
+    return $clientPort;
+}
+
+sub adminPort
+{
+    my ($self) = @_;
+
+    my $adminPort = $self->_getOption('admin', 'port');
+
+    if (not ANSTE::Validate::port($adminPort)) {
+        throw ANSTE::Exceptions::InvalidConfig('admin/port',
+                                               $adminPort,
+                                               $self->{confFile});
+    }
+    
+    return $adminPort;
 }
 
 sub executionLog
@@ -226,7 +241,9 @@ sub _setDefaults
     my ($self) = @_;
 
     # TODO: Some options have to be mandatory and so don't have a default.
-    $self->{default}->{'listen'}->{'port'} = '8666';
+    $self->{default}->{'client'}->{'port'} = '8666';
+
+    $self->{default}->{'admin'}->{'port'} = '8777';
 
     $self->{default}->{'logs'}->{'execution'} = '/tmp/anste-out';
     $self->{default}->{'logs'}->{'result'} = '/tmp/anste-logs';

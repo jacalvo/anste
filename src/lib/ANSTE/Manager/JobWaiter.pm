@@ -31,6 +31,7 @@ my $singleton;
 
 my $lock : shared;
 my @queue : shared;
+my $current : shared;
 
 sub instance 
 {
@@ -67,14 +68,32 @@ sub waitForJob # returns job
 
     my $queue = $self->{queue};
 
+    $current = undef;
+
     if (not @queue) {
         lock($lock);
         cond_wait($lock);
     } 
 
     # thaw returns array so we return the object inside
-    my @job = thaw(shift(@queue)); 
+    $current = shift(@queue);
+    my @job = thaw($current); 
+
     return($job[0]);
+}
+
+sub current # returns current job
+{
+    my ($self) = @_;
+
+    return $current;
+}
+
+sub queue # returns list ref
+{
+    my ($self) = @_;
+
+    return \@queue;
 }
 
 1;
