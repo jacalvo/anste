@@ -26,6 +26,7 @@ sub new # (user, test, email) returns new Job object
 	my ($class, $user, $test, $email) = @_;
 	my $self = {};
 	
+    $self->{id} = undef;
 	$self->{user} = $user;
 	$self->{test} = $test;
 	$self->{email} = $email;
@@ -35,6 +36,23 @@ sub new # (user, test, email) returns new Job object
 	return $self;
 }
 
+sub id # returns id
+{
+	my ($self) = @_;
+
+	return $self->{id};
+}
+
+sub setId # (id)
+{
+	my ($self, $id) = @_;	
+
+    defined $id or
+        throw ANSTE::Exceptions::MissingArgument('id');
+
+	$self->{id} = $id;
+}
+
 sub user # returns user string
 {
 	my ($self) = @_;
@@ -42,7 +60,7 @@ sub user # returns user string
 	return $self->{user};
 }
 
-sub setUser # user string
+sub setUser # (user)
 {
 	my ($self, $user) = @_;	
 

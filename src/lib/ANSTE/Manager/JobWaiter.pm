@@ -32,6 +32,7 @@ my $singleton;
 my $lock : shared;
 my @queue : shared;
 my $current : shared;
+my $id : shared;
 
 sub instance 
 {
@@ -39,7 +40,7 @@ sub instance
     unless (defined $singleton) {
         my $self = {};
 
-        #$self->{queue} = new Thread::Queue();
+        $id = 0;
 
         $singleton = bless($self, $class);
     }
@@ -54,19 +55,47 @@ sub jobReceived # (job)
     defined $job or
         throw ANSTE::Exceptions::MissingArgument('job');
 
-    my $queue = $self->{queue};
-
     lock($lock);
+    $id++;
+    $job->setId($id);
     my $str = freeze($job);
     push(@queue, $str);
     cond_signal($lock);
 }
 
+sub deleteJob # (id) returns boolean
+{
+    my ($self, $id) = @_;
+
+    if ($current and (_getJobId($current) == $id)) {
+        # TODO: Delete the current running job
+        return 0;
+    }
+    if (not @queue) {
+        return 0;
+    }
+    foreach my $i (0 .. $#queue) {
+        my $fjob = $queue[$i];
+        if (_getJobId($fjob) == $id) {
+            delete $queue[$id];
+            return 1;
+        }
+    }
+    return 0;
+}
+
+sub _getJobId # (fjob) frozen job
+{
+    my ($fjob) = @_;
+
+    my @job = thaw($fjob); 
+
+    return($job[0]->id());
+}
+
 sub waitForJob # returns job
 {
     my ($self) = @_;
-
-    my $queue = $self->{queue};
 
     $current = undef;
 
@@ -75,8 +104,10 @@ sub waitForJob # returns job
         cond_wait($lock);
     } 
 
+    do { # skip the undefs (deleted jobs)
+        $current = shift(@queue);
+    } while (not $current);
     # thaw returns array so we return the object inside
-    $current = shift(@queue);
     my @job = thaw($current); 
 
     return($job[0]);

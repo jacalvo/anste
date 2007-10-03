@@ -44,7 +44,17 @@ pod2usage("$0: No command given.") if @ARGV == 0;
 my $command = $ARGV[0];
 
 if ($command eq 'list') {
-    list();
+    _list();
+}
+elsif ($command eq 'delete') {
+    my $id = $ARGV[1];
+    if ($id) {
+        _delete($id);
+    }
+    else {
+        print "delete requires an id as argument\n";
+        exit(1);
+    }
 }
 else {
     print "Command not recognized\n";
@@ -52,15 +62,30 @@ else {
 }
 exit(0);
 
-sub list
+sub _list
 {
-    my $client = getClient();
+    my $client = _getClient();
     my $list = $client->list();
     print $list;
 }
 
+sub _delete # (id)
+{
+    my ($id) = @_;
 
-sub getClient 
+    my $client = _getClient();
+    my $ret = $client->delete($id);
+
+    if ($ret) {
+        print "Job deleted.\n";
+    }
+    else {
+        print "No such job or job running.\n";
+    }
+}
+
+
+sub _getClient 
 {
     my $URL = "http://$server:$port";
 
@@ -78,7 +103,7 @@ anste-manager - ANSTE manager
 
 =head1 SYNOPSIS
 
-anste-manager [options] list 
+anste-manager [options] list | delete <id> 
 
  Options:
    -help             shows this help

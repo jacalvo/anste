@@ -70,4 +70,18 @@ sub list # returns queue string
     return($result);
 }
 
+sub delete # (jobID) returns boolean
+{
+    my ($self, $jobID) = @_;
+
+    my $soap = $self->{soap};
+
+    my $response = $soap->delete(SOAP::Data->name('id' => $jobID));
+    if ($response->fault) {
+    	die "SOAP request failed: $!";
+    }
+    my $result = $response->result;
+    return($result eq 'OK');
+}
+
 1;

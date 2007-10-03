@@ -28,22 +28,33 @@ sub list # returns job queue
 
     my $waiter = ANSTE::Manager::JobWaiter->instance();
 
-    my $list = '' ;
-    my $number = 1;
+    my $list = '';
     my $current = $waiter->current();
     if ($current) {
         my @job = thaw($current);
         my $job = $job[0];
-        $list = "$number) " . $job->toStr() . " (Running)\n";
-        $number++;
+        my $id = $job->id();
+        $list = "$id) " . $job->toStr() . " (Running)\n";
     }
     foreach my $item (@{$waiter->queue()}) {
+        next if not $item;
         my @job = thaw($item);
         my $job = $job[0];
-        $list .= "$number) " . $job->toStr() . "\n";
-        $number++;
+        my $id = $job->id();
+        $list .= "$id) " . $job->toStr() . "\n";
     }
     return $list ? $list : "No jobs.\n";
+}
+
+sub delete # (id)
+{
+    my ($self, $id) = @_;
+
+    my $waiter = ANSTE::Manager::JobWaiter->instance();
+    
+    my $ret = $waiter->deleteJob($id);
+
+    return $ret ? 'OK' : 'ERR';
 }
 
 1;
