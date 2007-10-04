@@ -94,7 +94,13 @@ install-anste-manager:
 				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
 	install -m644 src/lib/ANSTE/Manager/MailNotifier.pm \
 				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
+	install -m644 src/lib/ANSTE/Manager/RSSWriter.pm \
+				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
 	install -m644 src/lib/ANSTE/Manager/Server.pm \
+				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
+	install -m644 src/lib/ANSTE/Manager/AdminServer.pm \
+				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
+	install -m644 src/lib/ANSTE/Manager/AdminClient.pm \
 				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
 	install -m644 src/lib/ANSTE/Manager/Config.pm \
 				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
