@@ -21,6 +21,8 @@ use warnings;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 
+my $id = 0;
+
 sub new # (user, test, email) returns new Job object
 {
 	my ($class, $user, $test, $email) = @_;
@@ -30,6 +32,8 @@ sub new # (user, test, email) returns new Job object
 	$self->{user} = $user;
 	$self->{test} = $test;
 	$self->{email} = $email;
+
+    $self->{id} = ++$id;
 
 	bless($self, $class);
 
@@ -41,16 +45,6 @@ sub id # returns id
 	my ($self) = @_;
 
 	return $self->{id};
-}
-
-sub setId # (id)
-{
-	my ($self, $id) = @_;	
-
-    defined $id or
-        throw ANSTE::Exceptions::MissingArgument('id');
-
-	$self->{id} = $id;
 }
 
 sub user # returns user string

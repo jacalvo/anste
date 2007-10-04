@@ -32,15 +32,12 @@ my $singleton;
 my $lock : shared;
 my @queue : shared;
 my $current : shared;
-my $id : shared;
 
 sub instance 
 {
     my $class = shift;
     unless (defined $singleton) {
         my $self = {};
-
-        $id = 0;
 
         $singleton = bless($self, $class);
     }
@@ -56,32 +53,47 @@ sub jobReceived # (job)
         throw ANSTE::Exceptions::MissingArgument('job');
 
     lock($lock);
-    $id++;
-    $job->setId($id);
     my $str = freeze($job);
     push(@queue, $str);
     cond_signal($lock);
 }
 
-sub deleteJob # (id) returns boolean
+sub deleteJob # (jobID) returns boolean
 {
-    my ($self, $id) = @_;
+    my ($self, $jobID) = @_;
 
-    if ($current and (_getJobId($current) == $id)) {
+    if ($current and (_getJobId($current) == $jobID)) {
         # TODO: Delete the current running job
-        return 0;
     }
     if (not @queue) {
         return 0;
     }
-    foreach my $i (0 .. $#queue) {
+    for my $i (0 .. $#queue) {
         my $fjob = $queue[$i];
-        if (_getJobId($fjob) == $id) {
-            delete $queue[$id];
-            return 1;
+        my $fjobid = _getJobId($fjob);
+        if (_getJobId($fjob) == $jobID) {
+            _delete($i);
+           return 1;
         }
     }
     return 0;
+}
+
+sub _delete # (index)
+{
+    my ($index) = @_;
+
+    lock($lock);
+    if ($index == $#queue) {
+        pop(@queue);
+    }
+    else {
+        delete $queue[$index];
+        for my $i ($index .. ($#queue - 1)) {
+            $queue[$i] = $queue[$i+1];
+        }
+        pop(@queue);
+    }        
 }
 
 sub _getJobId # (fjob) frozen job
@@ -104,9 +116,7 @@ sub waitForJob # returns job
         cond_wait($lock);
     } 
 
-    do { # skip the undefs (deleted jobs)
-        $current = shift(@queue);
-    } while (not $current);
+    $current = shift(@queue);
     # thaw returns array so we return the object inside
     my @job = thaw($current); 
 
@@ -124,6 +134,7 @@ sub queue # returns list ref
 {
     my ($self) = @_;
 
+    lock($lock);
     return \@queue;
 }
 

@@ -37,7 +37,6 @@ sub list # returns job queue
         $list = "$id) " . $job->toStr() . " (Running)\n";
     }
     foreach my $item (@{$waiter->queue()}) {
-        next if not $item;
         my @job = thaw($item);
         my $job = $job[0];
         my $id = $job->id();
