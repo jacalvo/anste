@@ -41,6 +41,7 @@ my $create = '';
 my $deploy = '';
 my $test = '';
 my $out = '';
+my $path = '';
 my $video = '';
 my $help = 0;
 my $quiet = 0;
@@ -49,6 +50,7 @@ my $quiet = 0;
 GetOptions('create' => \$create,
            'deploy' => \$deploy,
            'test' => \$test,
+           'path=s' => \$path,
            'out=s' => \$out,
            'video' => \$video,
            'quiet' => \$quiet,
@@ -63,6 +65,10 @@ if (none($create, $deploy, $test) == 1) {
 pod2usage("$0: No files given.") if @ARGV == 0;
 
 my $config = ANSTE::Config->instance();
+
+if ($path) {
+    $config->setUserPath($path);
+}
 
 if ($quiet) {
     $config->setVerbose(0);
@@ -172,12 +178,13 @@ anste - Advanced Network Service Testing Environment
 anste [options] [file ...]
 
  Options:
-   -help      shows this help
-   -create    create a base image
-   -deploy    deploy a scenario
-   -test      test a suite
-   -out dir   report output directory
-   -video     save video recording of selenium tests
-   -quiet     do not show output of commands
+   -help        shows this help
+   -create      create a base image
+   -deploy      deploy a scenario
+   -test        test a suite
+   -path <dir>  where to find the data  
+   -out  <dir>  report output directory
+   -video       save video recording of selenium tests
+   -quiet       do not show output of commands
 
 =cut

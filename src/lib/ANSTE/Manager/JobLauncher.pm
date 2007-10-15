@@ -53,35 +53,36 @@ sub _launch # (job)
     
     my $test = $job->test();
     my $user = $job->user();
+    my $path = "/home/$user/" . $job->path();
 
 
-    my $EXDIR = ANSTE::Manager::Config->instance()->executionLog(); 
     my $WWWDIR = ANSTE::Manager::Config->instance()->wwwDir(); 
-
-    if (not -d $EXDIR) {
-        mkdir($EXDIR) or die "Can't mkdir: $!";
-    }
-    my $execlog = "$test.log";
-    $execlog =~ tr{/}{-};
 
     my $testlog = "$test-results";
     $testlog =~ tr{/}{-};
    
+    my $logpath = "$WWWDIR/$user/$testlog";
+
     print "Running test '$test' from user '$user'...\n";
-    my $command = "bin/anste -t $test -o $WWWDIR/$user/$testlog";
-    $self->_executeSavingLog($command, "$EXDIR/$execlog");
-    print "Execution of test '$test' from user '$user' finished.\n";
+    my $command = "anste -t $test -o $logpath -p $path";
+    my $ret = $self->_executeSavingLog($command, "$logpath/out.log");
+    if ($ret == 0) {
+        print "Execution of test '$test' from user '$user' finished.\n";
+    } else {
+        print "Execution of test '$test' from user '$user' failed.\n";
+        $job->setFailed();
+    }
 
     if ($job->email()) {
         my $mail = new ANSTE::Manager::MailNotifier();
-        $mail->sendNotify($job);
+        $mail->sendNotify($job, $testlog);
     }        
 
     my $rss = new ANSTE::Manager::RSSWriter();
     $rss->writeItem($job, $testlog);
 }
 
-sub _executeSavingLog # (command, log)
+sub _executeSavingLog # (command, log) # returns exit code
 {
     my ($self, $command, $log) = @_;
 
@@ -98,6 +99,7 @@ sub _executeSavingLog # (command, log)
     }
     else {
         waitpid($pid, 0);
+        return $?;
     }
 }
 

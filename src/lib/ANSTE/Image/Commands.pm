@@ -334,10 +334,9 @@ sub executeScripts # (list)
     my $ip = $self->ip();
     $client->connect("http://$ip:$port");
 
-    my $path = ANSTE::Config->instance()->scriptPath();
-
     foreach my $script (@{$list}) {
-        $self->_executeSetup($client, "$path/$script");
+        my $file = $config->scriptFile($script);
+        $self->_executeSetup($client, $file);
     }
 }
 

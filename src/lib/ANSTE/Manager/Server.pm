@@ -23,13 +23,16 @@ use ANSTE::Manager::JobWaiter;
 use ANSTE::Manager::RSSWriter;
 use ANSTE::Manager::Config;
 
-sub addJob # (user, test, mail)
+sub addJob # (user, test, mail, path)
 {
-    my ($self, $user, $test, $mail) = @_;
+    my ($self, $user, $test, $mail, $path) = @_;
 
     my $job = new ANSTE::Manager::Job($user, $test);
     if ($mail) {
         $job->setEmail($mail);
+    }
+    if ($path) {
+        $job->setPath($path);
     }
 
     print "Added test '$test' from user '$user'\n";

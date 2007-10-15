@@ -133,8 +133,7 @@ sub loadFromDir # (dirname)
 
     $self->setDir($dirname);
 
-    my $dir = ANSTE::Config->instance()->testPath();
-    my $file = "$dir/$dirname/suite.xml";
+    my $file = ANSTE::Config->instance()->testFile("$dirname/suite.xml");
 
     if (not -r $file) {
         throw ANSTE::Exceptions::InvalidFile($file);

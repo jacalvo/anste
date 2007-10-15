@@ -94,36 +94,6 @@ sub adminPort
     return $adminPort;
 }
 
-sub executionLog
-{
-    my ($self) = @_;
-
-    my $executionLog = $self->_getOption('logs', 'execution');
-
-    if (not ANSTE::Validate::directoryWritable($executionLog)) {
-        throw ANSTE::Exceptions::InvalidConfig('logs/execution',
-                                               $executionLog,
-                                               $self->{confFile});
-    }
-
-    return $executionLog;
-}
-
-sub resultLog
-{
-    my ($self) = @_;
-
-    my $resultLog = $self->_getOption('logs', 'result');
-
-    if (not ANSTE::Validate::directoryWritable($resultLog)) {
-        throw ANSTE::Exceptions::InvalidConfig('logs/result',
-                                               $resultLog,
-                                               $self->{confFile});
-    }
-
-    return $resultLog;
-}
-
 sub mailAddress 
 {
     my ($self) = @_;
@@ -177,6 +147,21 @@ sub mailTemplate
 
     if (not ANSTE::Validate::template($template)) {
         throw ANSTE::Exceptions::InvalidConfig('mail/template',
+                                               $template,
+                                               $self->{confFile});
+    }
+    
+    return $template;
+}
+
+sub mailTemplateFailed
+{
+    my ($self) = @_;
+
+    my $template = $self->_getOption('mail', 'failtemplate');
+
+    if (not ANSTE::Validate::template($template)) {
+        throw ANSTE::Exceptions::InvalidConfig('mail/failtemplate',
                                                $template,
                                                $self->{confFile});
     }
@@ -245,13 +230,11 @@ sub _setDefaults
 
     $self->{default}->{'admin'}->{'port'} = '8777';
 
-    $self->{default}->{'logs'}->{'execution'} = '/tmp/anste-out';
-    $self->{default}->{'logs'}->{'result'} = '/tmp/anste-logs';
-
     $self->{default}->{'mail'}->{'address'} = 'anste-noreply@foo.bar';
     $self->{default}->{'mail'}->{'smtp'} = 'localhost';
     $self->{default}->{'mail'}->{'subject'} = 'ANSTE Job Notification';
-    $self->{default}->{'mail'}->{'subject'} = 'mail.tmpl';
+    $self->{default}->{'mail'}->{'template'} = 'mail.tmpl';
+    $self->{default}->{'mail'}->{'failtemplate'} = 'failmail.tmpl';
 
     $self->{default}->{'www'}->{'host'} = 'localhost';
     $self->{default}->{'www'}->{'dir'} = '/var/www/anste';

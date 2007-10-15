@@ -139,8 +139,7 @@ sub loadFromFile # (filename)
     defined $filename or
         throw ANSTE::Exceptions::MissingArgument('filename');
 
-    my $dir = ANSTE::Config->instance()->scenarioPath();
-    my $file = "$dir/$filename";
+    my $file = ANSTE::Config->instance()->scenarioFile($filename);
 
     if (not -r $file) {
         throw ANSTE::Exceptions::InvalidFile('filename');

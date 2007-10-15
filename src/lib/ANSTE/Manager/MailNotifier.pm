@@ -35,19 +35,21 @@ sub new # () returns new MailNotifier object
 	return $self;
 }
 
-sub sendNotify # (job)
+sub sendNotify # (job, result)
 {    
-    my ($self, $job) = @_;
+    my ($self, $job, $result) = @_;
 
     my $user = $job->user();
     my $test = $job->test();
     my $email = $job->email();
+    my $failed = $job->failed();
 
     my $config = ANSTE::Manager::Config->instance();
     my $subject = $config->mailSubject();
     my $address = $config->mailAddress();
     my $smtp = $config->mailSmtp();
-    my $templFile = $config->mailTemplate();
+    my $templFile = $failed ? $config->mailTemplateFailed() : 
+                              $config->mailTemplate();
     my $wwwHost = $config->wwwHost();
 
     my $sender = new Mail::Sender {from => $address, smtp => $smtp};
@@ -61,7 +63,11 @@ sub sendNotify # (job)
     my $template = new Text::Template(SOURCE => "$tmplPath/$templFile")
         or die "Couldn't construct template: $Text::Template::ERROR";
 
-    my $results = "http://$wwwHost/anste/$user/$test-results/";
+    my $results = "http://$wwwHost/anste/$user/$result/";
+
+    if ($failed) {
+        $results .= 'out.log';
+    }
 
     my %vars = (user => $user,
                 test => $test,

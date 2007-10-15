@@ -21,17 +21,20 @@ use warnings;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 
+use constant DEFAULT_PATH => 'anste';
+
 my $id = 0;
 
-sub new # (user, test, email) returns new Job object
+sub new # (user, test) returns new Job object
 {
-	my ($class, $user, $test, $email) = @_;
+	my ($class, $user, $test) = @_;
 	my $self = {};
 	
     $self->{id} = undef;
 	$self->{user} = $user;
 	$self->{test} = $test;
-	$self->{email} = $email;
+    $self->{path} = DEFAULT_PATH;
+    $self->{failed} = 0;
 
     $self->{id} = ++$id;
 
@@ -98,6 +101,37 @@ sub setEmail # email string
 	$self->{email} = $email;
 }
 
+sub path # returns path string
+{
+	my ($self) = @_;
+
+	return $self->{path};
+}
+
+sub setPath # path string
+{
+	my ($self, $path) = @_;	
+
+    defined $path or
+        throw ANSTE::Exceptions::MissingArgument('path');
+
+	$self->{path} = $path;
+}
+
+sub failed # returns boolean
+{
+	my ($self) = @_;
+
+	return $self->{failed};
+}
+
+sub setFailed
+{
+	my ($self) = @_;	
+
+	$self->{failed} = 1 
+}
+
 sub toStr # returns string
 {
     my ($self) = @_;
@@ -105,13 +139,17 @@ sub toStr # returns string
     my $user = $self->{user};
 	my $test = $self->{test};
 	my $email = $self->{email};
+	my $path = $self->{path};
+
+    my $str = "$user";
 
     if ($email) {
-        return "$user ($email): $test";
+        $str .= " ($email)";
     }
-    else {
-        return "$user: $test";
-    }
+
+    $str .= ": $path/tests/$test";
+
+    return $str;
 }
 
 1;

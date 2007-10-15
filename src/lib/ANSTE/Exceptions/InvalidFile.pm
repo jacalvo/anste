@@ -30,7 +30,7 @@ use base 'ANSTE::Exceptions::Base';
 #
 #     The newly created <ANSTE::Exceptions::InvalidType> exception
 #
-sub new # (arg, type)
+sub new # (arg)
 {
     my ($class, $arg) = @_;
 

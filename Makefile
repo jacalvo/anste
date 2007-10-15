@@ -3,13 +3,19 @@ DATADIR = $(PREFIX)/share/anste
 LIBDIR = $(PREFIX)/lib
 SBINDIR = $(PREFIX)/sbin
 BINDIR = $(PREFIX)/bin
-LIBPERL = $(PREFIX)/share/perl5
 VERSION = `cat VERSION`
 EXPORT = anste-$(VERSION)
+
+ifeq ($(PREFIX),/usr/local)
+	LIBPERL = $(PREFIX)/lib/site_perl
+else	
+	LIBPERL = $(PREFIX)/share/perl5
+endif	
 
 distclean:
 	rm -rf $(EXPORT)
 	rm -f anste-$(VERSION).tar.gz
+	rm -f *.deb
 
 export:
 	svn export . $(EXPORT) 
@@ -51,8 +57,8 @@ install-anste:
 	cp -a src/lib/ANSTE/Exceptions $(DESTDIR)$(LIBPERL)/ANSTE
 	install -d $(DESTDIR)$(DATADIR)/deploy
 	install -d $(DESTDIR)$(DATADIR)/deploy/modules
-	ln -s $(DESTDIR)$(LIBPERL)/ANSTE \
-		  $(DESTDIR)$(DATADIR)/deploy/modules/ANSTE
+	ln -sf $(DESTDIR)$(LIBPERL)/ANSTE \
+		   $(DESTDIR)$(DATADIR)/deploy/modules/ANSTE
 	install -d $(DESTDIR)$(DATADIR)/deploy/bin
 	install -m755 src/data/deploy/bin/* $(DESTDIR)$(DATADIR)/deploy/bin
 	install -d $(DESTDIR)$(DATADIR)/deploy/scripts

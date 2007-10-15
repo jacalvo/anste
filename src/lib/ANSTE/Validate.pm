@@ -158,8 +158,7 @@ sub suite # (suite)
 {
     my ($suite) = @_;
 
-    my $dir = ANSTE::Config->instance()->testPath();
-    my $file = "$dir/$suite/suite.xml";
+    my $file = ANSTE::Config->instance()->testFile("$suite/suite.xml");
 
     return -r $file;
 }

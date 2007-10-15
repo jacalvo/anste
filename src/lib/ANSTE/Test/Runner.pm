@@ -53,10 +53,10 @@ sub runDir # (suites)
 {
     my ($self, $suites) = @_;
 
-    my $path = ANSTE::Config->instance()->testPath(); 
+    my $dir = ANSTE::Config->instance()->testFile($suites); 
 
     my $DIR;
-    opendir($DIR, "$path/$suites") or die "Can't open directory $suites";
+    opendir($DIR, $dir) or die "Can't open directory $suites";
     my @dirs = readdir($DIR);
     closedir($DIR);
 
@@ -161,11 +161,10 @@ sub _runTest # (test)
 
     my $config = ANSTE::Config->instance();
 
-    my $suitePath = $config->testPath();
     my $suiteDir = $self->{suite}->dir();
     my $testDir = $test->dir();
 
-    my $path = "$suitePath/$suiteDir/$testDir";
+    my $path = $config->testFile("$suiteDir/$testDir");
 
     # Run pre-test script if exists
     if (-r "$path/pre") {

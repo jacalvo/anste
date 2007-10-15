@@ -55,21 +55,31 @@ sub connected # returns boolean
     return defined($self->{soap});
 }
 
+# Parameters:
+# user
+# test
 # mail - optional
-sub addJob # (user, test, mail) returns boolean
+# path - optional
+sub addJob # (params) returns boolean
 {
-    my ($self, $user, $test, $mail) = @_;
+    my ($self, %params) = @_;
 
-    defined $user or
+    defined $params{user} or
         throw ANSTE::Exceptions::MissingArgument('user');
-    defined $test or
+    defined $params{test} or
         throw ANSTE::Exceptions::MissingArgument('test');
+
+    my $user = $params{user};        
+    my $test = $params{test};
+    my $mail = $params{mail};
+    my $path = $params{path};
 
     my $soap = $self->{soap};
 
     my $response = $soap->addJob(SOAP::Data->name('user' => $user),
                                  SOAP::Data->name('test' => $test),
-                                 SOAP::Data->name('mail' => $mail));
+                                 SOAP::Data->name('mail' => $mail),
+                                 SOAP::Data->name('path' => $path));
     if ($response->fault) {
     	die "SOAP request failed: $!";
     }

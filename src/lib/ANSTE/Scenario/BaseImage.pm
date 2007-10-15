@@ -149,8 +149,7 @@ sub loadFromFile # (filename)
     defined $filename or
         throw ANSTE::Exceptions::MissingArgument('filename');
 
-    my $dir = ANSTE::Config->instance()->imageTypePath();
-    my $file = "$dir/$filename";
+    my $file = ANSTE::Config->instance()->imageTypeFile($filename);
 
     if (not -r $file) {
         throw ANSTE::Exceptions::InvalidFile('filename');

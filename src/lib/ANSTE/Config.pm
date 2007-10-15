@@ -72,6 +72,20 @@ sub configPath
     return $self->{confPath};
 }
 
+sub setUserPath # (path)
+{
+    my ($self, $path) = @_;
+
+    defined $path or
+        throw ANSTE::Exceptions::MissingArgument('path');
+
+    if (not ANSTE::Validate::path($path)) {
+        throw ANSTE::Exceptions::InvalidOption('path', $path);
+    }
+
+    $self->{userPath} = $path;
+}
+
 sub system
 {
     my ($self) = @_;
@@ -145,111 +159,6 @@ sub imagePath
     return $imagePath;
 }
 
-sub imageTypePath
-{
-    my ($self) = @_;
-
-    my $imageTypePath = $self->_getOption('paths', 'image-types');
-
-    if (not ANSTE::Validate::path($imageTypePath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/image-types',
-                                               $imageTypePath,
-                                               $self->{confFile});
-    }
-
-    return $imageTypePath;
-}
-
-sub scenarioPath
-{
-    my ($self) = @_;
-
-    my $scenarioPath = $self->_getOption('paths', 'scenarios');
-
-    if (not ANSTE::Validate::path($scenarioPath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/scenarios',
-                                               $scenarioPath,
-                                               $self->{confFile});
-    }
-
-    return $scenarioPath;
-}
-
-sub profilePath
-{
-    my ($self) = @_;
-
-    my $profilePath = $self->_getOption('paths', 'profiles');
-
-    if (not ANSTE::Validate::path($profilePath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/profiles',
-                                               $profilePath,
-                                               $self->{confFile});
-    }
-
-    return $profilePath;
-}
-
-sub scriptPath
-{
-    my ($self) = @_;
-
-    my $scriptPath = $self->_getOption('paths', 'scripts');
-
-    if (not ANSTE::Validate::path($scriptPath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/scripts',
-                                               $scriptPath,
-                                               $self->{confFile});
-    }
-
-    return $scriptPath;
-}
-
-sub deployPath
-{
-    my ($self) = @_;
-
-    my $deployPath = $self->_getOption('paths', 'deploy');
-
-    if (not ANSTE::Validate::path($deployPath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/deploy',
-                                               $deployPath,
-                                               $self->{confFile});
-    }
-
-    return $deployPath;
-}
-
-sub testPath
-{
-    my ($self) = @_;
-
-    my $testPath = $self->_getOption('paths', 'tests');
-
-    if (not ANSTE::Validate::path($testPath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/tests', 
-                                               $testPath,
-                                               $self->{confFile});
-    }
-
-    return $testPath;
-}
-
-sub templatePath
-{
-    my ($self) = @_;
-
-    my $templatePath = $self->_getOption('paths', 'templates');
-
-    if (not ANSTE::Validate::path($templatePath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/templates', 
-                                               $templatePath,
-                                               $self->{confFile});
-    }
-
-    return $templatePath;
-}
-
 sub logPath
 {
     my ($self) = @_;
@@ -277,6 +186,73 @@ sub setLogPath # (logPath)
     }
 
     $self->{override}->{'paths'}->{'logs'} = $logPath;
+}
+
+sub deployPath
+{
+    my ($self) = @_;
+
+    my $deployPath = $self->_getOption('paths', 'deploy');
+
+    if (not ANSTE::Validate::path($deployPath)) {
+        throw ANSTE::Exceptions::InvalidConfig('paths/deploy',
+                                               $deployPath,
+                                               $self->{confFile});
+    }
+
+    return $deployPath;
+}
+
+
+sub imageTypeFile
+{
+    my ($self, $file) = @_;
+
+    return $self->_filePath("images/$file");
+}
+
+sub scenarioFile
+{
+    my ($self, $file) = @_;
+
+    return $self->_filePath("scenarios/$file");
+}
+
+sub profileFile
+{
+    my ($self, $file) = @_;
+
+    return $self->_filePath("profiles/$file");
+}
+
+sub scriptFile
+{
+    my ($self, $file) = @_;
+
+    return $self->_filePath("scripts/$file");
+}
+
+
+sub testFile
+{
+    my ($self, $file) = @_;
+
+    return $self->_filePath("tests/$file");
+}
+
+sub templatePath
+{
+    my ($self) = @_;
+
+    my $templatePath = $self->_getOption('paths', 'templates');
+
+    if (not ANSTE::Validate::path($templatePath)) {
+        throw ANSTE::Exceptions::InvalidConfig('paths/templates', 
+                                               $templatePath,
+                                               $self->{confFile});
+    }
+
+    return $templatePath;
 }
 
 sub anstedPort
@@ -528,6 +504,23 @@ sub xenMirror
     return $self->_getOption('xen-options', 'mirror');
 }
 
+sub _filePath # (file)
+{
+    my ($self, $file) = @_;
+
+    my $data = $self->{dataPath};
+    my $user = $self->{userPath};
+
+    my $userFile = "$user/$file";
+    if (-r $userFile) {
+        return $userFile;
+    }
+    else {
+        my $dataFile = "$data/$file";
+        return $dataFile;
+    }
+}
+
 sub _getOption # (section, option)
 {
     my ($self, $section, $option) = @_;
@@ -552,7 +545,6 @@ sub _setDefaults
 {
     my ($self) = @_;
 
-    # TODO: Some options have to be mandatory and so don't have a default.
     my $data = $self->{dataPath};
 
     $self->{default}->{'global'}->{'system'} = 'Debian';
@@ -560,12 +552,7 @@ sub _setDefaults
     $self->{default}->{'global'}->{'verbose'} = 1;
 
     $self->{default}->{'paths'}->{'images'} = '/home/xen/domains';
-    $self->{default}->{'paths'}->{'image-types'} = "$data/images";
-    $self->{default}->{'paths'}->{'scenarios'} = "$data/scenarios";
-    $self->{default}->{'paths'}->{'profiles'} = "$data/profiles";
-    $self->{default}->{'paths'}->{'scripts'} = "$data/scripts";
     $self->{default}->{'paths'}->{'deploy'} = "$data/deploy";
-    $self->{default}->{'paths'}->{'tests'} = "$data/tests";
     $self->{default}->{'paths'}->{'templates'} = "$data/templates";
 
     $self->{default}->{'ansted'}->{'port'} = '8000';
@@ -582,7 +569,6 @@ sub _setDefaults
     $self->{default}->{'report'}->{'writer'} = 'Text';
 
     $self->{default}->{'selenium'}->{'browser'} = '*firefox';
-    $self->{default}->{'selenium'}->{'result-path'} = '/tmp';
     $self->{default}->{'selenium'}->{'video'} = 0;
     $self->{default}->{'selenium'}->{'record-all'} = 0;
 

@@ -60,6 +60,7 @@ sub writeItem # (job, result)
 
     my $user = $job->user();
     my $test = $job->test();
+    my $failed = $job->failed();
 
     my $rss = new XML::RSS(version => '2.0');
 
@@ -69,7 +70,10 @@ sub writeItem # (job, result)
 
     my $file = "$path/$user/feed.xml";
     my $url = "http://$host/anste/$user/$result";
-    my $title = "Your test $test has finished";
+    if ($failed) {
+        $url .= 'out.log';
+    }
+    my $title = "Your test $test has " . ($failed ? 'failed' : 'finished');
 
     if (-r $file) {
         $rss->parsefile($file);

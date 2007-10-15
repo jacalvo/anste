@@ -34,12 +34,14 @@ my $user = `whoami`;
 chomp($user);
 my $mail = '';
 my $help = 0;
+my $path = '';
 
 
 GetOptions('server=s' => \$server,
            'port=i' => \$port,
            'user=s' => \$user,
            'mail=s' => \$mail,
+           'data=s' => \$path,
            'help' => \$help) or pod2usage(2);
 
 pod2usage(1) if $help;           
@@ -56,7 +58,10 @@ sub addJob # (test)
     my ($test) = @_;
 
     my $client = getClient();
-    my $ok = $client->addJob($user, $test, $mail);
+    my $ok = $client->addJob(user => $user, 
+                             test => $test, 
+                             mail => $mail,
+                             path => $path);
     if ($ok) {
         print "Job $test sent.\n";
         if ($mail) {
@@ -98,6 +103,9 @@ anste-job [options] [test ...]
    -server <host>    host to connect (default: localhost) 
    -port <port>      port to connect (default: 8666)
    -user <username>  remote user (default: your local username)
-   -mail <address>   email address if you want notification when job finishes
+   -mail <address>   email address if you want notification when a
+                     job is finished
+   -data <path>      path where the data files are located relative to the
+                     remote user home directory (default: anste)
 
 =cut

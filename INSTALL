@@ -11,10 +11,17 @@ make install-anste
 make install-anste-manager
 make install-anste-job
 
-Soon will be Debian packages available in a repository, but you
-can build your own ones with the provided debian/rules script.
+For Debian users there are packages available in the following repository:
+
+deb http://www.ebox-platform.com/debian/anste/ unstable/
+
+Add the line above to your /etc/apt/sources.list, then apt-get update
+and apt-get install anste anste-manager anste-job
+
+You can also build your own packages with the provided debian/rules script.
 
 If you are going to use anste-manager is very recommendable to have
 HTTP and SMTP servers running on the machine. You can configure the path 
-where the results should be stored in anste-manager.conf.
-
+where the results should be stored in anste-manager.conf. It's also
+a good idea to have a working FTP or SSH server to let the users upload
+the tests that are going to run.
