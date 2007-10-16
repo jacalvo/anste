@@ -43,28 +43,28 @@ sub path # (path)
 {
     my ($path) = @_;
 
-    return -d $path;
+    return defined($path) and -d $path;
 }
 
 sub fileReadable # (file)
 {
     my ($file) = @_;
 
-    return -r $file;
+    return defined($file) and -r $file;
 }
 
 sub fileWritable # (file)
 {
     my ($file) = @_;
 
-    return -w dirname($file);
+    return defined($file) and -w dirname($file);
 }
 
 sub directoryWritable # (dir)
 {
     my ($dir) = @_;
 
-    return -w dirname($dir);
+    return defined($dir) and -w dirname($dir);
 }
 
 sub system # (system)

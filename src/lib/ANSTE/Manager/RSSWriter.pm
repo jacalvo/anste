@@ -69,7 +69,7 @@ sub writeItem # (job, result)
     my $path = $config->wwwDir();
 
     my $file = "$path/$user/feed.xml";
-    my $url = "http://$host/anste/$user/$result";
+    my $url = "http://$host/anste/$user/$result/";
     if ($failed) {
         $url .= 'out.log';
     }

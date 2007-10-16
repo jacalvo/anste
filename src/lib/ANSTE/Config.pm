@@ -65,6 +65,43 @@ sub instance
     return $singleton;
 }
 
+sub check
+{
+    my ($self) = @_;
+
+    $self->system();
+    $self->virtualizer();
+    $self->verbose();
+    $self->imagePath();
+    $self->logPath();
+    $self->deployPath();
+    $self->templatePath();
+    $self->anstedPort();
+    $self->masterPort();
+    $self->firstAddress();
+    $self->gateway();
+    $self->natIface();
+    $self->autoCreateImages();
+    $self->reportWriter();
+    $self->seleniumRCjar();
+    $self->seleniumBrowser();
+    $self->seleniumVideo();
+    $self->seleniumRecordAll();
+    $self->xenDir();
+    $self->xenInstallMethod();
+    $self->xenSize();
+    $self->xenMemory();
+    $self->xenNoSwap();
+    $self->xenFS();
+    $self->xenDist();
+    $self->xenImage();
+    $self->xenKernel();
+    $self->xenInitrd();
+    $self->xenMirror();
+    
+    return 1;
+}
+
 sub configPath
 {
     my ($self) = @_;
@@ -511,9 +548,11 @@ sub _filePath # (file)
     my $data = $self->{dataPath};
     my $user = $self->{userPath};
 
-    my $userFile = "$user/$file";
-    if (-r $userFile) {
-        return $userFile;
+    if ($user) {
+        my $userFile = "$user/$file";
+        if (-r $userFile) {
+            return $userFile;
+        }
     }
     else {
         my $dataFile = "$data/$file";

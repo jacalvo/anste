@@ -39,6 +39,9 @@ sub daemonize {
     umask 0;
 }
 
+# Check the config file
+ANSTE::Manager::Config->instance()->check();
+
 #daemonize();
 threads->create('_startServer') or die "Can't create thread: $!";
 threads->create('_startAdminServer') or die "Can't create thread: $!";

@@ -46,7 +46,6 @@ my $video = '';
 my $help = 0;
 my $quiet = 0;
 
-
 GetOptions('create' => \$create,
            'deploy' => \$deploy,
            'test' => \$test,
@@ -55,7 +54,7 @@ GetOptions('create' => \$create,
            'video' => \$video,
            'quiet' => \$quiet,
            'help' => \$help) or pod2usage(2);
-
+           
 pod2usage(1) if $help;           
 
 if (none($create, $deploy, $test) == 1) {
@@ -69,10 +68,18 @@ my $config = ANSTE::Config->instance();
 if ($path) {
     $config->setUserPath($path);
 }
-
 if ($quiet) {
     $config->setVerbose(0);
 }
+if ($out) {
+    $config->setLogPath($out);
+}
+if ($video) {
+    $config->setSeleniumVideo(1);
+}
+
+# Check the config file for missing or malformed options
+$config->check();
 
 foreach my $file (@ARGV) {
     if ($create) {
@@ -82,12 +89,6 @@ foreach my $file (@ARGV) {
         deploy($file);
     }
     elsif ($test) {
-        if ($out) {
-            $config->setLogPath($out);
-        }
-        if ($video) {
-            $config->setSeleniumVideo(1);
-        }
         test($file);
     }
 }

@@ -57,6 +57,25 @@ sub instance
     return $singleton;
 }
 
+# Try to get all the options to validate them
+# A exception is thrown if there's an invalid option.
+sub check
+{
+    my ($self) = @_;
+
+    $self->clientPort();
+    $self->adminPort();
+    $self->mailAddress();
+    $self->mailSmtp();
+    $self->mailSubject();
+    $self->mailTemplate();
+    $self->mailTemplateFailed();
+    $self->wwwDir();
+    $self->wwwHost();
+
+    return 1;
+}
+
 sub configPath
 {
     my ($self) = @_;
