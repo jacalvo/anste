@@ -38,6 +38,17 @@ use constant SETUP_SCRIPT => 'setup.sh';
 
 my $lockMount : shared;
 
+# Constructor: new
+#
+#   Constructor for HostDeployer class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Deploy::HostDeployer> object.
+#
 sub new # (host) returns new HostDeployer object
 {
 	my ($class, $host) = @_;
@@ -73,6 +84,21 @@ sub new # (host) returns new HostDeployer object
 	return $self;
 }
 
+# Method: startDeployThread
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub startDeployThread # (ip)
 {
     my ($self, $ip) = @_;
@@ -96,11 +122,82 @@ sub startDeployThread # (ip)
     $self->{thread} = threads->create('_deploy', $self);
 }
 
+# Method: waitForFinish
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub waitForFinish
 {
     my ($self) = @_;
     
     $self->{thread}->join();
+}
+
+# Method: shutdown
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
+sub shutdown
+{
+    my ($self) = @_;
+
+    my $cmd = $self->{cmd};
+
+    my $host = $self->{host};
+    my $hostname = $host->name();
+
+    print "[$hostname] shutting down...\n";
+    $cmd->shutdown();
+}
+
+# Method: deleteImage
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
+sub deleteImage
+{
+    my ($self) = @_;
+
+    my $virtualizer = $self->{virtualizer};
+
+    my $host = $self->{host};
+    my $hostname = $host->name();
+
+    print "[$hostname] deleting image...\n";
+    $virtualizer->deleteImage($hostname);
 }
 
 sub _deploy
@@ -157,32 +254,6 @@ sub _deploy
     # Execute post-install scripts
     print "[$hostname] Executing post scripts...\n";
     $cmd->executeScripts($host->postScripts());
-}
-
-sub shutdown
-{
-    my ($self) = @_;
-
-    my $cmd = $self->{cmd};
-
-    my $host = $self->{host};
-    my $hostname = $host->name();
-
-    print "[$hostname] shutting down...\n";
-    $cmd->shutdown();
-}
-
-sub deleteImage
-{
-    my ($self) = @_;
-
-    my $virtualizer = $self->{virtualizer};
-
-    my $host = $self->{host};
-    my $hostname = $host->name();
-
-    print "[$hostname] deleting image...\n";
-    $virtualizer->deleteImage($hostname);
 }
 
 sub _copyBaseImage

@@ -34,6 +34,21 @@ my @DATA_PATHS = ('data', '/usr/share/anste', '/usr/local/share/anste');
 
 my $singleton;
 
+# Method: instance
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub instance 
 {
     my $class = shift;
@@ -65,6 +80,21 @@ sub instance
     return $singleton;
 }
 
+# Method: check
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub check
 {
     my ($self) = @_;
@@ -102,6 +132,21 @@ sub check
     return 1;
 }
 
+# Method: configPath
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub configPath
 {
     my ($self) = @_;
@@ -109,6 +154,21 @@ sub configPath
     return $self->{confPath};
 }
 
+# Method: setUserPath
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setUserPath # (path)
 {
     my ($self, $path) = @_;
@@ -123,6 +183,21 @@ sub setUserPath # (path)
     $self->{userPath} = $path;
 }
 
+# Method: system
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub system
 {
     my ($self) = @_;
@@ -137,6 +212,21 @@ sub system
     return $system;
 }
 
+# Method: virtualizer
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub virtualizer
 {
     my ($self) = @_;
@@ -151,6 +241,21 @@ sub virtualizer
     return $virtualizer;
 }
 
+# Method: verbose
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub verbose
 {
     my ($self) = @_;
@@ -166,6 +271,21 @@ sub verbose
     return $verbose;
 }
 
+# Method: setVerbose
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setVerbose # (value)
 {
     my ($self, $value) = @_;
@@ -181,6 +301,21 @@ sub setVerbose # (value)
     $self->{override}->{'global'}->{'verbose'} = $value;
 }
 
+# Method: imagePath
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub imagePath
 {
     my ($self) = @_;
@@ -196,6 +331,21 @@ sub imagePath
     return $imagePath;
 }
 
+# Method: logPath
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub logPath
 {
     my ($self) = @_;
@@ -211,6 +361,21 @@ sub logPath
     return $logPath;
 }
 
+# Method: setLogPath
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setLogPath # (logPath)
 {
     my ($self, $logPath) = @_;
@@ -225,6 +390,21 @@ sub setLogPath # (logPath)
     $self->{override}->{'paths'}->{'logs'} = $logPath;
 }
 
+# Method: deployPath
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub deployPath
 {
     my ($self) = @_;
@@ -241,6 +421,21 @@ sub deployPath
 }
 
 
+# Method: imageTypeFile
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub imageTypeFile
 {
     my ($self, $file) = @_;
@@ -248,6 +443,21 @@ sub imageTypeFile
     return $self->_filePath("images/$file");
 }
 
+# Method: scenarioFile
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub scenarioFile
 {
     my ($self, $file) = @_;
@@ -255,6 +465,21 @@ sub scenarioFile
     return $self->_filePath("scenarios/$file");
 }
 
+# Method: profileFile
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub profileFile
 {
     my ($self, $file) = @_;
@@ -262,6 +487,21 @@ sub profileFile
     return $self->_filePath("profiles/$file");
 }
 
+# Method: scriptFile
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub scriptFile
 {
     my ($self, $file) = @_;
@@ -270,6 +510,21 @@ sub scriptFile
 }
 
 
+# Method: testFile
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub testFile
 {
     my ($self, $file) = @_;
@@ -277,6 +532,21 @@ sub testFile
     return $self->_filePath("tests/$file");
 }
 
+# Method: templatePath
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub templatePath
 {
     my ($self) = @_;
@@ -292,6 +562,21 @@ sub templatePath
     return $templatePath;
 }
 
+# Method: anstedPort
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub anstedPort
 {
     my ($self) = @_;
@@ -307,6 +592,21 @@ sub anstedPort
     return $anstedPort;
 }
 
+# Method: masterPort
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub masterPort
 {
     my ($self) = @_;
@@ -322,6 +622,21 @@ sub masterPort
     return $masterPort;
 }
 
+# Method: firstAddress
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub firstAddress
 {
     my ($self) = @_;
@@ -337,6 +652,21 @@ sub firstAddress
     return $firstAddress;
 }
 
+# Method: gateway
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub gateway
 {
     my ($self) = @_;
@@ -352,6 +682,21 @@ sub gateway
     return $gateway;
 }
 
+# Method: natIface
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub natIface
 {
     my ($self) = @_;
@@ -362,6 +707,21 @@ sub natIface
     return $iface;
 }
 
+# Method: autoCreateImages
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub autoCreateImages
 {
     my ($self) = @_;
@@ -378,6 +738,21 @@ sub autoCreateImages
     return $auto;
 }
 
+# Method: reportWriter
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub reportWriter
 {
     my ($self) = @_;
@@ -387,6 +762,21 @@ sub reportWriter
     return $writer;
 }
 
+# Method: seleniumRCjar
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub seleniumRCjar
 {
     my ($self) = @_;
@@ -405,6 +795,21 @@ sub seleniumRCjar
     return $jar;
 }
 
+# Method: seleniumBrowser
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub seleniumBrowser
 {
     my ($self) = @_;
@@ -416,6 +821,21 @@ sub seleniumBrowser
     return $browser;
 }
 
+# Method: seleniumVideo
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub seleniumVideo
 {
     my ($self) = @_;
@@ -431,6 +851,21 @@ sub seleniumVideo
     return $video;
 }
 
+# Method: setSeleniumVideo
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setSeleniumVideo # (value)
 {
     my ($self, $value) = @_;
@@ -446,6 +881,21 @@ sub setSeleniumVideo # (value)
     $self->{override}->{'selenium'}->{'video'} = $value;
 }
 
+# Method: seleniumRecordAll
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub seleniumRecordAll
 {
     my ($self) = @_;
@@ -464,6 +914,21 @@ sub seleniumRecordAll
 # TODO: validate xen options (maybe they should be in separate class 
 # Virtualizer::XenConfig or similar)
 
+# Method: xenDir
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub xenDir
 {
     my ($self) = @_;
@@ -471,6 +936,21 @@ sub xenDir
     return $self->_getOption('xen-options', 'dir');
 }
 
+# Method: xenInstallMethod
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub xenInstallMethod
 {
     my ($self) = @_;
@@ -478,6 +958,21 @@ sub xenInstallMethod
     return $self->_getOption('xen-options', 'install-method');
 }
 
+# Method: xenSize
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub xenSize
 {
     my ($self) = @_;
@@ -485,6 +980,21 @@ sub xenSize
     return $self->_getOption('xen-options', 'size');
 }
 
+# Method: xenMemory
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub xenMemory
 {
     my ($self) = @_;
@@ -492,6 +1002,21 @@ sub xenMemory
     return $self->_getOption('xen-options', 'memory');
 }
 
+# Method: xenNoSwap
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub xenNoSwap
 {
     my ($self) = @_;
@@ -499,6 +1024,21 @@ sub xenNoSwap
     return $self->_getOption('xen-options', 'noswap');
 }
 
+# Method: xenFS
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub xenFS
 {
     my ($self) = @_;
@@ -506,6 +1046,21 @@ sub xenFS
     return $self->_getOption('xen-options', 'fs');
 }
 
+# Method: xenDist
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub xenDist
 {
     my ($self) = @_;
@@ -513,6 +1068,21 @@ sub xenDist
     return $self->_getOption('xen-options', 'dist');
 }
 
+# Method: xenImage
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub xenImage
 {
     my ($self) = @_;
@@ -520,6 +1090,21 @@ sub xenImage
     return $self->_getOption('xen-options', 'image');
 }
 
+# Method: xenKernel
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub xenKernel
 {
     my ($self) = @_;
@@ -527,6 +1112,21 @@ sub xenKernel
     return $self->_getOption('xen-options', 'kernel');
 }
 
+# Method: xenInitrd
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub xenInitrd
 {
     my ($self) = @_;
@@ -534,6 +1134,21 @@ sub xenInitrd
     return $self->_getOption('xen-options', 'initrd');
 }
 
+# Method: xenMirror
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub xenMirror
 {
     my ($self) = @_;

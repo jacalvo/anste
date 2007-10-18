@@ -26,6 +26,17 @@ use SOAP::Lite; # +trace => 'debug';
 
 use constant URI => 'urn:ANSTE::Comm::SlaveServer';
 
+# Constructor: new
+#
+#   Constructor for MasterClient class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Comm:MasterClient> object.
+#
 sub new
 {
     my ($class) = @_;

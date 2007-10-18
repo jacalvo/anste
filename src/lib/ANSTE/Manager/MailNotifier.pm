@@ -25,6 +25,17 @@ use ANSTE::Manager::Config;
 use Mail::Sender;
 use Text::Template;
 
+# Constructor: new
+#
+#   Constructor for MailNotifier class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Manager::MailNotifier> object.
+#
 sub new # () returns new MailNotifier object
 {
 	my ($class) = @_;
@@ -35,6 +46,21 @@ sub new # () returns new MailNotifier object
 	return $self;
 }
 
+# Method: sendNotify
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub sendNotify # (job, result)
 {    
     my ($self, $job, $result) = @_;

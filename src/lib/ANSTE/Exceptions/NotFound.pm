@@ -17,6 +17,17 @@ package ANSTE::Exceptions::NotFound;
 
 use base 'ANSTE::Exceptions::Base';
 
+# Constructor: new
+#
+#   Constructor for NotFound class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Exceptions::NotFound> object.
+#
 sub new # (what, value)
 {
 	my ($class, $what, $value) = @_;
@@ -26,4 +37,5 @@ sub new # (what, value)
 	bless ($self, $class);
 	return $self;
 }
+
 1;

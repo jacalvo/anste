@@ -39,6 +39,21 @@ my %executed : shared;
 
 my $returnValue : shared;
 
+# Method: instance
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub instance 
 {
     my $class = shift;
@@ -51,6 +66,21 @@ sub instance
     return $singleton;
 }
 
+# Method: hostReady
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub hostReady # (host)
 {
     my ($self, $host) = @_; 
@@ -59,6 +89,21 @@ sub hostReady # (host)
     cond_signal($lock);
 }
 
+# Method: executionFinished
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub executionFinished # (host, retValue)
 {
     my ($self, $host, $retValue) = @_; 
@@ -69,6 +114,21 @@ sub executionFinished # (host, retValue)
     cond_signal($lock);
 }
 
+# Method: waitForReady
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub waitForReady # (host)
 {
     my ($self, $host) = @_;
@@ -83,6 +143,21 @@ sub waitForReady # (host)
     return(1);
 }
 
+# Method: waitForExecution
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub waitForExecution # (host) returns retValue
 {
     my ($self, $host) = @_;
@@ -97,6 +172,21 @@ sub waitForExecution # (host) returns retValue
     return $returnValue;
 }
 
+# Method: waitForAnyExecution
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub waitForAnyExecution # returns retValue
 {
     my ($self) = @_;

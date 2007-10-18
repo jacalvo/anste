@@ -25,6 +25,17 @@ use SOAP::Lite; # +trace => 'debug';
 
 use constant URI => 'urn:ANSTE::Manager::AdminServer';
 
+# Constructor: new
+#
+#   Constructor for AdminClient class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Manager::AdminClient> object.
+#
 sub new
 {
     my ($class) = @_;
@@ -37,6 +48,21 @@ sub new
     return $self;
 }
 
+# Method: connect
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub connect	# (host) 
 {
     my ($self, $host) = @_;
@@ -49,6 +75,21 @@ sub connect	# (host)
                                    endpoint => $host); 
 }
 
+# Method: connected
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub connected # returns boolean
 {
     my ($self) = @_;
@@ -56,6 +97,21 @@ sub connected # returns boolean
     return defined($self->{soap});
 }
 
+# Method: list
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub list # returns queue string
 {
     my ($self) = @_;
@@ -70,6 +126,21 @@ sub list # returns queue string
     return($result);
 }
 
+# Method: delete
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub delete # (jobID) returns boolean
 {
     my ($self, $jobID) = @_;

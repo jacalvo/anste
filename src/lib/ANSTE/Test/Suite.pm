@@ -23,6 +23,17 @@ use ANSTE::Exceptions::MissingArgument;
 
 use XML::DOM;
 
+# Constructor: new
+#
+#   Constructor for Suite class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Test::Suite> object.
+#
 sub new # (dir) returns new TestSuite object
 {
 	my ($class, $dir) = @_;
@@ -39,6 +50,21 @@ sub new # (dir) returns new TestSuite object
 	return $self;
 }
 
+# Method: name
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub name # returns name string
 {
 	my ($self) = @_;
@@ -46,6 +72,21 @@ sub name # returns name string
 	return $self->{name};
 }
 
+# Method: setName
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setName # name string
 {
 	my ($self, $name) = @_;	
@@ -56,6 +97,21 @@ sub setName # name string
 	$self->{name} = $name;
 }
 
+# Method: desc
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub desc # returns desc string
 {
 	my ($self) = @_;
@@ -63,6 +119,21 @@ sub desc # returns desc string
 	return $self->{desc};
 }
 
+# Method: setDesc
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setDesc # desc string
 {
 	my ($self, $desc) = @_;	
@@ -73,6 +144,21 @@ sub setDesc # desc string
 	$self->{desc} = $desc;
 }
 
+# Method: dir
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub dir # returns dir string
 {
 	my ($self) = @_;
@@ -80,6 +166,21 @@ sub dir # returns dir string
 	return $self->{dir};
 }
 
+# Method: setDir
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setDir # dir string
 {
 	my ($self, $dir) = @_;	
@@ -90,6 +191,21 @@ sub setDir # dir string
 	$self->{dir} = $dir;
 }
 
+# Method: scenario
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub scenario # returns scenario string
 {
 	my ($self) = @_;
@@ -97,6 +213,21 @@ sub scenario # returns scenario string
 	return $self->{scenario};
 }
 
+# Method: setScenario
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setScenario # scenario string
 {
 	my ($self, $scenario) = @_;	
@@ -107,6 +238,21 @@ sub setScenario # scenario string
 	$self->{scenario} = $scenario;
 }
 
+# Method: tests
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub tests # return tests list ref
 {
     my ($self) = @_;
@@ -114,6 +260,21 @@ sub tests # return tests list ref
     $self->{tests};
 }
 
+# Method: addTest
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub addTest # (test)
 {
     my ($self, $test) = @_;
@@ -124,6 +285,21 @@ sub addTest # (test)
     push(@{$self->{tests}}, $test);
 }
 
+# Method: loadFromDir
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub loadFromDir # (dirname)
 {
 	my ($self, $dirname) = @_;

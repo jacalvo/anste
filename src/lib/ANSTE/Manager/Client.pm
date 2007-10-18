@@ -24,6 +24,17 @@ use SOAP::Lite; # +trace => 'debug';
 
 use constant URI => 'urn:ANSTE::Manager::Server';
 
+# Constructor: new
+#
+#   Constructor for Client class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Manager::Client> object.
+#
 sub new
 {
     my ($class) = @_;
@@ -36,6 +47,21 @@ sub new
     return $self;
 }
 
+# Method: connect
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub connect	# (host) 
 {
     my ($self, $host) = @_;
@@ -48,6 +74,21 @@ sub connect	# (host)
                                    endpoint => $host); 
 }
 
+# Method: connected
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub connected # returns boolean
 {
     my ($self) = @_;
@@ -55,11 +96,25 @@ sub connected # returns boolean
     return defined($self->{soap});
 }
 
+# Method: addJob
+#
+#
+#
 # Parameters:
+#
 # user
 # test
 # mail - optional
 # path - optional
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub addJob # (params) returns boolean
 {
     my ($self, %params) = @_;

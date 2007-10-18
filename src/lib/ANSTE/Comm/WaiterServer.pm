@@ -26,6 +26,17 @@ use SOAP::Transport::HTTP;
 
 my $thread = undef;
 
+# Constructor: new
+#
+#   Constructor for WaiterServer class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Comm::WaiterServer> object.
+#
 sub new # returns new WaiterServer object
 {
 	my ($class) = @_;
@@ -36,6 +47,21 @@ sub new # returns new WaiterServer object
 	return $self;
 }
 
+# Method: startThread
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub startThread # returns thread object
 {
     my ($self) = @_;

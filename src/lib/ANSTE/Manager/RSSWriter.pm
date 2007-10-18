@@ -23,6 +23,17 @@ use ANSTE::Manager::Job;
 
 use XML::RSS;
 
+# Constructor: new
+#
+#   Constructor for RSSWriter class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Manager::RSSWriter> object.
+#
 sub new # () returns new RSSWriter object
 {
 	my ($class) = @_;
@@ -33,6 +44,21 @@ sub new # () returns new RSSWriter object
 	return $self;
 }
 
+# Method: writeChannel
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeChannel # (user)
 {
     my ($self, $user) = @_;
@@ -54,6 +80,21 @@ sub writeChannel # (user)
     }
 }
 
+# Method: writeItem
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeItem # (job, result)
 {
     my ($self, $job, $result) = @_;

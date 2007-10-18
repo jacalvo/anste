@@ -23,6 +23,8 @@ use warnings;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::NotImplemented;
 
+# TODO: Copy NaturalDocs comments from HTMLWriter :)
+
 sub writeHeader 
 {
     my ($self) = @_;

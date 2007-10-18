@@ -231,7 +231,20 @@ sub installVars # return strings
 
 
 # Method: networkConfig
-# FIXME documentation
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub networkConfig # (network) returns string
 {
     my ($self, $network) = @_;
@@ -259,7 +272,20 @@ sub networkConfig # (network) returns string
 }
 
 # Method: initialNetworkConfig
-# FIXME documentation
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub initialNetworkConfig # (iface) returns string
 {
     my ($self, $iface) = @_;
@@ -283,7 +309,20 @@ sub initialNetworkConfig # (iface) returns string
 }
 
 # Method: hostnameConfig
-# FIXME documentation
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub hostnameConfig # (hostname) returns string
 {
     my ($self, $hostname) = @_;
@@ -295,7 +334,20 @@ sub hostnameConfig # (hostname) returns string
 }
 
 # Method: hostsConfig
-# FIXME documentation
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub hostsConfig # (hostname) returns string
 {
     my ($self, $hostname) = @_;
@@ -322,7 +374,20 @@ sub hostsConfig # (hostname) returns string
 }
 
 # Method: storeMasterAddress
-# FIXME documentation
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub storeMasterAddress # (address) returns string
 {
     my ($self, $address) = @_;
@@ -334,7 +399,20 @@ sub storeMasterAddress # (address) returns string
 }
 
 # Method: copyToMountCommand
-# FIXME documentation
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub copyToMountCommand # (orig, dest) returns string
 {
     my ($self, $orig, $dest) = @_;
@@ -348,7 +426,20 @@ sub copyToMountCommand # (orig, dest) returns string
 }
 
 # Method: createMountDirCommand
-# FIXME documentation
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub createMountDirCommand # (path) returns string
 {
     my ($self, $path) = @_;
@@ -360,7 +451,20 @@ sub createMountDirCommand # (path) returns string
 }
 
 # Method: firewallDefaultRules
-# FIXME documentation
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub firewallDefaultRules # returns string
 {
     my ($self) = @_;
@@ -376,7 +480,20 @@ sub firewallDefaultRules # returns string
 }
 
 # Method: enableNAT
-# FIXME: documentation
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub enableNAT # (iface, sourceAddr)
 {
     my ($self, $iface, $sourceAddr) = @_;
@@ -397,7 +514,20 @@ sub enableNAT # (iface, sourceAddr)
 }
 
 # Method: disableNAT
-# FIXME: documentation
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub disableNAT # (iface, sourceAddr)
 {
     my ($self, $iface, $sourceAddr) = @_;
@@ -412,7 +542,20 @@ sub disableNAT # (iface, sourceAddr)
 }
 
 # Method: executeSelenium
-# FIXME: documentation
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub executeSelenium # (%params)
 {
     my ($self, %params) = @_;
@@ -441,10 +584,24 @@ sub executeSelenium # (%params)
     $self->execute($cmd);
 }
 
+# Method: startVideoRecording
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub startVideoRecording # (filename)
 {
     my ($self, $filename) = @_;
-    print "TRYING TO RECORD SHIT\n";
 
     if (not ANSTE::Validate::fileWritable($filename)) {
         throw ANSTE::Exceptions::InvalidFile($filename);
@@ -466,6 +623,21 @@ sub startVideoRecording # (filename)
     }
 }
 
+# Method: stopVideoRecording
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub stopVideoRecording
 {
     my ($self) = @_;

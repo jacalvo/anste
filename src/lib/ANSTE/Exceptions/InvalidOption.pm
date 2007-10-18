@@ -17,6 +17,17 @@ package ANSTE::Exceptions::InvalidOption;
 
 use base 'ANSTE::Exceptions::Base';
 
+# Constructor: new
+#
+#   Constructor for InvalidOption class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Exceptions::InvalidOption> object.
+#
 sub new # (option, value)
 {
 	my ($class, $option, $value) = @_;

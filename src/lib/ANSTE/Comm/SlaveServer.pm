@@ -22,6 +22,21 @@ use File::Basename;
 
 my $DIR = '/tmp';
 
+# Method: put
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub put	# (file, content)
 {
     my ($self, $file, $content) = @_;
@@ -37,6 +52,21 @@ sub put	# (file, content)
     }
 }
 
+# Method: get
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub get	# (file)
 {
     my ($self, $file) = @_;
@@ -52,6 +82,21 @@ sub get	# (file)
     }
 }
 
+# Method: exec
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub exec # (file, log?)
 {
     my ($self, $file, $log) = @_;
@@ -82,6 +127,21 @@ sub exec # (file, log?)
     }
 }
 
+# Method: del
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub del	# (file)
 {
     my ($self, $file) = @_;

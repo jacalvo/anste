@@ -22,6 +22,21 @@ use ANSTE::Manager::JobWaiter;
 
 use FreezeThaw qw(thaw);
 
+# Method: list
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub list # returns job queue
 {
     my ($self) = @_;
@@ -45,6 +60,21 @@ sub list # returns job queue
     return $list ? $list : "No jobs.\n";
 }
 
+# Method: delete
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub delete # (id)
 {
     my ($self, $id) = @_;

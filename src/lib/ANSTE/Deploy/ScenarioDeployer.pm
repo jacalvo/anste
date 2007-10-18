@@ -25,6 +25,17 @@ use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 
+# Constructor: new
+#
+#   Constructor for ScenarioDeployer class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Deploy::ScenarioDeployer> object.
+#
 sub new # (scenario) returns new ScenarioDeployer object
 {
 	my ($class, $scenario) = @_;
@@ -46,6 +57,21 @@ sub new # (scenario) returns new ScenarioDeployer object
 	return $self;
 }
 
+# Method: deploy
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub deploy # returns hash ref with the ip of each host 
 {
     my ($self) = @_;
@@ -85,6 +111,21 @@ sub deploy # returns hash ref with the ip of each host
     return $hostIP; 
 }
 
+# Method: shutdown
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub shutdown
 {
     my ($self) = @_;

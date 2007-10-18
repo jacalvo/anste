@@ -24,6 +24,17 @@ use ANSTE::Scenario::Network;
 use ANSTE::Scenario::NetworkInterface;
 use ANSTE::Exceptions::MissingArgument;
 
+# Constructor: new
+#
+#   Constructor for Image class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Image::Image> object.
+#
 sub new # returns new Image object
 {
 	my ($class, %params) = @_;
@@ -47,6 +58,21 @@ sub new # returns new Image object
 	return $self;
 }
 
+# Method: ip
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub ip # returns ip string
 {
 	my ($self) = @_;
@@ -54,6 +80,21 @@ sub ip # returns ip string
 	return $self->{ip};
 }
 
+# Method: setIp
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setIp # ip string
 {
 	my ($self, $ip) = @_;
@@ -64,6 +105,21 @@ sub setIp # ip string
 	$self->{ip} = $ip;
 }
 
+# Method: memory
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub memory # returns memory string 
 {
 	my ($self) = shift;
@@ -71,6 +127,21 @@ sub memory # returns memory string
 	return $self->{memory};
 }
 
+# Method: setMemory
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setMemory # (memory)
 {
 	my ($self, $memory) = @_;
@@ -81,6 +152,21 @@ sub setMemory # (memory)
 	$self->{memory} = $memory;
 }
 
+# Method: network
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub network # returns Network object
 {
 	my ($self) = @_;
@@ -98,6 +184,21 @@ sub setNetwork # (network)
 	$self->{network} = $network;
 }
 
+# Method: commInterface
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub commInterface 
 {
     my ($self) = @_;

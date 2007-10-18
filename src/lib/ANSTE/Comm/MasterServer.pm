@@ -20,6 +20,21 @@ use ANSTE::Comm::HostWaiter;
 use strict;
 use warnings;
 
+# Method: hostReady
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub hostReady # (host) 
 {
     my ($self, $host) = @_;
@@ -30,6 +45,21 @@ sub hostReady # (host)
     return 'OK';
 }
 
+# Method: executionFinished
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub executionFinished # (host, retValue) 
 {
     my ($self, $host, $retValue) = @_;

@@ -23,6 +23,21 @@ use ANSTE::Manager::JobWaiter;
 use ANSTE::Manager::RSSWriter;
 use ANSTE::Manager::Config;
 
+# Method: addJob
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub addJob # (user, test, mail, path)
 {
     my ($self, $user, $test, $mail, $path) = @_;

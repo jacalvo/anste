@@ -28,12 +28,15 @@ use constant IFACE_TYPE_STATIC => 0;
 use constant IFACE_TYPE_DHCP => 1;
 
 # Constructor: new
-# 
-#       Construct a new NetworkInterface class.
-# 
+#
+#   Constructor for NetworkInterface class.
+#
+# Parameters:
+#
+#
 # Returns:
 #
-#       A recently created Scenario::NetworkInterface object
+#   A recently created <ANSTE::Scenario::NetworkInterface> object.
 #
 sub new # returns new NetworkInterface object
 {
@@ -51,6 +54,21 @@ sub new # returns new NetworkInterface object
 	return $self;
 }
 
+# Method: name
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub name # returns interface name string
 {
 	my ($self) = @_;
@@ -58,6 +76,21 @@ sub name # returns interface name string
 	return $self->{name};
 }
 
+# Method: setName
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setName # (name) 
 {
 	my ($self, $name) = @_;	
@@ -68,6 +101,21 @@ sub setName # (name)
 	$self->{name} = $name;
 }
 
+# Method: type
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub type # returns interface type
 {
 	my ($self) = @_;
@@ -75,6 +123,21 @@ sub type # returns interface type
 	return $self->{type};
 }
 
+# Method: setTypeStatic
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setTypeStatic
 {
 	my ($self) = @_;
@@ -82,6 +145,21 @@ sub setTypeStatic
 	$self->{type} = IFACE_TYPE_STATIC;
 }
 
+# Method: setTypeDHCP
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setTypeDHCP
 {
 	my ($self) = @_;
@@ -126,6 +204,21 @@ sub setAddress # address string
 	$self->{address} = $address;
 }
 
+# Method: netmask
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub netmask # returns netmask string
 {
 	my ($self) = @_;
@@ -133,6 +226,21 @@ sub netmask # returns netmask string
 	return $self->{netmask};
 }
 
+# Method: setNetmask
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setNetmask # netmask string
 {
 	my ($self, $netmask) = @_;	
@@ -147,6 +255,21 @@ sub setNetmask # netmask string
 	$self->{netmask} = $netmask;
 }
 
+# Method: gateway
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub gateway # returns gateway string
 {
 	my ($self) = @_;
@@ -154,6 +277,21 @@ sub gateway # returns gateway string
 	return $self->{gateway};
 }
 
+# Method: setGateway
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setGateway # gateway string
 {
 	my ($self, $gateway) = @_;	
@@ -168,6 +306,21 @@ sub setGateway # gateway string
 	$self->{gateway} = $gateway;
 }
 
+# Method: removeGateway
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub removeGateway
 {
     my ($self) = @_;
@@ -175,6 +328,21 @@ sub removeGateway
     $self->{gateway} = '';
 }
 
+# Method: load
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub load # (node)
 {
 	my ($self, $node) = @_;

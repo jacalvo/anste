@@ -26,6 +26,17 @@ use ANSTE::Exceptions::InvalidType;
 
 use Error qw(:try);
 
+# Constructor: new
+#
+#   Constructor for Creator class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Image::Creator> object.
+#
 sub new # (image) returns new ImageCreator object
 {
 	my ($class, $image) = @_;
@@ -46,6 +57,21 @@ sub new # (image) returns new ImageCreator object
 	return $self;
 }
 
+# Method: createImage
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub createImage
 {
     my ($self) = @_;

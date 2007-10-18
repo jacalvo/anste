@@ -184,8 +184,8 @@ sub resizeImage # (image, size)
 
 # Method: updatePackagesCommand
 #
-#   Overriden method that returns the Debian command
-#   to update packages database.
+#   Override this method to return the system-specific
+#   command to udpate packages database.
 #
 # Returns:
 #
@@ -200,10 +200,28 @@ sub updatePackagesCommand # returns string
     throw ANSTE::Exceptions::NotImplemented();
 }
 
-# Method: updatePackagesCommand
+# Method: enableInterfacesCommand
 #
-#   Overriden method that returns the Debian command
-#   to clean packages cache.
+#   Override this method to return the system-specific
+#   command to enable network interfaces.
+#
+# Returns:
+#
+#   string - command string
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub enableInterfacesCommand # returns string
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: cleanPackagesCommand
+#
+#   Override this method to return the system-specific
+#   command to clean the packages cache.
 #
 # Returns:
 #
@@ -310,6 +328,146 @@ sub storeMasterAddress # (address) returns string
 #   throws <ANSTE::Exceptions::NotImplemented> 
 #
 sub copyToMountCommand # (orig, dest) returns string
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: createMountDirCommand
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
+sub createMountDirCommand # (path) returns string
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: firewallDefaultRules
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
+sub firewallDefaultRules # returns string
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: enableNAT
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
+sub enableNAT # (iface, sourceAddr)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: disableNAT
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
+sub disableNAT # (iface, sourceAddr)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: executeSelenium
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
+sub executeSelenium # (%params)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: startVideoRecording
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
+sub startVideoRecording # (filename)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: stopVideoRecording
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
+sub stopVideoRecording
 {
     throw ANSTE::Exceptions::NotImplemented();
 }

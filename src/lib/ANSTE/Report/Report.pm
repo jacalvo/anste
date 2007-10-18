@@ -22,6 +22,17 @@ use ANSTE::Report::SuiteResult;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 
+# Constructor: new
+#
+#   Constructor for Report class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Report::Report> object.
+#
 sub new # returns new Report object
 {
 	my ($class) = @_;
@@ -34,6 +45,21 @@ sub new # returns new Report object
 	return $self;
 }
 
+# Method: add
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub add # (suite)
 {
     my ($self, $suite) = @_;
@@ -49,6 +75,21 @@ sub add # (suite)
     push(@{$self->{suites}}, $suite);
 }
 
+# Method: suites
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub suites # returns list ref
 {
     my ($self) = @_;

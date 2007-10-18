@@ -23,6 +23,21 @@ use warnings;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::NotImplemented;
 
+# Method: writeHeader
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeHeader 
 {
     my ($self) = @_;
@@ -37,6 +52,21 @@ sub writeHeader
     print $file "<h1>ANSTE Test report</h1>\n";
 }    
 
+# Method: writeEnd
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeEnd
 {
     my ($self) = @_;
@@ -47,6 +77,21 @@ sub writeEnd
     print $file "</html>\n";
 }    
 
+# Method: writeSuiteHeader
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeSuiteHeader # (name, desc)
 {
     my ($self, $name, $desc) = @_;
@@ -63,6 +108,21 @@ sub writeSuiteHeader # (name, desc)
     print $file "</tr></th>\n";
 }    
 
+# Method: writeSuiteEnd
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeSuiteEnd
 {
     my ($self) = @_;
@@ -72,13 +132,26 @@ sub writeSuiteEnd
     print $file "</table>\n";
 }    
 
-# TODO: named parameters
+# Method: 
+#
+#
+#
 # Parameters:
+#
 # name
 # desc
 # value
 # log
 # video
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeTestResult # (%params)
 {
     my ($self, %params) = @_;

@@ -24,6 +24,17 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
 
+# Constructor: new
+#
+#   Constructor for BaseImageSetup class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::ScriptGen::BaseImageSetup> object.
+#
 sub new # (image) returns new BaseScriptGen object
 {
 	my ($class, $image) = @_;
@@ -50,6 +61,21 @@ sub new # (image) returns new BaseScriptGen object
 	return $self;
 }
 
+# Method: writeScript
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeScript # (file)
 {
 	my ($self, $file) = @_;

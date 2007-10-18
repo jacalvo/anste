@@ -25,6 +25,17 @@ use ANSTE::Exceptions::InvalidFile;
 
 use XML::DOM;
 
+# Constructor: new
+#
+#   Constructor for BaseImage class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Scenario::BaseImage> object.
+#
 sub new # returns new BaseImage object
 {
 	my $class = shift;
@@ -43,6 +54,21 @@ sub new # returns new BaseImage object
 	return $self;
 }
 
+# Method: name
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub name # returns name string
 {
 	my ($self) = @_;
@@ -50,6 +76,21 @@ sub name # returns name string
 	return $self->{name};
 }
 
+# Method: setName
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setName # name string
 {
 	my ($self, $name) = @_;	
@@ -60,6 +101,21 @@ sub setName # name string
 	$self->{name} = $name;
 }
 
+# Method: desc
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub desc # returns desc string
 {
 	my ($self) = @_;
@@ -67,6 +123,21 @@ sub desc # returns desc string
 	return $self->{desc};
 }
 
+# Method: setDesc
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setDesc # desc string
 {
 	my ($self, $desc) = @_;	
@@ -77,6 +148,21 @@ sub setDesc # desc string
 	$self->{desc} = $desc;
 }
 
+# Method: memory
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub memory # returns memory string
 {
 	my ($self) = @_;
@@ -84,6 +170,21 @@ sub memory # returns memory string
 	return $self->{memory};
 }
 
+# Method: setMemory
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setMemory # memory string
 {
 	my ($self, $memory) = @_;	
@@ -94,6 +195,21 @@ sub setMemory # memory string
 	$self->{memory} = $memory;
 }
 
+# Method: size
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub size # returns size string
 {
 	my ($self) = @_;
@@ -101,6 +217,21 @@ sub size # returns size string
 	return $self->{size};
 }
 
+# Method: setSize
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setSize # size string
 {
 	my ($self, $size) = @_;	
@@ -111,6 +242,21 @@ sub setSize # size string
 	$self->{size} = $size;
 }
 
+# Method: packages
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub packages # returns Packages object
 {
 	my ($self) = @_;
@@ -118,6 +264,21 @@ sub packages # returns Packages object
 	return $self->{packages};
 }
 
+# Method: setPackages
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setPackages # (packages)
 {
 	my ($self, $packages) = @_;
@@ -128,6 +289,21 @@ sub setPackages # (packages)
 	$self->{packages} = $packages;
 }
 
+# Method: preScripts
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub preScripts # returns list ref
 {
     my ($self) = @_;
@@ -135,6 +311,21 @@ sub preScripts # returns list ref
     return $self->{'pre-scripts'};
 }
 
+# Method: postScripts
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub postScripts # returns list ref
 {
     my ($self) = @_;
@@ -142,6 +333,21 @@ sub postScripts # returns list ref
     return $self->{'post-scripts'};
 }
 
+# Method: loadFromFile
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub loadFromFile # (filename)
 {
 	my ($self, $filename) = @_;

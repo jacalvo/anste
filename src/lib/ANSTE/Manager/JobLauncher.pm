@@ -24,6 +24,17 @@ use ANSTE::Manager::RSSWriter;
 use ANSTE::Manager::Config;
 use ANSTE::Exceptions::MissingArgument;
 
+# Constructor: new
+#
+#   Constructor for JobLauncher class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Manager::JobLauncher> object.
+#
 sub new # () returns new JobLauncher object
 {
 	my ($class) = @_;
@@ -34,6 +45,21 @@ sub new # () returns new JobLauncher object
 	return $self;
 }
 
+# Method: waitAndLaunch
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub waitAndLaunch
 {
 	my ($self) = @_;

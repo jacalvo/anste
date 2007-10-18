@@ -25,6 +25,17 @@ use constant DEFAULT_PATH => 'anste';
 
 my $id = 0;
 
+# Constructor: new
+#
+#   Constructor for Job class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Manager::Job> object.
+#
 sub new # (user, test) returns new Job object
 {
 	my ($class, $user, $test) = @_;
@@ -43,6 +54,21 @@ sub new # (user, test) returns new Job object
 	return $self;
 }
 
+# Method: id
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub id # returns id
 {
 	my ($self) = @_;
@@ -50,6 +76,21 @@ sub id # returns id
 	return $self->{id};
 }
 
+# Method: user
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub user # returns user string
 {
 	my ($self) = @_;
@@ -57,6 +98,21 @@ sub user # returns user string
 	return $self->{user};
 }
 
+# Method: setUser
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setUser # (user)
 {
 	my ($self, $user) = @_;	
@@ -67,6 +123,21 @@ sub setUser # (user)
 	$self->{user} = $user;
 }
 
+# Method: test
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub test # returns test string
 {
 	my ($self) = @_;
@@ -74,6 +145,21 @@ sub test # returns test string
 	return $self->{test};
 }
 
+# Method: setTest
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setTest # test string
 {
 	my ($self, $test) = @_;	
@@ -84,6 +170,21 @@ sub setTest # test string
 	$self->{test} = $test;
 }
 
+# Method: email
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub email # returns email string
 {
 	my ($self) = @_;
@@ -91,6 +192,21 @@ sub email # returns email string
 	return $self->{email};
 }
 
+# Method: setEmail
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setEmail # email string
 {
 	my ($self, $email) = @_;	
@@ -101,6 +217,21 @@ sub setEmail # email string
 	$self->{email} = $email;
 }
 
+# Method: path
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub path # returns path string
 {
 	my ($self) = @_;
@@ -108,6 +239,21 @@ sub path # returns path string
 	return $self->{path};
 }
 
+# Method: setPath
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setPath # path string
 {
 	my ($self, $path) = @_;	
@@ -118,6 +264,21 @@ sub setPath # path string
 	$self->{path} = $path;
 }
 
+# Method: failed
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub failed # returns boolean
 {
 	my ($self) = @_;
@@ -125,6 +286,21 @@ sub failed # returns boolean
 	return $self->{failed};
 }
 
+# Method: setFailed
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setFailed
 {
 	my ($self) = @_;	
@@ -132,6 +308,21 @@ sub setFailed
 	$self->{failed} = 1 
 }
 
+# Method: toStr
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub toStr # returns string
 {
     my ($self) = @_;

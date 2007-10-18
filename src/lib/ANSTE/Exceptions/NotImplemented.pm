@@ -18,6 +18,17 @@ package ANSTE::Exceptions::NotImplemented;
 
 use base 'ANSTE::Exceptions::Base';
 
+# Constructor: new
+#
+#   Constructor for NotImplemented class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Exceptions::NotImplemented> object.
+#
 sub new 
 {
 	my ($class) = @_;

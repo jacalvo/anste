@@ -25,6 +25,17 @@ use Net::Domain qw(hostname);
 
 use constant URI => "urn:ANSTE::Comm::MasterServer";
 
+# Constructor: new
+#
+#   Constructor for SlaveClient class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Comm::SlaveClient> object.
+#
 sub new
 {
     my ($class) = @_;

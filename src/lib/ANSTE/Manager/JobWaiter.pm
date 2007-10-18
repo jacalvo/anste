@@ -33,6 +33,21 @@ my $lock : shared;
 my @queue : shared;
 my $current : shared;
 
+# Method: instance
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub instance 
 {
     my $class = shift;
@@ -45,6 +60,21 @@ sub instance
     return $singleton;
 }
 
+# Method: jobReceived
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub jobReceived # (job)
 {
     my ($self, $job) = @_; 
@@ -58,6 +88,21 @@ sub jobReceived # (job)
     cond_signal($lock);
 }
 
+# Method: deleteJob
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub deleteJob # (jobID) returns boolean
 {
     my ($self, $jobID) = @_;

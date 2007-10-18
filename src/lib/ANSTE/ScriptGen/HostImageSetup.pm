@@ -24,6 +24,17 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
 
+# Constructor: new
+#
+#   Constructor for HostImageSetup class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::ScriptGen::HostImageSetup> object.
+#
 sub new # (host) returns new HostImageSetup object
 {
 	my ($class, $host) = @_;
@@ -50,6 +61,21 @@ sub new # (host) returns new HostImageSetup object
 	return $self;
 }
 
+# Method: writeScript
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeScript # (file)
 {
 	my ($self, $file) = @_;

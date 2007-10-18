@@ -30,6 +30,17 @@ use ANSTE::Exceptions::InvalidFile;
 
 use Error qw(:try);
 
+# Constructor: new
+#
+#   Constructor for Runner class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Test::Runner> object.
+#
 sub new # returns new Runner object
 {
 	my ($class) = @_;
@@ -49,6 +60,21 @@ sub new # returns new Runner object
 	return $self;
 }
 
+# Method: runDir
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub runDir # (suites)
 {
     my ($self, $suites) = @_;
@@ -74,6 +100,21 @@ sub runDir # (suites)
     }
 }
 
+# Method: runSuite
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub runSuite # (suite)
 {
     my ($self, $suite) = @_;
@@ -101,6 +142,21 @@ sub runSuite # (suite)
     print "Finished testing of suite '$suiteName'.\n\n";
 }
 
+# Method: report
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub report # returns report object
 {
     my ($self) = @_;

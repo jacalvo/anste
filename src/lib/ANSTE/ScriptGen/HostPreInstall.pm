@@ -24,6 +24,17 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
 
+# Constructor: new
+#
+#   Constructor for HostPreInstall class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::ScriptGen::HostPreInstall> object.
+#
 sub new # (image) returns new HostInstallGen object
 {
 	my ($class, $image) = @_;
@@ -51,6 +62,21 @@ sub new # (image) returns new HostInstallGen object
 	return $self;
 }
 
+# Method: writeScript
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeScript # (file)
 {
 	my ($self, $file) = @_;

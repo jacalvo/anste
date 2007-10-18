@@ -22,6 +22,17 @@ use ANSTE::Report::Report;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::NotImplemented;
 
+# Constructor: new
+#
+#   Constructor for Writer class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Report::Writer> object.
+#
 sub new # (report) returns new Write object
 {
 	my ($class, $report) = @_;
@@ -38,6 +49,21 @@ sub new # (report) returns new Write object
 	return $self;
 }
 
+# Method: write
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub write # (file) 
 {
     my ($self, $file) = @_;
@@ -67,32 +93,106 @@ sub write # (file)
     $self->writeEnd();
 }
 
+# Method: writeHeader
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeHeader
 {
     throw ANSTE::Exceptions::NotImplemented();
 }    
 
+# Method: writeEnd
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeEnd
 {
     throw ANSTE::Exceptions::NotImplemented();
 }    
 
+# Method: writeSuiteHeader
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeSuiteHeader # (name, desc)
 {
     throw ANSTE::Exceptions::NotImplemented();
 }    
 
+# Method: writeSuiteEnd
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeSuiteEnd
 {
     throw ANSTE::Exceptions::NotImplemented();
 }    
 
+# Method: writeTestResult
+#
+#
+#
 # Parameters:
+#
 # name
 # desc
 # value
 # log
 # video
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeTestResult # (%params)
 {
     throw ANSTE::Exceptions::NotImplemented();

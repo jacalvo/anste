@@ -17,6 +17,17 @@ package ANSTE::Exceptions::InvalidData;
 
 use base 'ANSTE::Exceptions::Base';
 
+# Constructor: new
+#
+#   Constructor for InvalidData class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Exceptions::InvalidData> object.
+#
 sub new # (data, value)
 {
 	my ($class, $data, $value) = @_;
@@ -29,4 +40,5 @@ sub new # (data, value)
 	bless ($self, $class);
 	return $self;
 }
+
 1;

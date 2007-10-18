@@ -25,6 +25,17 @@ use Mail::RFC822::Address;
 use Cwd;
 use File::Basename;
 
+# Function: natural
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
 sub natural # (string)
 {
     my ($string) = @_;
@@ -32,6 +43,17 @@ sub natural # (string)
     return $string =~ /^\d+$/;
 }
 
+# Function: boolean
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
 sub boolean # (value)
 {
     my ($value) = @_;
@@ -39,34 +61,89 @@ sub boolean # (value)
     return $value == 0 || $value == 1;
 }
 
+# Function: path
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
 sub path # (path)
 {
     my ($path) = @_;
 
-    return defined($path) and -d $path;
+    return defined($path) && -d $path;
 }
 
+# Function: fileReadable
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
 sub fileReadable # (file)
 {
     my ($file) = @_;
 
-    return defined($file) and -r $file;
+    return defined($file) && -r $file;
 }
 
+# Function: fileWritable
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
 sub fileWritable # (file)
 {
     my ($file) = @_;
 
-    return defined($file) and -w dirname($file);
+    return defined($file) && -w dirname($file);
 }
 
+# Function: directoryWritable
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
 sub directoryWritable # (dir)
 {
     my ($dir) = @_;
 
-    return defined($dir) and -w dirname($dir);
+    return defined($dir) && -w dirname($dir);
 }
 
+# Function: system
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
 sub system # (system)
 {
     my ($system) = @_;
@@ -81,6 +158,17 @@ sub system # (system)
     return 0;
 }
 
+# Function: virtualizer
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
 sub virtualizer # (virtualizer)
 {
     my ($virtualizer) = @_;
@@ -95,6 +183,17 @@ sub virtualizer # (virtualizer)
     return 0;
 }
 
+# Function: port
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
 sub port # (port)
 {
     my ($port) = @_;
@@ -102,6 +201,17 @@ sub port # (port)
     return natural($port) && $port > 0 && $port <= 65535;
 }
 
+# Function: host
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
 sub host # (host)
 {
     my ($host) = @_;
@@ -123,6 +233,17 @@ sub host # (host)
     }
 }
 
+# Function: ip
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
 sub ip # (ip)
 {
     my ($ip) = @_;
@@ -147,6 +268,17 @@ sub ip # (ip)
     return 1; 
 }
 
+# Function: email
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
 sub email # (address)
 {
     my ($address) = @_;
@@ -154,6 +286,17 @@ sub email # (address)
     return Mail::RFC822::Address::valid($address);
 }
 
+# Function: suite
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
 sub suite # (suite)
 {
     my ($suite) = @_;
@@ -163,6 +306,17 @@ sub suite # (suite)
     return -r $file;
 }
 
+# Function: template
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
 sub template # (template)
 {
     my ($template) = @_;

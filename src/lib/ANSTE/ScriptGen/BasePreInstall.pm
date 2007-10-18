@@ -27,6 +27,17 @@ use ANSTE::Exceptions::InvalidFile;
 # Generates the scripts that installs ansted and anste-slave
 # in a base image.
 
+# Constructor: new
+#
+#   Constructor for BasePreInstall class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::ScriptGen::BasePreInstall> object.
+#
 sub new # (image) returns new CommInstallGen object
 {
 	my ($class, $image) = @_;
@@ -53,6 +64,21 @@ sub new # (image) returns new CommInstallGen object
 	return $self;
 }
 
+# Method: writeScript
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub writeScript # (file)
 {
 	my ($self, $file) = @_;

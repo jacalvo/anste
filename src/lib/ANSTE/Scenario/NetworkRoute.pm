@@ -24,12 +24,15 @@ use ANSTE::Exceptions::InvalidData;
 use ANSTE::Validate;
 
 # Constructor: new
-# 
-#       Construct a new NetworkRoute class.
-# 
+#
+#   Constructor for NetworkRoute class.
+#
+# Parameters:
+#
+#
 # Returns:
 #
-#       A recently created Scenario::NetworkRoute object
+#   A recently created <ANSTE::Scenario::NetworkRoute> object.
 #
 sub new # returns new NetworkRoute object
 {
@@ -46,6 +49,21 @@ sub new # returns new NetworkRoute object
 	return $self;
 }
 
+# Method: destination
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub destination # returns interface destination string
 {
 	my ($self) = @_;
@@ -53,6 +71,21 @@ sub destination # returns interface destination string
 	return $self->{destination};
 }
 
+# Method: setDestination
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setDestination # (destination) 
 {
 	my ($self, $destination) = @_;	
@@ -63,6 +96,21 @@ sub setDestination # (destination)
 	$self->{destination} = $destination;
 }
 
+# Method: gateway
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub gateway # returns gateway string
 {
 	my ($self) = @_;
@@ -70,6 +118,21 @@ sub gateway # returns gateway string
 	return $self->{gateway};
 }
 
+# Method: setGateway
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setGateway # gateway string
 {
 	my ($self, $gateway) = @_;	
@@ -80,6 +143,21 @@ sub setGateway # gateway string
 	$self->{gateway} = $gateway;
 }
 
+# Method: netmask
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub netmask # returns netmask string
 {
 	my ($self) = @_;
@@ -87,6 +165,21 @@ sub netmask # returns netmask string
 	return $self->{netmask};
 }
 
+# Method: setNetmask
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setNetmask # netmask string
 {
 	my ($self, $netmask) = @_;	
@@ -101,6 +194,21 @@ sub setNetmask # netmask string
 	$self->{netmask} = $netmask;
 }
 
+# Method: iface
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub iface # returns iface string
 {
 	my ($self) = @_;
@@ -108,6 +216,21 @@ sub iface # returns iface string
 	return $self->{iface};
 }
 
+# Method: setIface
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setIface # iface string
 {
 	my ($self, $iface) = @_;	
@@ -118,6 +241,21 @@ sub setIface # iface string
 	$self->{iface} = $iface;
 }
 
+# Method: load
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub load # (node)
 {
     my ($self, $node) = @_;

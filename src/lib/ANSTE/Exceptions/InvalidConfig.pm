@@ -17,6 +17,17 @@ package ANSTE::Exceptions::InvalidConfig;
 
 use base 'ANSTE::Exceptions::Base';
 
+# Constructor: new
+#
+#   Constructor for InvalidConfig class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Exceptions::InvalidConfig> object.
+#
 sub new # (option, value, file)
 {
 	my ($class, $option, $value, $file) = @_;
@@ -27,4 +38,5 @@ sub new # (option, value, file)
 	bless ($self, $class);
 	return $self;
 }
+
 1;

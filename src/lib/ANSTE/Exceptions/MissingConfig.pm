@@ -17,6 +17,17 @@ package ANSTE::Exceptions::MissingConfig;
 
 use base 'ANSTE::Exceptions::Base';
 
+# Constructor: new
+#
+#   Constructor for MissingConfig class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Exceptions::MissingConfig> object.
+#
 sub new # (option)
 {
 	my ($class, $option) = @_;
@@ -27,4 +38,5 @@ sub new # (option)
 	bless ($self, $class);
 	return $self;
 }
+
 1;

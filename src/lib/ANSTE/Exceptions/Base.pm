@@ -18,6 +18,17 @@ package ANSTE::Exceptions::Base;
 
 use base 'Error';
 
+# Constructor: new
+#
+#   Constructor for Base class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Exceptions::Base> object.
+#
 sub new # (text)
 {
 	my ($class, $text) = @_;
@@ -27,6 +38,21 @@ sub new # (text)
 	return $self;
 }
 
+# Method: toStderr
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub toStderr 
 {
 	my ($self) = @_;

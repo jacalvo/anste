@@ -23,6 +23,17 @@ use ANSTE::Report::TestResult;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 
+# Constructor: new
+#
+#   Constructor for SuiteResult class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Report::SuiteResult> object.
+#
 sub new # returns new SuiteResult object
 {
 	my ($class) = @_;
@@ -36,6 +47,21 @@ sub new # returns new SuiteResult object
 	return $self;
 }
 
+# Method: suite
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub suite # returns suite string
 {
 	my ($self) = @_;
@@ -43,6 +69,21 @@ sub suite # returns suite string
 	return $self->{suite};
 }
 
+# Method: setSuite
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setSuite # suite string
 {
 	my ($self, $suite) = @_;	
@@ -58,6 +99,21 @@ sub setSuite # suite string
 	$self->{suite} = $suite;
 }
 
+# Method: add
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub add # (test)
 {
     my ($self, $test) = @_;
@@ -73,6 +129,21 @@ sub add # (test)
     push(@{$self->{tests}}, $test);
 }
 
+# Method: tests
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub tests # returns list ref 
 {
     my ($self) = @_;

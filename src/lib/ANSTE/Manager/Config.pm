@@ -33,6 +33,21 @@ my @CONFIG_PATHS = ('data/conf', '/etc/anste', '/usr/local/etc/anste');
 
 my $singleton;
 
+# Method: instance
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub instance 
 {
     my $class = shift;
@@ -57,8 +72,22 @@ sub instance
     return $singleton;
 }
 
-# Try to get all the options to validate them
-# A exception is thrown if there's an invalid option.
+# Method: check
+#
+#   Tries to get all the options to validate them
+#   An exception is thrown if there's an invalid option.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub check
 {
     my ($self) = @_;
@@ -76,6 +105,21 @@ sub check
     return 1;
 }
 
+# Method: configPath
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub configPath
 {
     my ($self) = @_;
@@ -83,6 +127,21 @@ sub configPath
     return $self->{confPath};
 }
 
+# Method: clientPort
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub clientPort
 {
     my ($self) = @_;
@@ -98,6 +157,21 @@ sub clientPort
     return $clientPort;
 }
 
+# Method: adminPort
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub adminPort
 {
     my ($self) = @_;
@@ -113,6 +187,21 @@ sub adminPort
     return $adminPort;
 }
 
+# Method: mailAddress
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub mailAddress 
 {
     my ($self) = @_;
@@ -128,6 +217,21 @@ sub mailAddress
     return $email;
 }
 
+# Method: mailSmtp
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub mailSmtp
 {
     my ($self) = @_;
@@ -143,6 +247,21 @@ sub mailSmtp
     return $smtp;
 }
 
+# Method: mailSubject
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub mailSubject
 {
     my ($self) = @_;
@@ -158,6 +277,21 @@ sub mailSubject
     return $subject;
 }
 
+# Method: mailTemplate
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub mailTemplate
 {
     my ($self) = @_;
@@ -173,6 +307,21 @@ sub mailTemplate
     return $template;
 }
 
+# Method: mailTemplateFailed
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub mailTemplateFailed
 {
     my ($self) = @_;
@@ -188,6 +337,21 @@ sub mailTemplateFailed
     return $template;
 }
 
+# Method: wwwDir
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub wwwDir
 {
     my ($self) = @_;
@@ -203,6 +367,21 @@ sub wwwDir
     return $dir;
 }
 
+# Method: wwwHost
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub wwwHost
 {
     my ($self) = @_;

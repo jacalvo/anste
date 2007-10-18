@@ -25,6 +25,17 @@ use ANSTE::Exceptions::InvalidFile;
 
 use XML::DOM;
 
+# Constructor: new
+#
+#   Constructor for Scenario class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Scenario::Scenario> object.
+#
 sub new # returns new Scenario object
 {
 	my ($class) = @_;
@@ -41,6 +52,21 @@ sub new # returns new Scenario object
 	return $self;
 }
 
+# Method: name
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub name # returns name string
 {
 	my ($self) = @_;
@@ -48,6 +74,21 @@ sub name # returns name string
 	return $self->{name};
 }
 
+# Method: setName
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setName # name string
 {
 	my ($self, $name) = @_;	
@@ -58,6 +99,21 @@ sub setName # name string
 	$self->{name} = $name;
 }
 
+# Method: desc
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub desc # returns desc string
 {
 	my ($self) = @_;
@@ -65,6 +121,21 @@ sub desc # returns desc string
 	return $self->{desc};
 }
 
+# Method: setDesc
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setDesc # desc string
 {
 	my ($self, $desc) = @_;	
@@ -75,6 +146,21 @@ sub setDesc # desc string
 	$self->{desc} = $desc;
 }
 
+# Method: virtualizer
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub virtualizer # returns virtualizer package
 {
 	my ($self) = @_;
@@ -82,6 +168,21 @@ sub virtualizer # returns virtualizer package
 	return $self->{virtualizer};
 }
 
+# Method: setVirtualizer
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setVirtualizer # (virtualizer)
 {
 	my ($self, $virtualizer) = @_;	
@@ -92,6 +193,21 @@ sub setVirtualizer # (virtualizer)
 	$self->{virtualizer} = $virtualizer;
 }
 
+# Method: system
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub system # returns system package
 {
 	my ($self) = @_;
@@ -99,6 +215,21 @@ sub system # returns system package
 	return $self->{system};
 }
 
+# Method: setSystem
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub setSystem # (system)
 {
 	my ($self, $system) = @_;
@@ -109,6 +240,21 @@ sub setSystem # (system)
 	$self->{system} = $system;
 }
 
+# Method: hosts
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub hosts # returns hosts list 
 {
 	my ($self) = @_;
@@ -116,6 +262,21 @@ sub hosts # returns hosts list
 	return $self->{hosts};
 }
 
+# Method: addHost
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub addHost # (host)
 {
 	my ($self, $host) = @_;	
@@ -132,6 +293,21 @@ sub addHost # (host)
 }
 
 
+# Method: loadFromFile
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub loadFromFile # (filename)
 {
 	my ($self, $filename) = @_;

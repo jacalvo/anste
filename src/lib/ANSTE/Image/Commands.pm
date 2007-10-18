@@ -31,6 +31,17 @@ use ANSTE::Exceptions::InvalidType;
 use Cwd;
 use File::Temp qw(tempfile tempdir);
 
+# Constructor: new
+#
+#   Constructor for Commands class.
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#   A recently created <ANSTE::Image::Commands> object.
+#
 sub new # (image) returns new Commands object
 {
 	my ($class, $image) = @_;
@@ -65,6 +76,21 @@ sub new # (image) returns new Commands object
 	return $self;
 }
 
+# Method: ip
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub ip
 {
     my ($self) = @_;
@@ -80,6 +106,21 @@ sub ip
     return $ip;
 }
 
+# Method: create
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub create
 {
 	my ($self) = @_;
@@ -94,6 +135,21 @@ sub create
                                   ip => $ip);
 }
 
+# Method: mount
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub mount
 {
 	my ($self) = @_;
@@ -117,57 +173,71 @@ sub mount
     $system->mountImage($image, $mountPoint);
 }
 
-# TODO: This two methods are very similar, try to factorize them
+# Method: copyBaseFiles
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub copyBaseFiles
 {
     my ($self) = @_;
 
-    my $mountPoint = $self->{mountPoint};
     my $image = $self->{image};
-    my $system = $self->{system};
 
-    # Generates the installation script on a temporary file
     my $gen = new ANSTE::ScriptGen::BasePreInstall($image);
-    my ($fh, $filename) = tempfile() or die "Can't create temporary file: $!";
-    $gen->writeScript($fh);
-    close($fh) or die "Can't close temporary file: $!";
-    # Gives execution perm to the script
-    chmod(700, $filename) or die "Can't chmod $filename: $!";
-    
-    # Executes the installation script passing the mount point
-    # of the image as argument
-    my $ret = $system->execute("$filename $mountPoint");
-
-    unlink($filename) or die "Can't unlink $filename: $!";
-
-    return $ret;
+    return $self->_copyFiles($gen)
 }
 
+# Method: copyHostFiles
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub copyHostFiles 
 {
     my ($self) = @_;
 
-    my $mountPoint = $self->{mountPoint};
     my $image = $self->{image};
-    my $system = $self->{system};
 
-    # Generates the installation script on a temporary file
     my $gen = new ANSTE::ScriptGen::HostPreInstall($image);
-    my ($fh, $filename) = tempfile() or die "Can't create temporary file: $!";
-    $gen->writeScript($fh);
-    close($fh) or die "Can't close temporary file: $!";
-    # Gives execution perm to the script
-    chmod(700, $filename) or die "Can't chmod $filename: $!";
-    
-    # Executes the installation script passing the mount point
-    # of the image as argument
-    my $ret = $system->execute("$filename $mountPoint");
-
-    unlink($filename) or die "Can't unlink $filename: $!";
-
-    return $ret;
+    return $self->_copyFiles($gen)
 }
 
+# Method: installBasePackages
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub installBasePackages
 {
     my ($self) = @_;
@@ -196,6 +266,21 @@ sub installBasePackages
     }
 }
 
+# Method: prepareSystem
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub prepareSystem 
 {
     my ($self) = @_;
@@ -241,6 +326,21 @@ sub prepareSystem
 }
 
 
+# Method: umount
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub umount
 {
     my ($self) = @_;
@@ -255,6 +355,21 @@ sub umount
     return($ret);
 }
 
+# Method: deleteMountPoint
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub deleteMountPoint
 {
     my ($self) = @_;
@@ -264,6 +379,21 @@ sub deleteMountPoint
     rmdir($mountPoint);
 }
 
+# Method: shutdown
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub shutdown
 {
     my ($self) = @_;
@@ -280,6 +410,21 @@ sub shutdown
     $system->disableNAT($iface, $self->ip());
 }
 
+# Method: resize
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub resize # (size)
 {
     my ($self, $size) = @_;
@@ -299,6 +444,21 @@ sub resize # (size)
     $system->resizeImage($virtualizer->imageFile($imagePath, $image), $size);
 }
 
+# Method: createVirtualMachine
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub createVirtualMachine
 {
     my ($self) = @_;
@@ -321,6 +481,21 @@ sub createVirtualMachine
     print "[$name] System is up.\n";
 }
 
+# Method: executeScripts
+#
+#
+#
+# Parameters:
+#
+#
+# Returns:
+#
+#
+#
+# Exceptions:
+#
+#
+#
 sub executeScripts # (list)
 {
     my ($self, $list) = @_;
@@ -338,6 +513,29 @@ sub executeScripts # (list)
         my $file = $config->scriptFile($script);
         $self->_executeSetup($client, $file);
     }
+}
+
+sub _copyFiles # (gen)
+{
+    my ($self, $gen) = @_;
+
+    my $mountPoint = $self->{mountPoint};
+    my $system = $self->{system};
+
+    # Generates the installation script on a temporary file
+    my ($fh, $filename) = tempfile() or die "Can't create temporary file: $!";
+    $gen->writeScript($fh);
+    close($fh) or die "Can't close temporary file: $!";
+    # Gives execution perm to the script
+    chmod(700, $filename) or die "Can't chmod $filename: $!";
+    
+    # Executes the installation script passing the mount point
+    # of the image as argument
+    my $ret = $system->execute("$filename $mountPoint");
+
+    unlink($filename) or die "Can't unlink $filename: $!";
+
+    return $ret;
 }
 
 sub _executeSetup # (client, script)
