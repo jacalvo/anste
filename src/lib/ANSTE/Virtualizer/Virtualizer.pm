@@ -22,6 +22,13 @@ use ANSTE::Config;
 use ANSTE::Exceptions::NotImplemented;
 use ANSTE::Exceptions::MissingArgument;
 
+# Class: Virtualizer
+#
+#   Abstract class with the methods called by the rest of the ANSTE
+#   framework to interact with a virtualizer software and have to
+#   be implemented by each virtualizer backend.
+#
+
 # Constructor: new
 #   
 #   Constructor for Virtualizer class and his derivated classes.

@@ -32,6 +32,12 @@ use File::Copy::Recursive qw(dircopy);
 
 use constant XEN_CONFIG_TEMPLATE => 'xen-config.tmpl';
 
+# Class: Xen
+#
+#   Implementation of the Virtualizer class that interacts
+#   with the Xen virtualization software.
+#
+
 # Method: createBaseImage
 #
 #   Overriden method that creates a new base image using the xen-create-image
@@ -46,6 +52,10 @@ use constant XEN_CONFIG_TEMPLATE => 'xen-config.tmpl';
 #
 #   boolean - Always returns true due to xen-create-image is broken and
 #             returns it although the creation process fails.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub createBaseImage # (%params)
 {
@@ -90,6 +100,10 @@ sub createBaseImage # (%params)
 #   
 #   boolean - indicates if the process has been successful
 #
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
 sub shutdownImage # (image)
 {
     my ($self, $image) = @_;
@@ -111,6 +125,10 @@ sub shutdownImage # (image)
 # Returns:
 #   
 #   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub createVM # (name)
 {
@@ -134,6 +152,10 @@ sub createVM # (name)
 # Returns:
 #   
 #   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub imageFile # (path, name)
 {
@@ -162,6 +184,10 @@ sub imageFile # (path, name)
 # Returns:
 #   
 #   boolean   - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub createImageCopy # (baseimage, newimage)
 {
@@ -218,6 +244,10 @@ sub createImageCopy # (baseimage, newimage)
 #   
 #   boolean - indicates if the process has been successful
 #               
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
 sub deleteImage # (image)
 {
     my ($self, $image) = @_;
