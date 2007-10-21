@@ -25,12 +25,20 @@ use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 
+# Class: ScenarioDeployer
+#
+#   Deploys a given scenario creating its corresponding virtual machines
+#   and configurating them properly.
+#
+
 # Constructor: new
 #
 #   Constructor for ScenarioDeployer class.
+#   Initializes the object with the given scenario representation object.
 #
 # Parameters:
-#
+# 
+#   scenario - <ANSTE::Scenario::Scenario> object.
 #
 # Returns:
 #
@@ -59,18 +67,13 @@ sub new # (scenario) returns new ScenarioDeployer object
 
 # Method: deploy
 #
-#
-#
-# Parameters:
-#
+#   Starts the master server thread and another thread for the
+#   deployment of each host in the scenario.
+#   The deployment of each host is done through <ANSTE::Deploy::HostDeployer>.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   hash - Contains the IP address of each deployed host indexed by hostname.
 #
 sub deploy # returns hash ref with the ip of each host 
 {
@@ -113,18 +116,8 @@ sub deploy # returns hash ref with the ip of each host
 
 # Method: shutdown
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Notify all of the deployer threads of the scenario that have to shut down.
+#   Also ask them for image deletion.
 #
 sub shutdown
 {

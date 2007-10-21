@@ -38,12 +38,20 @@ use constant SETUP_SCRIPT => 'setup.sh';
 
 my $lockMount : shared;
 
+# Class: HostDeployer
+#
+#   Deploys a host virtual machine in a separate thread.
+#   The operations are done with the classes in <ANSTE::Image> module.
+#
+
 # Constructor: new
 #
 #   Constructor for HostDeployer class.
+#   Initializes the object with the given host representation object.
 #
 # Parameters:
 #
+#   host - <ANSTE::Scenario::Host> object.
 #
 # Returns:
 #
@@ -86,18 +94,20 @@ sub new # (host) returns new HostDeployer object
 
 # Method: startDeployThread
 #
-#
+#   Starts the deploying thread for the object's host, with the IP
+#   address given as parameter.
 #
 # Parameters:
 #
+#   ip - IP address to be assigned.
 #
 # Returns:
 #
-#
+#   ref - Reference to the created thread.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
 sub startDeployThread # (ip)
 {
@@ -124,18 +134,7 @@ sub startDeployThread # (ip)
 
 # Method: waitForFinish
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Waits until the deploying thread finishes.
 #
 sub waitForFinish
 {
@@ -146,18 +145,7 @@ sub waitForFinish
 
 # Method: shutdown
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Shuts down the image and virtual machine creation.
 #
 sub shutdown
 {
@@ -174,18 +162,7 @@ sub shutdown
 
 # Method: deleteImage
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Deletes the image of the deployed host.
 #
 sub deleteImage
 {
