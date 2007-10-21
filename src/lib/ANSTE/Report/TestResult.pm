@@ -22,12 +22,14 @@ use ANSTE::Test::Test;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 
+# Class: TestResult
+#
+#   Contains the result of a test.
+#
+
 # Constructor: new
 #
 #   Constructor for TestResult class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -50,18 +52,11 @@ sub new # returns new TestResult object
 
 # Method: test
 #
-#
-#
-# Parameters:
-#
+#   Returns the test object with the information of the test.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - <ANSTE::Test::Test> object.
 #
 sub test # returns test string
 {
@@ -72,18 +67,16 @@ sub test # returns test string
 
 # Method: setTest
 #
-#
+#   Sets the test object with the information of the test.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   test - <ANSTE::Test::Test> object.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
 sub setTest # test string
 {
@@ -102,18 +95,11 @@ sub setTest # test string
 
 # Method: value
 #
-#
-#
-# Parameters:
-#
+#   Gets the value of the test result.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   integer - result value
 #
 sub value # returns value
 {
@@ -124,18 +110,15 @@ sub value # returns value
 
 # Method: setValue
 #
-#
+#   Sets the value of the test result.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   value - Integer with the result value.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub setValue # (value)
 {
@@ -149,18 +132,11 @@ sub setValue # (value)
 
 # Method: log
 #
-#
-#
-# Parameters:
-#
+#   Returns the path of the execution log for the test.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the path of the execution log
 #
 sub log # returns log
 {
@@ -171,18 +147,15 @@ sub log # returns log
 
 # Method: setLog
 #
-#
+#   Sets the path of the execution log for the test.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   log - String with the path of the execution log.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub setLog # (log)
 {
@@ -196,18 +169,11 @@ sub setLog # (log)
 
 # Method: video
 #
-#
-#
-# Parameters:
-#
+#   Returns the path of the video record of the test execution.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the path of the video record
 #
 sub video # returns video
 {
@@ -218,18 +184,15 @@ sub video # returns video
 
 # Method: setVideo
 #
-#
+#   Sets the path of the video record of the test execution.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   video - String with the path of the video record.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub setVideo # (video)
 {

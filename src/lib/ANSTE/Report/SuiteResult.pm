@@ -23,12 +23,14 @@ use ANSTE::Report::TestResult;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 
+# Class: SuiteResult
+#
+#   Contains the test results of a suite.
+#
+
 # Constructor: new
 #
 #   Constructor for SuiteResult class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -49,18 +51,11 @@ sub new # returns new SuiteResult object
 
 # Method: suite
 #
-#
-#
-# Parameters:
-#
+#   Returns the suite object with the information of the test suite.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - <ANSTE::Test::Suite> object.
 #
 sub suite # returns suite string
 {
@@ -71,20 +66,18 @@ sub suite # returns suite string
 
 # Method: setSuite
 #
-#
+#   Sets the suite object with the information of the test suite.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   suite - <ANSTE::Report::SuiteResult> object.
 #
 # Exceptions:
 #
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-#
-sub setSuite # suite string
+sub setSuite # (suite)
 {
 	my ($self, $suite) = @_;	
 
@@ -101,18 +94,16 @@ sub setSuite # suite string
 
 # Method: add
 #
-#
+#   Add a test result to the suite result.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   test - <ANSTE::Report::TestResult> object.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
 sub add # (test)
 {
@@ -131,18 +122,11 @@ sub add # (test)
 
 # Method: tests
 #
-#
-#
-# Parameters:
-#
+#   Returns the list of test results.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - Reference to the list of <ANSTE::Report::TestResult>.
 #
 sub tests # returns list ref 
 {

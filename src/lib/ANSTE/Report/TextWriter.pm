@@ -20,11 +20,15 @@ use base 'ANSTE::Report::Writer';
 use strict;
 use warnings;
 
-use ANSTE::Exceptions::MissingArgument;
-use ANSTE::Exceptions::NotImplemented;
+# Class: TextWriter
+#
+#   Implementation of class Writer for writing reports in plain text format.
+#
 
-# TODO: Copy NaturalDocs comments from HTMLWriter :)
-
+# Method: writeHeader
+#
+#   Overriden method that writes the header of the report.
+#
 sub writeHeader 
 {
     my ($self) = @_;
@@ -34,6 +38,10 @@ sub writeHeader
     print $file "Beginning test report\n\n";
 }    
 
+# Method: writeEnd
+#
+#   Overriden method that writes the end of the report.
+#
 sub writeEnd
 {
     my ($self) = @_;
@@ -43,15 +51,27 @@ sub writeEnd
     print $file "Ending test report\n";
 }    
 
-sub writeSuiteHeader # (suite)
+# Method: writeSuiteHeader
+#
+#   Overriden method that writes the header of a suite result.
+#
+# Parameters:
+#
+#   name - String with the suite name.
+#
+sub writeSuiteHeader # (name)
 {
-    my ($self, $suite) = @_;
+    my ($self, $name) = @_;
 
     my $file = $self->{file};
 
-    print $file "\t$suite\n";
+    print $file "\t$name\n";
 }    
 
+# Method: writeSuiteEnd
+#
+#   Overriden method that writes the end of a suite result.
+#
 sub writeSuiteEnd
 {
     my ($self) = @_;
@@ -61,9 +81,15 @@ sub writeSuiteEnd
     print $file "\n";
 }    
 
-# Parameters: 
-# name
-# value
+# Method: writeTestResult
+#
+#   Overriden method that writes a test result.
+#
+# Parameters:
+#
+#   name  - String with the test name.
+#   value - String with the test result value.
+#
 sub writeTestResult # (%params)
 {
     my ($self, %params) = @_;

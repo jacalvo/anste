@@ -22,16 +22,26 @@ use ANSTE::Report::Report;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::NotImplemented;
 
+# Class: Writer
+#
+#   Abstract class for writing reports in different formats.
+#
+
 # Constructor: new
 #
 #   Constructor for Writer class.
 #
 # Parameters:
-#
+#   
+#   report - <ANSTE::Report::Report> object.
 #
 # Returns:
 #
 #   A recently created <ANSTE::Report::Writer> object.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub new # (report) returns new Write object
 {
@@ -51,18 +61,11 @@ sub new # (report) returns new Write object
 
 # Method: write
 #
-#
+#   Writes the report to the given file.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   file - String with the file name.
 #
 sub write # (file) 
 {
@@ -95,18 +98,11 @@ sub write # (file)
 
 # Method: writeHeader
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
+#   Override this method to write the header of the report.
 #
 # Exceptions:
 #
-#
+#   throw <ANSTE::Exceptions::NotImplemented>
 #
 sub writeHeader
 {
@@ -115,18 +111,11 @@ sub writeHeader
 
 # Method: writeEnd
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
+#   Override this method to write the end of the report.
 #
 # Exceptions:
 #
-#
+#   throw <ANSTE::Exceptions::NotImplemented>
 #
 sub writeEnd
 {
@@ -135,18 +124,16 @@ sub writeEnd
 
 # Method: writeSuiteHeader
 #
-#
+#   Override this method to write the header of a suite result.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   name - String with the suite name.
+#   desc - *optional* String with the suite description.
 #
 # Exceptions:
 #
-#
+#   throw <ANSTE::Exceptions::NotImplemented>
 #
 sub writeSuiteHeader # (name, desc)
 {
@@ -155,18 +142,11 @@ sub writeSuiteHeader # (name, desc)
 
 # Method: writeSuiteEnd
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
+#   Override this method to write the end of a suite result.
 #
 # Exceptions:
 #
-#
+#   throw <ANSTE::Exceptions::NotImplemented>
 #
 sub writeSuiteEnd
 {
@@ -175,23 +155,19 @@ sub writeSuiteEnd
 
 # Method: writeTestResult
 #
-#
+#   Override this method to write a test result.
 #
 # Parameters:
 #
-# name
-# desc
-# value
-# log
-# video
-#
-# Returns:
-#
-#
+#   name  - String with the test name.
+#   value - String with the test result value.
+#   desc  - *optional* String with the test description.
+#   log   - *optional* String with the log path.
+#   video - *optional* String with the video path.
 #
 # Exceptions:
 #
-#
+#   throw <ANSTE::Exceptions::NotImplemented>
 #
 sub writeTestResult # (%params)
 {

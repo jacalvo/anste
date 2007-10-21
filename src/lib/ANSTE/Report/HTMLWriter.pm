@@ -20,23 +20,14 @@ use base 'ANSTE::Report::Writer';
 use strict;
 use warnings;
 
-use ANSTE::Exceptions::MissingArgument;
-use ANSTE::Exceptions::NotImplemented;
+# Class: HTMLWriter
+#
+#   Implementation of class Writer for writing reports in HTML format.
+#
 
 # Method: writeHeader
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Overriden method that writes the header of the report in HTML.
 #
 sub writeHeader 
 {
@@ -54,18 +45,7 @@ sub writeHeader
 
 # Method: writeEnd
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Overriden method that writes the end of the report in HTML.
 #
 sub writeEnd
 {
@@ -79,18 +59,12 @@ sub writeEnd
 
 # Method: writeSuiteHeader
 #
-#
+#   Overriden method that writes the header of a suite result in HTML.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   name - String with the suite name.
+#   desc - String with the suite description.
 #
 sub writeSuiteHeader # (name, desc)
 {
@@ -110,18 +84,7 @@ sub writeSuiteHeader # (name, desc)
 
 # Method: writeSuiteEnd
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Overriden method that writes the end of a suite result in HTML.
 #
 sub writeSuiteEnd
 {
@@ -132,25 +95,17 @@ sub writeSuiteEnd
     print $file "</table>\n";
 }    
 
-# Method: 
+# Method: writeTestResult
 #
-#
+#   Overriden method that writes a test result in HTML.
 #
 # Parameters:
 #
-# name
-# desc
-# value
-# log
-# video
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   name  - String with the test name.
+#   value - String with the test result value.
+#   desc  - *optional* String with the test description.
+#   log   - *optional* String with the log path.
+#   video - *optional* String with the video path.
 #
 sub writeTestResult # (%params)
 {

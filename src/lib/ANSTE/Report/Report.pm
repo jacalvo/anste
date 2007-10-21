@@ -22,12 +22,14 @@ use ANSTE::Report::SuiteResult;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 
+# Class: Report
+#
+#   Contains the results of a set of test suites.
+#
+
 # Constructor: new
 #
 #   Constructor for Report class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -47,18 +49,16 @@ sub new # returns new Report object
 
 # Method: add
 #
-#
+#   Adds a suite result to the report.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   suite - <ANSTE::Report::SuiteResult> object.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
 sub add # (suite)
 {
@@ -77,18 +77,11 @@ sub add # (suite)
 
 # Method: suites
 #
-#
-#
-# Parameters:
-#
+#   Returns the list of suite results.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - Reference to the list of <ANSTE::Report::SuiteResult>.
 #
 sub suites # returns list ref
 {
