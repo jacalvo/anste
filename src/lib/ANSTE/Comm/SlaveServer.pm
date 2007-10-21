@@ -20,22 +20,27 @@ use warnings;
 
 use File::Basename;
 
+# Class: SlaveServer
+#
+#   This class is used by the SOAP server running in the slave hosts
+#   to handle the requests from the master client.
+#
+
 my $DIR = '/tmp';
 
 # Method: put
 #
-#
+#   Handles a file put command, writing the contents of the file to disk.
+#   TODO: Do this with attachments?
 #
 # Parameters:
 #
+#   file - String with the name of the file.
+#   content - String with the data of the file.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - OK if everything goes well, ERR if not
 #
 sub put	# (file, content)
 {
@@ -54,18 +59,16 @@ sub put	# (file, content)
 
 # Method: get
 #
-#
+#   Handles a file get command, reading and returning the contents of the 
+#   file from disk.
 #
 # Parameters:
 #
+#   file - String with the name of the file.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - String with the contents of the file or ERR if fails.
 #
 sub get	# (file)
 {
@@ -84,18 +87,19 @@ sub get	# (file)
 
 # Method: exec
 #
+#   Handles a execution command, executing the specified file and optionally
+#   writing its output to a log.
+#   This is non-blocking, the execution is done in a separate process
+#   and when it finishes the master is notified through anste-slave command.
 #
 #
 # Parameters:
 #
+#   file - String with the name of the file to be executed.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - OK
 #
 sub exec # (file, log?)
 {
@@ -129,18 +133,15 @@ sub exec # (file, log?)
 
 # Method: del
 #
-#
+#   Handles a file delete command, deleting the given file from disk.
 #
 # Parameters:
 #
+#   file - String with the name of the file to be deleted.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - OK if removed correctly, ERR if not
 #
 sub del	# (file)
 {

@@ -25,10 +25,11 @@ use ANSTE::Exceptions::MissingArgument;
 
 # Class: HostWaiter
 #
-# Informates when a slave host ends its boot process and finishes
-# the execution of a command.
-# This is done by blocking methods that waits for the event of a
-# given host.
+#   Informates when a slave host ends its boot process and finishes
+#   the execution of a command.
+#   This is done by blocking methods that waits for the event of a
+#   given host.
+#
 
 my $singleton;
 
@@ -41,18 +42,11 @@ my $returnValue : shared;
 
 # Method: instance
 #
-#
-#
-# Parameters:
-#
+#   Returns a reference of the singleton object of this class.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - the class unique instance.
 #
 sub instance 
 {
@@ -68,18 +62,11 @@ sub instance
 
 # Method: hostReady
 #
-#
+#   Called to acknowledge that a given host is ready.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   host - String with the hostname of the ready host   
 #
 sub hostReady # (host)
 {
@@ -91,18 +78,13 @@ sub hostReady # (host)
 
 # Method: executionFinished
 #
-#
+#   Called to acknowledge that a given host host has finished the execution
+#   of a script with a given return value.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   host - String with the hostname of the host that has finished execution.
+#   retValue - Integer with the return value of the script.
 #
 sub executionFinished # (host, retValue)
 {
@@ -116,18 +98,11 @@ sub executionFinished # (host, retValue)
 
 # Method: waitForReady
 #
-#
+#   Waits until a given host is ready.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   host - String with the hostname we want to wait for.
 #
 sub waitForReady # (host)
 {
@@ -145,18 +120,19 @@ sub waitForReady # (host)
 
 # Method: waitForExecution
 #
-#
+#   Waits until a given host finishes his current script in execution.
 #
 # Parameters:
 #
+#   host - String with the hostname we want to wait for.
 #
 # Returns:
 #
-#
+#   integer - Return value of the script being executed.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter not passed
 #
 sub waitForExecution # (host) returns retValue
 {
@@ -174,18 +150,11 @@ sub waitForExecution # (host) returns retValue
 
 # Method: waitForAnyExecution
 #
-#
-#
-# Parameters:
-#
+#   Waits for an execution finish on any host.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   integer - Return value of the script being executed.
 #
 sub waitForAnyExecution # returns retValue
 {

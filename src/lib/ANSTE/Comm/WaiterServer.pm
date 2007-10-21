@@ -24,14 +24,16 @@ use ANSTE::Config;
 use threads;
 use SOAP::Transport::HTTP;
 
+# Class: WaiterServer
+#
+#   Wraps the creation of the SOAP master server in a separate thread.
+#
+
 my $thread = undef;
 
 # Constructor: new
 #
 #   Constructor for WaiterServer class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -49,18 +51,11 @@ sub new # returns new WaiterServer object
 
 # Method: startThread
 #
-#
-#
-# Parameters:
-#
+#   Creates a thread that handles the requests to MasterServer.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - reference to the thread object
 #
 sub startThread # returns thread object
 {

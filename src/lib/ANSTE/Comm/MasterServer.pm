@@ -20,20 +20,23 @@ use ANSTE::Comm::HostWaiter;
 use strict;
 use warnings;
 
+# Class: MasterServer
+#
+#   This class is used by the SOAP server running in the master host
+#   to handle the requests from the slave clients.
+#
+
 # Method: hostReady
 #
-#
+#   Handle a host ready message from a given host.
 #
 # Parameters:
 #
+#   host - String with the name of the host.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - OK
 #
 sub hostReady # (host) 
 {
@@ -47,18 +50,16 @@ sub hostReady # (host)
 
 # Method: executionFinished
 #
-#
+#   Handle a script execution finished message from a given host.
 #
 # Parameters:
 #
+#   host - String with the name of the host.
+#   retValue - Integer with the return value of the script.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - OK
 #
 sub executionFinished # (host, retValue) 
 {

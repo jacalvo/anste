@@ -25,12 +25,15 @@ use Net::Domain qw(hostname);
 
 use constant URI => "urn:ANSTE::Comm::MasterServer";
 
+# Class: SlaveClient
+#   
+#   Client that runs on the slave hosts and sends notifications
+#   to the master host.
+#
+
 # Constructor: new
 #
 #   Constructor for SlaveClient class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -48,18 +51,39 @@ sub new
     return $self;
 }
 
-sub connect	# (host) 
+# Method: connect
+#
+#   Initialize the object used to send the commands with
+#   the location of the server.
+#
+# Parameters:
+#
+#   url - URL of the server.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#
+sub connect	# (url) 
 {
-    my ($self, $host) = @_;
+    my ($self, $url) = @_;
 
-    defined $host or
-        throw ANSTE::Exceptions::MissingArgument('host');
+    defined $url or
+        throw ANSTE::Exceptions::MissingArgument('url');
 
-    $self->{soap} = new SOAP::Lite(uri => URI, 
-                                   endpoint => $host, 
-                                   proxy => $host);
+    $self->{soap} = new SOAP::Lite(uri => URI,
+                                   proxy => $url,
+                                   endpoint => $url); 
 }
 
+# Method: hostReady
+#
+#   Notifies to the master server that this host is ready.
+#
+# Returns:
+#
+#   boolean - true if the server response is OK, false otherwise
+#
 sub hostReady
 {
     my ($self) = @_;
@@ -76,6 +100,23 @@ sub hostReady
     return($result eq 'OK');
 }
 
+# Method: executionFinished
+#
+#   Notifies to the master server that this host has finished
+#   its script execution with the given value.
+#
+# Parameters:
+#
+#   retValue - Integer with the return value of the script.
+#
+# Returns:
+#
+#   boolean - true if the server response is OK, false otherwise
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#
 sub executionFinished # (retValue)
 {
     my ($self, $retValue) = @_;

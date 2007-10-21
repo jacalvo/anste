@@ -26,12 +26,15 @@ use SOAP::Lite; # +trace => 'debug';
 
 use constant URI => 'urn:ANSTE::Comm::SlaveServer';
 
+# Class: MasterClient
+# 
+#   Client that runs on the master host and send commands
+#   to the slave hosts.
+#
+
 # Constructor: new
 #
 #   Constructor for MasterClient class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -49,18 +52,39 @@ sub new
     return $self;
 }
 
-sub connect	# (host) 
+# Method: connect
+#
+#   Initialize the object used to send the commands with
+#   the location of the server.
+#
+# Parameters:
+#
+#   url - URL of the server.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#
+sub connect	# (url) 
 {
-    my ($self, $host) = @_;
+    my ($self, $url) = @_;
 
-    defined $host or
-        throw ANSTE::Exceptions::MissingArgument('host');
+    defined $url or
+        throw ANSTE::Exceptions::MissingArgument('url');
 
     $self->{soap} = new SOAP::Lite(uri => URI,
-                                   proxy => $host,
-                                   endpoint => $host); 
+                                   proxy => $url,
+                                   endpoint => $url); 
 }
 
+# Method: connected
+#
+#   Check if the client is connected.
+#
+# Returns:
+#
+#   boolean - true if the client have a valid connection with the server
+#
 sub connected # returns boolean
 {
     my ($self) = @_;
@@ -68,6 +92,23 @@ sub connected # returns boolean
     return defined($self->{soap});
 }
 
+# Method: put
+#
+#   Sends a file to the slave host.
+#
+# Parameters:
+#
+#   file - String with the name of the file.
+#
+# Returns:
+#
+#   boolean - true if the server response is OK, false otherwise
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#   <ANSTE::Exceptions::InvalidFile> - throw if file does not exist
+#
 sub put	# (file) returns boolean
 {
     my ($self, $file) = @_;
@@ -97,6 +138,22 @@ sub put	# (file) returns boolean
     return($result eq 'OK');
 }
 
+# Method: get
+#
+#   Sends a file get request to the server and writes the response to disk.
+#
+# Parameters:
+#
+#   file - String with the name of the file.
+#
+# Returns:
+#
+#   boolean - true if the server response is OK, false otherwise
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#
 sub get	# (file)
 {
     my ($self, $file) = @_;
@@ -125,6 +182,23 @@ sub get	# (file)
     }
 }
 
+# Method: exec
+#
+#   Sends a command execution requests to the server.
+#
+# Parameters:
+#
+#   command - String with the name of the command.
+#   log     - *optional* String with the name of the log file.
+#
+# Returns:
+#
+#   boolean - true if the server response is OK, false otherwise
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#
 sub exec # (command, log) # - log optional
 {
     my ($self, $command, $log) = @_;
@@ -146,6 +220,22 @@ sub exec # (command, log) # - log optional
     return($result eq 'OK');
 }
 
+# Method: del
+#
+#   Sends a file deletion request to the server.
+#
+# Parameters:
+#
+#   file - String with the name of the file to be deleted.
+#
+# Returns:
+#
+#   boolean - true if the server response is OK, false otherwise
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#
 sub del	# (file)
 {
     my ($self, $file) = @_;
