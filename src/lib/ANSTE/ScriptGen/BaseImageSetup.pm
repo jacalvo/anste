@@ -24,16 +24,28 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
 
+# Class: BaseImageSetup
+#
+#   Writes the setup script for a base image that needs to be
+#   executed with the virtual machine running.
+#
+
 # Constructor: new
 #
 #   Constructor for BaseImageSetup class.
 #
 # Parameters:
 #
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #
 #   A recently created <ANSTE::ScriptGen::BaseImageSetup> object.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
 sub new # (image) returns new BaseScriptGen object
 {
@@ -63,18 +75,16 @@ sub new # (image) returns new BaseScriptGen object
 
 # Method: writeScript
 #
-#
+#   Writes the script to the given file.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   file - String with the name of the file to be written.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidFile> - throw if argument is not a writable file
 #
 sub writeScript # (file)
 {

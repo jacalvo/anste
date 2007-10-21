@@ -24,16 +24,30 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
 
+# Class: HostPreInstall
+#
+#   Writes the setup script for a host image that is executed on
+#   a mounted image, before creating the virtual machine.
+#   The generated script updates the hostname and network configuration
+#   on the image.
+#
+
 # Constructor: new
 #
 #   Constructor for HostPreInstall class.
 #
 # Parameters:
 #
+#   host - <ANSTE::Scenario::Host> object.
 #
 # Returns:
 #
 #   A recently created <ANSTE::ScriptGen::HostPreInstall> object.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
 sub new # (image) returns new HostInstallGen object
 {
@@ -64,18 +78,16 @@ sub new # (image) returns new HostInstallGen object
 
 # Method: writeScript
 #
-#
+#   Writes the script to the given file.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   file - String with the name of the file to be written.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidFile> - throw if argument is not a writable file
 #
 sub writeScript # (file)
 {

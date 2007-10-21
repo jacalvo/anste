@@ -24,8 +24,13 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
 
-# Generates the scripts that installs ansted and anste-slave
-# in a base image.
+# Class: BasePreInstall
+#
+#   Writes the setup script for a base image that is executed 
+#   on a mounted image, before creating the virtual machine.
+#   The generated script installs ansted and anste-slave in
+#   the base image.
+#
 
 # Constructor: new
 #
@@ -33,10 +38,16 @@ use ANSTE::Exceptions::InvalidFile;
 #
 # Parameters:
 #
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #
 #   A recently created <ANSTE::ScriptGen::BasePreInstall> object.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
 sub new # (image) returns new CommInstallGen object
 {
@@ -66,18 +77,16 @@ sub new # (image) returns new CommInstallGen object
 
 # Method: writeScript
 #
-#
+#   Writes the script to the given file.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   file - String with the name of the file to be written.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidFile> - throw if argument is not a writable file
 #
 sub writeScript # (file)
 {
