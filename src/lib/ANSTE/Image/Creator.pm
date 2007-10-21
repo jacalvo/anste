@@ -26,12 +26,18 @@ use ANSTE::Exceptions::InvalidType;
 
 use Error qw(:try);
 
+# Class: Creator
+#
+#   Creates base images.
+#
+
 # Constructor: new
 #
 #   Constructor for Creator class.
 #
 # Parameters:
 #
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #
@@ -59,18 +65,11 @@ sub new # (image) returns new ImageCreator object
 
 # Method: createImage
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
+#   Does the image creation.
 #
 # Exceptions:
 #
-#
+#   TODO: Change dies to throw ANSTE::Exceptions::Generic??
 #
 sub createImage
 {

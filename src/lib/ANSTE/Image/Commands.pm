@@ -31,12 +31,18 @@ use ANSTE::Exceptions::InvalidType;
 use Cwd;
 use File::Temp qw(tempfile tempdir);
 
+# Class: Commands
+#
+#   Set of commands for manipulating a image. 
+#
+
 # Constructor: new
 #
 #   Constructor for Commands class.
 #
 # Parameters:
 #
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #
@@ -78,18 +84,12 @@ sub new # (image) returns new Commands object
 
 # Method: ip
 #
-#
-#
-# Parameters:
-#
+#   Returns the IP address of the image.
+#   Either from the image data or from the configuration.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the IP address of the image
 #
 sub ip
 {
@@ -108,18 +108,7 @@ sub ip
 
 # Method: create
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Creates the image using the virtualizer interface.
 #
 sub create
 {
@@ -137,18 +126,7 @@ sub create
 
 # Method: mount
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Mounts the image to a temporary mount point.
 #
 sub mount
 {
@@ -175,18 +153,12 @@ sub mount
 
 # Method: copyBaseFiles
 #
-#
-#
-# Parameters:
-#
+#   Generates and executes the pre-install script that copies
+#   the necessary files on the base image.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   integer - return value of the pre-install script
 #
 sub copyBaseFiles
 {
@@ -200,18 +172,12 @@ sub copyBaseFiles
 
 # Method: copyHostFiles
 #
-#
-#
-# Parameters:
-#
+#   Generates and executes the pre-install script that copies
+#   the necessary files on a host image.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   integer - return value of the pre-install script
 #
 sub copyHostFiles 
 {
@@ -225,18 +191,11 @@ sub copyHostFiles
 
 # Method: installBasePackages
 #
-#
-#
-# Parameters:
-#
+#   Install the image base packages using the system interface.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   integer - exit code of the installation process
 #
 sub installBasePackages
 {
@@ -268,18 +227,17 @@ sub installBasePackages
 
 # Method: prepareSystem
 #
-#
-#
-# Parameters:
-#
+#   Prepares a base image executing the proper pre-setup, setup
+#   and post-setup scripts.
+#   The setup script is generated before its execution.
 #
 # Returns:
 #
-#
+#   boolean - true if sucesss, false otherwise
 #
 # Exceptions:
 #
-#
+#   TODO: change dies to throw exception
 #
 sub prepareSystem 
 {
@@ -328,18 +286,15 @@ sub prepareSystem
 
 # Method: umount
 #
-#
-#
-# Parameters:
-#
+#   Umounts the image.
 #
 # Returns:
 #
-#
+#   boolean - true if sucesss, false otherwise
 #
 # Exceptions:
 #
-#
+#   TODO: change dies to throw exception
 #
 sub umount
 {
@@ -357,18 +312,11 @@ sub umount
 
 # Method: deleteMountPoint
 #
-#
-#
-# Parameters:
-#
+#   Deletes the temporary mount point.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   boolean - true if sucesss, false otherwise
 #
 sub deleteMountPoint
 {
@@ -381,18 +329,7 @@ sub deleteMountPoint
 
 # Method: shutdown
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Shuts down a running image using the virtualizer interface.
 #
 sub shutdown
 {
@@ -412,18 +349,15 @@ sub shutdown
 
 # Method: resize
 #
-#
+#   Changes the size of the image.
 #
 # Parameters:
 #
+#   size - String with the new size of the image.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   boolean - true if sucesss, false otherwise
 #
 sub resize # (size)
 {
@@ -446,18 +380,8 @@ sub resize # (size)
 
 # Method: createVirtualMachine
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Creates the image virtual machine using the virtualizer interface,
+#   once the machine is created it waits for the system start.
 #
 sub createVirtualMachine
 {
@@ -483,18 +407,11 @@ sub createVirtualMachine
 
 # Method: executeScripts
 #
-#
+#   Executes the given list of scripts on the running image.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   list - Reference to the list of scripts to be executed.
 #
 sub executeScripts # (list)
 {

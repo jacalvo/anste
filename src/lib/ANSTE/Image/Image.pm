@@ -24,12 +24,21 @@ use ANSTE::Scenario::Network;
 use ANSTE::Scenario::NetworkInterface;
 use ANSTE::Exceptions::MissingArgument;
 
+# Class: Image
+#
+#   Extended <ANSTE::Scenario::BaseImage> adding information needed
+#   for deployment like real hostname, ip address and memory size.
+#
+
 # Constructor: new
 #
 #   Constructor for Image class.
 #
 # Parameters:
 #
+#   name   - *optional* String with the image hostname.
+#   ip     - *optional* String with the image IP address.
+#   memory - *optional* String with the image memory size.
 #
 # Returns:
 #
@@ -60,18 +69,11 @@ sub new # returns new Image object
 
 # Method: ip
 #
-#
-#
-# Parameters:
-#
+#   Gets the image IP address.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the ip address
 #
 sub ip # returns ip string
 {
@@ -82,18 +84,15 @@ sub ip # returns ip string
 
 # Method: setIp
 #
-#
+#   Sets the image IP address.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   ip - String with the image IP address.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setIp # ip string
 {
@@ -107,18 +106,11 @@ sub setIp # ip string
 
 # Method: memory
 #
-#
-#
-# Parameters:
-#
+#   Gets the memory size string.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the memory size
 #
 sub memory # returns memory string 
 {
@@ -129,18 +121,15 @@ sub memory # returns memory string
 
 # Method: setMemory
 #
-#
+#   Sets the memory size string.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   memory - String with the memory size.    
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setMemory # (memory)
 {
@@ -154,18 +143,11 @@ sub setMemory # (memory)
 
 # Method: network
 #
-#
-#
-# Parameters:
-#
+#   Returns the object with the network configuration of the image.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - <ANSTE::Scenario::Network> object.
 #
 sub network # returns Network object
 {
@@ -174,6 +156,19 @@ sub network # returns Network object
 	return $self->{network};
 }
 
+# Method: setNetwork
+#
+#   Sets the object with the network configuration of the image
+#
+# Parameters:
+#
+#   network - <ANSTE::Scenario::Network> object.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
+#
 sub setNetwork # (network)
 {
 	my ($self, $network) = @_;	
@@ -181,23 +176,21 @@ sub setNetwork # (network)
     defined $network or
         throw ANSTE::Exceptions::MissingArgument('network');
 
+    if (not $network->isa('ANSTE::Scenario::Network')) {
+        throw ANSTE::Exceptions::InvalidType('network',
+                                             'ANSTE::Scenario::Network');
+    }
+
 	$self->{network} = $network;
 }
 
 # Method: commInterface
 #
-#
-#
-# Parameters:
-#
+#   Returns the object representing the communication interface of the image.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - <ANSTE::Scenario::NetworkInterface> object.
 #
 sub commInterface 
 {
