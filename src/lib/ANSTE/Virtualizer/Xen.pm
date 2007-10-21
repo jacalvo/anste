@@ -173,12 +173,12 @@ sub createImageCopy # (baseimage, newimage)
         throw ANSTE::Exceptions::MissingArgument('newimage');
 
     if (not $baseimage->isa('ANSTE::Scenario::BaseImage')) {
-        throw EBox::Exception::InvalidType('baseimage',
-                                           'ANSTE::Scenario::BaseImage');
+        throw ANSTE::Exception::InvalidType('baseimage',
+                                            'ANSTE::Scenario::BaseImage');
     }
     if (not $newimage->isa('ANSTE::Image::Image')) {
-        throw EBox::Exception::InvalidType('newimage',
-                                           'ANSTE::Image::Image');
+        throw ANSTE::Exception::InvalidType('newimage',
+                                            'ANSTE::Image::Image');
     }
 
     my $path = ANSTE::Config->instance()->imagePath();

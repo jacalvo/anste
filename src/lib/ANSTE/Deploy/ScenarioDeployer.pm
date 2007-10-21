@@ -53,8 +53,8 @@ sub new # (scenario) returns new ScenarioDeployer object
         throw ANSTE::Exceptions::MissingArgument('scenario');
 
     if (not $scenario->isa('ANSTE::Scenario::Scenario')) {
-        throw EBox::Exception::InvalidType('scenario',
-                                           'ANSTE::Scenario::Scenario');
+        throw ANSTE::Exception::InvalidType('scenario',
+                                            'ANSTE::Scenario::Scenario');
     }
 	
 	$self->{scenario} = $scenario;

@@ -30,12 +30,15 @@ use ANSTE::Exceptions::InvalidFile;
 
 use Error qw(:try);
 
+# Class: Runner
+#
+#   Class used to run separate test suites or entire directories
+#   containing several suites.
+#
+
 # Constructor: new
 #
 #   Constructor for Runner class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -62,22 +65,23 @@ sub new # returns new Runner object
 
 # Method: runDir
 #
-#
+#   Runs all the suites of the given directory.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   suites - String with the directory that contains the suites.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub runDir # (suites)
 {
     my ($self, $suites) = @_;
+
+	defined $suites or
+		throw ANSTE::Exceptions::MissingArgument('suites');
+	
 
     my $dir = ANSTE::Config->instance()->testFile($suites); 
 
@@ -86,6 +90,7 @@ sub runDir # (suites)
     my @dirs = readdir($DIR);
     closedir($DIR);
 
+#   FIXME: Throw an exception instead of dying??
     if (@dirs == 0) {
         die "There isn't any test suite in $suites";
     }
@@ -102,22 +107,28 @@ sub runDir # (suites)
 
 # Method: runSuite
 #
-#
+#   Runs a given suite of tests.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   suite - <ANSTE::Test::Suite> object.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
 sub runSuite # (suite)
 {
     my ($self, $suite) = @_;
+
+    defined $suite or
+        throw ANSTE::Exceptions::MissingArgument('suite');
+
+    if (not $suite->isa('ANSTE::Test::Suite')) {
+        throw ANSTE::Exception::InvalidType('suite',
+                                            'ANSTE::Test::Suite');
+    }
 
     $self->{suite} = $suite;
 
@@ -144,18 +155,11 @@ sub runSuite # (suite)
 
 # Method: report
 #
-#
-#
-# Parameters:
-#
+#   Gets the object containing the test results report.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - <ANSTE::Report::Report> object.
 #
 sub report # returns report object
 {

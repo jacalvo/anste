@@ -23,18 +23,20 @@ use ANSTE::Exceptions::MissingArgument;
 
 use XML::DOM;
 
+# Class: Suite
+#
+#   Contains the information of a test suite.
+#
+
 # Constructor: new
 #
 #   Constructor for Suite class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
 #   A recently created <ANSTE::Test::Suite> object.
 #
-sub new # (dir) returns new TestSuite object
+sub new # returns new TestSuite object
 {
 	my ($class, $dir) = @_;
 	my $self = {};
@@ -52,18 +54,11 @@ sub new # (dir) returns new TestSuite object
 
 # Method: name
 #
-#
-#
-# Parameters:
-#
+#   Gets the name of the test suite.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Name of the test suite.
 #
 sub name # returns name string
 {
@@ -74,18 +69,15 @@ sub name # returns name string
 
 # Method: setName
 #
-#
+#   Sets the name for this test suite object to the given value.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   name - String with the name for the test suite.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
 sub setName # name string
 {
@@ -99,18 +91,11 @@ sub setName # name string
 
 # Method: desc
 #
-#
-#
-# Parameters:
-#
+#   Gets the description of the test suite.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Description of the test suite.
 #
 sub desc # returns desc string
 {
@@ -121,18 +106,15 @@ sub desc # returns desc string
 
 # Method: setDesc
 #
-#
+#   Sets the description for this test suite object to the given value.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   name - String with the description for the test suite.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
 sub setDesc # desc string
 {
@@ -146,18 +128,11 @@ sub setDesc # desc string
 
 # Method: dir
 #
-#
-#
-# Parameters:
-#
+#   Gets the directory of the test suite
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Name of the directory of the test suite.
 #
 sub dir # returns dir string
 {
@@ -168,18 +143,15 @@ sub dir # returns dir string
 
 # Method: setDir
 #
-#
+#   Sets the directory for this test suite object to the given value.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   name - String with the directory of the test suite.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
 sub setDir # dir string
 {
@@ -193,18 +165,11 @@ sub setDir # dir string
 
 # Method: scenario
 #
-#
-#
-# Parameters:
-#
+#   Gets the scenario of this suite, where the tests have to be executed.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - String with the name of the scenario.
 #
 sub scenario # returns scenario string
 {
@@ -215,18 +180,15 @@ sub scenario # returns scenario string
 
 # Method: setScenario
 #
-#
+#   Sets the scenario name of this suite to the given value.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   scenario - String with the name of the scenario.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
 sub setScenario # scenario string
 {
@@ -240,18 +202,11 @@ sub setScenario # scenario string
 
 # Method: tests
 #
-#
-#
-# Parameters:
-#
+#   Gets the list of all tests of the suite.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   list ref - Reference to the list of tests.
 #
 sub tests # return tests list ref
 {
@@ -262,18 +217,15 @@ sub tests # return tests list ref
 
 # Method: addTest
 #
-#
+#   Adds a given test to the suite.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   test - <ANSTE::Test::Test> object.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
 sub addTest # (test)
 {
@@ -287,18 +239,17 @@ sub addTest # (test)
 
 # Method: loadFromDir
 #
-#
+#   Loads the information of the test suite at the given directory.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   dirname - String with the name of the directory that contains a file
+#             called suite.xml with the data of the suite.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#   <ANSTE::Exceptions::InvalidFile> - throw if parameter is not a valid suite
 #
 sub loadFromDir # (dirname)
 {

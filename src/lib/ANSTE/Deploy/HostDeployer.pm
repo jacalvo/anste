@@ -66,7 +66,7 @@ sub new # (host) returns new HostDeployer object
         throw ANSTE::Exceptions::MissingArgument('host');
 
     if (not $host->isa('ANSTE::Scenario::Host')) {
-        throw EBox::Exception::InvalidType('host',
+        throw ANSTE::Exception::InvalidType('host',
                                            'ANSTE::Scenario::Host');
     }
 

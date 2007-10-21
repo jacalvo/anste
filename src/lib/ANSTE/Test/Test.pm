@@ -22,6 +22,19 @@ use ANSTE::Exceptions::MissingArgument;
 
 use XML::DOM;
 
+# Class: Test
+#
+#   Contains the information of a test.
+#
+
+# Constructor: new
+#
+#   Constructor for Test class.
+#
+# Returns:
+#
+#   A recently created <ANSTE::Test::Test> object.
+#
 sub new # returns new Test object
 {
 	my ($class) = @_;
@@ -37,6 +50,14 @@ sub new # returns new Test object
 	return $self;
 }
 
+# Method: name
+#
+#   Gets the name of the test.
+#
+# Returns:
+#
+#   string - Name of the test.
+#
 sub name # returns name string
 {
 	my ($self) = @_;
@@ -44,6 +65,18 @@ sub name # returns name string
 	return $self->{name};
 }
 
+# Method: setName
+#
+#   Sets the name for this test object to the given value.
+#
+# Parameters:
+#
+#   name - String with the name for the test.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
 sub setName # name string
 {
 	my ($self, $name) = @_;	
@@ -54,6 +87,14 @@ sub setName # name string
 	$self->{name} = $name;
 }
 
+# Method: desc
+#
+#   Gets the description of the test.
+#
+# Returns:
+#
+#   string - Description of the test.
+#
 sub desc # returns desc string
 {
 	my ($self) = @_;
@@ -61,6 +102,18 @@ sub desc # returns desc string
 	return $self->{desc};
 }
 
+# Method: setDesc
+#
+#   Sets the description for this test object to the given value.
+#
+# Parameters:
+#
+#   name - String with the description for the test.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
 sub setDesc # desc string
 {
 	my ($self, $desc) = @_;
@@ -71,6 +124,14 @@ sub setDesc # desc string
 	$self->{desc} = $desc;
 }
 
+# Method: host
+#
+#   Gets the host where the test have to be executed.
+#
+# Returns:
+#
+#   string - Hostname where execute the test.
+#
 sub host # returns host string
 {
 	my ($self) = @_;
@@ -78,6 +139,18 @@ sub host # returns host string
 	return $self->{host};
 }
 
+# Method: setHost
+#
+#   Sets the execution host for this test object to the given value.
+#
+# Parameters:
+#
+#   name - String with the hostname where the test have to be executed.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
 sub setHost # host string
 {
 	my ($self, $host) = @_;
@@ -88,6 +161,14 @@ sub setHost # host string
 	$self->{host} = $host;
 }
 
+# Method: dir
+#
+#   Gets the directory of the test scripts.
+#
+# Returns:
+#
+#   string - Name of the directory of this test.
+#
 sub dir # returns dir string
 {
 	my ($self) = @_;
@@ -95,6 +176,18 @@ sub dir # returns dir string
 	return $self->{dir};
 }
 
+# Method: setDir
+#
+#   Sets the directory for this test object to the given value.
+#
+# Parameters:
+#
+#   name - String with the relative path of the test directory.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
 sub setDir # dir string
 {
 	my ($self, $dir) = @_;
@@ -105,6 +198,14 @@ sub setDir # dir string
 	$self->{dir} = $dir;
 }
 
+# Method: selenium
+#
+#   Gets if this is a selenium test.
+#
+# Returns:
+#
+#   boolean - true if it's a selenium test, false if not
+#
 sub selenium # returns boolean
 {
     my ($self) = @_;
@@ -112,6 +213,10 @@ sub selenium # returns boolean
     return $self->{selenium};
 }
 
+# Method: setSelenium
+#
+#   Specifies that this test is a Selenium one. 
+#
 sub setSelenium
 {
     my ($self) = @_;
@@ -119,6 +224,20 @@ sub setSelenium
     $self->{selenium} = 1;
 }
 
+# Method: load
+#
+#   Loads the information contained in the given XML node representing
+#   the test into this object.
+#
+# Parameters:
+#
+#   node - <XML::DOM::Element> object containing the test data.    
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
+#
 sub load # (node)
 {
 	my ($self, $node) = @_;
