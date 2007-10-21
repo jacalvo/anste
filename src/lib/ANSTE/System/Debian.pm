@@ -25,6 +25,12 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
 
+# Class: System
+#
+#    Implementation of the System class that interacts
+#    with the Debian GNU/Linux system.
+#
+
 # Method: mountImage 
 #
 #   Overriden method that executes mount with
@@ -160,7 +166,14 @@ sub updatePackagesCommand # returns string
 }
 
 # Method: enableInterfacesCommand
-# FIXME: documentation
+#
+#   Overriden method that returns the system-specific
+#   command to enable network interfaces.
+#
+# Returns:
+#
+#   string - command string
+#
 sub enableInterfacesCommand # returns string
 {
     my ($self) = @_;
@@ -168,7 +181,7 @@ sub enableInterfacesCommand # returns string
     return 'ifup -a';
 }
 
-# Method: updatePackagesCommand
+# Method: cleanPackagesCommand
 #
 #   Overriden method that returns the Debian command
 #   to clean packages cache.
@@ -232,18 +245,20 @@ sub installVars # return strings
 
 # Method: networkConfig
 #
-#
+#   Overriden method that returns the network configuration
+#   for a given network config passed as an argument.
 #
 # Parameters:
 #
+#   network - <ANSTE::Scenario::Network> object.
 #
 # Returns:
 #
-#
+#   string - contains the network configuration
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub networkConfig # (network) returns string
 {
@@ -310,18 +325,20 @@ sub initialNetworkConfig # (iface) returns string
 
 # Method: hostnameConfig
 #
-#
+#   Overriden method that returns the hostname configuration
+#   for a the given hostname passed as an argument.
 #
 # Parameters:
 #
+#   hostname - String with the hostname for write the config.
 #
 # Returns:
 #
-#
+#   string - contains the hostname configuration
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub hostnameConfig # (hostname) returns string
 {
@@ -335,18 +352,20 @@ sub hostnameConfig # (hostname) returns string
 
 # Method: hostsConfig
 #
-#
+#   Overriden method that returns the hosts configuration
+#   for a the given hostname passed as an argument.
 #
 # Parameters:
 #
+#   hostname - String with the hostname for write the config.
 #
 # Returns:
 #
-#
+#   string - contains the network hosts configuration
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub hostsConfig # (hostname) returns string
 {
@@ -375,18 +394,20 @@ sub hostsConfig # (hostname) returns string
 
 # Method: storeMasterAddress
 #
-#
+#   Overriden method that returns the command for store the master
+#   address in the slave host.
 #
 # Parameters:
 #
+#   address - String with the IP address to store.
 #
 # Returns:
 #
-#
+#   string - contains the command to store the address
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub storeMasterAddress # (address) returns string
 {
@@ -400,18 +421,21 @@ sub storeMasterAddress # (address) returns string
 
 # Method: copyToMountCommand
 #
-#
+#   Overriden method that returns the command used to copy a given
+#   file to a given destiny on a mounted image.
 #
 # Parameters:
 #
+#   orig - String with the origin file to copy.
+#   dest - String with the destiny of the copy on the mounted image.
 #
 # Returns:
 #
-#
+#   string - contains the command to copy to a mounted image
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub copyToMountCommand # (orig, dest) returns string
 {
@@ -427,18 +451,20 @@ sub copyToMountCommand # (orig, dest) returns string
 
 # Method: createMountDirCommand
 #
-#
+#   Overriden method that returns the command used to create a
+#   directory on a mounted image.
 #
 # Parameters:
 #
+#   path - String with the full path of directories to be created.
 #
 # Returns:
 #
-#
+#   string - contains the command
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub createMountDirCommand # (path) returns string
 {
@@ -452,14 +478,12 @@ sub createMountDirCommand # (path) returns string
 
 # Method: firewallDefaultRules
 #
-#
-#
-# Parameters:
-#
+#   Overriden method that returns the commands needed to set
+#   the default firewall (no filtering).
 #
 # Returns:
 #
-#
+#   string - contains the commands
 #
 # Exceptions:
 #
@@ -481,18 +505,21 @@ sub firewallDefaultRules # returns string
 
 # Method: enableNAT
 #
-#
+#   Overriden method that returns the command that enables NAT 
+#   on a given network interface from a given source address.
 #
 # Parameters:
 #
+#   iface - String with the interface to enable masquerading.
+#   sourceAddr - String with the source IP address to enable the NAT.
 #
 # Returns:
 #
-#
+#   string - contains the command
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub enableNAT # (iface, sourceAddr)
 {
@@ -515,18 +542,21 @@ sub enableNAT # (iface, sourceAddr)
 
 # Method: disableNAT
 #
-#
+#   Overriden method that returns the command that disables NAT on 
+#   a given network interface from a given source address.
 #
 # Parameters:
 #
+#   iface - String with the interface to disable masquerading.
+#   sourceAddr - String with the source IP address to disable the NAT.
 #
 # Returns:
 #
-#
+#   string - contains the command
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub disableNAT # (iface, sourceAddr)
 {
@@ -543,18 +573,23 @@ sub disableNAT # (iface, sourceAddr)
 
 # Method: executeSelenium
 #
-#
+#   Overriden method that returns the command that executes Selenium.
 #
 # Parameters:
 #
+#   jar - String with the path of the selenium jar.
+#   browser - String with the web browser to be used.
+#   url - String with the url of the web we want to test.
+#   testFile - String with the filename of the Selenium test suite.
+#   resultFile - String with the filename of the Selenium results to be saved.
 #
 # Returns:
 #
-#
+#   string - contains the command
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub executeSelenium # (%params)
 {
@@ -586,18 +621,21 @@ sub executeSelenium # (%params)
 
 # Method: startVideoRecording
 #
-#
+#   Overriden method that returns the command that should
+#   be used to start video recording on the specific system.
+#   The video is stored with the given filename.
 #
 # Parameters:
 #
+#   filename - String with the filename of the video to store.
 #
 # Returns:
 #
-#
+#   string - contains the command
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidFile> - throw if file is not writable
 #
 sub startVideoRecording # (filename)
 {
@@ -625,18 +663,12 @@ sub startVideoRecording # (filename)
 
 # Method: stopVideoRecording
 #
-#
-#
-# Parameters:
-#
+#   Overriden method that returns the command that should
+#   be used to stop video recording on the specific system.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the command
 #
 sub stopVideoRecording
 {

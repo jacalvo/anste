@@ -22,13 +22,20 @@ use ANSTE::Config;
 use ANSTE::Exceptions::NotImplemented;
 use ANSTE::Exceptions::MissingArgument;
 
+# Class: System
+#
+#   Abstract class with the methods called by the rest of the ANSTE
+#   framework to interact with the operating system software and have to
+#   be implemented by each system backend.
+#
+
 # Constructor: new
 #   
-#   Constructor for Virtualizer class and his derivated classes.
+#   Constructor for System class and his derivated classes.
 #
 # Returns:
 #
-#   A recently created <ANSTE::Virtualizer::Virtualizer> object
+#   A recently created <ANSTE::System::System> object
 #
 sub new
 {
@@ -65,36 +72,6 @@ sub execute # (command)
     return system($command) == 0;
 }
 
-sub _executeSavingLog # (command, log)
-{
-    my ($self, $command, $log) = @_;
-
-    # Take copies of the file descriptors
-    open(OLDOUT, '>&STDOUT')   or return 1;
-    open(OLDERR, '>&STDERR')   or return 1;
-
-    # Redirect stdout and stderr
-    open(STDOUT, "> $log")     or return 1;
-    open(STDERR, '>&STDOUT')   or return 1;
-
-    my $ret = system($command);
-
-    # Close the redirected filehandles
-    close(STDOUT)              or return 1;
-    close(STDERR)              or return 1;
-
-    # Restore stdout and stderr
-    open(STDERR, '>&OLDERR')   or return 1;
-    open(STDOUT, '>&OLDOUT')   or return 1;
-
-    # Avoid leaks by closing the independent copies
-    close(OLDOUT)              or return 1;
-    close(OLDERR)              or return 1;
-
-    return $ret;
-}
-
-
 # Method: mountImage 
 #
 #   Override this method to execute the command that 
@@ -107,7 +84,7 @@ sub _executeSavingLog # (command, log)
 #
 # Returns:
 #   
-#   boolean    - indicates if the process has been successful
+#   boolean - indicates if the process has been successful
 #               
 # Exceptions:
 #
@@ -129,7 +106,7 @@ sub mountImage # (image, mountPoint)
 #
 # Returns:
 #   
-#   boolean -   indicates if the process has been successful
+#   boolean - indicates if the process has been successful
 #               
 # Exceptions:
 #
@@ -238,8 +215,8 @@ sub cleanPackagesCommand # returns string
 
 # Method: installPackagesCommand 
 #
-#   Overriden method that returns the Debian command
-#   to install the given list of packages 
+#   Override this method to return the Debian command
+#   to install the given list of packages. 
 #
 # Parameters:
 #   
@@ -260,7 +237,7 @@ sub installPackagesCommand # (packages) returns string
 
 # Method: installVars
 #
-#   Overriden method that returns the environment variables needed 
+#   Override this method to return the environment variables needed 
 #   for the packages installation process.
 #
 # Returns:
@@ -278,7 +255,18 @@ sub installVars # return strings
 
 
 # Method: networkConfig
-# FIXME documentation
+#
+#   Override this method to return the network configuration
+#   for a given network config passed as an argument.
+#
+# Parameters:
+#
+#   network - <ANSTE::Scenario::Network> object.
+#
+# Returns:
+#
+#   string - contains the network configuration
+#
 # Exceptions:
 #
 #   throws <ANSTE::Exceptions::NotImplemented> 
@@ -289,7 +277,18 @@ sub networkConfig # (network) returns string
 }
 
 # Method: hostnameConfig
-# FIXME documentation
+#
+#   Override this method to return the hostname configuration
+#   for a the given hostname passed as an argument.
+#
+# Parameters:
+#
+#   hostname - String with the hostname for write the config.
+#
+# Returns:
+#
+#   string - contains the hostname configuration
+#
 # Exceptions:
 #
 #   throws <ANSTE::Exceptions::NotImplemented> 
@@ -300,7 +299,18 @@ sub hostnameConfig # (hostname) returns string
 }
 
 # Method: hostsConfig
-# FIXME documentation
+#
+#   Override this method to return the hosts configuration
+#   for a the given hostname passed as an argument.
+#
+# Parameters:
+#
+#   hostname - String with the hostname for write the config.
+#
+# Returns:
+#
+#   string - contains the network hosts configuration
+#
 # Exceptions:
 #
 #   throws <ANSTE::Exceptions::NotImplemented> 
@@ -311,7 +321,18 @@ sub hostsConfig # (hostname) returns string
 }
 
 # Method: storeMasterAddress
-# FIXME documentation
+#
+#   Override this method to return the command for store the master
+#   address in the slave host.
+#
+# Parameters:
+#
+#   address - String with the IP address to store.
+#
+# Returns:
+#
+#   string - contains the command to store the address
+#
 # Exceptions:
 #
 #   throws <ANSTE::Exceptions::NotImplemented> 
@@ -322,7 +343,19 @@ sub storeMasterAddress # (address) returns string
 }
 
 # Method: copyToMountCommand
-# FIXME documentation
+#
+#   Override this method to return the command used to copy a given
+#   file to a given destiny on a mounted image.
+#
+# Parameters:
+#
+#   orig - String with the origin file to copy.
+#   dest - String with the destiny of the copy on the mounted image.
+#
+# Returns:
+#
+#   string - contains the command to copy to a mounted image
+#
 # Exceptions:
 #
 #   throws <ANSTE::Exceptions::NotImplemented> 
@@ -334,18 +367,20 @@ sub copyToMountCommand # (orig, dest) returns string
 
 # Method: createMountDirCommand
 #
-#
+#   Override this method to return the command used to create a
+#   directory on a mounted image.
 #
 # Parameters:
 #
+#   path - String with the full path of directories to be created.
 #
 # Returns:
 #
-#
+#   string - contains the command
 #
 # Exceptions:
 #
-#
+#   throws <ANSTE::Exceptions::NotImplemented> 
 #
 sub createMountDirCommand # (path) returns string
 {
@@ -354,18 +389,16 @@ sub createMountDirCommand # (path) returns string
 
 # Method: firewallDefaultRules
 #
-#
-#
-# Parameters:
-#
+#   Override this method to return the commands needed to set
+#   the default firewall (no filtering).
 #
 # Returns:
 #
-#
+#   string - contains the commands
 #
 # Exceptions:
 #
-#
+#   throws <ANSTE::Exceptions::NotImplemented> 
 #
 sub firewallDefaultRules # returns string
 {
@@ -374,18 +407,21 @@ sub firewallDefaultRules # returns string
 
 # Method: enableNAT
 #
-#
+#   Override this method to return the command that enablse NAT 
+#   on a given network interface from a given source address.
 #
 # Parameters:
 #
+#   iface - String with the interface to enable masquerading.
+#   sourceAddr - String with the source IP address to enable the NAT.
 #
 # Returns:
 #
-#
+#   string - contains the command
 #
 # Exceptions:
 #
-#
+#   throws <ANSTE::Exceptions::NotImplemented> 
 #
 sub enableNAT # (iface, sourceAddr)
 {
@@ -394,18 +430,21 @@ sub enableNAT # (iface, sourceAddr)
 
 # Method: disableNAT
 #
-#
+#   Override this method to return the command that disables NAT 
+#   on a given network interface from a given source address.
 #
 # Parameters:
 #
+#   iface - String with the interface to disable masquerading.
+#   sourceAddr - String with the source IP address to disable the NAT.
 #
 # Returns:
 #
-#
+#   string - contains the command
 #
 # Exceptions:
 #
-#
+#   throws <ANSTE::Exceptions::NotImplemented> 
 #
 sub disableNAT # (iface, sourceAddr)
 {
@@ -414,18 +453,23 @@ sub disableNAT # (iface, sourceAddr)
 
 # Method: executeSelenium
 #
-#
+#   Override this method to return the command that executes Selenium.
 #
 # Parameters:
 #
+#   jar - String with the path of the selenium jar.
+#   browser - String with the web browser to be used.
+#   url - String with the url of the web we want to test.
+#   testFile - String with the filename of the Selenium test suite.
+#   resultFile - String with the filename of the Selenium results to be saved.
 #
 # Returns:
 #
-#
+#   string - contains the command
 #
 # Exceptions:
 #
-#
+#   throws <ANSTE::Exceptions::NotImplemented> 
 #
 sub executeSelenium # (%params)
 {
@@ -434,18 +478,21 @@ sub executeSelenium # (%params)
 
 # Method: startVideoRecording
 #
-#
+#   Override this method to return the command that should
+#   be used to start video recording on the specific system.
+#   The video is stored with the given filename.
 #
 # Parameters:
 #
+#   filename - String with the filename of the video to store.
 #
 # Returns:
 #
-#
+#   string - contains the command
 #
 # Exceptions:
 #
-#
+#   throws <ANSTE::Exceptions::NotImplemented> 
 #
 sub startVideoRecording # (filename)
 {
@@ -454,22 +501,51 @@ sub startVideoRecording # (filename)
 
 # Method: stopVideoRecording
 #
-#
-#
-# Parameters:
-#
+#   Override this method to return the command that should
+#   be used to stop video recording on the specific system.
 #
 # Returns:
 #
-#
+#   string - contains the command
 #
 # Exceptions:
 #
-#
+#   throws <ANSTE::Exceptions::NotImplemented> 
 #
 sub stopVideoRecording
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
+
+sub _executeSavingLog # (command, log)
+{
+    my ($self, $command, $log) = @_;
+
+    # Take copies of the file descriptors
+    open(OLDOUT, '>&STDOUT')   or return 1;
+    open(OLDERR, '>&STDERR')   or return 1;
+
+    # Redirect stdout and stderr
+    open(STDOUT, "> $log")     or return 1;
+    open(STDERR, '>&STDOUT')   or return 1;
+
+    my $ret = system($command);
+
+    # Close the redirected filehandles
+    close(STDOUT)              or return 1;
+    close(STDERR)              or return 1;
+
+    # Restore stdout and stderr
+    open(STDERR, '>&OLDERR')   or return 1;
+    open(STDOUT, '>&OLDOUT')   or return 1;
+
+    # Avoid leaks by closing the independent copies
+    close(OLDOUT)              or return 1;
+    close(OLDERR)              or return 1;
+
+    return $ret;
+}
+
+
 
 1;
