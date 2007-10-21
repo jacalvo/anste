@@ -27,6 +27,12 @@ use ANSTE::Validate;
 
 use Config::Tiny;
 
+# Class: Config
+#
+#   Contains the values readed from the config file as long as
+#   the default and overriden (by commandline options) ones.
+#
+
 use constant CONFIG_FILE => 'anste.conf';
 
 my @CONFIG_PATHS = ('data/conf', '/etc/anste', '/usr/local/etc/anste');
@@ -36,18 +42,11 @@ my $singleton;
 
 # Method: instance
 #
-#
-#
-# Parameters:
-#
+#   Returns a reference to the singleton object of this class
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - the class unique instance of type <ANSTE::Config>.
 #
 sub instance 
 {
@@ -82,18 +81,16 @@ sub instance
 
 # Method: check
 #
-#
-#
-# Parameters:
-#
+#   Tries to get all the options to validate them.
+#   An exception is thrown if there's an invalid option.
 #
 # Returns:
 #
-#
+#   boolean - true if all the options are correct.
 #
 # Exceptions:
 #
-#
+#   Different exceptions can be thrown depending of the wrong option.
 #
 sub check
 {
@@ -112,7 +109,6 @@ sub check
     $self->gateway();
     $self->natIface();
     $self->autoCreateImages();
-    $self->reportWriter();
     $self->seleniumRCjar();
     $self->seleniumBrowser();
     $self->seleniumVideo();
@@ -134,18 +130,11 @@ sub check
 
 # Method: configPath
 #
-#
-#
-# Parameters:
-#
+#   Gets the path of the used config file to read the values.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - String with the path to the configuration file.
 #
 sub configPath
 {
@@ -156,18 +145,16 @@ sub configPath
 
 # Method: setUserPath
 #
-#
+#   Sets an user data path alternative to the default data path.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   path - String with the path to use.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
 sub setUserPath # (path)
 {
@@ -185,18 +172,15 @@ sub setUserPath # (path)
 
 # Method: system
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the system option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::NotFound> - throw if system is not found
 #
 sub system
 {
@@ -214,18 +198,15 @@ sub system
 
 # Method: virtualizer
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the virtualizer option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::NotFound> - throw if virtualizer is not found
 #
 sub virtualizer
 {
@@ -243,18 +224,15 @@ sub virtualizer
 
 # Method: verbose
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the verbose option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub verbose
 {
@@ -273,18 +251,16 @@ sub verbose
 
 # Method: setVerbose
 #
-#
+#   Sets the value for the verbose option.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   value - String with the value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
 sub setVerbose # (value)
 {
@@ -303,18 +279,15 @@ sub setVerbose # (value)
 
 # Method: imagePath
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the images' path option. 
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub imagePath
 {
@@ -333,18 +306,15 @@ sub imagePath
 
 # Method: logPath
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the logs' path option. 
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub logPath
 {
@@ -363,18 +333,16 @@ sub logPath
 
 # Method: setLogPath
 #
-#
+#   Sets the value for the logs' path option.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   value - String with the value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
 sub setLogPath # (logPath)
 {
@@ -392,18 +360,15 @@ sub setLogPath # (logPath)
 
 # Method: deployPath
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the deploy path option. 
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub deployPath
 {
@@ -423,20 +388,17 @@ sub deployPath
 
 # Method: imageTypeFile
 #
-#
+#   Gets the full path of a given image file name.
 #
 # Parameters:
 #
+#   file - String with the file name.
 #
 # Returns:
 #
+#   string - The full path of the file.
 #
-#
-# Exceptions:
-#
-#
-#
-sub imageTypeFile
+sub imageTypeFile # (file)
 {
     my ($self, $file) = @_;
 
@@ -445,20 +407,17 @@ sub imageTypeFile
 
 # Method: scenarioFile
 #
-#
+#   Gets the full path of a given scenario file name.
 #
 # Parameters:
 #
+#   file - String with the file name.
 #
 # Returns:
 #
+#   string - The full path of the file.
 #
-#
-# Exceptions:
-#
-#
-#
-sub scenarioFile
+sub scenarioFile # (file)
 {
     my ($self, $file) = @_;
 
@@ -467,20 +426,17 @@ sub scenarioFile
 
 # Method: profileFile
 #
-#
+#   Gets the full path of a given profile file name.
 #
 # Parameters:
 #
+#   file - String with the file name.
 #
 # Returns:
 #
+#   string - The full path of the file.
 #
-#
-# Exceptions:
-#
-#
-#
-sub profileFile
+sub profileFile # (file)
 {
     my ($self, $file) = @_;
 
@@ -489,20 +445,17 @@ sub profileFile
 
 # Method: scriptFile
 #
-#
+#   Gets the full path of a given script file name.
 #
 # Parameters:
 #
+#   file - String with the file name.
 #
 # Returns:
 #
+#   string - The full path of the file.
 #
-#
-# Exceptions:
-#
-#
-#
-sub scriptFile
+sub scriptFile # (file)
 {
     my ($self, $file) = @_;
 
@@ -512,20 +465,17 @@ sub scriptFile
 
 # Method: testFile
 #
-#
+#   Gets the full path of a given test file name.
 #
 # Parameters:
 #
+#   file - String with the file name.
 #
 # Returns:
 #
+#   string - The full path of the file.
 #
-#
-# Exceptions:
-#
-#
-#
-sub testFile
+sub testFile # (file)
 {
     my ($self, $file) = @_;
 
@@ -534,18 +484,15 @@ sub testFile
 
 # Method: templatePath
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the templates' path option. 
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub templatePath
 {
@@ -564,18 +511,15 @@ sub templatePath
 
 # Method: anstedPort
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the ansted listen port option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub anstedPort
 {
@@ -594,18 +538,15 @@ sub anstedPort
 
 # Method: masterPort
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the master listen port option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub masterPort
 {
@@ -624,18 +565,16 @@ sub masterPort
 
 # Method: firstAddress
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the starting IP address option for the virtual
+#   machines.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub firstAddress
 {
@@ -654,18 +593,15 @@ sub firstAddress
 
 # Method: gateway
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the default gateway option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub gateway
 {
@@ -684,18 +620,11 @@ sub gateway
 
 # Method: natIface
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the outgoing NAT interface option.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Value for the option.
 #
 sub natIface
 {
@@ -709,18 +638,15 @@ sub natIface
 
 # Method: autoCreateImages
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the auto-create-images option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub autoCreateImages
 {
@@ -738,44 +664,18 @@ sub autoCreateImages
     return $auto;
 }
 
-# Method: reportWriter
-#
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
-#
-sub reportWriter
-{
-    my ($self) = @_;
-
-    my $writer = $self->_getOption('report', 'writer');
-
-    return $writer;
-}
-
 # Method: seleniumRCjar
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the path selenium-rc jar option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingConfig> - throw if option is missing
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub seleniumRCjar
 {
@@ -797,18 +697,11 @@ sub seleniumRCjar
 
 # Method: seleniumBrowser
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the Selenium browser option.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Value for the option.
 #
 sub seleniumBrowser
 {
@@ -823,18 +716,15 @@ sub seleniumBrowser
 
 # Method: seleniumVideo
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the Selenium video recording option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub seleniumVideo
 {
@@ -853,18 +743,16 @@ sub seleniumVideo
 
 # Method: setSeleniumVideo
 #
-#
+#   Sets the value for the Selenium video recording option.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   value - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present 
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
 sub setSeleniumVideo # (value)
 {
@@ -883,18 +771,15 @@ sub setSeleniumVideo # (value)
 
 # Method: seleniumRecordAll
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the Selenium record all videos option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub seleniumRecordAll
 {
@@ -916,18 +801,11 @@ sub seleniumRecordAll
 
 # Method: xenDir
 #
-#
-#
-# Parameters:
-#
+#   Gets the value of the Xen's dir option.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Value for the option.
 #
 sub xenDir
 {
@@ -938,18 +816,11 @@ sub xenDir
 
 # Method: xenInstallMethod
 #
-#
-#
-# Parameters:
-#
+#   Gets the value of the Xen's install-method option.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Value for the option.
 #
 sub xenInstallMethod
 {
@@ -961,17 +832,11 @@ sub xenInstallMethod
 # Method: xenSize
 #
 #
-#
-# Parameters:
-#
+#   Gets the value of the Xen's size option.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Value for the option.
 #
 sub xenSize
 {
@@ -982,18 +847,11 @@ sub xenSize
 
 # Method: xenMemory
 #
-#
-#
-# Parameters:
-#
+#   Gets the value of the Xen's memory option.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Value for the option.
 #
 sub xenMemory
 {
@@ -1004,18 +862,11 @@ sub xenMemory
 
 # Method: xenNoSwap
 #
-#
-#
-# Parameters:
-#
+#   Gets the value of the Xen's noswap option.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Value for the option.
 #
 sub xenNoSwap
 {
@@ -1026,18 +877,11 @@ sub xenNoSwap
 
 # Method: xenFS
 #
-#
-#
-# Parameters:
-#
+#   Gets the value of the Xen's fs option.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Value for the option.
 #
 sub xenFS
 {
@@ -1048,18 +892,11 @@ sub xenFS
 
 # Method: xenDist
 #
-#
-#
-# Parameters:
-#
+#   Gets the value of the Xen's dist option.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Value for the option.
 #
 sub xenDist
 {
@@ -1070,18 +907,11 @@ sub xenDist
 
 # Method: xenImage
 #
-#
-#
-# Parameters:
-#
+#   Gets the value of the Xen's image option.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Value for the option.
 #
 sub xenImage
 {
@@ -1092,18 +922,11 @@ sub xenImage
 
 # Method: xenKernel
 #
-#
-#
-# Parameters:
-#
+#   Gets the value of the Xen's kernel option.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Value for the option.
 #
 sub xenKernel
 {
@@ -1114,18 +937,11 @@ sub xenKernel
 
 # Method: xenInitrd
 #
-#
-#
-# Parameters:
-#
+#   Gets the value of the Xen's initrd option.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Value for the option.
 #
 sub xenInitrd
 {
@@ -1136,18 +952,11 @@ sub xenInitrd
 
 # Method: xenMirror
 #
-#
-#
-# Parameters:
-#
+#   Gets the value of the Xen's mirror option.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - Value for the option.
 #
 sub xenMirror
 {
@@ -1219,8 +1028,6 @@ sub _setDefaults
     $self->{default}->{'comm'}->{'first-address'} = '192.168.0.191';
 
     $self->{default}->{'deploy'}->{'auto-create-images'} = 0;
-
-    $self->{default}->{'report'}->{'writer'} = 'Text';
 
     $self->{default}->{'selenium'}->{'browser'} = '*firefox';
     $self->{default}->{'selenium'}->{'video'} = 0;

@@ -42,11 +42,11 @@ my $returnValue : shared;
 
 # Method: instance
 #
-#   Returns a reference of the singleton object of this class.
+#   Returns a reference to the singleton object of this class.
 #
 # Returns:
 #
-#   ref - the class unique instance.
+#   ref - the class unique instance of type <ANSTE::Comm::HostWaiter>.
 #
 sub instance 
 {

@@ -74,7 +74,7 @@ sub instance
 
 # Method: check
 #
-#   Tries to get all the options to validate them
+#   Tries to get all the options to validate them.
 #   An exception is thrown if there's an invalid option.
 #
 # Parameters:

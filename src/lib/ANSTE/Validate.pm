@@ -25,16 +25,22 @@ use Mail::RFC822::Address;
 use Cwd;
 use File::Basename;
 
+# Module: Validate
+#
+#   Contains functions to validate several kinds of data.
+#
+
 # Function: natural
 #
-#
+#   Checks if the passed string is a valid natural number.
 #
 # Parameters:
 #
+#   string - String to be validated.
 #
 # Returns:
 #
-#
+#   boolean - true if it's valid, false otherwise
 #
 sub natural # (string)
 {
@@ -45,14 +51,15 @@ sub natural # (string)
 
 # Function: boolean
 #
-#
+#   Checks if the passed value is a valid boolean number (0 or 1).
 #
 # Parameters:
 #
+#   value - Value to be validated.
 #
 # Returns:
 #
-#
+#   boolean - true if it's valid, false otherwise
 #
 sub boolean # (value)
 {
@@ -63,14 +70,15 @@ sub boolean # (value)
 
 # Function: path
 #
-#
+#   Checks if the passed path is a existing directory.
 #
 # Parameters:
 #
+#   path - String with the path to be checked.
 #
 # Returns:
 #
-#
+#   boolean - true if it's valid, false otherwise
 #
 sub path # (path)
 {
@@ -81,14 +89,15 @@ sub path # (path)
 
 # Function: fileReadable
 #
-#
+#   Checks if the given file is readable.
 #
 # Parameters:
 #
+#   file - String with the path of the file.
 #
 # Returns:
 #
-#
+#   boolean - true if it's valid, false otherwise
 #
 sub fileReadable # (file)
 {
@@ -99,14 +108,15 @@ sub fileReadable # (file)
 
 # Function: fileWritable
 #
-#
+#   Checks if the given file is writable.
 #
 # Parameters:
 #
+#   file - String with the path of the file.
 #
 # Returns:
 #
-#
+#   boolean - true if it's valid, false otherwise
 #
 sub fileWritable # (file)
 {
@@ -117,14 +127,15 @@ sub fileWritable # (file)
 
 # Function: directoryWritable
 #
-#
+#   Checks if the given directory is writable.
 #
 # Parameters:
 #
+#   dir - String with the directory path.
 #
 # Returns:
 #
-#
+#   boolean - true if it's valid, false otherwise
 #
 sub directoryWritable # (dir)
 {
@@ -135,14 +146,15 @@ sub directoryWritable # (dir)
 
 # Function: system
 #
-#
+#   Checks if the given string is a existing System implementation.
 #
 # Parameters:
 #
+#   system - String with the name of <ANSTE::System::System> implementation.
 #
 # Returns:
 #
-#
+#   boolean - true if it's valid, false otherwise
 #
 sub system # (system)
 {
@@ -160,14 +172,16 @@ sub system # (system)
 
 # Function: virtualizer
 #
-#
+#   Checks if the given string is a existing Virtualizer implementation.
 #
 # Parameters:
 #
+#   virtualizer - String with the name of 
+#                 the <ANSTE::Virutalizer::Virtualizer> implementation
 #
 # Returns:
 #
-#
+#   boolean - true if it's valid, false otherwise
 #
 sub virtualizer # (virtualizer)
 {
@@ -185,14 +199,15 @@ sub virtualizer # (virtualizer)
 
 # Function: port
 #
-#
+#   Checks if the given argument is a valid port.
 #
 # Parameters:
 #
+#   port - String with the port number.
 #
 # Returns:
 #
-#
+#   boolean - true if it's valid, false otherwise
 #
 sub port # (port)
 {
@@ -203,14 +218,15 @@ sub port # (port)
 
 # Function: host
 #
-#
+#   Checks if the given host string is a valid domain name.
 #
 # Parameters:
 #
+#   host - String with the host.
 #
 # Returns:
 #
-#
+#   boolean - true if it's valid, false otherwise
 #
 sub host # (host)
 {
@@ -235,14 +251,15 @@ sub host # (host)
 
 # Function: ip
 #
-#
+#   Checks if the given string is a valid IP address.
 #
 # Parameters:
 #
+#   ip - String with the IP address representation.
 #
 # Returns:
 #
-#
+#   boolean - true if it's valid, false otherwise
 #
 sub ip # (ip)
 {
@@ -270,14 +287,15 @@ sub ip # (ip)
 
 # Function: email
 #
-#
+#   Checks if the given email address is valid according to RFC 822.
 #
 # Parameters:
 #
+#   email - String with the email.
 #
 # Returns:
 #
-#
+#   boolean - true if it's valid, false otherwise
 #
 sub email # (address)
 {
@@ -288,14 +306,15 @@ sub email # (address)
 
 # Function: suite
 #
-#
+#   Checks if the directory passed is an existing test suite directory.
 #
 # Parameters:
 #
+#   suite - String with the directory name of the test suite.
 #
 # Returns:
 #
-#
+#   boolean - true if it's valid, false otherwise
 #
 sub suite # (suite)
 {
@@ -308,14 +327,15 @@ sub suite # (suite)
 
 # Function: template
 #
-#
+#   Checks if the file passed is an existing template file.
 #
 # Parameters:
 #
+#   template - String with the template name.
 #
 # Returns:
 #
-#
+#   boolean - true if it's valid, false otherwise
 #
 sub template # (template)
 {
