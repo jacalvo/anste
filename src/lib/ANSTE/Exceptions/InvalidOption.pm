@@ -17,12 +17,19 @@ package ANSTE::Exceptions::InvalidOption;
 
 use base 'ANSTE::Exceptions::Base';
 
+# Class: InvalidOption
+#
+#   Exception for invalid overriden commandline options.
+#
+
 # Constructor: new
 #
 #   Constructor for InvalidOption class.
 #
 # Parameters:
 #
+#   option - String with the option's name.
+#   value  - String with the mistaken value for the option.
 #
 # Returns:
 #

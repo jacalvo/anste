@@ -18,14 +18,23 @@ package ANSTE::Exceptions::MissingArgument;
 
 use base 'ANSTE::Exceptions::Base';
 
+# Class: MissingArgument
+#
+#   An exception called when a mandatory argument is missing a
+#   block call
+#
+
 # Constructor: new
 #
-#      An exception called when a mandatory argument is missing a
-#      block call
+#   Constructor for MissingArgument class.
 #
 # Parameters:
 #
-#      arg - the argument name
+#      arg - String with the missing argument's name
+#
+# Returns:
+#
+#   A recently created <ANSTE::Exceptions::MissingArgument> object.
 #
 sub new 
 {

@@ -17,18 +17,23 @@ package ANSTE::Exceptions::InvalidFile;
 
 use base 'ANSTE::Exceptions::Base';
 
+# Class: InvalidFile
+#
+#   This exception is taken to say an argument is not
+#   a valid file or filehandle.
+#
+
 # Constructor: new
 #
-#     This exception is taken to say an argument is not
-#     a valid file or filehandle.
+#   Constructor for InvalidFile class.
 #
 # Parameters:
 #
-#     arg  - the mistaken argument
+#   arg - String with the mistaken argument
 #
 # Returns:
 #
-#     The newly created <ANSTE::Exceptions::InvalidType> exception
+#   A recently created <ANSTE::Exceptions::InvalidFile> object.
 #
 sub new # (arg)
 {

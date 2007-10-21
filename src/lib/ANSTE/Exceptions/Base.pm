@@ -18,12 +18,18 @@ package ANSTE::Exceptions::Base;
 
 use base 'Error';
 
+# Class: Base
+#
+#   Base class for ANSTE exceptions.
+#
+
 # Constructor: new
 #
 #   Constructor for Base class.
 #
 # Parameters:
 #
+#   text - String with the exception message.
 #
 # Returns:
 #
@@ -40,18 +46,7 @@ sub new # (text)
 
 # Method: toStderr
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Prints the exception message to system's standard error.
 #
 sub toStderr 
 {

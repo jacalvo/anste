@@ -17,12 +17,17 @@ package ANSTE::Exceptions::MissingConfig;
 
 use base 'ANSTE::Exceptions::Base';
 
+# Class: MissingConfig
+#
+#   Exception for a missing mandatory configuration option.
+
 # Constructor: new
 #
 #   Constructor for MissingConfig class.
 #
 # Parameters:
 #
+#   option - String with the name of the missing option.
 #
 # Returns:
 #

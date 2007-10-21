@@ -17,12 +17,19 @@ package ANSTE::Exceptions::InvalidData;
 
 use base 'ANSTE::Exceptions::Base';
 
+# Class: InvalidData
+#
+#   Exception for invalid data values.
+#
+
 # Constructor: new
 #
 #   Constructor for InvalidData class.
 #
 # Parameters:
 #
+#   data  - String with the name of the parameter.
+#   value - String with the wrong value for the data.
 #
 # Returns:
 #

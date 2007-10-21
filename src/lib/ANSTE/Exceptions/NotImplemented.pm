@@ -18,12 +18,14 @@ package ANSTE::Exceptions::NotImplemented;
 
 use base 'ANSTE::Exceptions::Base';
 
+# Class: NotImplemented
+#
+#   Exception to be thrown when a method that isn't implemented is called.
+#
+
 # Constructor: new
 #
 #   Constructor for NotImplemented class.
-#
-# Parameters:
-#
 #
 # Returns:
 #

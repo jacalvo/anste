@@ -17,12 +17,20 @@ package ANSTE::Exceptions::InvalidConfig;
 
 use base 'ANSTE::Exceptions::Base';
 
+# Class: InvalidConfig
+#
+#   Exception for invalid configuration options.
+#
+
 # Constructor: new
 #
 #   Constructor for InvalidConfig class.
 #
 # Parameters:
 #
+#   option - String with the option's name.
+#   value  - String with the mistaken value for the option.
+#   file   - String with the path of the configuration file.
 #
 # Returns:
 #

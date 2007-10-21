@@ -17,12 +17,19 @@ package ANSTE::Exceptions::NotFound;
 
 use base 'ANSTE::Exceptions::Base';
 
+# Class: NotFound
+#
+#   Exception to be thrown when something is not present.
+#
+
 # Constructor: new
 #
 #   Constructor for NotFound class.
 #
 # Parameters:
 #
+#   what  - String with the kind of thing that is missing.
+#   value - String with the name of the missing thing.
 #
 # Returns:
 #

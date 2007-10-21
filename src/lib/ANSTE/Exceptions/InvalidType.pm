@@ -18,19 +18,24 @@ package ANSTE::Exceptions::InvalidType;
 
 use base 'ANSTE::Exceptions::Base';
 
+# Class: InvalidType
+#
+#   This exception is taken to say the type of an argument is not
+#   the correct one.
+#
+
 # Constructor: new
 #
-#     This exception is taken to say the type of an argument is not
-#     the correct one.
+#   Constructor for InvalidType class.
 #
 # Parameters:
 #
-#     arg  - the mistaken argument
-#     type - the correct type
+#     arg  - String with the mistaken argument
+#     type - String with the correct type
 #
 # Returns:
 #
-#     The newly created <ANSTE::Exceptions::InvalidType> exception
+#   A recently created <ANSTE::Exceptions::InvalidType> object.
 #
 sub new # (arg, type)
 {
