@@ -23,16 +23,28 @@ use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidData;
 use ANSTE::Validate;
 
-# Constants 
+# Class: NetworkInterface
+#
+#   Contains the information of a network interface.
+#
+
+# Constant: IFACE_TYPE_STATIC
+#   
+#   Constant for the network interface type that indicates static
+#   configuration.
+#
 use constant IFACE_TYPE_STATIC => 0;
+
+# Constant: IFACE_TYPE_DHCP
+#   
+#   Constant for the network interface type that indicates dynamic
+#   configuration.
+#
 use constant IFACE_TYPE_DHCP => 1;
 
 # Constructor: new
 #
 #   Constructor for NetworkInterface class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -56,18 +68,11 @@ sub new # returns new NetworkInterface object
 
 # Method: name
 #
-#
-#
-# Parameters:
-#
+#   Gets the interface name.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the name of the interface
 #
 sub name # returns interface name string
 {
@@ -78,18 +83,15 @@ sub name # returns interface name string
 
 # Method: setName
 #
-#
+#   Sets the interface name.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   name - String with the name of the interface.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setName # (name) 
 {
@@ -103,18 +105,11 @@ sub setName # (name)
 
 # Method: type
 #
-#
-#
-# Parameters:
-#
+#   Gets the interface type.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   constant - IFACE_TYPE_STATIC or IFACE_TYPE_DHCP
 #
 sub type # returns interface type
 {
@@ -125,18 +120,7 @@ sub type # returns interface type
 
 # Method: setTypeStatic
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Sets the interface type to static.
 #
 sub setTypeStatic
 {
@@ -147,18 +131,7 @@ sub setTypeStatic
 
 # Method: setTypeDHCP
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Sets the interface type to DHCP.
 #
 sub setTypeDHCP
 {
@@ -169,7 +142,7 @@ sub setTypeDHCP
 
 # Method: address
 #
-#   Get the interface address
+#   Gets the interface address.
 #
 # Returns:
 #
@@ -184,11 +157,16 @@ sub address # returns address string
 
 # Method: setAddress
 #
-#   Sets the interface address
+#   Sets the interface address.
 #
 # Parameters:
 #
-#   address - IP address
+#   address - String with the IP address of the interface.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidData> - throw if argument is not an IP address
 #
 sub setAddress # address string
 {
@@ -206,18 +184,11 @@ sub setAddress # address string
 
 # Method: netmask
 #
-#
-#
-# Parameters:
-#
+#   Gets the interface network mask.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the network mask of the interface
 #
 sub netmask # returns netmask string
 {
@@ -228,18 +199,16 @@ sub netmask # returns netmask string
 
 # Method: setNetmask
 #
-#
+#   Sets the interface network mask.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   netmask - String with the network mask of the interface.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidData> - throw if argument is not an IP address
 #
 sub setNetmask # netmask string
 {
@@ -257,18 +226,11 @@ sub setNetmask # netmask string
 
 # Method: gateway
 #
-#
-#
-# Parameters:
-#
+#   Gets the interface gateway.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the gateway of the interface
 #
 sub gateway # returns gateway string
 {
@@ -279,18 +241,16 @@ sub gateway # returns gateway string
 
 # Method: setGateway
 #
-#
+#   Sets the interface gateway.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   gateway - String with the gateway of the interface.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidData> - throw if argument is not an IP address
 #
 sub setGateway # gateway string
 {
@@ -308,18 +268,7 @@ sub setGateway # gateway string
 
 # Method: removeGateway
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Remove the interface gateway.
 #
 sub removeGateway
 {
@@ -330,18 +279,17 @@ sub removeGateway
 
 # Method: load
 #
-#
+#   Loads the information contained in the given XML node representing
+#   the network interface into this object.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   node - <XML::DOM::Element> object containing the test data.    
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
 #
 sub load # (node)
 {
@@ -351,8 +299,7 @@ sub load # (node)
         throw ANSTE::Exceptions::MissingArgument('node');
 
     if (not $node->isa('XML::DOM::Element')) {
-        throw ANSTE::Exceptions::InvalidType('node',
-                                             'XML::DOM::Element');
+        throw ANSTE::Exceptions::InvalidType('node', 'XML::DOM::Element');
     }
 
 	my $type = $node->getAttribute('type');

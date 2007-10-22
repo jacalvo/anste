@@ -25,12 +25,14 @@ use ANSTE::Exceptions::InvalidFile;
 
 use XML::DOM;
 
+# Class: BaseImage
+#
+#   Contains the information to build a system base image.
+#
+
 # Constructor: new
 #
 #   Constructor for BaseImage class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -56,18 +58,11 @@ sub new # returns new BaseImage object
 
 # Method: name
 #
-#
-#
-# Parameters:
-#
+#   Gets the name of the image.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the image name
 #
 sub name # returns name string
 {
@@ -78,18 +73,15 @@ sub name # returns name string
 
 # Method: setName
 #
-#
+#   Sets the name of the image.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   name - String with the name of the image.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setName # name string
 {
@@ -103,18 +95,11 @@ sub setName # name string
 
 # Method: desc
 #
-#
-#
-# Parameters:
-#
+#   Gets the description of the image.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the image description
 #
 sub desc # returns desc string
 {
@@ -125,18 +110,15 @@ sub desc # returns desc string
 
 # Method: setDesc
 #
-#
+#   Sets the description of the image.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   desc - String with the description of the image.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setDesc # desc string
 {
@@ -150,44 +132,34 @@ sub setDesc # desc string
 
 # Method: memory
 #
-#
-#
-# Parameters:
-#
+#   Gets the memory size string.
 #
 # Returns:
 #
+#   string - contains the memory size
 #
-#
-# Exceptions:
-#
-#
-#
-sub memory # returns memory string
+sub memory # returns memory string 
 {
-	my ($self) = @_;
+	my ($self) = shift;
 
 	return $self->{memory};
 }
 
 # Method: setMemory
 #
-#
+#   Sets the memory size string.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   memory - String with the memory size.    
 #
 # Exceptions:
 #
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-#
-sub setMemory # memory string
+sub setMemory # (memory)
 {
-	my ($self, $memory) = @_;	
+	my ($self, $memory) = @_;
 
     defined $memory or
         throw ANSTE::Exceptions::MissingArgument('memory');
@@ -197,18 +169,11 @@ sub setMemory # memory string
 
 # Method: size
 #
-#
-#
-# Parameters:
-#
+#   Gets the size of the image.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the size of the image
 #
 sub size # returns size string
 {
@@ -220,17 +185,15 @@ sub size # returns size string
 # Method: setSize
 #
 #
+#   Sets the size of the image.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   size - String with the size of the image.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setSize # size string
 {
@@ -244,18 +207,11 @@ sub setSize # size string
 
 # Method: packages
 #
-#
-#
-# Parameters:
-#
+#   Gets the object with the information of packages to be installed.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - <ANSTE::Scenario::Packages> object.
 #
 sub packages # returns Packages object
 {
@@ -266,18 +222,16 @@ sub packages # returns Packages object
 
 # Method: setPackages
 #
-#
+#   Sets the object with the information of packages to be installed.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   packages - <ANSTE::Scenario::Packages> object.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
 sub setPackages # (packages)
 {
@@ -286,23 +240,21 @@ sub setPackages # (packages)
     defined $packages or
         throw ANSTE::Exceptions::MissingArgument('packages');
 
+    if (not $packages->isa('ANSTE::Scenario::Packages')) {
+        throw ANSTE::Exceptions::InvalidType('packages',
+                                             'ANSTE::Scenario::Packages');
+    }
+
 	$self->{packages} = $packages;
 }
 
 # Method: preScripts
 #
-#
-#
-# Parameters:
-#
+#   Gets the list of scripts that have to be executed before the setup.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - reference to the list of script names
 #
 sub preScripts # returns list ref
 {
@@ -313,18 +265,11 @@ sub preScripts # returns list ref
 
 # Method: postScripts
 #
-#
-#
-# Parameters:
-#
+#   Gets the list of scripts that have to be executed after the setup.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - reference to the list of script names
 #
 sub postScripts # returns list ref
 {
@@ -335,18 +280,20 @@ sub postScripts # returns list ref
 
 # Method: loadFromFile
 #
-#
+#   Loads the base image data from a XML file.
 #
 # Parameters:
 #
+#   filename - String with the name of the file.
 #
 # Returns:
 #
-#
+#   boolean - true if loaded correctly 
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidFile> - throw if argument is not a file
 #
 sub loadFromFile # (filename)
 {
@@ -362,7 +309,7 @@ sub loadFromFile # (filename)
     }
 
 	my $parser = new XML::DOM::Parser;
-	my $doc = $parser->parsefile("$file");
+	my $doc = $parser->parsefile($file);
 
 	my $image = $doc->getDocumentElement();
 

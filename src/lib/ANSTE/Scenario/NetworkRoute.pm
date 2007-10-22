@@ -23,12 +23,14 @@ use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidData;
 use ANSTE::Validate;
 
+# Class: NetworkRoute
+#
+#   Contains the information of a network route.
+#
+
 # Constructor: new
 #
 #   Constructor for NetworkRoute class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -49,22 +51,15 @@ sub new # returns new NetworkRoute object
 	return $self;
 }
 
-# Method: destination
+# Method: name
 #
-#
-#
-# Parameters:
-#
+#   Gets the route destination.
 #
 # Returns:
 #
+#   string - contains the route destination string
 #
-#
-# Exceptions:
-#
-#
-#
-sub destination # returns interface destination string
+sub destination # returns route destination string
 {
 	my ($self) = @_;
 
@@ -73,18 +68,15 @@ sub destination # returns interface destination string
 
 # Method: setDestination
 #
-#
+#   Sets the route destination.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   destination - String with the destination of the route
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setDestination # (destination) 
 {
@@ -98,18 +90,11 @@ sub setDestination # (destination)
 
 # Method: gateway
 #
-#
-#
-# Parameters:
-#
+#   Gets the route gateway.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the gateway of the route
 #
 sub gateway # returns gateway string
 {
@@ -120,18 +105,16 @@ sub gateway # returns gateway string
 
 # Method: setGateway
 #
-#
+#   Sets the route gateway.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   gateway - String with the gateway of the route.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidData> - throw if argument is not an IP address
 #
 sub setGateway # gateway string
 {
@@ -145,18 +128,11 @@ sub setGateway # gateway string
 
 # Method: netmask
 #
-#
-#
-# Parameters:
-#
+#   Gets the route network mask.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the network mask of the route
 #
 sub netmask # returns netmask string
 {
@@ -167,18 +143,16 @@ sub netmask # returns netmask string
 
 # Method: setNetmask
 #
-#
+#   Sets the route network mask.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   netmask - String with the network mask of the route.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidData> - throw if argument is not an IP address
 #
 sub setNetmask # netmask string
 {
@@ -196,18 +170,11 @@ sub setNetmask # netmask string
 
 # Method: iface
 #
-#
-#
-# Parameters:
-#
+#   Gets the name of the outgoing network interface for the route.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the name of the interface
 #
 sub iface # returns iface string
 {
@@ -218,18 +185,15 @@ sub iface # returns iface string
 
 # Method: setIface
 #
-#
+#   Sets the name of the outgoing network interface for the route.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   iface - String with the interface name.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setIface # iface string
 {
@@ -243,18 +207,17 @@ sub setIface # iface string
 
 # Method: load
 #
-#
+#   Loads the information contained in the given XML node representing
+#   the network route into this object.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   node - <XML::DOM::Element> object containing the test data.    
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
 #
 sub load # (node)
 {
@@ -264,8 +227,7 @@ sub load # (node)
         throw ANSTE::Exceptions::MissingArgument('node');
 
     if (not $node->isa('XML::DOM::Element')) {
-        throw ANSTE::Exceptions::InvalidType('node',
-                'XML::DOM::Element');
+        throw ANSTE::Exceptions::InvalidType('node', 'XML::DOM::Element');
     }
 
     my $destinationNode = 

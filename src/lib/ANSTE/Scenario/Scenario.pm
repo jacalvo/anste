@@ -25,12 +25,14 @@ use ANSTE::Exceptions::InvalidFile;
 
 use XML::DOM;
 
+# Class: Scenario
+#
+#   Contains all the information of a scenario needed for its deployment.
+#
+
 # Constructor: new
 #
 #   Constructor for Scenario class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -54,18 +56,11 @@ sub new # returns new Scenario object
 
 # Method: name
 #
-#
-#
-# Parameters:
-#
+#   Gets the name of the scenario.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the scenario name
 #
 sub name # returns name string
 {
@@ -76,18 +71,15 @@ sub name # returns name string
 
 # Method: setName
 #
-#
+#   Sets the name of the scenario. 
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   name - String with the name of the scenario.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setName # name string
 {
@@ -101,18 +93,11 @@ sub setName # name string
 
 # Method: desc
 #
-#
-#
-# Parameters:
-#
+#   Gets the description of the scenario.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the scenario description
 #
 sub desc # returns desc string
 {
@@ -123,18 +108,15 @@ sub desc # returns desc string
 
 # Method: setDesc
 #
-#
+#   Sets the description of the scenario.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   desc - String with the description of the scenario.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setDesc # desc string
 {
@@ -148,18 +130,11 @@ sub setDesc # desc string
 
 # Method: virtualizer
 #
-#
-#
-# Parameters:
-#
+#   Gets the virtualizer backend for this scenario.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the virtualizer backend name
 #
 sub virtualizer # returns virtualizer package
 {
@@ -170,18 +145,15 @@ sub virtualizer # returns virtualizer package
 
 # Method: setVirtualizer
 #
-#
+#   Sets the virtualizer backend for this scenario.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   virtualizer - String with the virtualizer backend name.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setVirtualizer # (virtualizer)
 {
@@ -195,18 +167,11 @@ sub setVirtualizer # (virtualizer)
 
 # Method: system
 #
-#
-#
-# Parameters:
-#
+#   Gets the system backend for this scenario.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the system backend name
 #
 sub system # returns system package
 {
@@ -217,18 +182,15 @@ sub system # returns system package
 
 # Method: setSystem
 #
-#
+#   Sets the system backend for this scenario.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   system - String with the system backend name.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setSystem # (system)
 {
@@ -242,18 +204,11 @@ sub setSystem # (system)
 
 # Method: hosts
 #
-#
-#
-# Parameters:
-#
+#   Gets the list of hosts.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - list of <ANSTE::Scenario::Host> objects
 #
 sub hosts # returns hosts list 
 {
@@ -264,18 +219,16 @@ sub hosts # returns hosts list
 
 # Method: addHost
 #
-#
+#   Adds a host to the scenario list of hosts.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   host - <ANSTE::Scenario::Host> object.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
 #
 sub addHost # (host)
 {
@@ -292,21 +245,22 @@ sub addHost # (host)
 	push(@{$self->{hosts}}, $host);
 }
 
-
 # Method: loadFromFile
 #
-#
+#   Loads the scenario data from a XML file.
 #
 # Parameters:
 #
+#   filename - String with the name of the file.
 #
 # Returns:
 #
-#
+#   boolean - true if loaded correctly 
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidFile> - throw if argument is not a file
 #
 sub loadFromFile # (filename)
 {

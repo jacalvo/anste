@@ -23,6 +23,19 @@ use ANSTE::Exceptions::InvalidType;
 
 use XML::DOM;
 
+# Class: Packages
+#
+#   Contains the list of packages that have to be installed on a image.
+#
+
+# Constructor: new
+#
+#   Constructor for X class.
+#
+# Returns:
+#
+#   A recently created <ANSTE::> object.
+#
 sub new # returns new Packages object
 {
 	my $class = shift;
@@ -35,6 +48,14 @@ sub new # returns new Packages object
 	return $self;
 }
 
+# Method: list
+#
+#   Gets the list of packages.
+#
+# Returns:
+#
+#   ref - list of packages
+#
 sub list # returns the package list 
 {
 	my ($self) = @_;
@@ -42,7 +63,18 @@ sub list # returns the package list
 	return $self->{list};
 }
 
-# Add a list or packages or a single package
+# Method: add
+#
+#   Adds a list of packages or a single package.
+#
+# Parameters:
+#
+#   packages - List of package names.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
 sub add # (packages)
 {
 	my ($self, @packages) = @_;	
@@ -54,6 +86,20 @@ sub add # (packages)
 	push(@{$self->{list}}, @packages);
 }
 
+# Method: load
+#
+#   Loads the information contained in the given XML node representing
+#   the package list into this object.
+#
+# Parameters:
+#
+#   node - <XML::DOM::Element> object containing the test data.    
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
+#
 sub load # (node)
 {
 	my ($self, $node) = @_;

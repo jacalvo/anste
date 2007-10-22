@@ -23,6 +23,19 @@ use ANSTE::Scenario::NetworkRoute;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 
+# Class: Network
+#
+#   Contains the lists of network interfaces and routes for a host.
+#
+
+# Constructor: new
+#
+#   Constructor for Network class.
+#
+# Returns:
+#
+#   A recently created <ANSTE::Scenario::Network> object.
+#
 sub new # returns new Network object
 {
 	my ($class) = @_;
@@ -36,6 +49,14 @@ sub new # returns new Network object
 	return $self;
 }
 
+# Method: interfaces
+#
+#   Gets the list of interfaces.
+#
+# Returns:
+#
+#   ref - list of <ANSTE::Scenario::NetworkInterface> objects 
+#
 sub interfaces # returns interfaces list reference
 {
     my ($self) = @_;
@@ -43,6 +64,19 @@ sub interfaces # returns interfaces list reference
     return $self->{interfaces};
 }
 
+# Method: add
+#
+#   Adds an interface object to the list.
+#
+# Parameters:
+#
+#   interface - <ANSTE::Scenario::NetworkInterface> object.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
+#
 sub addInterface # (interface)
 {
     my ($self, $interface) = @_;
@@ -58,6 +92,14 @@ sub addInterface # (interface)
     push(@{$self->{interfaces}}, $interface);
 }
 
+# Method: routes
+#
+#   Gets the list of routes.
+#
+# Returns:
+#
+#   ref - list of <ANSTE::Scenario::NetworkRoute> objects
+#
 sub routes # returns routes list reference
 {
     my ($self) = @_;
@@ -65,6 +107,19 @@ sub routes # returns routes list reference
     return $self->{routes};
 }
 
+# Method: add
+#
+#   Adds a network route object to the list.
+#
+# Parameters:
+#
+#   route - <ANSTE::Scenario::NetworkRoute> object.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
+#
 sub addRoute # (route)
 {
     my ($self, $route) = @_;
@@ -80,6 +135,20 @@ sub addRoute # (route)
     push(@{$self->{routes}}, $route);
 }
 
+# Method: load
+#
+#   Loads the information contained in the given XML node representing
+#   the network configuration into this object.
+#
+# Parameters:
+#
+#   node - <XML::DOM::Element> object containing the test data.    
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
+#
 sub load # (node)
 {
 	my ($self, $node) = @_;

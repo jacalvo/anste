@@ -27,7 +27,7 @@ use ANSTE::Exceptions::MissingArgument;
 # Class: Image
 #
 #   Extended <ANSTE::Scenario::BaseImage> adding information needed
-#   for deployment like real hostname, ip address and memory size.
+#   for deployment like real hostname and ip address.
 #
 
 # Constructor: new
@@ -104,42 +104,6 @@ sub setIp # ip string
 	$self->{ip} = $ip;
 }
 
-# Method: memory
-#
-#   Gets the memory size string.
-#
-# Returns:
-#
-#   string - contains the memory size
-#
-sub memory # returns memory string 
-{
-	my ($self) = shift;
-
-	return $self->{memory};
-}
-
-# Method: setMemory
-#
-#   Sets the memory size string.
-#
-# Parameters:
-#
-#   memory - String with the memory size.    
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
-#
-sub setMemory # (memory)
-{
-	my ($self, $memory) = @_;
-
-    defined $memory or
-        throw ANSTE::Exceptions::MissingArgument('memory');
-
-	$self->{memory} = $memory;
-}
 
 # Method: network
 #

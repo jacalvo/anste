@@ -26,6 +26,19 @@ use ANSTE::Exceptions::InvalidType;
 
 use XML::DOM;
 
+# Class: Host
+#
+#   Contains the information for a host of a scenario. 
+#
+
+# Constructor: new
+#
+#   Constructor for Host class.
+#
+# Returns:
+#
+#   A recently created <ANSTE::Scenario::Host> object.
+#
 sub new # returns new Host object
 {
 	my $class = shift;
@@ -44,6 +57,14 @@ sub new # returns new Host object
 	return $self;
 }
 
+# Method: name
+#
+#   Gets the name of the host.
+#
+# Returns:
+#
+#   string - contains the host name
+#
 sub name # returns name string
 {
 	my ($self) = @_;
@@ -51,6 +72,18 @@ sub name # returns name string
 	return $self->{name};
 }
 
+# Method: setName
+#
+#   Sets the name of the host.
+#
+# Parameters:
+#
+#   name - String with the name of the host.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
 sub setName # name string
 {
 	my ($self, $name) = @_;	
@@ -61,12 +94,32 @@ sub setName # name string
 	$self->{name} = $name;
 }
 
+# Method: desc
+#
+#   Gets the description of the host.
+#
+# Returns:
+#
+#   string - contains the host description
+#
 sub desc # returns desc string
 {
 	my ($self) = @_;
 	return $self->{desc};
 }
 
+# Method: setDesc
+#
+#   Sets the description of the host.
+#
+# Parameters:
+#
+#   desc - String with the description of the host.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
 sub setDesc # desc string
 {
 	my ($self, $desc) = @_;	
@@ -77,6 +130,14 @@ sub setDesc # desc string
 	$self->{desc} = $desc;
 }
 
+# Method: baseImage
+#
+#   Gets the object with the information of the base image of the host.
+#
+# Returns:
+#
+#   ref - <ANSTE::Scenario::BaseImage> object.
+#
 sub baseImage # returns BaseImage object
 {
 	my ($self) = @_;
@@ -84,6 +145,19 @@ sub baseImage # returns BaseImage object
 	return $self->{baseImage};
 }
 
+# Method: setBaseImage
+#
+#   Sets the object with the information of the base image of the host.
+#
+# Parameters:
+#
+#   baseImage - <ANSTE::Scenario::BaseImage> object.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
+#
 sub setBaseImage # (baseImage)
 {
 	my ($self, $baseImage) = @_;	
@@ -91,9 +165,22 @@ sub setBaseImage # (baseImage)
     defined $baseImage or
         throw ANSTE::Exceptions::MissingArgument('baseImage');
 
+    if (not $baseImage->isa('ANSTE::Scenario::BaseImage')) {
+        throw ANSTE::Exceptions::InvalidType('baseImage',
+                                             'ANSTE::Scenario::BaseImage');
+    }
+
 	$self->{baseImage} = $baseImage;
 }
 
+# Method: network
+#
+#   Gets the object with the network configuration for the host.
+#
+# Returns:
+#
+#   ref - <ANSTE::Scenario::Network> object.
+#
 sub network # returns Network object
 {
 	my ($self) = @_;
@@ -101,6 +188,19 @@ sub network # returns Network object
 	return $self->{network};
 }
 
+# Method: setNetwork
+#
+#   Sets the object with the network configuration for the host.
+#
+# Parameters:
+#
+#   network - <ANSTE::Scenario::Network> object.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
+#
 sub setNetwork # (network)
 {
 	my ($self, $network) = @_;	
@@ -108,9 +208,22 @@ sub setNetwork # (network)
     defined $network or
         throw ANSTE::Exceptions::MissingArgument('network');
 
+    if (not $network->isa('ANSTE::Scenario::Network')) {
+        throw ANSTE::Exceptions::InvalidType('network',
+                                             'ANSTE::Scenario::Network');
+    }
+
 	$self->{network} = $network;
 }
 
+# Method: packages
+#
+#   Gets the object with the information of packages to be installed.
+#
+# Returns:
+#
+#   ref - <ANSTE::Scenario::Packages> object.
+#
 sub packages # returns Packages object
 {
 	my ($self) = @_;
@@ -118,6 +231,19 @@ sub packages # returns Packages object
 	return $self->{packages};
 }
 
+# Method: setPackages
+#
+#   Sets the object with the information of packages to be installed.
+#
+# Parameters:
+#
+#   packages - <ANSTE::Scenario::Packages> object.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
+#
 sub setPackages # (packages)
 {
 	my ($self, $packages) = @_;
@@ -125,9 +251,22 @@ sub setPackages # (packages)
     defined $packages or
         throw ANSTE::Exceptions::MissingArgument('packages');
 
+    if (not $packages->isa('ANSTE::Scenario::Packages')) {
+        throw ANSTE::Exceptions::InvalidType('packages',
+                                             'ANSTE::Scenario::Packages');
+    }
+
 	$self->{packages} = $packages;
 }
 
+# Method: preScripts
+#
+#   Gets the list of scripts that have to be executed before the setup.
+#
+# Returns:
+#
+#   ref - reference to the list of script names
+#
 sub preScripts # returns list
 {
     my ($self) = @_;
@@ -135,6 +274,14 @@ sub preScripts # returns list
     return $self->{'pre-scripts'};
 }
 
+# Method: postScripts
+#
+#   Gets the list of scripts that have to be executed after the setup.
+#
+# Returns:
+#
+#   ref - reference to the list of script names
+#
 sub postScripts # returns list
 {
     my ($self) = @_;
@@ -142,6 +289,20 @@ sub postScripts # returns list
     return $self->{'post-scripts'};
 }
 
+# Method: load
+#
+#   Loads the information contained in the given XML node representing
+#   the host configuration into this object.
+#
+# Parameters:
+#
+#   node - <XML::DOM::Element> object containing the test data.    
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
+#
 sub load # (node)
 {
 	my ($self, $node) = @_;
