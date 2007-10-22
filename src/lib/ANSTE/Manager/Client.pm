@@ -24,12 +24,14 @@ use SOAP::Lite; # +trace => 'debug';
 
 use constant URI => 'urn:ANSTE::Manager::Server';
 
+# Class: Client
+#
+#   Client used to send jobs to anste-manager.
+#
+
 # Constructor: new
 #
 #   Constructor for Client class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -49,18 +51,16 @@ sub new
 
 # Method: connect
 #
-#
+#   Initialize the object used to send the commands with
+#   the location of the server.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   url - URL of the server.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub connect	# (host) 
 {
@@ -76,18 +76,11 @@ sub connect	# (host)
 
 # Method: connected
 #
-#
-#
-# Parameters:
-#
+#   Check if the client is connected.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   boolean - true if the client have a valid connection with the server
 #
 sub connected # returns boolean
 {
@@ -98,22 +91,22 @@ sub connected # returns boolean
 
 # Method: addJob
 #
-#
+#   Sends an add job command to the server.
 #
 # Parameters:
 #
-# user
-# test
-# mail - optional
-# path - optional
+#   user - String with the name of the user that sends the job.
+#   test - String with the name of the test to be executed.
+#   mail - *optional* String with the address where the user will be notified.
+#   path - *optional* String with the path of the user tests.
 #
 # Returns:
 #
-#
+#   boolean - true if server response is OK, false otherwise
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub addJob # (params) returns boolean
 {

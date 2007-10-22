@@ -23,12 +23,14 @@ use ANSTE::Manager::Job;
 
 use XML::RSS;
 
+# Class: RSSNotifier
+#
+#   Notifies via RSS when a user job has finished or failed.
+#
+
 # Constructor: new
 #
 #   Constructor for RSSWriter class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -46,18 +48,11 @@ sub new # () returns new RSSWriter object
 
 # Method: writeChannel
 #
-#
+#   Creates the RSS channel of the user.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   user - String with the user name.
 #
 sub writeChannel # (user)
 {
@@ -82,18 +77,12 @@ sub writeChannel # (user)
 
 # Method: writeItem
 #
-#
+#   Write a item with the test result on the user's RSS channel.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   job    - <ANSTE::Manager::Job> object.
+#   result - String with the location of the result reports.
 #
 sub writeItem # (job, result)
 {

@@ -21,6 +21,11 @@ use warnings;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 
+# Class: Job
+#
+#   Contains the information of a job.
+#
+
 use constant DEFAULT_PATH => 'anste';
 
 my $id = 0;
@@ -31,6 +36,8 @@ my $id = 0;
 #
 # Parameters:
 #
+#   user - String with the user name.
+#   test - String with the test name.
 #
 # Returns:
 #
@@ -56,18 +63,11 @@ sub new # (user, test) returns new Job object
 
 # Method: id
 #
-#
-#
-# Parameters:
-#
+#   Gets the job identificator.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the job identificator
 #
 sub id # returns id
 {
@@ -78,18 +78,11 @@ sub id # returns id
 
 # Method: user
 #
-#
-#
-# Parameters:
-#
+#   Gets the user who sent the job.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the user name
 #
 sub user # returns user string
 {
@@ -100,18 +93,15 @@ sub user # returns user string
 
 # Method: setUser
 #
-#
+#   Sets the user who sent the job.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   user - String with the name of the user.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setUser # (user)
 {
@@ -125,18 +115,11 @@ sub setUser # (user)
 
 # Method: test
 #
-#
-#
-# Parameters:
-#
+#   Gets the name of the test that have to be executed.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the test name
 #
 sub test # returns test string
 {
@@ -147,18 +130,15 @@ sub test # returns test string
 
 # Method: setTest
 #
-#
+#   Sets the name of the test that have to be executed.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   test - String with the name of the test.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setTest # test string
 {
@@ -172,18 +152,11 @@ sub setTest # test string
 
 # Method: email
 #
-#
-#
-# Parameters:
-#
+#   Gets the email where the user who sent the job wants to be notified.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the email address
 #
 sub email # returns email string
 {
@@ -194,18 +167,15 @@ sub email # returns email string
 
 # Method: setEmail
 #
-#
+#   Sets the email where the user who sent the job wants to be notified.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   email - String with the email address of the user.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setEmail # email string
 {
@@ -219,18 +189,11 @@ sub setEmail # email string
 
 # Method: path
 #
-#
-#
-# Parameters:
-#
+#   Gets the path of the user data (tests, scenarios, scripts, etc).
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the path
 #
 sub path # returns path string
 {
@@ -241,18 +204,15 @@ sub path # returns path string
 
 # Method: setPath
 #
-#
+#   Sets the path of the user data (tests, scenarios, scripts, etc).
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   path - String with the path of the user data, relative to his home.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub setPath # path string
 {
@@ -266,18 +226,11 @@ sub setPath # path string
 
 # Method: failed
 #
-#
-#
-# Parameters:
-#
+#   Checks if the test has failed.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   boolean - true if the test has failed, false if not
 #
 sub failed # returns boolean
 {
@@ -288,18 +241,7 @@ sub failed # returns boolean
 
 # Method: setFailed
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Sets the test status as failed.
 #
 sub setFailed
 {
@@ -310,18 +252,11 @@ sub setFailed
 
 # Method: toStr
 #
-#
-#
-# Parameters:
-#
+#   Gets the string representation of the job.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - contains the user, test, and email
 #
 sub toStr # returns string
 {

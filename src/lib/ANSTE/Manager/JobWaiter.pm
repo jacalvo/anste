@@ -26,6 +26,9 @@ use threads::shared;
 use FreezeThaw qw(freeze thaw);
 
 # Class: JobWaiter
+#
+#   Handles the job received messages and manages the job queue.
+#
 
 my $singleton;
 
@@ -35,18 +38,11 @@ my $current : shared;
 
 # Method: instance
 #
-#
-#
-# Parameters:
-#
+#   Returns a reference to the singleton object of this class.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - the class unique instance of type <ANSTE::Manager::JobWaiter>.
 #
 sub instance 
 {
@@ -62,18 +58,15 @@ sub instance
 
 # Method: jobReceived
 #
-#
+#   Notifies the reception of a job.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   job - <ANSTE::Manager::Job> object.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub jobReceived # (job)
 {
@@ -88,20 +81,43 @@ sub jobReceived # (job)
     cond_signal($lock);
 }
 
-# Method: deleteJob
+# Method: waitForJob
 #
-#
-#
-# Parameters:
-#
+#   Waits until a job is received.
 #
 # Returns:
 #
+#   ref - <ANSTE::Manager::Job> object
 #
+sub waitForJob # returns job
+{
+    my ($self) = @_;
+
+    $current = undef;
+
+    if (not @queue) {
+        lock($lock);
+        cond_wait($lock);
+    } 
+
+    $current = shift(@queue);
+    # thaw returns array so we return the object inside
+    my @job = thaw($current); 
+
+    return($job[0]);
+}
+
+# Method: deleteJob
 #
-# Exceptions:
+#   Deletes the given job from the queue.
 #
+# Parameters:
 #
+#   jobID - String with the job identificator.
+#
+# Returns:
+#
+#   boolean - true if deleted correctly, false if not
 #
 sub deleteJob # (jobID) returns boolean
 {
@@ -122,6 +138,37 @@ sub deleteJob # (jobID) returns boolean
         }
     }
     return 0;
+}
+
+# Method: current
+#
+#   Gets the current running job.
+#
+# Returns:
+#
+#   string - contains a frozen <ANSTE::Manager::Job> object
+#
+sub current # returns current job
+{
+    my ($self) = @_;
+
+    return $current;
+}
+
+# Method: queue
+#
+#   Gets the job queue.
+#
+# Returns:
+#
+#   ref - reference to list that contains frozen <ANSTE::Manager::Job> objects
+#
+sub queue # returns list ref
+{
+    my ($self) = @_;
+
+    lock($lock);
+    return \@queue;
 }
 
 sub _delete # (index)
@@ -150,37 +197,5 @@ sub _getJobId # (fjob) frozen job
     return($job[0]->id());
 }
 
-sub waitForJob # returns job
-{
-    my ($self) = @_;
-
-    $current = undef;
-
-    if (not @queue) {
-        lock($lock);
-        cond_wait($lock);
-    } 
-
-    $current = shift(@queue);
-    # thaw returns array so we return the object inside
-    my @job = thaw($current); 
-
-    return($job[0]);
-}
-
-sub current # returns current job
-{
-    my ($self) = @_;
-
-    return $current;
-}
-
-sub queue # returns list ref
-{
-    my ($self) = @_;
-
-    lock($lock);
-    return \@queue;
-}
 
 1;

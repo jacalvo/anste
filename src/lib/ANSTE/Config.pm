@@ -29,7 +29,7 @@ use Config::Tiny;
 
 # Class: Config
 #
-#   Contains the values readed from the config file as long as
+#   Contains the values read from the config file as long as
 #   the default and overriden (by commandline options) ones.
 #
 

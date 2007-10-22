@@ -24,12 +24,14 @@ use ANSTE::Manager::RSSWriter;
 use ANSTE::Manager::Config;
 use ANSTE::Exceptions::MissingArgument;
 
+# Class: JobLauncher
+#
+#   Launches the jobs of the queue.
+#
+
 # Constructor: new
 #
 #   Constructor for JobLauncher class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -47,18 +49,7 @@ sub new # () returns new JobLauncher object
 
 # Method: waitAndLaunch
 #
-#
-#
-# Parameters:
-#
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   Waits until there is a job in the queue and launches it.
 #
 sub waitAndLaunch
 {

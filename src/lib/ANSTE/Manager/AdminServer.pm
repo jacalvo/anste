@@ -22,20 +22,19 @@ use ANSTE::Manager::JobWaiter;
 
 use FreezeThaw qw(thaw);
 
+# Class: AdminServer
+#
+#   This class is used by the SOAP server that manages the administrator 
+#   requests to handle them.
+#
+
 # Method: list
 #
-#
-#
-# Parameters:
-#
+#   Handles a list command from the admin, returning the queue of jobs.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - text representation of the job queue
 #
 sub list # returns job queue
 {
@@ -62,18 +61,15 @@ sub list # returns job queue
 
 # Method: delete
 #
-#
+#   Handles a delete command from the admin, deleting the requested job.
 #
 # Parameters:
 #
+#   id - String with the identificator of the job to delete.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - OK on sucess, ERR on fail
 #
 sub delete # (id)
 {

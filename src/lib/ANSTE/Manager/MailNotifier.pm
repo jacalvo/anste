@@ -25,12 +25,14 @@ use ANSTE::Manager::Config;
 use Mail::Sender;
 use Text::Template;
 
+# Class: MailNotifier
+#
+#   Notifies a user via email when his job has finished or failed.
+#
+
 # Constructor: new
 #
 #   Constructor for MailNotifier class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -48,18 +50,12 @@ sub new # () returns new MailNotifier object
 
 # Method: sendNotify
 #
-#
+#   Sends a notification of the given job with the given results url.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
-#
-# Exceptions:
-#
-#
+#   job    - <ANSTE::Manager::Job> object.
+#   result - String with the location of the result reports.
 #
 sub sendNotify # (job, result)
 {    

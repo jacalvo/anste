@@ -27,6 +27,12 @@ use ANSTE::Validate;
 
 use Config::Tiny;
 
+# Class: Config
+#
+#   Contains the values read from the config file as long as
+#   the default and overriden (by commandline options) ones.
+#
+
 use constant CONFIG_FILE => 'anste-manager.conf';
 
 my @CONFIG_PATHS = ('data/conf', '/etc/anste', '/usr/local/etc/anste');
@@ -35,18 +41,11 @@ my $singleton;
 
 # Method: instance
 #
-#
-#
-# Parameters:
-#
+#   Returns a reference to the singleton object of this class
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   ref - the class unique instance of type <ANSTE::Config>.
 #
 sub instance 
 {
@@ -77,16 +76,13 @@ sub instance
 #   Tries to get all the options to validate them.
 #   An exception is thrown if there's an invalid option.
 #
-# Parameters:
-#
-#
 # Returns:
 #
-#
+#   boolean - true if all the options are correct.
 #
 # Exceptions:
 #
-#
+#   Different exceptions can be thrown depending of the wrong option.
 #
 sub check
 {
@@ -107,18 +103,11 @@ sub check
 
 # Method: configPath
 #
-#
-#
-# Parameters:
-#
+#   Gets the path of the used config file to read the values.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - String with the path to the configuration file.
 #
 sub configPath
 {
@@ -129,18 +118,15 @@ sub configPath
 
 # Method: clientPort
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for client port option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub clientPort
 {
@@ -159,18 +145,15 @@ sub clientPort
 
 # Method: adminPort
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for admin port option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub adminPort
 {
@@ -189,18 +172,15 @@ sub adminPort
 
 # Method: mailAddress
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for mail address option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub mailAddress 
 {
@@ -219,18 +199,15 @@ sub mailAddress
 
 # Method: mailSmtp
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for mail smtp option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub mailSmtp
 {
@@ -249,18 +226,15 @@ sub mailSmtp
 
 # Method: mailSubject
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for notification mail subject option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub mailSubject
 {
@@ -279,18 +253,15 @@ sub mailSubject
 
 # Method: mailTemplate
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the mail notification template file. 
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub mailTemplate
 {
@@ -309,18 +280,15 @@ sub mailTemplate
 
 # Method: mailTemplateFailed
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the mail failed notification template file. 
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub mailTemplateFailed
 {
@@ -339,18 +307,15 @@ sub mailTemplateFailed
 
 # Method: wwwDir
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the www directory option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub wwwDir
 {
@@ -369,18 +334,15 @@ sub wwwDir
 
 # Method: wwwHost
 #
-#
-#
-# Parameters:
-#
+#   Gets the value for the www host option.
 #
 # Returns:
 #
-#
+#   string - Value for the option.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
 sub wwwHost
 {

@@ -25,12 +25,14 @@ use SOAP::Lite; # +trace => 'debug';
 
 use constant URI => 'urn:ANSTE::Manager::AdminServer';
 
+# Class: Client
+#
+#   Client for the administration interface of anste-manager.
+#
+
 # Constructor: new
 #
 #   Constructor for AdminClient class.
-#
-# Parameters:
-#
 #
 # Returns:
 #
@@ -50,18 +52,16 @@ sub new
 
 # Method: connect
 #
-#
+#   Initialize the object used to send the commands with
+#   the location of the server.
 #
 # Parameters:
 #
-#
-# Returns:
-#
-#
+#   url - URL of the server.
 #
 # Exceptions:
 #
-#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
 sub connect	# (host) 
 {
@@ -77,18 +77,11 @@ sub connect	# (host)
 
 # Method: connected
 #
-#
-#
-# Parameters:
-#
+#   Check if the client is connected.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   boolean - true if the client have a valid connection with the server
 #
 sub connected # returns boolean
 {
@@ -99,18 +92,11 @@ sub connected # returns boolean
 
 # Method: list
 #
-#
-#
-# Parameters:
-#
+#   Sends a job list request to the server.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - text representation of the job queue
 #
 sub list # returns queue string
 {
@@ -128,18 +114,15 @@ sub list # returns queue string
 
 # Method: delete
 #
-#
+#   Sends a delete job command to the server.
 #
 # Parameters:
 #
+#   id - String with the identificator of the job to delete.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   boolean - true if server response is OK, false otherwise
 #
 sub delete # (jobID) returns boolean
 {

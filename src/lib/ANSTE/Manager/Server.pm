@@ -23,20 +23,27 @@ use ANSTE::Manager::JobWaiter;
 use ANSTE::Manager::RSSWriter;
 use ANSTE::Manager::Config;
 
+# Class: Server
+#
+#   This class is used by the SOAP server that manages the client requests
+#   to handle them.
+#
+
 # Method: addJob
 #
-#
+#   Handles an add job command from the client, notifying that the
+#   job has been received to the <ANSTE::Manager::JobWaiter> instance.
 #
 # Parameters:
 #
+#   user - String with the name of the user that sends the job.
+#   test - String with the name of the test to be executed.
+#   mail - *optional* String with the address where the user will be notified.
+#   path - *optional* String with the path of the user tests.
 #
 # Returns:
 #
-#
-#
-# Exceptions:
-#
-#
+#   string - OK if the request is sucessful.
 #
 sub addJob # (user, test, mail, path)
 {
