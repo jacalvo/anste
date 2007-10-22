@@ -118,7 +118,10 @@ uninstall-anste-manager:
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/Job.pm
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/JobWaiter.pm
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/MailNotifier.pm
+	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/RSSWriter.pm
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/Server.pm
+	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/AdminServer.pm
+	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/AdminClient.pm
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/Config.pm
 	-rmdir $(DESTDIR)$(LIBPERL)/ANSTE/Manager
 	-rmdir $(DESTDIR)$(LIBPERL)/ANSTE

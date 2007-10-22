@@ -150,10 +150,6 @@ sub test # (file)
     };
 
     my $report = $runner->report();
-    my $package = $config->reportWriter() . 'Writer';
-
-    eval("use ANSTE::Report::$package");
-    die "Can't load package $package: $@" if $@;
 
     my $txtWriter = new ANSTE::Report::TextWriter($report); 
     $txtWriter->write(\*STDOUT);
