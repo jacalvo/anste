@@ -1,3 +1,5 @@
+ANSTE Installation
+------------------
 To install ANSTE simply do make install.
 
 Then copy the provided configuration file conf/anste.conf to
@@ -20,6 +22,20 @@ and apt-get install anste anste-manager anste-job
 
 You can also build your own packages with the provided debian/rules script.
 
+Xen configuration
+-----------------
+For the correct working of ANSTE with Xen you have to edit
+your /etc/xen/xend-config.sxp and uncomment the following lines:
+
+(network-script network-nat)
+(vif-script     vif-nat)
+
+Ensure that the lines containing referring network-bridge, network-route
+and vif-bridge, vif-route are commented.
+
+
+Note for anste-manager users:
+-----------------------------
 If you are going to use anste-manager is very recommendable to have
 HTTP and SMTP servers running on the machine. You can configure the path 
 where the results should be stored in anste-manager.conf. It's also
