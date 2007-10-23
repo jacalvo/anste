@@ -30,7 +30,7 @@ your /etc/xen/xend-config.sxp and uncomment the following lines:
 (network-script network-nat)
 (vif-script     vif-nat)
 
-Ensure that the lines containing referring network-bridge, network-route
+Ensure that the lines containing network-bridge, network-route
 and vif-bridge, vif-route are commented.
 
 
