@@ -321,11 +321,13 @@ sub _createImageConfig # (image, path) returns config string
         $ifaceList .= ", 'ip=$ip'";    
     }
 
+    my $device = ANSTE::Config->instance()->xenDevice();
+
     my %vars = (hostname => $image->name(),
                 iface_list => $ifaceList,
                 memory => $image->memory(),
                 path => $path,
-                device => 'sda');
+                device => $device);
 
     my $config = $template->fill_in(HASH => \%vars)
         or die "Couldn't fill in the template: $Text::Template::ERROR";
