@@ -333,12 +333,13 @@ sub shutdown
 {
     my ($self) = @_;
 
-    my $image = $self->{image};
+    my $image = $self->{image}->name();
     my $virtualizer = $self->{virtualizer}; 
     my $system = $self->{system};
 
-    # TODO: Maybe this could be done more softly sending poweroff :)
-    $virtualizer->shutdownImage($image->name());
+    print "[$image] Shutting down...\n";
+    $virtualizer->shutdownImage($image);
+    print "[$image] Shutdown done.\n";
 
     # Delete the NAT rule for this image
     my $iface = ANSTE::Config->instance()->natIface();

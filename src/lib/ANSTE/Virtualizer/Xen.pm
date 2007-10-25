@@ -111,7 +111,13 @@ sub shutdownImage # (image)
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
 
-    $self->execute("xm destroy $image");
+    my $config = ANSTE::Config->instance();
+
+    $self->execute("xm shutdown $image");
+
+    # Wait until shutdown finishes
+    my $waitScript = $config->scriptFile('xen-waitshutdown.sh');
+    system("$waitScript $image");
 }
 
 # Method: createVM

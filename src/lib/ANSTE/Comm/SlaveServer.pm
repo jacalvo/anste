@@ -123,7 +123,7 @@ sub exec # (file, log?)
         else {
             $ret = $self->_execute($command);
         }
-        exec("anste-slave finished $ret");
+        exec("/usr/local/bin/anste-slave finished $ret");
         exit(0);
     }
     else {

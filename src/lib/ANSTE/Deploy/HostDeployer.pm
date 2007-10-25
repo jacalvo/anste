@@ -156,7 +156,6 @@ sub shutdown
     my $host = $self->{host};
     my $hostname = $host->name();
 
-    print "[$hostname] shutting down...\n";
     $cmd->shutdown();
 }
 
@@ -173,8 +172,9 @@ sub deleteImage
     my $host = $self->{host};
     my $hostname = $host->name();
 
-    print "[$hostname] deleting image...\n";
+    print "[$hostname] Deleting image...\n";
     $virtualizer->deleteImage($hostname);
+    print "[$hostname] Image deleted.\n";
 }
 
 sub _deploy
