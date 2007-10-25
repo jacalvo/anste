@@ -192,15 +192,7 @@ sub _deploy
     try {
         $self->_copyBaseImage() or die "Can't copy base image";
     } catch ANSTE::Exceptions::NotFound with {
-        if (ANSTE::Config->instance->autoCreateImages()) {
-            print "[$hostname] Base image not found, creating...\n";
-            my $creator = new ANSTE::Image::Creator($host->baseImage());
-            $creator->createImage();
-            $self->_copyBaseImage() or die "Can't copy base image";
-            print "[$hostname] Base image created.\n";
-        } else {
-            die "[$hostname] Base image not found, can't continue.";
-        }
+        die "[$hostname] Base image not found, can't continue.";
     };
 
     # Critical section here to prevent mount errors with loop device busy

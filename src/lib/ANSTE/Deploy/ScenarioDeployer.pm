@@ -87,6 +87,10 @@ sub deploy # returns hash ref with the ip of each host
     my $server = new ANSTE::Comm::WaiterServer();
     $server->startThread();
 
+    if (ANSTE::Config->instance->autoCreateImages()) {
+        $self->_createMissingBaseImages();
+    }
+
     my $firstAddress = ANSTE::Config->instance()->firstAddress();
 
     # Separate the last number of the ip in order to increment it.
@@ -128,6 +132,28 @@ sub shutdown
     foreach my $deployer (@{$deployers}) {
         $deployer->shutdown();
         $deployer->deleteImage();
+    }
+}
+
+sub _createMissingBaseImages
+{
+    my ($self) = @_;
+
+    my $scenario = $self->{scenario};
+
+    # Tries to create all the base images, if a image
+    # already exists, does nothing.
+    foreach my $host (@{$scenario->hosts()}) {
+        my $image = $host->baseImage();
+        my $hostname = $host->name();
+        print "[$hostname] Auto-creating base image if not exists...\n";
+        my $creator = new ANSTE::Image::Creator($image);
+        if($creator->createImage()) {
+            print "[$hostname] Base image created.\n";
+        }
+        else {
+            print "[$hostname] Base image already exists.\n";
+        }
     }
 }
 

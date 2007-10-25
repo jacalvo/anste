@@ -65,7 +65,11 @@ sub new # (image) returns new ImageCreator object
 
 # Method: createImage
 #
-#   Does the image creation.
+#   Does the image creation. If the image already exists, does nothing.
+#
+# Returns:
+#
+#   boolean - true if the image is created, false if already exists
 #
 # Exceptions:
 #
@@ -78,6 +82,10 @@ sub createImage
     my $image = $self->{image};
 
     my $cmd = new ANSTE::Image::Commands($image);
+
+    if ($cmd->exists()) {
+        return 0;
+    }
 
     $cmd->create() or die 'Error creating base image.';
 
@@ -102,6 +110,10 @@ sub createImage
     };
 
     $cmd->resize($image->size()) or die 'Error resizing image.';
+
+    return 1;
 }
+
+
 
 1;

@@ -97,8 +97,6 @@ sub ip
 
     my $image = $self->{image};
 
-    # FIXME: When creating more than one baseimages at once
-    # could be IP issues...
     my $ip = $image->isa('ANSTE::Image::Image') ? 
              $image->ip() : 
              ANSTE::Config->instance()->firstAddress();
@@ -376,6 +374,25 @@ sub resize # (size)
 
     print "Resizing the image to $size\n" if $config->verbose();
     $system->resizeImage($virtualizer->imageFile($imagePath, $image), $size);
+}
+
+# Method: exists
+#
+#   Checks if this image exists physically in the disk.
+#
+# Returns:
+#
+#   boolean - true if the image exists, false if not
+#
+sub exists
+{
+    my ($self) = @_;
+
+    my $image = $self->{image}->name();
+    my $virtualizer = $self->{virtualizer};
+    my $path = ANSTE::Config->instance()->imagePath();
+
+    return -r $virtualizer->imageFile($path, $image);
 }
 
 # Method: createVirtualMachine
