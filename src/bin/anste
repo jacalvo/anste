@@ -110,7 +110,12 @@ sub create # (file)
     $image->setIp($address);
 
     my $creator = new ANSTE::Image::Creator($image);
-    $creator->createImage();
+    if (not $creator->createImage()) {
+        my $name = $image->name();
+        print STDERR "The image $name already exists.\n".
+                     "Delete it before trying to create it again.\n";
+        exit(1);                     
+    }
 }
 
 sub deploy # (file)
