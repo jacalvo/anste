@@ -41,6 +41,7 @@ sub new # returns new Report object
 	my $self = {};
 
     $self->{suites} = [];
+    $self->{time} = '';
 
 	bless($self, $class);
 
@@ -88,6 +89,43 @@ sub suites # returns list ref
     my ($self) = @_;
 
     return $self->{suites};
+}
+
+# Method: time
+#
+#   Returns the time when the report was generated.
+#
+# Returns:
+#
+#   string - contains the date/time representation of the report generation
+#
+sub time # returns time
+{
+    my ($self) = @_;
+
+    return $self->{time};
+}
+
+# Method: setTime
+#
+#   Sets the time when the report was generated.
+#
+# Parameters:
+#
+#   time - String with the date/time representation of the report generation.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#
+sub setTime # (time)
+{
+    my ($self, $time) = @_;
+
+    defined $time or
+        throw ANSTE::Exceptions::MissingArgument('time');
+
+    $self->{time} = $time;        
 }
 
 1;

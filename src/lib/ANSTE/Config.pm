@@ -115,7 +115,7 @@ sub check
     $self->seleniumRecordAll();
     $self->xenDir();
     $self->xenInstallMethod();
-    $self->xenDevice();
+    $self->xenUseIdeDevices();
     $self->xenSize();
     $self->xenMemory();
     $self->xenNoSwap();
@@ -830,20 +830,20 @@ sub xenInstallMethod
     return $self->_getOption('xen-options', 'install-method');
 }
 
-# Method: xenDevice
+# Method: xenUseIdeDevices
 #
 #
-#   Gets the value of the Xen's device option.
+#   Gets the value of the Xen's use-ide-devices option.
 #
 # Returns:
 #
 #   string - Value for the option.
 #
-sub xenDevice
+sub xenUseIdeDevices
 {
     my ($self) = @_;
 
-    return $self->_getOption('xen-options', 'device');
+    return $self->_getOption('xen-options', 'use-ide-devices');
 }
 
 # Method: xenSize
@@ -1052,7 +1052,7 @@ sub _setDefaults
 
     $self->{default}->{'xen-options'}->{'dir'} = '/home/xen';
     $self->{default}->{'xen-options'}->{'install-method'} = 'debootstrap';
-    $self->{default}->{'xen-options'}->{'device'} = 'sda';
+    $self->{default}->{'xen-options'}->{'use-ide-devices'} = 0;
     $self->{default}->{'xen-options'}->{'size'} = '2Gb';
     $self->{default}->{'xen-options'}->{'memory'} = '512Mb';
     $self->{default}->{'xen-options'}->{'noswap'} = '1';

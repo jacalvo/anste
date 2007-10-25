@@ -44,6 +44,8 @@ sub new # returns new TestResult object
     $self->{value} = undef;
     $self->{log} = undef;
     $self->{video} = undef;
+    $self->{startTime} = undef;
+    $self->{endTime} = undef;
 
 	bless($self, $class);
 
@@ -202,6 +204,80 @@ sub setVideo # (video)
         throw ANSTE::Exceptions::MissingArgument('video');
 
     $self->{video} = $video;        
+}
+
+# Method: startTime
+#
+#   Returns the time when the test started.
+#
+# Returns:
+#
+#   string - contains the date/time representation of the test start
+#
+sub startTime # returns startTime
+{
+    my ($self) = @_;
+
+    return $self->{startTime};
+}
+
+# Method: setStartTime
+#
+#   Sets the time when the test started.
+#
+# Parameters:
+#
+#   startTime - String with the date/time representation of the test start.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#
+sub setStartTime # (startTime)
+{
+    my ($self, $startTime) = @_;
+
+    defined $startTime or
+        throw ANSTE::Exceptions::MissingArgument('startTime');
+
+    $self->{startTime} = $startTime;        
+}
+
+# Method: endTime
+#
+#   Returns the time when the test ended.
+#
+# Returns:
+#
+#   string - contains the date/time representation of the test end
+#
+sub endTime # returns endTime
+{
+    my ($self) = @_;
+
+    return $self->{endTime};
+}
+
+# Method: setEndTime
+#
+#   Sets the time when the test ended.
+#
+# Parameters:
+#
+#   endTime - String with the date/time representation of the test end.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#
+sub setEndTime # (endTime)
+{
+    my ($self, $endTime) = @_;
+
+    defined $endTime or
+        throw ANSTE::Exceptions::MissingArgument('endTime');
+
+    $self->{endTime} = $endTime;        
 }
 
 1;

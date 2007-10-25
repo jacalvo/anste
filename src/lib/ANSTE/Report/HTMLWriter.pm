@@ -53,6 +53,10 @@ sub writeEnd
 
     my $file = $self->{file};
 
+    my $time = $self->{report}->time();
+
+    print $file "<p><i>Report generated at $time</i></p>\n";
+
     print $file "</body>\n";
     print $file "</html>\n";
 }    

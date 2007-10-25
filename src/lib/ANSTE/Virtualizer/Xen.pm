@@ -71,10 +71,17 @@ sub createBaseImage # (%params)
 
     my $confFile = _createXenToolsConfig();
 
-    my $dir = ANSTE::Config->instance()->xenDir();
+    my $config = ANSTE::Config->instance();
+
+    my $dir = $config->xenDir();
+    my $ide = $config->xenUseIdeDevices();
 
     my $command = "xen-create-image --dir=$dir --hostname=$name" .
                   " --ip='$ip' --config=$confFile"; 
+    
+    if ($ide) {
+        $command .= " --ide";
+    }
 
     print "Showing xen-tools.conf:\n";
     open(FILE, '<', $confFile);
@@ -327,7 +334,8 @@ sub _createImageConfig # (image, path) returns config string
         $ifaceList .= ", 'ip=$ip'";    
     }
 
-    my $device = ANSTE::Config->instance()->xenDevice();
+    my $useIDE = ANSTE::Config->instance()->xenUseIdeDevices();
+    my $device = $useIDE ? 'hda' : 'sda';
 
     my %vars = (hostname => $image->name(),
                 iface_list => $ifaceList,
