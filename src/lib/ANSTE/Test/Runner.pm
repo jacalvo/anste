@@ -152,6 +152,11 @@ sub runSuite # (suite)
         $deployer->shutdown();
     };
     print "Finished testing of suite '$suiteName'.\n\n";
+
+    my ($sec, $min, $hour, $mday, $mon, $year) = localtime();
+    $year += 1900;
+    my $time = "$mday-$mon-$year $hour:$min:$sec";
+    $self->{report}->setTime($time);
 }
 
 # Method: report
@@ -249,6 +254,12 @@ sub _runTest # (test)
 
     my $verbose = $config->verbose();
 
+    # Store start time
+    my ($sec, $min, $hour, $mday, $mon, $year) = localtime();
+    $year += 1900;
+    my $time = "$mday-$mon-$year $hour:$min:$sec";
+    $testResult->setStartTime($time);
+
     # Run the test itself either it's a selenium one or a normal one 
     if ($test->selenium()) {
         my $video;
@@ -293,6 +304,12 @@ sub _runTest # (test)
     }
 
     $testResult->setValue($ret);
+
+    # Store end time
+    ($sec, $min, $hour, $mday, $mon, $year) = localtime();
+    $year += 1900;
+    $time = "$mday-$mon-$year $hour:$min:$sec";
+    $testResult->setEndTime($time);
 
     return $testResult;
 }
