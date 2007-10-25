@@ -573,7 +573,7 @@ sub disableNAT # (iface, sourceAddr)
 
 # Method: executeSelenium
 #
-#   Overriden method that returns the command that executes Selenium.
+#   Overriden method that executes Selenium.
 #
 # Parameters:
 #

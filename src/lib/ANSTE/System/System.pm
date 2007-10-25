@@ -59,6 +59,10 @@ sub new
 #
 #   boolean - true if the exit code is 0, false otherwise
 #
+# Exceptions:
+#
+#   <ANSTE::Exceptions::Error> - throw if can't execute the command
+#
 sub execute # (command)
 {
     my ($self, $command) = @_;
@@ -69,7 +73,14 @@ sub execute # (command)
     if (not ANSTE::Config->instance()->verbose()) {
         $command .= ' &> /dev/null';
     }
-    return system($command) == 0;
+    my $ret = system($command);
+
+    # Checks if the command can't be executed or broken pipe signal
+    if ($ret == -1) {
+        throw ANSTE::Exceptions::Error("Can't execute $command");
+    }
+
+    return $ret == 0;
 }
 
 # Method: mountImage 
@@ -453,7 +464,7 @@ sub disableNAT # (iface, sourceAddr)
 
 # Method: executeSelenium
 #
-#   Override this method to return the command that executes Selenium.
+#   Override this method to execute Selenium.
 #
 # Parameters:
 #

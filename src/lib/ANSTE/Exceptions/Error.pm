@@ -1,5 +1,4 @@
 # Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
-# Copyright (C) 2005 Warp Networks S.L., DBS Servicios Informaticos S.L.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -14,44 +13,35 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::Exceptions::Base;
+package ANSTE::Exceptions::Error;
 
-use base 'Error';
+use base 'ANSTE::Exceptions::Base';
 
-# Class: Base
+# Class: Error
 #
-#   Base class for ANSTE exceptions.
+#   Exception to be thrown when generic errors happen.
 #
 
 # Constructor: new
 #
-#   Constructor for Base class.
+#   Constructor for Error class.
 #
 # Parameters:
 #
-#   text - String with the exception message.
+#   msg  - String with the error message.
 #
 # Returns:
 #
-#   A recently created <ANSTE::Exceptions::Base> object.
+#   A recently created <ANSTE::Exceptions::Error> object.
 #
-sub new # (text)
+sub new # (msg)
 {
-	my ($class, $text) = @_;
+	my ($class, $msg) = @_;
 
-	$self = $class->SUPER::new(-text => "$text", @_);
+	$self = $class->SUPER::new("ERROR: $msg\n");
+
 	bless ($self, $class);
 	return $self;
-}
-
-# Method: toStderr
-#
-#   Prints the exception message to system's standard error.
-#
-sub toStderr 
-{
-	my ($self) = @_;
-	print STDERR "[ANSTE::Exceptions] ". $self->stringify() ."\n";
 }
 
 1;

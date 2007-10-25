@@ -25,6 +25,7 @@ use ANSTE::Test::Suite;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::HostWaiter;
 use ANSTE::Report::Report;
+use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
 
@@ -332,7 +333,6 @@ sub _runSeleniumRC # (hostname, file, log) returns result
 
     my $system = $self->{system};
 
-    # TODO: Include the URL of the test in XMLs
     my $ip = $self->{hostIP}->{$hostname};
     my $url = "http://$ip";
 
@@ -341,11 +341,16 @@ sub _runSeleniumRC # (hostname, file, log) returns result
     my $jar = $config->seleniumRCjar();
     my $browser = $config->seleniumBrowser();
 
-    $system->executeSelenium(jar => $jar,
-                             browser => $browser, 
-                             url => $url, 
-                             testFile => $file, 
-                             resultFile => $log);
+    try {
+        $system->executeSelenium(jar => $jar,
+                                 browser => $browser, 
+                                 url => $url, 
+                                 testFile => $file, 
+                                 resultFile => $log);
+    } catch ANSTE::Exceptions::Error with {
+        throw ANSTE::Exceptions::Error("Can't execute Selenium or Java. " .
+                                       "Ensure that everything is ok.");
+    };
 
     return $self->_seleniumResult($log);
 }
@@ -355,7 +360,9 @@ sub _seleniumResult # (logfile)
     my ($self, $logfile) = @_;
 
     my $LOG;
-    open($LOG, '<', $logfile);
+    open($LOG, '<', $logfile) or
+        throw ANSTE::Exceptions::Error("Selenium results not found. " . 
+                                       "Check if it's working properly.");
     foreach my $line (<$LOG>) {
         if ($line =~ /^<td>passed/) {
             close($LOG);
@@ -368,7 +375,7 @@ sub _seleniumResult # (logfile)
     }
     close($LOG);
 
-    return 2;
+    return -1;
 }
 
 1;
