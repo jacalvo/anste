@@ -177,10 +177,10 @@ sub updatePackagesCommand # returns string
     throw ANSTE::Exceptions::NotImplemented();
 }
 
-# Method: enableInterfacesCommand
+# Method: updateNetworkCommand
 #
 #   Override this method to return the system-specific
-#   command to enable network interfaces.
+#   command to update the network configuration.
 #
 # Returns:
 #
@@ -190,7 +190,7 @@ sub updatePackagesCommand # returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented> 
 #
-sub enableInterfacesCommand # returns string
+sub updateNetworkCommand # returns string
 {
     throw ANSTE::Exceptions::NotImplemented();
 }

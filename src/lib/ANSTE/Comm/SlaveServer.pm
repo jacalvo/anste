@@ -96,6 +96,7 @@ sub get	# (file)
 # Parameters:
 #
 #   file - String with the name of the file to be executed.
+#   log  - *optional* String with the name of the file to save the log.
 #
 # Returns:
 #
@@ -122,8 +123,7 @@ sub exec # (file, log?)
         else {
             $ret = $self->_execute($command);
         }
-        # FIXME: This isn't cool.
-        exec("/usr/local/bin/anste-slave finished $ret");
+        exec("anste-slave finished $ret");
         exit(0);
     }
     else {

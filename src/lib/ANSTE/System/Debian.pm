@@ -165,20 +165,20 @@ sub updatePackagesCommand # returns string
     return 'apt-get update';
 }
 
-# Method: enableInterfacesCommand
+# Method: updateNetworkCommand 
 #
 #   Overriden method that returns the system-specific
-#   command to enable network interfaces.
+#   command to update the network configuration.
 #
 # Returns:
 #
 #   string - command string
 #
-sub enableInterfacesCommand # returns string
+sub updateNetworkCommand # returns string
 {
     my ($self) = @_;
 
-    return 'ifup -a';
+    return '/etc/init.d/networking restart';
 }
 
 # Method: cleanPackagesCommand
