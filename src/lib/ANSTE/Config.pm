@@ -116,6 +116,7 @@ sub check
     $self->xenDir();
     $self->xenInstallMethod();
     $self->xenUseIdeDevices();
+    $self->xenModules();
     $self->xenSize();
     $self->xenMemory();
     $self->xenNoSwap();
@@ -846,6 +847,22 @@ sub xenUseIdeDevices
     return $self->_getOption('xen-options', 'use-ide-devices');
 }
 
+# Method: xenModules
+#
+#
+#   Gets the value of the Xen's modules option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+sub xenModules
+{
+    my ($self) = @_;
+
+    return $self->_getOption('xen-options', 'modules');
+}
+
 # Method: xenSize
 #
 #
@@ -1053,6 +1070,7 @@ sub _setDefaults
     $self->{default}->{'xen-options'}->{'dir'} = '/home/xen';
     $self->{default}->{'xen-options'}->{'install-method'} = 'debootstrap';
     $self->{default}->{'xen-options'}->{'use-ide-devices'} = 0;
+    $self->{default}->{'xen-options'}->{'modules'} = '';
     $self->{default}->{'xen-options'}->{'size'} = '2Gb';
     $self->{default}->{'xen-options'}->{'memory'} = '512Mb';
     $self->{default}->{'xen-options'}->{'noswap'} = '1';

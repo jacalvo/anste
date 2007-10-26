@@ -75,12 +75,17 @@ sub createBaseImage # (%params)
 
     my $dir = $config->xenDir();
     my $ide = $config->xenUseIdeDevices();
+    my $modules = $config->xenModules();
 
     my $command = "xen-create-image --dir=$dir --hostname=$name" .
                   " --ip='$ip' --config=$confFile"; 
     
     if ($ide) {
         $command .= " --ide";
+    }
+
+    if ($modules) {
+        $command .= " --modules=$modules";
     }
 
     print "Showing xen-tools.conf:\n";
