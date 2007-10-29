@@ -115,11 +115,13 @@ sub create
     my $image = $self->{image};
     my $name = $image->name();
     my $ip = $self->ip();
+    my $memory = $image->memory();
 
     my $virtualizer = $self->{virtualizer};
 
     $virtualizer->createBaseImage(name => $name,
-                                  ip => $ip);
+                                  ip => $ip,
+                                  memory => $memory);
 }
 
 # Method: mount

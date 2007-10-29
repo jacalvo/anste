@@ -47,6 +47,7 @@ use constant XEN_CONFIG_TEMPLATE => 'xen-config.tmpl';
 #   
 #   name    -   name of the image type to be created
 #   ip      -   ip address that will be assigned to the image
+#   memory  -   *optional* size of the RAM memory to be used
 #
 # Returns:
 #
@@ -68,8 +69,9 @@ sub createBaseImage # (%params)
 
     my $name = $params{name};
     my $ip = $params{ip};
+    my $memory = $params{memory};
 
-    my $confFile = _createXenToolsConfig();
+    my $confFile = _createXenToolsConfig($memory);
 
     my $config = ANSTE::Config->instance();
 
@@ -278,18 +280,21 @@ sub deleteImage # (image)
     $self->execute("xen-delete-image $image --dir $dir");
 }
 
-sub _createXenToolsConfig # returns filename
+sub _createXenToolsConfig # (memory) returns filename
 {
-    my ($self) = @_;
+    my ($self, $memory) = @_;
 
     my ($fh, $filename) = tempfile();
 
     my $config = ANSTE::Config->instance();
 
+    if (not $memory) {
+        $memory = $config->xenMemory(); 
+    }        
+
     my $dir = $config->imagePath();
     my $installMethod = $config->xenInstallMethod();
     my $size = $config->xenSize();
-    my $memory = $config->xenMemory();
     my $noSwap = $config->xenNoSwap();
     my $dist = $config->xenDist();
     my $image = $config->xenImage();
@@ -350,6 +355,9 @@ sub _createImageConfig # (image, path) returns config string
 
     my $useIDE = ANSTE::Config->instance()->xenUseIdeDevices();
     my $device = $useIDE ? 'hda' : 'sda';
+
+    my $MEM = $image->memory();
+    print("THE FUCKING MEMORY IS $MEM\n");
 
     my %vars = (hostname => $image->name(),
                 iface_list => $ifaceList,
