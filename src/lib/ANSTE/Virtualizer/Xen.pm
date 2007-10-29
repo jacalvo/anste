@@ -73,7 +73,7 @@ sub createBaseImage # (%params)
 
     my $config = ANSTE::Config->instance();
 
-    my $dir = $config->xenDir();
+    my $dir = $config->imagePath();
     my $ide = $config->xenUseIdeDevices();
     my $modules = $config->xenModules();
 
@@ -184,7 +184,7 @@ sub imageFile # (path, name)
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-    return "$path/$name/disk.img";
+    return "$path/domains/$name/disk.img";
 }
 
 # Method: copyImage
@@ -234,7 +234,7 @@ sub createImageCopy # (baseimage, newimage)
         throw ANSTE::Exceptions::NotFound('Image', $basename);
     }
 
-    dircopy("$path/$basename", "$path/$newname");
+    dircopy("$path/domains/$basename", "$path/domains/$newname");
 
     # Creates the configuration file for the new image
     my $config = $self->_createImageConfig($newimage, $path);
@@ -273,9 +273,9 @@ sub deleteImage # (image)
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
 
-    my $xenDir = ANSTE::Config->instance()->xenDir();
+    my $dir = ANSTE::Config->instance()->imagePath();
 
-    $self->execute("xen-delete-image $image --dir $xenDir");
+    $self->execute("xen-delete-image $image --dir $dir");
 }
 
 sub _createXenToolsConfig # returns filename
@@ -286,7 +286,7 @@ sub _createXenToolsConfig # returns filename
 
     my $config = ANSTE::Config->instance();
 
-    my $dir = $config->xenDir();
+    my $dir = $config->imagePath();
     my $installMethod = $config->xenInstallMethod();
     my $size = $config->xenSize();
     my $memory = $config->xenMemory();

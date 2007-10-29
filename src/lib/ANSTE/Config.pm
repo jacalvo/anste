@@ -113,7 +113,6 @@ sub check
     $self->seleniumBrowser();
     $self->seleniumVideo();
     $self->seleniumRecordAll();
-    $self->xenDir();
     $self->xenInstallMethod();
     $self->xenUseIdeDevices();
     $self->xenModules();
@@ -796,24 +795,6 @@ sub seleniumRecordAll
     }
 
     return $all;
-}
-
-# TODO: validate xen options (maybe they should be in separate class 
-# Virtualizer::XenConfig or similar)
-
-# Method: xenDir
-#
-#   Gets the value of the Xen's dir option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-sub xenDir
-{
-    my ($self) = @_;
-
-    return $self->_getOption('xen-options', 'dir');
 }
 
 # Method: xenInstallMethod
