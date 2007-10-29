@@ -80,6 +80,7 @@ sub createImage
     my ($self) = @_;
 
     my $image = $self->{image};
+    my $name = $image->name();
 
     my $cmd = new ANSTE::Image::Commands($image);
 
@@ -87,16 +88,26 @@ sub createImage
         return 0;
     }
 
+    print "[$name] Creating image...";
     $cmd->create() or die 'Error creating base image.';
+    print "done.\n";
 
+    print "[$name] Mounting image... ";
     $cmd->mount() or die 'Error mounting image.';
+    print "done.\n";
 
     try {
+        print "[$name] Copying base files... ";
         $cmd->copyBaseFiles() or die 'Error copying files.';
+        print "done.\n";
 
+        print "[$name] Installing base packages... ";
         $cmd->installBasePackages() or die 'Error installing packages.';
+        print "done.\n";
     } finally {
+        print "[$name] Umounting image... ";
         $cmd->umount() or die 'Error unmounting image.';
+        print "done.\n";
     };
 
     # Starts Master Server thread
@@ -104,12 +115,17 @@ sub createImage
     $server->startThread();
 
     try {
+        print "[$name] Starting to prepare the system... \n";
         $cmd->prepareSystem() or die 'Error preparing system.'; 
     } finally {
         $cmd->shutdown();
     };
 
+    print "[$name] Resizing image... ";
     $cmd->resize($image->size()) or die 'Error resizing image.';
+    print "done.\n";
+    
+    print "[$name] Image creation finished.\n";
 
     return 1;
 }

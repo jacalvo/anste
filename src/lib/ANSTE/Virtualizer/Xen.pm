@@ -90,13 +90,6 @@ sub createBaseImage # (%params)
         $command .= " --modules=$modules";
     }
 
-    print "Showing xen-tools.conf:\n";
-    open(FILE, '<', $confFile);
-    foreach(<FILE>) {
-        print;
-    }
-    close(FILE);
-
     $self->execute($command);
 
     unlink($confFile);
