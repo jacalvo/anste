@@ -38,6 +38,7 @@ use Error qw(:try);
 use Perl6::Junction qw(none);
 
 my $create = '';
+my $remove = '';
 my $deploy = '';
 my $test = '';
 my $out = '';
@@ -47,6 +48,7 @@ my $help = 0;
 my $quiet = 0;
 
 GetOptions('create' => \$create,
+           'remove' => \$remove,
            'deploy' => \$deploy,
            'test' => \$test,
            'path=s' => \$path,
@@ -57,7 +59,7 @@ GetOptions('create' => \$create,
            
 pod2usage(1) if $help;           
 
-if (none($create, $deploy, $test) == 1) {
+if (none($create, $remove, $deploy, $test) == 1) {
     pod2usage("$0: No action specified.");
 }
 
@@ -84,6 +86,9 @@ $config->check();
 foreach my $file (@ARGV) {
     if ($create) {
         create($file);
+    }
+    elsif ($remove) {
+        remove($file);
     }
     elsif ($deploy) {
         deploy($file);
@@ -114,6 +119,28 @@ sub create # (file)
         my $name = $image->name();
         print STDERR "The image $name already exists.\n".
                      "Delete it before trying to create it again.\n";
+        exit(1);                     
+    }
+}
+
+sub remove # (file)
+{
+    my ($file) = @_;
+
+    my $image = new ANSTE::Image::Image();
+
+    try {
+        $image->loadFromFile($file);
+    } catch ANSTE::Exceptions::InvalidFile with {
+        print STDERR "Can't load image $file.\n";
+        exit(1);
+    };
+
+    my $cmd = new ANSTE::Image::Commands($image);
+    if (not $cmd->deleteImage()) {
+        my $name = $image->name();
+        print STDERR "The image $name can't be delete.\n".
+                     "Maybe it doesn't exists.\n";
         exit(1);                     
     }
 }
@@ -182,6 +209,7 @@ anste [options] [file ...]
  Options:
    -help        shows this help
    -create      create a base image
+   -remove      delete a base image
    -deploy      deploy a scenario
    -test        test a suite
    -path <dir>  where to find the data  

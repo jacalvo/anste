@@ -310,6 +310,25 @@ sub umount
     return($ret);
 }
 
+# Method: delete
+#
+#   Deletes this image from disk.
+#
+# Returns:
+#
+#   boolean - true if sucesss, false otherwise
+#
+sub deleteImage
+{
+    my ($self) = @_;
+
+    my $virtualizer = $self->{virtualizer};
+
+    my $image = $self->{image}->name();
+
+    $virtualizer->deleteImage($image);
+}
+
 # Method: deleteMountPoint
 #
 #   Deletes the temporary mount point.
