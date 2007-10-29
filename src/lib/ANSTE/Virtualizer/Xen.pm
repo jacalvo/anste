@@ -337,8 +337,11 @@ sub _createImageConfig # (image, path) returns config string
     foreach my $iface (@{$image->network()->interfaces()}) {
         $ip = $iface->address();
         my $mac = $iface->hwAddress();
-        if ($mac) {
+        if ($ip and $mac) {
             $ifaceList .= ", 'ip=$ip,mac=$mac'";
+        }
+        elsif ($mac) {
+            $ifaceList .= ", 'mac=$mac'";
         }
         else {
             $ifaceList .= ", 'ip=$ip'";
