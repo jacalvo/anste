@@ -336,7 +336,13 @@ sub _createImageConfig # (image, path) returns config string
 
     foreach my $iface (@{$image->network()->interfaces()}) {
         $ip = $iface->address();
-        $ifaceList .= ", 'ip=$ip'";    
+        my $mac = $iface->hwAddress();
+        if ($mac) {
+            $ifaceList .= ", 'ip=$ip,mac=$mac'";
+        }
+        else {
+            $ifaceList .= ", 'ip=$ip'";
+        }
     }
 
     my $useIDE = ANSTE::Config->instance()->xenUseIdeDevices();

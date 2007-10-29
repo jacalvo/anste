@@ -58,6 +58,7 @@ sub new # returns new NetworkInterface object
 	$self->{type} = IFACE_TYPE_STATIC;
 	$self->{name} = '';
 	$self->{address} = '';
+	$self->{hwAddress} = '';
 	$self->{netmask} = '';
 	$self->{gateway} = '';
 
@@ -181,6 +182,49 @@ sub setAddress # address string
 
 	$self->{address} = $address;
 }
+
+# Method: hwAddress
+#
+#   Gets the interface hardware address.
+#
+# Returns:
+#
+#   string - the interface hardware address
+#
+sub hwAddress # returns address string
+{
+	my ($self) = @_;
+
+	return $self->{hwAddress};
+}
+
+# Method: setHwAddress
+#
+#   Sets the interface hardware address.
+#
+# Parameters:
+#
+#   hwAddress - String with the hardware address of the interface.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidData> - throw if argument is not an IP address
+#
+sub setHwAddress # hardware address string
+{
+	my ($self, $hwAddress) = @_;	
+
+    defined $hwAddress or
+        throw ANSTE::Exceptions::MissingArgument('hwAddress');
+
+    if (not ANSTE::Validate::mac($hwAddress)) {
+        throw ANSTE::Exceptions::InvalidData('hwAddress', $hwAddress);
+    }
+
+	$self->{hwAddress} = $hwAddress;
+}
+
 
 # Method: netmask
 #
@@ -319,6 +363,11 @@ sub load # (node)
     		my $gateway = $gatewayNode->getFirstChild()->getNodeValue();
             $self->setGateway($gateway);
         }
+		my $hwAddrNode = $node->getElementsByTagName('hw-addr', 0)->item(0);
+        if ($hwAddrNode) {
+    		my $hwAddress = $hwAddrNode->getFirstChild()->getNodeValue();
+	    	$self->setHwAddress($hwAddress);
+        }            
 	} elsif ($type eq 'dhcp') {
 		$self->setTypeDHCP();
 	}

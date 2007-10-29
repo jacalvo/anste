@@ -285,6 +285,27 @@ sub ip # (ip)
     return 1; 
 }
 
+# Function: mac
+#
+#   Checks if the given string is a valid MAC address.
+#
+# Parameters:
+#
+#   mac - String with the MAC address representation.
+#
+# Returns:
+#
+#   boolean - true if it's valid, false otherwise
+#
+sub mac # (mac)
+{
+    my ($mac) = @_;
+
+    # Add this to simplify the regex
+    $mac .= ':';
+    return $mac =~ /^([0-9a-fA-F]{1,2}:){6}$/;
+}
+
 # Function: email
 #
 #   Checks if the given email address is valid according to RFC 822.

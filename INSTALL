@@ -17,6 +17,9 @@ For Debian users there are packages available in the following repository:
 
 deb http://www.ebox-platform.com/debian/anste/ unstable/
 
+These packages are built for the Debian GNU/Linux "sid" (unstable).
+
+
 Add the line above to your /etc/apt/sources.list, then apt-get update
 and apt-get install anste anste-manager anste-job
 
