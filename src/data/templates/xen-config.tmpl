@@ -24,7 +24,7 @@ memory      = '{$memory}'
 root        = '/dev/{$device}1 ro'
 
 { 
-  my $image_vbd = "file:$path/$hostname/disk.img";
+  my $image_vbd = "file:$path/domains/$hostname/disk.img";
 
   $OUT .= "disk        = [ '$image_vbd,$device" . "1,w' ]";
 }
