@@ -322,25 +322,27 @@ sub loadFromFile # (filename)
 	$self->setDesc($desc);
 
 	my $memoryNode = $image->getElementsByTagName('memory', 0)->item(0);
-	my $memory = $memoryNode->getFirstChild()->getNodeValue();
-	$self->setMemory($memory);
+    if ($memoryNode) {
+    	my $memory = $memoryNode->getFirstChild()->getNodeValue();
+	    $self->setMemory($memory);
+    }        
 
 	my $sizeNode = $image->getElementsByTagName('size', 0)->item(0);
 	my $size = $sizeNode->getFirstChild()->getNodeValue();
 	$self->setSize($size);
 
 	my $packagesNode = $image->getElementsByTagName('packages', 0)->item(0);
-	if($packagesNode){
+	if ($packagesNode) {
 		$self->packages()->load($packagesNode);
 	}
 
 	my $preNode = $image->getElementsByTagName('pre-install', 0)->item(0);
-	if($preNode){
+	if ($preNode) {
         $self->_addScripts('pre-scripts', $preNode);
 	}
 
 	my $postNode = $image->getElementsByTagName('post-install', 0)->item(0);
-	if($postNode){
+	if ($postNode) {
         $self->_addScripts('post-scripts', $postNode);
 	}
 

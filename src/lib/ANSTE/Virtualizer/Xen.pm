@@ -71,7 +71,7 @@ sub createBaseImage # (%params)
     my $ip = $params{ip};
     my $memory = $params{memory};
 
-    my $confFile = _createXenToolsConfig($memory);
+    my $confFile = $self->_createXenToolsConfig($memory);
 
     my $config = ANSTE::Config->instance();
 
@@ -355,9 +355,6 @@ sub _createImageConfig # (image, path) returns config string
 
     my $useIDE = ANSTE::Config->instance()->xenUseIdeDevices();
     my $device = $useIDE ? 'hda' : 'sda';
-
-    my $MEM = $image->memory();
-    print("THE FUCKING MEMORY IS $MEM\n");
 
     my %vars = (hostname => $image->name(),
                 iface_list => $ifaceList,
