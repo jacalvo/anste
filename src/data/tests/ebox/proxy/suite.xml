@@ -1,7 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <suite>
     <name>eBox Proxy tests</name>
-    <desc>Contains a set of tests to ensure
-    that a ebox image works ok.
+    <desc>
+    Contains a set of tests to check 
+    that the eBox HTTP Proxy module works properly.
     </desc>
     
     <scenario>ebox-and-client.xml</scenario>
@@ -9,7 +11,7 @@
     <test type="selenium">
         <name>ConfigNetwork</name>
         <desc>
-        Set the interface as external, etc.
+        Sets the interface as external, etc.
         </desc>
 
         <host>ebox-server</host>
@@ -45,7 +47,7 @@
 
     <test>
         <name>ForbidDownload</name>
-        <desc>Try to download a file of an forbidden host</desc>
+        <desc>Try to download a file of a forbidden host</desc>
 
         <host>test-client</host>
         <dir>forbid-download</dir>
