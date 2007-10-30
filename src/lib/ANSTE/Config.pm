@@ -1057,10 +1057,10 @@ sub _setDefaults
     $self->{default}->{'xen-options'}->{'fs'} = 'ext3';
     $self->{default}->{'xen-options'}->{'dist'} = 'sarge';
     $self->{default}->{'xen-options'}->{'image'} = 'full';
-    $self->{default}->{'xen-options'}->{'kernel'} = 
-        '/boot/vmlinuz-`uname -r`';
-    $self->{default}->{'xen-options'}->{'initrd'} = 
-        '/boot/initrd.img-`uname-r`';
+    my $version = `uname -r`;
+    chomp($version);
+    $self->{default}->{'xen-options'}->{'kernel'} = "/boot/vmlinuz-$version";
+    $self->{default}->{'xen-options'}->{'initrd'} = "/boot/initrd.img-$version";
     $self->{default}->{'xen-options'}->{'mirror'} =
         'http://ftp.debian.org/debian';
 }

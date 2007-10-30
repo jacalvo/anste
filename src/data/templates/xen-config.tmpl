@@ -7,13 +7,9 @@
 #  Kernel + memory size
 #
 {
-    my $kernel = '/boot/vmlinuz-' . `uname -r`;
-    chomp($kernel);
     $OUT.= "kernel      = '$kernel'";
 }
 {
-    my $initrd = '/boot/initrd.img-' . `uname -r`;
-    chomp($initrd);
     $OUT.= "ramdisk     = '$initrd'";
 }
 memory      = '{$memory}'

@@ -346,19 +346,23 @@ sub _createImageConfig # (image, path) returns config string
         }
     }
 
-    my $useIDE = ANSTE::Config->instance()->xenUseIdeDevices();
-    my $device = $useIDE ? 'hda' : 'sda';
+    my $config = ANSTE::Config->instance();
+    my $kernel = eval $config->xenKernel();
+    my $initrd = eval $config->xenInitrd();
+    my $device = $config->xenUseIdeDevices() ? 'hda' : 'sda';
 
-    my %vars = (hostname => $image->name(),
+    my %vars = (kernel => $kernel,
+                initrd => $initrd,
+                hostname => $image->name(),
                 iface_list => $ifaceList,
                 memory => $image->memory(),
                 path => $path,
                 device => $device);
 
-    my $config = $template->fill_in(HASH => \%vars)
+    my $imageConfig = $template->fill_in(HASH => \%vars)
         or die "Couldn't fill in the template: $Text::Template::ERROR";
 
-    return $config;
+    return $imageConfig;
 }
 
 1;
