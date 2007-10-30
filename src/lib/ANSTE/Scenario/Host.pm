@@ -130,6 +130,43 @@ sub setDesc # desc string
 	$self->{desc} = $desc;
 }
 
+# Method: memory
+#
+#   Gets the memory size string.
+#
+# Returns:
+#
+#   string - contains the memory size
+#
+sub memory # returns memory string 
+{
+	my ($self) = shift;
+
+	return $self->{memory};
+}
+
+# Method: setMemory
+#
+#   Sets the memory size string.
+#
+# Parameters:
+#
+#   memory - String with the memory size.    
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setMemory # (memory)
+{
+	my ($self, $memory) = @_;
+
+    defined $memory or
+        throw ANSTE::Exceptions::MissingArgument('memory');
+
+	$self->{memory} = $memory;
+}
+
 # Method: baseImage
 #
 #   Gets the object with the information of the base image of the host.
@@ -322,6 +359,12 @@ sub load # (node)
 	my $descNode = $node->getElementsByTagName('desc', 0)->item(0);
 	my $desc = $descNode->getFirstChild()->getNodeValue();
 	$self->setDesc($desc);
+
+	my $memoryNode = $node->getElementsByTagName('memory', 0)->item(0);
+    if ($memoryNode) {
+    	my $memory = $memoryNode->getFirstChild()->getNodeValue();
+	    $self->setMemory($memory);
+    }        
 
 	my $baseimageNode = $node->getElementsByTagName('baseimage', 0)->item(0);
 	my $baseimage = $baseimageNode->getFirstChild()->getNodeValue();

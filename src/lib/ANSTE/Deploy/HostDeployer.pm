@@ -118,7 +118,10 @@ sub startDeployThread # (ip)
 
     my $host = $self->{host};
     my $hostname = $host->name();
-    my $memory = $host->baseImage()->memory();
+    my $memory = $host->memory();
+    if (not $memory) {
+        $memory = $host->baseImage()->memory();
+    }
     my $image = new ANSTE::Image::Image(name => $hostname,
                                         memory => $memory,
                                         ip => $ip);

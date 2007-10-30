@@ -7,6 +7,7 @@
 		<name>hostname1</name>
 		<desc>Describes the role of the host in the test</desc>
         <baseimage>sarge-mini</baseimage>
+        <memory>128</memory>
 		<network>
             <interface type="static">
                 <name>eth1</name>
@@ -24,6 +25,7 @@
 		<name>hostname2</name>
 		<desc>Blah blah blah</desc>
         <baseimage>sarge-mini</baseimage>
+        <memory>64</memory>
 		<network>
             <interface type="static">
                 <name>eth1</name>
