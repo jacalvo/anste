@@ -174,4 +174,17 @@ sub writeTestResult # (%params)
     throw ANSTE::Exceptions::NotImplemented();
 }    
 
+# Method: filename
+#
+#   Override this method to return the name of the file to be used.
+#
+# Exceptions:
+#
+#   throw <ANSTE::Exceptions::NotImplemented>
+#
+sub filename
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}    
+
 1;

@@ -98,6 +98,7 @@ sub check
 
     $self->system();
     $self->virtualizer();
+    $self->format();
     $self->verbose();
     $self->imagePath();
     $self->logPath();
@@ -168,6 +169,59 @@ sub setUserPath # (path)
     }
 
     $self->{userPath} = $path;
+}
+
+# Method: format
+#
+#   Gets the value for the format option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::NotFound> - throw if format is not found
+#
+sub format
+{
+    my ($self) = @_;
+
+    my $format = $self->{format};
+
+    if (not ANSTE::Validate::format($format)) {
+        throw ANSTE::Exceptions::NotFound('Format', 
+                                          $format);
+    }
+
+    return $format;
+}
+
+# Method: setFormat
+#
+#   Sets the format to be used in the report writing.
+#
+# Parameters:
+#
+#   format - String with the name of the format.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setFormat # (format)
+{
+    my ($self, $format) = @_;
+
+    defined $format or
+        throw ANSTE::Exceptions::MissingArgument('format');
+
+    if (not ANSTE::Validate::format($format)) {
+        throw ANSTE::Exceptions::InvalidOption('format', $format);
+    }
+
+    $self->{format} = $format;
 }
 
 # Method: system
@@ -1032,6 +1086,7 @@ sub _setDefaults
     my ($self) = @_;
 
     my $data = $self->{dataPath};
+    $self->{format} = 'HTML';
 
     $self->{default}->{'global'}->{'system'} = 'Debian';
     $self->{default}->{'global'}->{'virtualizer'} = 'Xen';

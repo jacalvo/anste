@@ -13,39 +13,38 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-package ANSTE::Report::HTMLWriter;
+package ANSTE::Report::XMLWriter;
 
 use base 'ANSTE::Report::Writer';
 
 use strict;
 use warnings;
 
-# Class: HTMLWriter
+# Class: XMLWriter
 #
-#   Implementation of class Writer for writing reports in HTML format.
+#   Implementation of class Writer for writing reports in XML format.
 #
 
 # Method: writeHeader
 #
-#   Overriden method that writes the header of the report in HTML.
+#   Overriden method that writes the header of the report in XML.
 #
 sub writeHeader 
 {
     my ($self) = @_;
 
     my $file = $self->{file};
+    my $time = $self->{report}->time();
 
-    print $file "<html>\n";
-    print $file "<head>\n";
+    print $file "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    print $file "<report>\n";
     print $file "<title>ANSTE Test report</title>\n";
-    print $file "</head>\n";
-    print $file "<body>\n";
-    print $file "<h1>ANSTE Test report</h1>\n";
+    print $file "<time>$time</time>\n";
 }    
 
 # Method: writeEnd
 #
-#   Overriden method that writes the end of the report in HTML.
+#   Overriden method that writes the end of the report in XML.
 #
 sub writeEnd
 {
@@ -53,17 +52,12 @@ sub writeEnd
 
     my $file = $self->{file};
 
-    my $time = $self->{report}->time();
-
-    print $file "<p><i>Report generated at $time</i></p>\n";
-
-    print $file "</body>\n";
-    print $file "</html>\n";
+    print $file "</title>\n";
 }    
 
 # Method: writeSuiteHeader
 #
-#   Overriden method that writes the header of a suite result in HTML.
+#   Overriden method that writes the header of a suite result in XML.
 #
 # Parameters:
 #
@@ -76,19 +70,14 @@ sub writeSuiteHeader # (name, desc)
 
     my $file = $self->{file};
 
-    print $file "<h2>$name</h2>\n";
-    print $file "<h3>$desc</h3>\n";
-    print $file "<table border='1'>\n";
-    print $file "<th><tr>\n";
-    print $file "<td>Test</td>\n";
-    print $file "<td>Description</td>\n";
-    print $file "<td>Result</td>\n";
-    print $file "</tr></th>\n";
+    print $file "<suite>\n";
+    print $file "<name>$name</name>\n";
+    print $file "<desc>$desc</desc>\n";
 }    
 
 # Method: writeSuiteEnd
 #
-#   Overriden method that writes the end of a suite result in HTML.
+#   Overriden method that writes the end of a suite result in XML.
 #
 sub writeSuiteEnd
 {
@@ -96,12 +85,12 @@ sub writeSuiteEnd
 
     my $file = $self->{file};
 
-    print $file "</table>\n";
+    print $file "</suite>\n";
 }    
 
 # Method: writeTestResult
 #
-#   Overriden method that writes a test result in HTML.
+#   Overriden method that writes a test result in XML.
 #
 # Parameters:
 #
@@ -123,30 +112,31 @@ sub writeTestResult # (%params)
 
     my $filehandle = $self->{file};
 
-    my $resultStr = $result == 0 ? "<font color='#00FF00'>OK</font>" : 
-                                   "<font color='#FF0000'>ERROR</font>";
+    print $filehandle "<test>\n";
+
+    print $filehandle "<name>$name</name>\n";
+
+    if ($desc) {
+        print $filehandle "<desc>$desc</desc>\n";
+    }        
+
+    my $resultStr = $result == 0 ? 'OK' : 'ERROR';
+    print $filehandle "<result>$resultStr</result>\n";
+
     if ($file) {
-        $resultStr = "<a href=\"$file\">" . $resultStr . "</a>";
+        print $filehandle "<log>$file</log>\n";
     }        
 
     if ($video) {
-        $resultStr .= " (<a href=\"$video\">video</a>)";
+        print $filehandle "<video>$video</video>\n";
     }
 
-    if (not $desc) {
-        $desc = '&nbsp;';
-    }
-
-    print $filehandle "<tr>\n" . 
-                      "<td>$name</td>\n" .
-                      "<td>$desc</td>\n" .
-                      "<td>$resultStr</td>\n" .
-                      "</tr>\n";
+    print $filehandle "</test>\n";
 }    
 
 # Method: filename
 #
-#   Overriden method that returns the name of the file for the HTML report.
+#   Overriden method that returns the name of the file for the XML report.
 #
 # Returns:
 #
@@ -156,7 +146,7 @@ sub filename
 {
     my ($self) = @_;
 
-    return 'index.html';
+    return 'report.xml';
 }    
 
 1;

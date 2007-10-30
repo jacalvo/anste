@@ -177,7 +177,7 @@ sub system # (system)
 # Parameters:
 #
 #   virtualizer - String with the name of 
-#                 the <ANSTE::Virutalizer::Virtualizer> implementation
+#                 the <ANSTE::Virtualizer::Virtualizer> implementation
 #
 # Returns:
 #
@@ -189,6 +189,33 @@ sub virtualizer # (virtualizer)
 
     foreach my $path (@INC) {
         my $file = "$path/ANSTE/Virtualizer/$virtualizer.pm";
+        if (-r $file) {
+            return 1;
+            last;
+        }
+    }
+    return 0;
+}
+
+# Function: format
+#
+#   Checks if the given string is a existing report writer implementation.
+#
+# Parameters:
+#
+#   format - String with the prefix of 
+#            the <ANSTE::Report::Writer> implementation
+#
+# Returns:
+#
+#   boolean - true if it's valid, false otherwise
+#
+sub format # (format)
+{
+    my ($format) = @_;
+
+    foreach my $path (@INC) {
+        my $file = "$path/ANSTE/Report/$format" . "Writer.pm";
         if (-r $file) {
             return 1;
             last;

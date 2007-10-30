@@ -44,6 +44,7 @@ my $test = '';
 my $out = '';
 my $path = '';
 my $video = '';
+my $format = '';
 my $help = 0;
 my $quiet = 0;
 
@@ -54,6 +55,7 @@ GetOptions('create' => \$create,
            'path=s' => \$path,
            'out=s' => \$out,
            'video' => \$video,
+           'format=s' => \$format,
            'quiet' => \$quiet,
            'help' => \$help) or pod2usage(2);
            
@@ -94,6 +96,9 @@ foreach my $file (@ARGV) {
         deploy($file);
     }
     elsif ($test) {
+        if ($format) {
+            $config->setFormat($format);
+        }
         test($file);
     }
 }
@@ -187,11 +192,18 @@ sub test # (file)
     $txtWriter->write(\*STDOUT);
 
     my $LOGPATH = $config->logPath();
-    print "\nWriting HTML reports to $LOGPATH...";
-    my $htmlWriter = new ANSTE::Report::HTMLWriter($report);
+    my $format = $config->format();
+    print "\nWriting $format reports to $LOGPATH...";
+
+    my $writerPackage = "ANSTE::Report::$format" . 'Writer';
+
+    eval("use $writerPackage");
+    die "Can't load package $writerPackage: $@" if $@;
+
+    my $writer = $writerPackage->new($report);
     my $FILE;
-    open($FILE, '>', "$LOGPATH/index.html");
-    $htmlWriter->write($FILE);
+    open($FILE, '>', $LOGPATH . $writer->filename());
+    $writer->write($FILE);
     close($FILE);
     print "Done.\n";
 }
@@ -207,14 +219,15 @@ anste - Advanced Network Service Testing Environment
 anste [options] [file ...]
 
  Options:
-   -help        shows this help
-   -create      create a base image
-   -remove      delete a base image
-   -deploy      deploy a scenario
-   -test        test a suite
-   -path <dir>  where to find the data  
-   -out  <dir>  report output directory
-   -video       save video recording of selenium tests
-   -quiet       do not show output of commands
+   -help           shows this help
+   -create         create a base image
+   -remove         delete a base image
+   -deploy         deploy a scenario
+   -test           test a suite
+   -path <dir>     where to find the data  
+   -out  <dir>     report output directory
+   -video          save video recording of selenium tests
+   -format <fmt>   select the output format for the reports
+   -quiet          do not show output of commands
 
 =cut
