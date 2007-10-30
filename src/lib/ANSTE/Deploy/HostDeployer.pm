@@ -122,8 +122,10 @@ sub startDeployThread # (ip)
     if (not $memory) {
         $memory = $host->baseImage()->memory();
     }
+    my $swap = $host->baseImage()->swap();
     my $image = new ANSTE::Image::Image(name => $hostname,
                                         memory => $memory,
+                                        swap => $swap,
                                         ip => $ip);
     $image->setNetwork($host->network());
 

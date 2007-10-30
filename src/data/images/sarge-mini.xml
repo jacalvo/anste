@@ -4,6 +4,8 @@
 	<desc>Debian GNU/Linux 3.1</desc>
 
     <memory>256</memory>
+    
+    <swap>128M</swap>
 
     <size>350M</size>
 </image>

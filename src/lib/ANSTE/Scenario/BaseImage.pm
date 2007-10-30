@@ -47,6 +47,7 @@ sub new # returns new BaseImage object
 	$self->{desc} = '';
 	$self->{memory} = '';
 	$self->{size} = '';
+	$self->{swap} = '';
 	$self->{packages} = new ANSTE::Scenario::Packages();
     $self->{'pre-scripts'} = [];
     $self->{'post-scripts'} = [];
@@ -205,6 +206,44 @@ sub setSize # size string
 	$self->{size} = $size;
 }
 
+# Method: swap
+#
+#   Gets the size of the swap partition.
+#
+# Returns:
+#
+#   string - contains the size of the image
+#
+sub swap # returns size string
+{
+	my ($self) = @_;
+
+	return $self->{swap};
+}
+
+# Method: setSwap
+#
+#
+#   Sets the size of the swap partition.
+#
+# Parameters:
+#
+#   size - String with the size of the image.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setSwap # size string
+{
+	my ($self, $size) = @_;	
+
+    defined $size or
+        throw ANSTE::Exceptions::MissingArgument('size');
+
+	$self->{swap} = $size;
+}
+
 # Method: packages
 #
 #   Gets the object with the information of packages to be installed.
@@ -330,6 +369,12 @@ sub loadFromFile # (filename)
 	my $sizeNode = $image->getElementsByTagName('size', 0)->item(0);
 	my $size = $sizeNode->getFirstChild()->getNodeValue();
 	$self->setSize($size);
+
+	my $swapNode = $image->getElementsByTagName('swap', 0)->item(0);
+    if ($swapNode) {
+    	my $swap = $swapNode->getFirstChild()->getNodeValue();
+	    $self->setSwap($swap);
+    }        
 
 	my $packagesNode = $image->getElementsByTagName('packages', 0)->item(0);
 	if ($packagesNode) {

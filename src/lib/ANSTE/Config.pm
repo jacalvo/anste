@@ -118,7 +118,6 @@ sub check
     $self->xenModules();
     $self->xenSize();
     $self->xenMemory();
-    $self->xenNoSwap();
     $self->xenFS();
     $self->xenDist();
     $self->xenImage();
@@ -883,21 +882,6 @@ sub xenMemory
     return $self->_getOption('xen-options', 'memory');
 }
 
-# Method: xenNoSwap
-#
-#   Gets the value of the Xen's noswap option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-sub xenNoSwap
-{
-    my ($self) = @_;
-
-    return $self->_getOption('xen-options', 'noswap');
-}
-
 # Method: xenFS
 #
 #   Gets the value of the Xen's fs option.
@@ -1077,7 +1061,6 @@ sub _setDefaults
     $self->{default}->{'xen-options'}->{'modules'} = '';
     $self->{default}->{'xen-options'}->{'size'} = '2Gb';
     $self->{default}->{'xen-options'}->{'memory'} = '512Mb';
-    $self->{default}->{'xen-options'}->{'noswap'} = '1';
     $self->{default}->{'xen-options'}->{'fs'} = 'ext3';
     $self->{default}->{'xen-options'}->{'dist'} = 'sarge';
     $self->{default}->{'xen-options'}->{'image'} = 'full';

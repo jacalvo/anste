@@ -48,6 +48,7 @@ use constant XEN_CONFIG_TEMPLATE => 'xen-config.tmpl';
 #   name    -   name of the image type to be created
 #   ip      -   ip address that will be assigned to the image
 #   memory  -   *optional* size of the RAM memory to be used
+#   swap    -   *optional* size of the swap partition to be used
 #
 # Returns:
 #
@@ -70,8 +71,9 @@ sub createBaseImage # (%params)
     my $name = $params{name};
     my $ip = $params{ip};
     my $memory = $params{memory};
+    my $swap = $params{swap};
 
-    my $confFile = $self->_createXenToolsConfig($memory);
+    my $confFile = $self->_createXenToolsConfig($memory, $swap);
 
     my $config = ANSTE::Config->instance();
 
@@ -273,9 +275,9 @@ sub deleteImage # (image)
     $self->execute("xen-delete-image $image --dir $dir");
 }
 
-sub _createXenToolsConfig # (memory) returns filename
+sub _createXenToolsConfig # (memory, swap) returns filename
 {
-    my ($self, $memory) = @_;
+    my ($self, $memory, $swap) = @_;
 
     my ($fh, $filename) = tempfile();
 
@@ -288,7 +290,6 @@ sub _createXenToolsConfig # (memory) returns filename
     my $dir = $config->imagePath();
     my $installMethod = $config->xenInstallMethod();
     my $size = $config->xenSize();
-    my $noSwap = $config->xenNoSwap();
     my $dist = $config->xenDist();
     my $image = $config->xenImage();
     my $kernel = $config->xenKernel();
@@ -301,7 +302,13 @@ sub _createXenToolsConfig # (memory) returns filename
     print $fh "install-method = $installMethod\n";
     print $fh "size = $size\n";
     print $fh "memory = $memory\n";
-    print $fh "noswap = $noSwap\n";
+    if ($swap) {
+        print $fh "swap = $swap\n";
+        print $fh "noswap = 0\n";
+    }
+    else {
+        print $fh "noswap = 1\n";
+    }
     print $fh "dist = $dist\n";
     print $fh "image = $image\n";
     print $fh "cache = no\n";
@@ -351,11 +358,14 @@ sub _createImageConfig # (image, path) returns config string
     my $initrd = $config->xenInitrd();
     my $device = $config->xenUseIdeDevices() ? 'hda' : 'sda';
 
+    my $swap = $image->swap() ? 1 : 0;
+
     my %vars = (kernel => $kernel,
                 initrd => $initrd,
                 hostname => $image->name(),
                 iface_list => $ifaceList,
                 memory => $image->memory(),
+                swap => $swap,
                 path => $path,
                 device => $device);
 

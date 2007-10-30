@@ -17,12 +17,18 @@ memory      = '{$memory}'
 #
 #  Disk device(s).
 #
-root        = '/dev/{$device}1 ro'
 
 { 
-  my $image_vbd = "file:$path/domains/$hostname/disk.img";
-
-  $OUT .= "disk        = [ '$image_vbd,$device" . "1,w' ]";
+  my $img_path = "file:$path/domains/$hostname";
+  if ($swap) {
+    $OUT .= "root        = '/dev/$device" . "2 ro'\n";
+    $OUT .= "disk        = [ '$img_path/swap.img,$device" . "1,w',";
+    $OUT .=                " '$img_path/disk.img,$device" . "2,w' ]";
+  } 
+  else {
+    $OUT .= "root        = '/dev/$device" . "1 ro'\n";
+    $OUT .= "disk        = [ '$img_path/disk.img,$device" . "1,w' ]";
+  }
 }
 
 #

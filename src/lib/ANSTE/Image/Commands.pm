@@ -116,12 +116,14 @@ sub create
     my $name = $image->name();
     my $ip = $self->ip();
     my $memory = $image->memory();
+    my $swap = $image->swap();
 
     my $virtualizer = $self->{virtualizer};
 
     $virtualizer->createBaseImage(name => $name,
                                   ip => $ip,
-                                  memory => $memory);
+                                  memory => $memory,
+                                  swap => $swap);
 }
 
 # Method: mount
