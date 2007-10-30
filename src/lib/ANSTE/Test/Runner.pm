@@ -29,6 +29,7 @@ use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
 
+use Perl6::Slurp;
 use Error qw(:try);
 
 # Class: Runner
@@ -153,10 +154,7 @@ sub runSuite # (suite)
     };
     print "Finished testing of suite '$suiteName'.\n\n";
 
-    my ($sec, $min, $hour, $mday, $mon, $year) = localtime();
-    $year += 1900;
-    my $time = "$mday-$mon-$year $hour:$min:$sec";
-    $self->{report}->setTime($time);
+    $self->{report}->setTime($self->_time());
 }
 
 # Method: report
@@ -247,7 +245,7 @@ sub _runTest # (test)
 
     my $name = $test->name();
 
-    my ($log, $ret);
+    my ($logfile, $ret);
 
     my $testResult = new ANSTE::Report::TestResult();
     $testResult->setTest($test);
@@ -255,10 +253,7 @@ sub _runTest # (test)
     my $verbose = $config->verbose();
 
     # Store start time
-    my ($sec, $min, $hour, $mday, $mon, $year) = localtime();
-    $year += 1900;
-    my $time = "$mday-$mon-$year $hour:$min:$sec";
-    $testResult->setStartTime($time);
+    $testResult->setStartTime($self->_time());
 
     # Run the test itself either it's a selenium one or a normal one 
     if ($test->selenium()) {
@@ -269,8 +264,8 @@ sub _runTest # (test)
             $system->startVideoRecording($video);
         }
 
-        $log = "$logPath/selenium/$name.html";
-        $ret = $self->_runSeleniumRC($hostname, "$path/suite.html", $log);
+        $logfile = "$logPath/selenium/$name.html";
+        $ret = $self->_runSeleniumRC($hostname, "$path/suite.html", $logfile);
 
         if ($config->seleniumVideo()) {
             print "Ending video recording for test $name... " if $verbose;
@@ -286,6 +281,9 @@ sub _runTest # (test)
                 $testResult->setVideo("video/$name.ogg");
             }
         }            
+        # Store end time
+        my $endTime = $self->_time();
+        $testResult->setEndTime($endTime);
         $testResult->setLog("selenium/$name.html");
     }
     else {
@@ -293,8 +291,22 @@ sub _runTest # (test)
             throw ANSTE::Exceptions::NotFound('Test script',
                                               "$suiteDir/$testDir/test");
         }
-        $log = "$logPath/out/$name.txt";
-        $ret = $self->_runScript($hostname, "$path/test", $log);
+        $logfile = "$logPath/out/$name.txt";
+        $ret = $self->_runScript($hostname, "$path/test", $logfile);
+        # Store end time
+        my $endTime = $self->_time();
+        $testResult->setEndTime($endTime);
+
+        # Editing the log to write the starting and ending times.
+        my $contents = slurp "<$logfile";
+        my $LOG;
+        open($LOG, ">$logfile");
+        my $startTime = $testResult->startTime();
+        print $LOG "Starting test '$name' at $startTime.\n\n";
+        print $LOG $contents;
+        print $LOG "\nTest finished at $endTime.\n";
+        close($LOG);
+
         $testResult->setLog("out/$name.txt");
     }
 
@@ -305,13 +317,19 @@ sub _runTest # (test)
 
     $testResult->setValue($ret);
 
-    # Store end time
-    ($sec, $min, $hour, $mday, $mon, $year) = localtime();
-    $year += 1900;
-    $time = "$mday-$mon-$year $hour:$min:$sec";
-    $testResult->setEndTime($time);
 
     return $testResult;
+}
+
+sub _time
+{
+    my ($self) = @_;
+
+    my ($sec, $min, $hour, $mday, $mon, $year) = localtime();
+    $year += 1900;
+    my $str = sprintf("%02d-%02d-%02d %02d:%02d:%02d",
+                      $mday, $mon, $year % 100, $hour, $min, $sec);
+    return $str;
 }
 
 sub _runScript # (hostname, script, log?)
