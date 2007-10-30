@@ -347,8 +347,8 @@ sub _createImageConfig # (image, path) returns config string
     }
 
     my $config = ANSTE::Config->instance();
-    my $kernel = eval $config->xenKernel();
-    my $initrd = eval $config->xenInitrd();
+    my $kernel = $config->xenKernel();
+    my $initrd = $config->xenInitrd();
     my $device = $config->xenUseIdeDevices() ? 'hda' : 'sda';
 
     my %vars = (kernel => $kernel,

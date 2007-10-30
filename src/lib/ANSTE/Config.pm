@@ -841,7 +841,15 @@ sub xenModules
 {
     my ($self) = @_;
 
-    return $self->_getOption('xen-options', 'modules');
+    my $modules = $self->_getOption('xen-options', 'modules');
+
+    if ($modules and not ANSTE::Validate::path($modules)) {
+        throw ANSTE::Exceptions::InvalidConfig('xen-options/modules',
+                                               $modules,
+                                               $self->{confFile});
+    }
+
+    return $modules;
 }
 
 # Method: xenSize
@@ -947,7 +955,15 @@ sub xenKernel
 {
     my ($self) = @_;
 
-    return $self->_getOption('xen-options', 'kernel');
+    my $kernel = $self->_getOption('xen-options', 'kernel');
+
+    if (not ANSTE::Validate::fileReadable($kernel)) {
+        throw ANSTE::Exceptions::InvalidConfig('xen-options/kernel', 
+                                               $kernel,
+                                               $self->{confFile});
+    }
+
+    return $kernel;
 }
 
 # Method: xenInitrd
@@ -962,7 +978,15 @@ sub xenInitrd
 {
     my ($self) = @_;
 
-    return $self->_getOption('xen-options', 'initrd');
+    my $initrd = $self->_getOption('xen-options', 'initrd');
+
+    if (not ANSTE::Validate::fileReadable($initrd)) {
+        throw ANSTE::Exceptions::InvalidConfig('xen-options/initrd', 
+                                               $initrd,
+                                               $self->{confFile});
+    }
+
+    return $initrd;
 }
 
 # Method: xenMirror
