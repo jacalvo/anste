@@ -15,6 +15,7 @@ endif
 distclean:
 	rm -rf $(EXPORT)
 	rm -f anste-$(VERSION).tar.gz
+	rm -f anste_$(VERSION)*
 	rm -f *.deb
 
 export:
