@@ -223,7 +223,7 @@ sub test # (file)
 
     my $writer = $writerPackage->new($report);
     my $FILE;
-    open($FILE, '>', $LOGPATH . $writer->filename());
+    open($FILE, '>', "$LOGPATH/" . $writer->filename());
     $writer->write($FILE);
     close($FILE);
     print "Done.\n";

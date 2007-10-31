@@ -104,4 +104,19 @@ sub writeTestResult # (%params)
     print $file "\t\t$name: $resultStr\n";
 }    
 
+# Method: filename
+#
+#   Overriden method that returns the name of the file for the text report.
+#
+# Returns:
+#
+#   string - contains the name of the file
+#
+sub filename
+{
+    my ($self) = @_;
+
+    return 'anste-report.txt';
+}    
+
 1;

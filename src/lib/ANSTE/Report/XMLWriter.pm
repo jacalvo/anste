@@ -52,7 +52,7 @@ sub writeEnd
 
     my $file = $self->{file};
 
-    print $file "</title>\n";
+    print $file "</report>\n";
 }    
 
 # Method: writeSuiteHeader
@@ -146,7 +146,7 @@ sub filename
 {
     my ($self) = @_;
 
-    return 'report.xml';
+    return 'anste-report.xml';
 }    
 
 1;
