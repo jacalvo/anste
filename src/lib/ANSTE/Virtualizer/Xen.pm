@@ -99,7 +99,7 @@ sub createBaseImage # (%params)
 
 # Method: shutdownImage 
 #
-#   Overriden method that destroys a Xen running image.
+#   Overriden method that shuts down a Xen running image.
 #
 # Parameters:
 #
@@ -127,6 +127,32 @@ sub shutdownImage # (image)
     # Wait until shutdown finishes
     my $waitScript = $config->scriptFile('xen-waitshutdown.sh');
     system("$waitScript $image");
+}
+
+# Method: destroyImage 
+#
+#   Overriden method that destroys a Xen running image.
+#
+# Parameters:
+#
+#   image - name of the image to shutdown 
+#
+# Returns:
+#   
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub destroyImage # (image)
+{
+    my ($self, $image) = @_;
+
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('image');
+
+    $self->execute("xm destroy $image");
 }
 
 # Method: createVM

@@ -35,6 +35,8 @@ use ANSTE::Exceptions::InvalidType;
 #
 #   Constructor for ScenarioDeployer class.
 #   Initializes the object with the given scenario representation object.
+#   Creates <ANSTE::Deploy::HostDeployer> objects for each host
+#   in the scenario.
 #
 # Parameters:
 # 
@@ -58,7 +60,23 @@ sub new # (scenario) returns new ScenarioDeployer object
     }
 	
 	$self->{scenario} = $scenario;
+
+    # Create host deployers
     $self->{deployers} = [];
+
+    my $firstAddress = ANSTE::Config->instance()->firstAddress();
+
+    # Separate the last number of the ip in order to increment it.
+    my ($base, $number) = 
+        $firstAddress =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3})\.(\d{1,3})$/;
+
+    foreach my $host (@{$scenario->hosts()}) {
+        my $ip = "$base.$number";
+        my $hostname = $host->name();
+        my $deployer = new ANSTE::Deploy::HostDeployer($host, $ip);
+        push(@{$self->{deployers}}, $deployer);
+        $number++;
+    }        
 
 	bless($self, $class);
 
@@ -91,22 +109,12 @@ sub deploy # returns hash ref with the ip of each host
         $self->_createMissingBaseImages();
     }
 
-    my $firstAddress = ANSTE::Config->instance()->firstAddress();
-
-    # Separate the last number of the ip in order to increment it.
-    my ($base, $number) = 
-        $firstAddress =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3})\.(\d{1,3})$/;
-
-    foreach my $host (@{$scenario->hosts()}) {
-        my $deployer = new ANSTE::Deploy::HostDeployer($host);
-        my $ip = "$base.$number";
-        my $hostname = $host->name();
-        $hostIP->{$hostname} = $ip;
-    
+    foreach my $deployer (@{$self->{deployers}}) {
+        my $hostname = $deployer->host()->name();
         print "[$hostname] Starting deployment...\n";
-        $deployer->startDeployThread($ip);
-        push(@{$self->{deployers}}, $deployer);
-        $number++;
+        $deployer->startDeployThread();
+
+        $hostIP->{$hostname} = $deployer->ip();
     }
 
     foreach my $deployer (@{$self->{deployers}}) {
@@ -133,6 +141,23 @@ sub shutdown
         $deployer->shutdown();
         $deployer->deleteImage();
     }
+}
+
+# Method: destroy
+#
+#   Destroys immediately all the running virtual machines from this scenario.
+#   Also ask them for image deletion.
+#
+sub destroy
+{
+    my ($self) = @_;
+
+    my $deployers = $self->{deployers};
+   
+    foreach my $deployer (@{$deployers}) {
+        $deployer->destroy();
+        $deployer->deleteImage();
+    }        
 }
 
 sub _createMissingBaseImages

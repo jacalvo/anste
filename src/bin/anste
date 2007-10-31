@@ -40,6 +40,7 @@ use Perl6::Junction qw(none);
 my $create = '';
 my $remove = '';
 my $deploy = '';
+my $shutdown = '';
 my $test = '';
 my $out = '';
 my $path = '';
@@ -51,6 +52,7 @@ my $quiet = 0;
 GetOptions('create' => \$create,
            'remove' => \$remove,
            'deploy' => \$deploy,
+           'shutdown' => \$shutdown,
            'test' => \$test,
            'path=s' => \$path,
            'out=s' => \$out,
@@ -61,7 +63,7 @@ GetOptions('create' => \$create,
            
 pod2usage(1) if $help;           
 
-if (none($create, $remove, $deploy, $test) == 1) {
+if (none($create, $remove, $deploy, $shutdown, $test) == 1) {
     pod2usage("$0: No action specified.");
 }
 
@@ -94,6 +96,9 @@ foreach my $file (@ARGV) {
     }
     elsif ($deploy) {
         deploy($file);
+    }
+    elsif ($shutdown) {
+        destroy($file);
     }
     elsif ($test) {
         if ($format) {
@@ -166,6 +171,22 @@ sub deploy # (file)
     $deployer->deploy();
 }
 
+sub destroy # (file)
+{
+    my ($file) = @_;
+
+    my $scenario = new ANSTE::Scenario::Scenario();
+    try {
+        $scenario->loadFromFile($file);
+    } catch ANSTE::Exceptions::InvalidFile with {
+        print STDERR "Can't load scenario $file.\n";
+        exit(1);
+    };
+
+    my $deployer = new ANSTE::Deploy::ScenarioDeployer($scenario);
+    $deployer->destroy();
+}
+
 sub test # (file)
 {
     my ($file) = @_;
@@ -220,10 +241,11 @@ anste [options] [file ...]
 
  Options:
    -help           shows this help
-   -create         create a base image
-   -remove         delete a base image
-   -deploy         deploy a scenario
-   -test           test a suite
+   -create         creates a base image
+   -remove         deletes a base image
+   -deploy         deploys a scenario
+   -shutdown       finishes and deletes all the images of a scenario
+   -test           tests a suite
    -path <dir>     where to find the data  
    -out  <dir>     report output directory
    -video          save video recording of selenium tests

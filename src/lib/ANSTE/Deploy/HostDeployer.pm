@@ -47,32 +47,32 @@ my $lockMount : shared;
 # Constructor: new
 #
 #   Constructor for HostDeployer class.
-#   Initializes the object with the given host representation object.
+#   Initializes the object with the given host representation object and
+#   the given IP address for the communications interface.
 #
 # Parameters:
 #
 #   host - <ANSTE::Scenario::Host> object.
+#   ip - IP address to be assigned.
 #
 # Returns:
 #
 #   A recently created <ANSTE::Deploy::HostDeployer> object.
 #
-sub new # (host) returns new HostDeployer object
+sub new # (host, ip) returns new HostDeployer object
 {
-	my ($class, $host) = @_;
+	my ($class, $host, $ip) = @_;
 	my $self = {};
 
     defined $host or
         throw ANSTE::Exceptions::MissingArgument('host');
+    defined $ip or
+        throw ANSTE::Exceptions::MissingArgument('ip');
 
     if (not $host->isa('ANSTE::Scenario::Host')) {
         throw ANSTE::Exception::InvalidType('host',
                                            'ANSTE::Scenario::Host');
     }
-
-	$self->{host} = $host;
-    $self->{image} = undef;
-    $self->{cmd} = undef;
 
     my $config = ANSTE::Config->instance();
     my $system = $config->system();
@@ -87,36 +87,6 @@ sub new # (host) returns new HostDeployer object
     $self->{system} = "ANSTE::System::$system"->new();
     $self->{virtualizer} = "ANSTE::Virtualizer::$virtualizer"->new();
 
-	bless($self, $class);
-
-	return $self;
-}
-
-# Method: startDeployThread
-#
-#   Starts the deploying thread for the object's host, with the IP
-#   address given as parameter.
-#
-# Parameters:
-#
-#   ip - IP address to be assigned.
-#
-# Returns:
-#
-#   ref - Reference to the created thread.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
-#
-sub startDeployThread # (ip)
-{
-    my ($self, $ip) = @_;
-
-    defined $ip or
-        throw ANSTE::Exceptions::MissingArgument('ip');
-
-    my $host = $self->{host};
     my $hostname = $host->name();
     my $memory = $host->memory();
     if (not $memory) {
@@ -131,9 +101,63 @@ sub startDeployThread # (ip)
 
     my $cmd = new ANSTE::Image::Commands($image);
 
+	$self->{host} = $host;
     $self->{image} = $image;
     $self->{cmd} = $cmd;
+    $self->{ip} = $ip;
 
+	bless($self, $class);
+
+	return $self;
+}
+
+# Method: host
+#
+#   Gets the the host object.
+#
+# Returns:
+#
+#   ref - <ANSTE::Scenario::Host> object.
+#
+sub host # returns ref
+{
+    my ($self) = @_;
+
+    return $self->{host};
+}
+
+# Method: ip
+#
+#   Gets the IP address assigned to the object's host.
+#
+# Returns:
+#
+#   string - contains the IP address
+#
+sub ip # returns ip string
+{
+    my ($self) = @_;
+
+    return $self->{ip};
+}
+
+# Method: startDeployThread
+#
+#   Starts the deploying thread for the object's host.
+#
+# Returns:
+#
+#   ref - Reference to the created thread.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
+sub startDeployThread
+{
+    my ($self, $ip) = @_;
+
+    my $host = $self->{host};
     $self->{thread} = threads->create('_deploy', $self);
 }
 
@@ -158,10 +182,20 @@ sub shutdown
 
     my $cmd = $self->{cmd};
 
-    my $host = $self->{host};
-    my $hostname = $host->name();
-
     $cmd->shutdown();
+}
+
+# Method: destroy
+#
+#   Stops immediately the virtual machine of the host.
+#
+sub destroy
+{
+    my ($self) = @_;
+
+    my $cmd = $self->{cmd};
+
+    $cmd->destroy();
 }
 
 # Method: deleteImage

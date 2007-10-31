@@ -119,6 +119,29 @@ sub shutdownImage # (image)
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: destroyImage 
+#
+#   Override this method to execute the command of the corresponding 
+#   virtualizer program to force the immediate shutdown of a given image 
+#   being virtualized. 
+#
+# Parameters:
+#
+#   image - name of the image to destroy
+#
+# Returns:
+#   
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub destroyImage # (image)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 # Method: createVM
 #
 #   Override this method to create the Virtual Machine

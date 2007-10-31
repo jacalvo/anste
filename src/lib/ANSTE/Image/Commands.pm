@@ -369,6 +369,26 @@ sub shutdown
     $system->disableNAT($iface, $self->ip());
 }
 
+# Method: destroy
+#
+#   Destroys immediately a running image using the virtualizer interface.
+#
+sub destroy
+{
+    my ($self) = @_;
+
+    my $image = $self->{image}->name();
+    my $virtualizer = $self->{virtualizer}; 
+    my $system = $self->{system};
+
+    $virtualizer->destroyImage($image);
+    print "[$image] Terminated.\n";
+
+    # Delete the NAT rule for this image
+    my $iface = ANSTE::Config->instance()->natIface();
+    $system->disableNAT($iface, $self->ip());
+}
+
 # Method: resize
 #
 #   Changes the size of the image.
