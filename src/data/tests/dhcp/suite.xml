@@ -1,0 +1,59 @@
+<suite>
+    <name>eBox dhcp tests</name>
+    <desc>Contains a set of tests to ensure
+    that ebox-dhcp module  image works ok.
+    </desc>
+    
+    <scenario>ebox-dhcp.xml</scenario>
+
+    <test type="selenium">
+        <name>ConfigNetwork</name>
+        <desc>
+        Add virtual interface on an internal interface.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-net</dir>
+    </test>        
+
+    <test type="selenium">
+        <name>ConfigDHCPRange</name>
+        <desc>
+        Configure the DHCP server to serve IP addresses on a range.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-dhcp-range</dir>
+    </test>        
+
+    <test>
+        <name>TestRange</name>
+        <desc>Check dhcp server serves an IP address within the range</desc>
+
+        <host>test-client</host>
+        <dir>test-range</dir>
+    </test>
+<!--
+    <test type="selenium">
+        <name>ConfigDHCPFixedAddr</name>
+        <desc>
+	Configure the DHCP server to serve a fixed IP address
+	regarding to the client MAC address
+	</desc>
+
+        <host>ebox-server</host>
+        <dir>config-dhcp-fixed-addr</dir>
+    </test>
+
+    <test>
+        <name>TestFixedAddr</name>
+        <desc>
+	  Check dhcp server serves a fixed IP address for the client
+	  MAC
+	</desc>
+
+        <host>test-client</host>
+        <dir>test-fixed-addr</dir>
+    </test>
+-->
+</suite>
