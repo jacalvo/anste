@@ -1,45 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenario>
-	<name>eBox and client</name>
-	<desc>One eBox machine and a user client machine</desc>
+    <name>eBox and client</name>
+    <desc>One eBox machine and a user client machine</desc>
 
-	<host>
-		<name>ebox-server</name>
-		<desc>eBox server</desc>
+    <host>
+        <name>ebox-server</name>
+        <desc>eBox server</desc>
         <baseimage>sarge-ebox-base</baseimage>
-		<network>
+        <network>
             <interface type="static">
                 <name>eth1</name>
-    			<address>192.168.2.1</address>
-	    		<netmask>255.255.255.0</netmask>
+                <address>192.168.2.1</address>
+                <netmask>255.255.255.0</netmask>
             </interface>
             <interface type="static">
                 <name>eth2</name>
-    			<address>192.168.3.1</address>
-	    		<netmask>255.255.255.0</netmask>
-    			<gateway>192.168.3.128</gateway>
+                <address>192.168.3.1</address>
+                <netmask>255.255.255.0</netmask>
+                <gateway>192.168.3.128</gateway>
             </interface>
-		</network>
+        </network>
 
-	<packages>
-	    <package>ebox-dhcp</package>
-	</packages>
-	<pre-install>
-	    <script>write-ebox-sources.sh</script>
-        </pre-install>
-        <post-install>
-            <script>add-services-to-ebox-firewall</script>
-	    <script>ebox-non-ssl.sh</script>
-            <script>ebox-import-network.sh</script>
-            <script>ebox-wait-start.sh</script>
-        </post-install>
-	</host>
+<!--
+    <packages>
+        <package>ebox-dhcp</package>
+    </packages>
+
+    <pre-install>
+        <script>write-ebox-sources.sh</script>
+    </pre-install>
+-->    
+    <post-install>
+<!--    <script>ebox-non-ssl.sh</script>
+        <script>add-services-to-ebox-firewall</script> -->
+        <script>ebox-import-network.sh</script>
+        <script>ebox-wait-start.sh</script>
+    </post-install>
+    </host>
 
     <host>
         <name>test-client</name>
-		<desc>simple client host</desc>
+        <desc>simple client host</desc>
         <baseimage>sarge-mini</baseimage>
-	<memory>64</memory>
+        <memory>64</memory>
         <network>
          <interface type="dhcp">
             <name>eth1</name>
