@@ -650,11 +650,11 @@ sub startVideoRecording # (filename)
 
     if ($pid == 0) {
         # TODO: Personalize
-        my $command = 'recordmydesktop';
+        my $command = "recordmydesktop --overwrite --no-sound -o $filename";
         # Exec without output
         open(STDOUT, '> /dev/null');
         open(STDERR, '>&STDOUT');
-        exec($command, '--overwrite', '-o', $filename);
+        exec(split(' ', $command));
     }
     else {
         $self->{videoPid} = $pid;
