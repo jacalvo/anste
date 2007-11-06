@@ -252,16 +252,22 @@ sub _deploy
     $host->network()->addInterface($commIface);
 
     # Execute pre-install scripts
-    print "[$hostname] Executing pre scripts...\n";
-    $cmd->executeScripts($host->preScripts());
+    my $pre = $host->preScripts();
+    if (@{$pre}) {
+        print "[$hostname] Executing pre scripts...\n";
+        $cmd->executeScripts($pre);
+    }        
 
     print "[$hostname] Generating setup script...\n";
     $self->_generateSetupScript(SETUP_SCRIPT);
     $self->_executeSetupScript($ip, SETUP_SCRIPT);
 
     # Execute post-install scripts
-    print "[$hostname] Executing post scripts...\n";
-    $cmd->executeScripts($host->postScripts());
+    my $post = $host->postScripts();
+    if (@{$post}) {
+        print "[$hostname] Executing post scripts...\n";
+        $cmd->executeScripts($post);
+    }        
 }
 
 sub _copyBaseImage
