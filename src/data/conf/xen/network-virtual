@@ -6,8 +6,7 @@
 # in the network-script field.
 #
 # This script creates a bridge (default xenbr${vifnum}), gives it an IP address
-# and the appropriate route. Then it starts the SuSEfirewall2 which should have
-# the bridge device in the zone you want it.
+# and the appropriate route.
 #
 # If all goes well, this should ensure that networking stays up.
 # However, some configurations are upset by this, especially
@@ -16,7 +15,7 @@
 #
 # Usage:
 #
-# vnet-brouter (start|stop|status) {VAR=VAL}*
+# network-virtual (start|stop|status) {VAR=VAL}*
 #
 # Vars:
 #
@@ -131,7 +130,6 @@ op_start () {
     if [ ${antispoof} = 'yes' ] ; then
         antispoofing
     fi
-#    rcSuSEfirewall2 start
 }
 
 op_stop () {
@@ -147,7 +145,6 @@ op_stop () {
     ip address del dev $bridge $bridgeip
     ##FIXME: disconnect the interfaces from the bridge 1st
     brctl delbr ${bridge}
-#    rcSuSEfirewall2 start
 }
 
 case "$command" in

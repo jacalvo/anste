@@ -19,7 +19,7 @@
     			<address>192.168.3.1</address>
                 <hw-addr>00:16:3E:72:55:35</hw-addr>
 	    		<netmask>255.255.255.0</netmask>
-    			<gateway>192.168.3.128</gateway>
+    			<gateway>10.6.7.1</gateway>
             </interface>
 		</network>
 		<packages>
@@ -27,8 +27,8 @@
 		</packages>
 
         <post-install>
-            <script>ebox-import-network.sh</script>
             <script>ebox-wait-start.sh</script>
+            <script>ebox-import-network.sh</script>
         </post-install>
 
 	</host>

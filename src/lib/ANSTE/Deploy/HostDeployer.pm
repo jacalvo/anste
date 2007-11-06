@@ -319,22 +319,21 @@ sub _executeSetupScript # (host, script)
     my $system = $self->{system};
 
     my $client = new ANSTE::Comm::MasterClient;
-    my $PORT = ANSTE::Config->instance()->anstedPort(); 
+    my $waiter = ANSTE::Comm::HostWaiter->instance();
+    my $config = ANSTE::Config->instance();
+
+    my $PORT = $config->anstedPort(); 
     $client->connect("http://$host:$PORT");
 
-    my $verbose = ANSTE::Config->instance()->verbose();
+    my $verbose = $config->verbose();
 
     my $hostname = $self->{host}->name();
 
-    if (not $verbose) {
-        print "[$hostname] Executing setup...\n";
-    }
-
-    print "[$hostname] Uploading setup script...\n" if $verbose;
-    $client->put($script);
-
     print "[$hostname] Executing setup script...\n" if $verbose;
-    $client->exec($script, "$script.out");
+    $client->put($script) or print "Upload failed\n";
+    $client->exec($script, "$script.out") or print "Failed\n";
+    my $ret = $waiter->waitForExecution($hostname);
+    print "[$hostname] Setup script finished (Return value = $ret).\n";
 
     if ($verbose) {
         print "[$hostname] Script executed with the following output:\n";

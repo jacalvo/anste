@@ -12,7 +12,7 @@
                 <name>eth1</name>
     			<address>192.168.3.1</address>
 	    		<netmask>255.255.255.0</netmask>
-    			<gateway>192.168.3.128</gateway>
+    			<gateway>10.6.7.1</gateway>
             </interface>
 		</network>
 	</host>

@@ -27,15 +27,27 @@ You can also build your own packages with the provided debian/rules script.
 
 Xen configuration
 -----------------
-For the correct working of ANSTE with Xen you have to edit
-your /etc/xen/xend-config.sxp and uncomment the following lines:
 
-(network-script network-nat)
-(vif-script     vif-nat)
+For the correct working of ANSTE with Xen you have to do the following:
 
-Ensure that the lines containing network-bridge, network-route
-and vif-bridge, vif-route are commented.
+- Copy the script conf/xen/network-virtual to /etc/xen/scripts.
 
+- Edit your /etc/xen/xend-config.sxp and uncomment the following lines:
+
+  (network-script network-virtual)
+  (vif-script     vif-bridge)
+
+  Ensure that the lines containing network-dummy, network-bridge, 
+  network-route, network-nat, vif-route and vif-nat are commented.
+
+If you want to define a specific network and gateway put the line as this:
+
+(network-script 'network-virtual bridgeip=10.0.0.1/24 brnet=10.0.0.0/24)
+
+Or the values you want, defaults are 10.6.7.1/24 and 10.6.7.0/24.
+
+These values must be coherent with your anste.conf settings (first-address and
+gateway).
 
 Note for anste-manager users:
 -----------------------------

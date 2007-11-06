@@ -1,1 +1,2 @@
 conf/anste.conf /etc/anste
+conf/xen/network-virtual /etc/xen/scripts

@@ -128,9 +128,11 @@ sub _writePackageInstall # (file)
 
 	my @packages = @{$self->{image}->packages()->list()};
 
-	print $file "# Install packages\n";
-    my $command = $system->installPackagesCommand(@packages); 
-	print $file "$command\n\n";
+    if (@packages > 0) {
+    	print $file "# Install packages\n";
+        my $command = $system->installPackagesCommand(@packages); 
+    	print $file "$command\n\n";
+    }
 }
 
 sub _writePostInstall # (file)
