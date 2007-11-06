@@ -365,8 +365,7 @@ sub shutdown
     print "[$image] Shutdown done.\n";
 
     # Delete the NAT rule for this image
-    my $iface = ANSTE::Config->instance()->natIface();
-    $system->disableNAT($iface, $self->ip());
+    $self->_disableNAT();
 }
 
 # Method: destroy
@@ -385,8 +384,7 @@ sub destroy
     print "[$image] Terminated.\n";
 
     # Delete the NAT rule for this image
-    my $iface = ANSTE::Config->instance()->natIface();
-    $system->disableNAT($iface, $self->ip());
+    $self->_disableNAT();
 }
 
 # Method: resize
@@ -490,6 +488,23 @@ sub executeScripts # (list)
     foreach my $script (@{$list}) {
         my $file = $config->scriptFile($script);
         $self->_executeSetup($client, $file);
+    }
+}
+
+sub _disableNAT
+{
+    my ($self) = @_;
+
+    my $system = $self->{system};
+    my $config = ANSTE::Config->instance();
+    my $interfaces = $self->{image}->network()->interfaces(); 
+
+    my $natIface = $config->natIface();
+
+    foreach my $if (@{$interfaces}) {
+        if ($if->gateway() eq $config->gateway()) {
+            $system->disableNAT($natIface, $if->address());
+        }
     }
 }
 

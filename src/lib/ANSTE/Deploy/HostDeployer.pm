@@ -220,12 +220,15 @@ sub _deploy
 {
     my ($self) = @_;
 
+    my $system = $self->{system};
+
     my $image = $self->{image};
     my $cmd = $self->{cmd};
 
     my $host = $self->{host};
     my $hostname = $host->name();
     my $ip = $image->ip();
+    my $config = ANSTE::Config->instance();
 
     print "[$hostname] Creating a copy of the base image...\n";
     try {
@@ -261,6 +264,18 @@ sub _deploy
     print "[$hostname] Generating setup script...\n";
     $self->_generateSetupScript(SETUP_SCRIPT);
     $self->_executeSetupScript($ip, SETUP_SCRIPT);
+
+    # NAT from with this address is not needed anymore
+    my $iface = $config->natIface();
+    $system->disableNAT($iface, $commIface->address());
+    # Adding the new nat rule
+    my $interfaces = $host->network()->interfaces();
+    foreach my $if (@{$interfaces}) {
+        if ($if->gateway() eq $config->gateway()) {
+            $system->enableNAT($iface, $if->address());
+            last;
+        }
+    }
 
     # Execute post-install scripts
     my $post = $host->postScripts();

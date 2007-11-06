@@ -534,10 +534,8 @@ sub enableNAT # (iface, sourceAddr)
     # or better restored to its initial value
     $self->execute('echo 1 > /proc/sys/net/ipv4/ip_forward');
 
-#FIXME: Do this with the correct IP when the system is set up
     $self->execute("iptables -t nat -A POSTROUTING " .
-#                   "-o $iface -s $sourceAddr -j MASQUERADE");
-                   "-o $iface -j MASQUERADE");
+                   "-o $iface -s $sourceAddr -j MASQUERADE");
 }
 
 # Method: disableNAT
