@@ -5,5 +5,7 @@
 
     <memory>256</memory>
 
+    <swap>256M</swap>
+
     <size>500M</size>
 </image>

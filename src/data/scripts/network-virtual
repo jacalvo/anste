@@ -1,0 +1,170 @@
+#!/bin/sh
+#============================================================================
+# Default Xen network start/stop script.
+# Xend calls a network script when it starts.
+# The script name to use is defined in /etc/xen/xend-config.sxp
+# in the network-script field.
+#
+# This script creates a bridge (default xenbr${vifnum}), gives it an IP address
+# and the appropriate route. Then it starts the SuSEfirewall2 which should have
+# the bridge device in the zone you want it.
+#
+# If all goes well, this should ensure that networking stays up.
+# However, some configurations are upset by this, especially
+# NFS roots. If the bridged setup does not meet your needs,
+# configure a different script, for example using routing instead.
+#
+# Usage:
+#
+# vnet-brouter (start|stop|status) {VAR=VAL}*
+#
+# Vars:
+#
+# bridgeip   Holds the ip address the bridge should have in the
+#            the form ip/mask (10.0.0.1/24).
+# brnet      Holds the network of the bridge (10.0.0.1/24).
+# 
+# vifnum     Virtual device number to use (default 0). Numbers >=8
+#            require the netback driver to have nloopbacks set to a
+#            higher value than its default of 8.
+# bridge     The bridge to use (default xenbr${vifnum}).
+#
+# start:
+# Creates the bridge
+# Gives it the IP address and netmask
+# Adds the routes to the routing table.
+#
+# stop:
+# Removes all routes from the bridge
+# Removes any devices on the bridge from it.
+# Deletes bridge
+#
+# status:
+# Print addresses, interfaces, routes
+#
+#============================================================================
+
+
+dir=$(dirname "$0")
+. "$dir/xen-script-common.sh"
+. "$dir/xen-network-common.sh"
+
+findCommand "$@"
+evalVariables "$@"
+
+vifnum=${vifnum:-0}
+bridgeip=${bridgeip:-10.6.7.1/24}
+brnet=${brnet:-10.6.7.0/24}
+netmask=${netmask:-255.255.255.0}
+bridge=${bridge:-xenbr${vifnum}}
+
+##
+# link_exists interface
+#
+# Returns 0 if the interface named exists (whether up or down), 1 otherwise.
+#
+link_exists()
+{
+    if ip link show "$1" >/dev/null 2>/dev/null
+    then
+        return 0
+    else
+        return 1
+    fi
+}
+
+
+# Usage: create_bridge bridge
+create_bridge () {
+    local bridge=$1
+
+    # Don't create the bridge if it already exists.
+    if [ ! -d "/sys/class/net/${bridge}/bridge" ]; then
+        brctl addbr ${bridge}
+        brctl stp ${bridge} off
+        brctl setfd ${bridge} 0
+    fi
+    ip link set ${bridge} up
+}
+
+# Usage: add_to_bridge bridge dev
+add_to_bridge () {
+    local bridge=$1
+    local dev=$2
+    # Don't add $dev to $bridge if it's already on a bridge.
+    if ! brctl show | grep -wq ${dev} ; then
+        brctl addif ${bridge} ${dev}
+    fi
+}
+
+# Usage: show_status dev bridge
+# Print ifconfig and routes.
+show_status () {
+    local dev=$1
+    local bridge=$2
+    
+    echo '============================================================'
+    ip addr show ${dev}
+    ip addr show ${bridge}
+    echo ' '
+    brctl show ${bridge}
+    echo ' '
+    ip route list
+    echo ' '
+    route -n
+    echo '============================================================'
+}
+
+op_start () {
+    if [ "${bridge}" = "null" ] ; then
+        return
+    fi
+
+    create_bridge ${bridge}
+
+    if link_exists "$bridge"; then
+        ip address add dev $bridge $bridgeip
+        ip link set ${bridge} up arp on
+        ip route add to $brnet dev $bridge
+    fi
+
+    if [ ${antispoof} = 'yes' ] ; then
+        antispoofing
+    fi
+#    rcSuSEfirewall2 start
+}
+
+op_stop () {
+    if [ "${bridge}" = "null" ]; then
+        return
+    fi
+    if ! link_exists "$bridge"; then
+        return
+    fi
+    
+    ip route del to $brnet dev $bridge
+    ip link set ${bridge} down arp off
+    ip address del dev $bridge $bridgeip
+    ##FIXME: disconnect the interfaces from the bridge 1st
+    brctl delbr ${bridge}
+#    rcSuSEfirewall2 start
+}
+
+case "$command" in
+    start)
+        op_start
+        ;;
+    
+    stop)
+        op_stop
+        ;;
+
+    status)
+        show_status ${netdev} ${bridge}
+        ;;
+
+    *)
+        echo "Unknown command: $command" >&2
+        echo 'Valid commands are: start, stop, status' >&2
+        exit 1
+esac
