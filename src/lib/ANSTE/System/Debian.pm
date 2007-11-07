@@ -535,7 +535,8 @@ sub enableNAT # (iface, sourceAddr)
     $self->execute('echo 1 > /proc/sys/net/ipv4/ip_forward');
 
     $self->execute("iptables -t nat -A POSTROUTING " .
-                   "-o $iface -s $sourceAddr -j MASQUERADE");
+#                   "-o $iface -s $sourceAddr -j MASQUERADE");
+                   "-o $iface -j MASQUERADE");
 }
 
 # Method: disableNAT
