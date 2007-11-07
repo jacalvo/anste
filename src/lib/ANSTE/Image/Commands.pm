@@ -497,14 +497,19 @@ sub _disableNAT
 
     my $system = $self->{system};
     my $config = ANSTE::Config->instance();
-    my $interfaces = $self->{image}->network()->interfaces(); 
-
     my $natIface = $config->natIface();
+    my $network = $self->{image}->network();
 
-    foreach my $if (@{$interfaces}) {
-        if ($if->gateway() eq $config->gateway()) {
-            $system->disableNAT($natIface, $if->address());
+    if ($network) {
+        foreach my $if (@{$network->interfaces()}) {
+            if ($if->gateway() eq $config->gateway()) {
+                $system->disableNAT($natIface, $if->address());
+                last;
+            }
         }
+    }
+    else {
+        $system->disableNAT($natIface, $self->ip());
     }
 }
 

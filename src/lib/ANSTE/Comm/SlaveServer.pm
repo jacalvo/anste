@@ -127,6 +127,7 @@ sub exec # (file, log?)
         exit(0);
     }
     else {
+        waitpid($pid, 0);
         return 'OK';
     }
 }

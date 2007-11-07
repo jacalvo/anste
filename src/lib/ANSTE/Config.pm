@@ -1100,9 +1100,9 @@ sub _setDefaults
 
     $self->{default}->{'master'}->{'port'} = '8001';
 
-    $self->{default}->{'comm'}->{'gateway'} = '192.168.0.62';
+    $self->{default}->{'comm'}->{'gateway'} = '10.6.7.1';
     $self->{default}->{'comm'}->{'nat-iface'} = 'eth1';
-    $self->{default}->{'comm'}->{'first-address'} = '192.168.0.191';
+    $self->{default}->{'comm'}->{'first-address'} = '10.6.7.10';
 
     $self->{default}->{'deploy'}->{'auto-create-images'} = 0;
 

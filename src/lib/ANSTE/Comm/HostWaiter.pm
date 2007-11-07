@@ -111,10 +111,11 @@ sub waitForReady # (host)
     defined $host or
         throw ANSTE::Exceptions::MissingArgument('host');
 
-    $ready{$host} = 0;
+    lock($lock);
     until ($ready{$host}) {
-        _waitForEvent();
+        cond_wait($lock);
     }
+    $ready{$host} = 0;
     return(1);
 }
 
@@ -141,37 +142,12 @@ sub waitForExecution # (host) returns retValue
     defined $host or
         throw ANSTE::Exceptions::MissingArgument('host');
 
-    $executed{$host} = 0;
-    until ($executed{$host}) {
-        _waitForEvent();
-    }
-    return $returnValue;
-}
-
-# Method: waitForAnyExecution
-#
-#   Waits for an execution finish on any host.
-#
-# Returns:
-#
-#   integer - Return value of the script being executed.
-#
-sub waitForAnyExecution # returns retValue
-{
-    my ($self) = @_;
-
-    use Perl6::Junction qw(any);
-
-    until (any (values %executed)) {
-        _waitForEvent();
-    }
-    return $returnValue;
-}
-
-sub _waitForEvent
-{
     lock($lock);
-    cond_wait($lock);
+    until ($executed{$host}) {
+        cond_wait($lock);
+    }
+    $executed{$host} = 0;
+    return $returnValue;
 }
 
 1;
