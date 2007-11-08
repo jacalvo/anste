@@ -153,9 +153,9 @@ sub _writeNetworkConfig # (file)
 	my ($self, $file) = @_;
 
     my $system = $self->{system};
-	my $network = $self->{host}->network();
+    my $host = $self->{host};
 
-    my $config = $system->networkConfig($network);
+    my $config = $system->networkConfig($host->network());
 
 	print $file "# Write network configuration\n";
     print $file "$config\n\n";
@@ -163,6 +163,12 @@ sub _writeNetworkConfig # (file)
     print $file "# Update network configuration\n";
     my $command = $system->updateNetworkCommand();
     print $file "$command\n\n";
+
+    if ($host->isRouter()) {
+        print $file "# Enable routing\n";
+        my $cmd = $system->enableRouting('eth0');
+        print $file "$cmd\n";
+    }
 }
 
 1;

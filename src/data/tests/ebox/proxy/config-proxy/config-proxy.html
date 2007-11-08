@@ -19,33 +19,38 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForTextPresent</td>
+	<td>General</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
-	<td>//a[contains(@href, '/ebox/Squid/Index')]</td>
+	<td>//a[contains(@href, '/ebox/Squid/Composite/General')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>SquidService_enabled</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Service enabled</td>
 	<td></td>
 </tr>
 <tr>
 	<td>select</td>
-	<td>active</td>
-	<td>label=Enabled</td>
+	<td>GeneralSettings_globalPolicy</td>
+	<td>label=Always allow</td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
-	<td>change</td>
+	<td>click</td>
+	<td>//input[@name='change' and @value='Change' and @type='submit' and @onclick='changeRow("/ebox/Squid/Controller/GeneralSettings", "GeneralSettings", ["page", "transparentProxy", "port", "globalPolicy", "filter"], "GeneralSettings","0", 0); return false']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>select</td>
-	<td>policy</td>
-	<td>label=Filter</td>
-</tr>
-<tr>
-    <td>select</td>
-    <td>threshold</td>
-    <td>label=Very permissive</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>document.forms[1].change</td>
+	<td>waitForTextPresent</td>
+	<td>Settings changed</td>
 	<td></td>
 </tr>
 

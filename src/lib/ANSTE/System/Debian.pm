@@ -503,6 +503,34 @@ sub firewallDefaultRules # returns string
     return $config;
 }
 
+# Method: enableRouting
+#
+#   Overriden method that returns the commands that enables routing
+#   on a given network interface.
+#
+# Parameters:
+#
+#   iface - String with the interface to enable masquerading.
+#
+# Returns:
+#
+#   string - contains the command
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub enableRouting # (iface)
+{
+    my ($self, $iface) = @_;
+
+    my $command = "echo 1 > /proc/sys/net/ipv4/ip_forward\n";
+    $command .= "unset MODPROBE_OPTIONS\n";
+    $command .= "iptables -t nat -A POSTROUTING -o $iface -j MASQUERADE\n";
+
+    return $command;
+}
+
 # Method: enableNAT
 #
 #   Overriden method that returns the command that enables NAT 

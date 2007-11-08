@@ -416,9 +416,31 @@ sub firewallDefaultRules # returns string
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: enableRouting
+#
+#   Override this method to return the commands that enables routing
+#   on a given network interface.
+#
+# Parameters:
+#
+#   iface - String with the interface to enable masquerading.
+#
+# Returns:
+#
+#   string - contains the command
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub enableRouting # (iface)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 # Method: enableNAT
 #
-#   Override this method to return the command that enablse NAT 
+#   Override this method to return the command that enables NAT 
 #   on a given network interface from a given source address.
 #
 # Parameters:

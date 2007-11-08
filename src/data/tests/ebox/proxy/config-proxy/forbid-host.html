@@ -10,7 +10,7 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/ebox/</td>
+	<td>/ebox/Squid/Composite/General</td>
 	<td></td>
 </tr>
 <tr>
@@ -19,23 +19,68 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForTextPresent</td>
+	<td>Filter settings</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
-	<td>link=Banned domains</td>
+	<td>link=Filter settings</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>ContentFilterThreshold_contentFilterThreshold</td>
+	<td>label=Very permissive</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>change</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Content filter threshold changed</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>Domains_2</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Domain filter settings</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Add new</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Adding a new internet domain</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>domain_name</td>
-	<td>www.marca.com</td>
+	<td>DomainFilter_domain</td>
+	<td>marca.com</td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
-	<td>accept</td>
+	<td>select</td>
+	<td>DomainFilter_policy</td>
+	<td>label=Always deny</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>add</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>www.marca.com</td>
+	<td>waitForTextPresent</td>
+	<td>Domain added</td>
 	<td></td>
 </tr>
 

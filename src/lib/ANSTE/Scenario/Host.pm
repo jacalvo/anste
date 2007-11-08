@@ -46,6 +46,7 @@ sub new # returns new Host object
 	
 	$self->{name} = '';
 	$self->{desc} = '';
+	$self->{isRouter} = 0;
     $self->{baseImage} = new ANSTE::Scenario::BaseImage;
 	$self->{network} = new ANSTE::Scenario::Network;
 	$self->{packages} = new ANSTE::Scenario::Packages;
@@ -128,6 +129,21 @@ sub setDesc # desc string
         throw ANSTE::Exceptions::MissingArgument('desc');
 
 	$self->{desc} = $desc;
+}
+
+# Method: isRouter
+#
+#   Checks if the host simulates a router.
+#
+# Returns:
+#
+#   boolean - true if it's a router, false if not
+#
+sub isRouter # returns boolean
+{
+    my ($self) = shift;
+
+    return $self->{isRouter};
 }
 
 # Method: memory
@@ -359,6 +375,12 @@ sub load # (node)
 	my $descNode = $node->getElementsByTagName('desc', 0)->item(0);
 	my $desc = $descNode->getFirstChild()->getNodeValue();
 	$self->setDesc($desc);
+
+    my $type = $node->getAttribute('type');
+
+    if ($type eq 'router') {
+        $self->{isRouter} = 1;
+    }
 
 	my $memoryNode = $node->getElementsByTagName('memory', 0)->item(0);
     if ($memoryNode) {

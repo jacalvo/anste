@@ -251,7 +251,7 @@ sub _deploy
     my $commIface = $image->commInterface();
     # This gateway is not needed anymore
     # and may conflict with the real one.
-    $commIface->removeGateway();
+    $commIface->removeGateway() unless $host->isRouter();
     $host->network()->addInterface($commIface);
 
     # Execute pre-install scripts

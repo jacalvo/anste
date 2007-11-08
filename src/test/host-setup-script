@@ -26,8 +26,10 @@ use ANSTE::ScriptGen::HostImageSetup;
 
 use constant SCENARIO => 'big.xml';
 
+my $arg = $ARGV[0] ? $ARGV[0] : SCENARIO;
+
 my $scenario = new ANSTE::Scenario::Scenario;
-$scenario->loadFromFile(SCENARIO);
+$scenario->loadFromFile($arg);
 my $hosts = $scenario->hosts();
 my $gen = new ANSTE::ScriptGen::HostImageSetup($hosts->[0], 
                                                $scenario->system());
