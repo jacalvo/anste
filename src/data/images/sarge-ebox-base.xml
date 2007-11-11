@@ -6,6 +6,8 @@
     <memory>256</memory>
 
     <size>800M</size>
+
+    <install method="debootstrap"/>
     
     <packages>
         <package>postfix</package>
@@ -20,4 +22,5 @@
         <script>add-services-to-ebox-firewall</script>
         <script>ebox-non-ssl.sh</script>
     </post-install>
+
 </image>

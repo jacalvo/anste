@@ -8,4 +8,6 @@
     <swap>256M</swap>
 
     <size>500M</size>
+
+    <install method="debootstrap"/>
 </image>

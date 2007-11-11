@@ -117,13 +117,17 @@ sub create
     my $ip = $self->ip();
     my $memory = $image->memory();
     my $swap = $image->swap();
+    my $method = $image->installMethod();
+    my $source = $image->installSource();
 
     my $virtualizer = $self->{virtualizer};
 
     $virtualizer->createBaseImage(name => $name,
                                   ip => $ip,
                                   memory => $memory,
-                                  swap => $swap);
+                                  swap => $swap,
+                                  method => $method,
+                                  source => $source);
 }
 
 # Method: mount

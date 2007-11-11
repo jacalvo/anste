@@ -6,6 +6,10 @@
     <memory>imageMemory</memory>
 
     <size>imageSize</size>
+
+    <install method="copy">
+        <source>/tmp</source>    
+    </install>
     
     <packages>
         <package>postfix</package>

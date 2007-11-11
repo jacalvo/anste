@@ -19,7 +19,7 @@ use warnings;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Config;
 
-use Test::More tests => 51;
+use Test::More tests => 55;
 
 use constant SCENARIO => 'test.xml';
 
@@ -96,6 +96,10 @@ sub testBaseImage # (image)
     is($memory, 'imageMemory', 'memory = imageMemory');
 	my $size = $image->size();
     is($size, 'imageSize', 'size = imageSize');
+	my $method = $image->installMethod();
+    is($method, 'copy', 'method = copy');
+	my $source = $image->installSource();
+    is($source, '/tmp', 'source = /tmp');
 
 	testPackages($image->packages());
 

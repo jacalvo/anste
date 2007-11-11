@@ -45,10 +45,13 @@ use constant XEN_CONFIG_TEMPLATE => 'xen-config.tmpl';
 #
 # Parameters: 
 #   
-#   name    -   name of the image type to be created
-#   ip      -   ip address that will be assigned to the image
-#   memory  -   *optional* size of the RAM memory to be used
-#   swap    -   *optional* size of the swap partition to be used
+#   name   - name of the image type to be created
+#   ip     - ip address that will be assigned to the image
+#   memory - *optional* size of the RAM memory to be used
+#   swap   - *optional* size of the swap partition to be used
+#   method - installation method to be used (debootstrap, copy, tarball)
+#   source - source of the installation data (for copy and tarball methods)
+#   dist   - distribution to be installed (for debootstrap method)
 #
 # Returns:
 #
@@ -67,13 +70,22 @@ sub createBaseImage # (%params)
         throw ANSTE::Exceptions::MissingArgument('name');
     exists $params{ip} or
         throw ANSTE::Exceptions::MissingArgument('ip');
+    exists $params{method} or
+        throw ANSTE::Exceptions::MissingArgument('method');
 
     my $name = $params{name};
     my $ip = $params{ip};
     my $memory = $params{memory};
     my $swap = $params{swap};
+    my $method = $params{method};
+    my $dist = $params{dist};
+    my $source = $params{source};
 
-    my $confFile = $self->_createXenToolsConfig($memory, $swap);
+    my $confFile = $self->_createXenToolsConfig(memory => $memory, 
+                                                swap => $swap,
+                                                method => $method,
+                                                dist => $dist,
+                                                source => $source);
 
     my $config = ANSTE::Config->instance();
 
@@ -301,9 +313,15 @@ sub deleteImage # (image)
     $self->execute("xen-delete-image $image --dir $dir");
 }
 
-sub _createXenToolsConfig # (memory, swap) returns filename
+sub _createXenToolsConfig # (%params) returns filename
 {
-    my ($self, $memory, $swap) = @_;
+    my ($self, %params) = @_;
+
+    my $memory = $params{memory};
+    my $swap = $params{swap};
+    my $method = $params{method};
+    my $source = $params{source};
+    my $dist = $params{dist};
 
     my ($fh, $filename) = tempfile();
 
@@ -314,9 +332,7 @@ sub _createXenToolsConfig # (memory, swap) returns filename
     }        
 
     my $dir = $config->imagePath();
-    my $installMethod = $config->xenInstallMethod();
     my $size = $config->xenSize();
-    my $dist = $config->xenDist();
     my $image = $config->xenImage();
     my $kernel = $config->xenKernel();
     my $initrd = $config->xenInitrd();
@@ -325,7 +341,13 @@ sub _createXenToolsConfig # (memory, swap) returns filename
     my $netmask = '255.255.255.0';
 
     print $fh "dir = $dir\n";
-    print $fh "install-method = $installMethod\n";
+    print $fh "install-method = $method\n";
+    if ($dist) {
+        print $fh "dist = $dist\n";
+    }        
+    if ($source) {
+        print $fh "install-source = $source\n";
+    }        
     print $fh "size = $size\n";
     print $fh "memory = $memory\n";
     if ($swap) {
@@ -335,7 +357,6 @@ sub _createXenToolsConfig # (memory, swap) returns filename
     else {
         print $fh "noswap = 1\n";
     }
-    print $fh "dist = $dist\n";
     print $fh "image = $image\n";
     print $fh "cache = no\n";
     print $fh "kernel = $kernel\n";

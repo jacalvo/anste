@@ -1,11 +1,11 @@
-#!/bin/sh -
+#!/bin/sh
 
 DOMAIN=$1
 
 XM=`whereis -b xm | cut -f2 -d' '`
 
 while true; do
-	$XM list | cut -f1 -d' ' | grep ^$DOMAIN
+	$XM list $DOMAIN
 	if [ $? -eq 0 ]
     then
 	    sleep 1

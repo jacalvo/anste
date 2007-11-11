@@ -48,6 +48,8 @@ sub new # returns new BaseImage object
 	$self->{memory} = '';
 	$self->{size} = '';
 	$self->{swap} = '';
+	$self->{installMethod} = '';
+	$self->{installSource} = '';
 	$self->{packages} = new ANSTE::Scenario::Packages();
     $self->{'pre-scripts'} = [];
     $self->{'post-scripts'} = [];
@@ -234,7 +236,7 @@ sub swap # returns size string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setSwap # size string
+sub setSwap # returns string
 {
 	my ($self, $size) = @_;	
 
@@ -242,6 +244,120 @@ sub setSwap # size string
         throw ANSTE::Exceptions::MissingArgument('size');
 
 	$self->{swap} = $size;
+}
+
+# Method: installMethod
+#
+#   Gets the installation method to be used.
+#
+# Returns:
+#
+#   string - contains the  name of the installation method
+#
+sub installMethod # returns string
+{
+	my ($self) = @_;
+
+	return $self->{installMethod};
+}
+
+# Method: setInstallMethod
+#
+#
+#   Sets the installMethod of the installMethod partition.
+#
+# Parameters:
+#
+#   installMethod - String with the installMethod of the image.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setInstallMethod # installMethod string
+{
+	my ($self, $installMethod) = @_;	
+
+    defined $installMethod or
+        throw ANSTE::Exceptions::MissingArgument('installMethod');
+
+	$self->{installMethod} = $installMethod;
+}
+
+# Source: installSource
+#
+#   Gets the installation method to be used.
+#
+# Returns:
+#
+#   string - contains the  name of the installation method
+#
+sub installSource # returns string
+{
+	my ($self) = @_;
+
+	return $self->{installSource};
+}
+
+# Source: setInstallSource
+#
+#
+#   Sets the installSource of the installSource partition.
+#
+# Parameters:
+#
+#   installSource - String with the installSource of the image.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setInstallSource # installSource string
+{
+	my ($self, $installSource) = @_;	
+
+    defined $installSource or
+        throw ANSTE::Exceptions::MissingArgument('installSource');
+
+	$self->{installSource} = $installSource;
+}
+
+# Dist: installDist
+#
+#   Sets the distribution to be installed.
+#
+# Returns:
+#
+#   string - contains the name of the distribution
+#
+sub installDist # returns string
+{
+	my ($self) = @_;
+
+	return $self->{installDist};
+}
+
+# Dist: setInstallDist
+#
+#
+#   Sets the distribution to be installed.
+#
+# Parameters:
+#
+#   installDist - String with the name of the distribution
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setInstallDist # installDist string
+{
+	my ($self, $installDist) = @_;	
+
+    defined $installDist or
+        throw ANSTE::Exceptions::MissingArgument('installDist');
+
+	$self->{installDist} = $installDist;
 }
 
 # Method: packages
@@ -359,6 +475,20 @@ sub loadFromFile # (filename)
 	my $descNode = $image->getElementsByTagName('desc', 0)->item(0);
 	my $desc = $descNode->getFirstChild()->getNodeValue();
 	$self->setDesc($desc);
+
+	my $installNode = $image->getElementsByTagName('install', 0)->item(0);
+    my $method = $installNode->getAttribute('method');
+    $self->setInstallMethod($method);
+    my $distNode = $installNode->getElementsByTagName('dist', 0)->item(0);
+    if ($distNode) {
+    	my $dist = $distNode->getFirstChild()->getNodeValue();
+	    $self->setInstallDist($dist);
+    }        
+    my $sourceNode = $installNode->getElementsByTagName('source', 0)->item(0);
+    if ($sourceNode) {
+    	my $source = $sourceNode->getFirstChild()->getNodeValue();
+	    $self->setInstallSource($source);
+    }        
 
 	my $memoryNode = $image->getElementsByTagName('memory', 0)->item(0);
     if ($memoryNode) {

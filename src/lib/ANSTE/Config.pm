@@ -114,13 +114,11 @@ sub check
     $self->seleniumBrowser();
     $self->seleniumVideo();
     $self->seleniumRecordAll();
-    $self->xenInstallMethod();
     $self->xenUseIdeDevices();
     $self->xenModules();
     $self->xenSize();
     $self->xenMemory();
     $self->xenFS();
-    $self->xenDist();
     $self->xenImage();
     $self->xenKernel();
     $self->xenInitrd();
@@ -850,21 +848,6 @@ sub seleniumRecordAll
     return $all;
 }
 
-# Method: xenInstallMethod
-#
-#   Gets the value of the Xen's install-method option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-sub xenInstallMethod
-{
-    my ($self) = @_;
-
-    return $self->_getOption('xen-options', 'install-method');
-}
-
 # Method: xenUseIdeDevices
 #
 #
@@ -949,21 +932,6 @@ sub xenFS
     my ($self) = @_;
 
     return $self->_getOption('xen-options', 'fs');
-}
-
-# Method: xenDist
-#
-#   Gets the value of the Xen's dist option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-sub xenDist
-{
-    my ($self) = @_;
-
-    return $self->_getOption('xen-options', 'dist');
 }
 
 # Method: xenImage
@@ -1111,13 +1079,11 @@ sub _setDefaults
     $self->{default}->{'selenium'}->{'record-all'} = 0;
 
     $self->{default}->{'xen-options'}->{'dir'} = '/home/xen';
-    $self->{default}->{'xen-options'}->{'install-method'} = 'debootstrap';
     $self->{default}->{'xen-options'}->{'use-ide-devices'} = 0;
     $self->{default}->{'xen-options'}->{'modules'} = '';
     $self->{default}->{'xen-options'}->{'size'} = '2Gb';
     $self->{default}->{'xen-options'}->{'memory'} = '512Mb';
     $self->{default}->{'xen-options'}->{'fs'} = 'ext3';
-    $self->{default}->{'xen-options'}->{'dist'} = 'sarge';
     $self->{default}->{'xen-options'}->{'image'} = 'full';
     my $version = `uname -r`;
     chomp($version);

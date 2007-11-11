@@ -79,9 +79,12 @@ sub execute # (command)
 #
 # Parameters: 
 #   
-#   name    -   name of the image type to be created
-#   ip      -   ip address that will be assigned to the image
-#   memory  -   *optional* size of the RAM memory to be used
+#   name   - name of the image type to be created
+#   ip     - ip address that will be assigned to the image
+#   memory - *optional* size of the RAM memory to be used
+#   swap   - *optional* size of the swap partition to be used
+#   method - installation method to be used (depends of the virtualizer)
+#   source - source of the installation data (depends of the virtualizer)
 #
 # Returns:
 #   

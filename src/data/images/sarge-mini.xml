@@ -6,4 +6,6 @@
     <memory>128</memory>
     
     <size>350M</size>
+
+    <install method="debootstrap"/>
 </image>
