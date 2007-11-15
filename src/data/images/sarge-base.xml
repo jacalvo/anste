@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <image>
-	<name>baseimage</name>
-	<desc>Debian GNU/Linux 3.1</desc>
+    <name>baseimage</name>
+    <desc>Debian GNU/Linux 3.1</desc>
 
     <memory>256</memory>
 
@@ -9,5 +9,7 @@
 
     <size>500M</size>
 
-    <install method="debootstrap"/>
+    <install method="debootstrap">
+        <dist>sarge</dist>
+    </install>        
 </image>

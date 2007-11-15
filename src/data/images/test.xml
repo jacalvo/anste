@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <image>
-	<name>imageName</name>
-	<desc>imageDesc</desc>
+    <name>imageName</name>
+    <desc>imageDesc</desc>
 
     <memory>imageMemory</memory>
 

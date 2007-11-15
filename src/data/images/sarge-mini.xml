@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <image>
-	<name>baseimage-mini</name>
-	<desc>Debian GNU/Linux 3.1</desc>
+    <name>baseimage-mini</name>
+    <desc>Debian GNU/Linux 3.1</desc>
 
     <memory>128</memory>
     
     <size>350M</size>
 
-    <install method="debootstrap"/>
+    <install method="debootstrap">
+        <dist>sarge</dist>
+    </install>        
 </image>
