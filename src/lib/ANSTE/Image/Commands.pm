@@ -119,6 +119,7 @@ sub create
     my $swap = $image->swap();
     my $method = $image->installMethod();
     my $source = $image->installSource();
+    my $dist = $image->installDist();
 
     my $virtualizer = $self->{virtualizer};
 
@@ -127,7 +128,8 @@ sub create
                                   memory => $memory,
                                   swap => $swap,
                                   method => $method,
-                                  source => $source);
+                                  source => $source,
+                                  dist => $dist);
 }
 
 # Method: mount
@@ -369,7 +371,10 @@ sub shutdown
     print "[$image] Shutdown done.\n";
 
     # Delete the NAT rule for this image
-    $self->_disableNAT();
+    # (only if not is a BaseImage)
+    if ($self->{image}->isa('ANSTE::Image::Image')) {
+        $self->_disableNAT();
+    }        
 }
 
 # Method: destroy
