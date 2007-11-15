@@ -33,7 +33,8 @@ use ANSTE::Exceptions::MissingArgument;
 
 my $singleton;
 
-my $lock : shared;
+my $lockReady : shared;
+my $lockExecuted : shared;
 
 my %ready : shared;
 my %executed : shared;
@@ -71,9 +72,9 @@ sub instance
 sub hostReady # (host)
 {
     my ($self, $host) = @_; 
-    lock($lock);
+    lock($lockReady);
     $ready{$host} = 1;
-    cond_signal($lock);
+    cond_signal($lockReady);
 }
 
 # Method: executionFinished
@@ -90,10 +91,10 @@ sub executionFinished # (host, retValue)
 {
     my ($self, $host, $retValue) = @_; 
 
-    lock($lock);
+    lock($lockExecuted);
     $executed{$host} = 1;
     $returnValue = $retValue;
-    cond_signal($lock);
+    cond_signal($lockExecuted);
 }
 
 # Method: waitForReady
@@ -111,9 +112,9 @@ sub waitForReady # (host)
     defined $host or
         throw ANSTE::Exceptions::MissingArgument('host');
 
-    lock($lock);
+    lock($lockReady);
     until ($ready{$host}) {
-        cond_wait($lock);
+        cond_wait($lockReady);
     }
     $ready{$host} = 0;
     return(1);
@@ -142,11 +143,31 @@ sub waitForExecution # (host) returns retValue
     defined $host or
         throw ANSTE::Exceptions::MissingArgument('host');
 
-    lock($lock);
+    lock($lockExecuted);
     until ($executed{$host}) {
-        cond_wait($lock);
+        cond_wait($lockExecuted);
     }
     $executed{$host} = 0;
+    return $returnValue;
+}
+
+# Method: waitForAnyExecution
+#
+#   Waits for an execution finish on any host.
+#
+# Returns:
+#
+#   integer - Return value of the script being executed.
+#
+sub waitForAnyExecution # returns retValue
+{
+    my ($self) = @_;
+
+    use Perl6::Junction qw(any);
+
+    until (any (values %executed)) {
+        cond_wait($lockExecuted);
+    }
     return $returnValue;
 }
 
