@@ -23,6 +23,7 @@
     <post-install>
         <script>add-services-to-ebox-firewall</script>
         <script>ebox-non-ssl.sh</script>
+        <script>ebox-autostart-off.sh</script>
     </post-install>
 
 </image>

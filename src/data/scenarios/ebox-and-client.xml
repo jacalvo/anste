@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenario>
-	<name>eBox and client</name>
-	<desc>One eBox machine and a user client machine</desc>
+    <name>eBox and client</name>
+    <desc>One eBox machine and a user client machine</desc>
 
-	<host>
-		<name>ebox-server</name>
-		<desc>eBox server</desc>
+    <host>
+        <name>ebox-server</name>
+        <desc>eBox server</desc>
         <baseimage>sarge-ebox-base</baseimage>
-		<network>
+        <network>
             <interface type="static">
                 <name>eth1</name>
-    			<address>192.168.2.1</address>
-	    		<netmask>255.255.255.0</netmask>
+                <address>192.168.2.1</address>
+                <netmask>255.255.255.0</netmask>
             </interface>
             <interface type="static">
                 <name>eth2</name>
-    			<address>192.168.3.1</address>
-	    		<netmask>255.255.255.0</netmask>
-    			<gateway>10.6.7.1</gateway>
+                <address>192.168.3.1</address>
+                <netmask>255.255.255.0</netmask>
+                <gateway>10.6.7.1</gateway>
             </interface>
-		</network>
+        </network>
 
         <post-install>
             <script>ebox-import-network.sh</script>
-            <script>ebox-wait-start.sh</script>
+            <script>ebox-start-and-wait.sh</script>
         </post-install>
-	</host>
+    </host>
 
     <host>
         <name>test-client</name>
-		<desc>simple client host</desc>
+        <desc>simple client host</desc>
         <baseimage>sarge-mini</baseimage>
 
         <network>
          <interface type="static">
             <name>eth1</name>
-    		<address>192.168.2.2</address>
-	    	<netmask>255.255.255.0</netmask>
+            <address>192.168.2.2</address>
+            <netmask>255.255.255.0</netmask>
             <!-- ebox is the gateway -->
             <gateway>192.168.2.1</gateway>
          </interface>
         </network>
 
-		<packages>
+        <packages>
             <package>wget</package>
-		</packages>
+        </packages>
     </host>
 </scenario>

@@ -74,7 +74,7 @@ sub hostReady # (host)
     my ($self, $host) = @_; 
     lock($lockReady);
     $ready{$host} = 1;
-    cond_signal($lockReady);
+    cond_broadcast($lockReady);
 }
 
 # Method: executionFinished
@@ -94,7 +94,7 @@ sub executionFinished # (host, retValue)
     lock($lockExecuted);
     $executed{$host} = 1;
     $returnValue = $retValue;
-    cond_signal($lockExecuted);
+    cond_broadcast($lockExecuted);
 }
 
 # Method: waitForReady
@@ -113,10 +113,10 @@ sub waitForReady # (host)
         throw ANSTE::Exceptions::MissingArgument('host');
 
     lock($lockReady);
+    $ready{$host} = 0;
     until ($ready{$host}) {
         cond_wait($lockReady);
     }
-    $ready{$host} = 0;
     return(1);
 }
 
@@ -144,10 +144,10 @@ sub waitForExecution # (host) returns retValue
         throw ANSTE::Exceptions::MissingArgument('host');
 
     lock($lockExecuted);
+    $executed{$host} = 0;
     until ($executed{$host}) {
         cond_wait($lockExecuted);
     }
-    $executed{$host} = 0;
     return $returnValue;
 }
 

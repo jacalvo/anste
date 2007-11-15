@@ -177,7 +177,6 @@ sub get	# (file)
     	open(FILE, ">", $file) or die "Can't open(): $!";
     	print FILE $content;
     	close FILE;
-    	print "File $file written\n" if $config->verbose();
         return 1;
     }
 }

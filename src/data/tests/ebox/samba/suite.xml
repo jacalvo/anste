@@ -2,7 +2,7 @@
     <name>eBox Samba tests</name>
     <desc>Contains samba-related tests.</desc>
     
-    <scenario>ebox-and-client.xml</scenario>
+    <scenario>ebox-samba.xml</scenario>
 
     <test type="selenium">
         <name>ConfigNetwork</name>

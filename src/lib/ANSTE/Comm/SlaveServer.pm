@@ -123,6 +123,7 @@ sub exec # (file, log?)
         else {
             $ret = $self->_execute($command);
         }
+        sleep 1; # Avoid notification before starting to wait for finish
         exec("/usr/local/bin/anste-slave finished $ret");
         exit(0);
     }

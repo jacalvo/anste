@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenario>
-	<name>scenarioName</name>
-	<desc>scenarioDesc</desc>
+    <name>scenarioName</name>
+    <desc>scenarioDesc</desc>
 
-	<host>
-		<name>hostName</name>
-		<desc>hostDesc</desc>
+    <host>
+        <name>hostName</name>
+        <desc>hostDesc</desc>
         <baseimage>test</baseimage>
-		<network>
+        <network>
             <interface type="static">
                 <name>eth0</name>
-    			<address>192.168.0.2</address>
-	    		<netmask>255.255.255.0</netmask>
-		    	<gateway>192.168.0.1</gateway>
+                <address>192.168.0.2</address>
+                <netmask>255.255.255.0</netmask>
+                <gateway>192.168.0.1</gateway>
             </interface>
             <interface type="static">
                 <name>eth1</name>
-    			<address>192.168.1.4</address>
-	    		<netmask>255.255.255.0</netmask>
-		    	<gateway>192.168.1.1</gateway>
+                <address>192.168.1.4</address>
+                <netmask>255.255.255.0</netmask>
+                <gateway>192.168.1.1</gateway>
             </interface>
             <route>
                 <destination>default</destination>
@@ -26,26 +26,26 @@
                 <netmask>0.0.0.0</netmask>
                 <iface>eth1</iface>
             </route>
-		</network>
-		<packages>
-			<profile>lamp-server</profile>
-		</packages>
-	</host>
+        </network>
+        <packages>
+            <profile>lamp-server</profile>
+        </packages>
+    </host>
 
-	<host>
-		<name>hostName</name>
-		<desc>hostDesc</desc>
+    <host>
+        <name>hostName</name>
+        <desc>hostDesc</desc>
         <baseimage>test</baseimage>
-		<network>
+        <network>
             <interface type="dhcp">
                 <name>eth0</name>
             </interface>
         </network>
-		<packages>
-			<profile>ftp-server</profile>
-			<package>samba-common</package>
-			<package>samba</package>
-		</packages>
-	</host>
+        <packages>
+            <profile>ftp-server</profile>
+            <package>samba-common</package>
+            <package>samba</package>
+        </packages>
+    </host>
 
 </scenario>

@@ -123,7 +123,6 @@ sub createImage
 
     print "[$name] Resizing image... ";
     $cmd->resize($image->size()) or die 'Error resizing image.';
-    print "done.\n";
     
     print "[$name] Image creation finished.\n";
 

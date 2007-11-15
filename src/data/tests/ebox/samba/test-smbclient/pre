@@ -1,6 +1,0 @@
-#!/bin/sh
-
-export DEBIAN_FRONTEND=NONINTERACTIVE
-OPTIONS='-o Dpkg::Options::=--force-confnew -o Dpkg::Options::=--force-confdef'
-apt-get update
-apt-get install -y $OPTIONS smbclient

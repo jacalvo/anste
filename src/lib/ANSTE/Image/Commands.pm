@@ -252,7 +252,7 @@ sub prepareSystem
     my ($self) = @_;
 
     my $image = $self->{image};
-
+    my $hostname = $image->name();
     
     my $client = new ANSTE::Comm::MasterClient;
 
@@ -264,7 +264,7 @@ sub prepareSystem
     $self->createVirtualMachine();
 
     # Execute pre-install scripts
-    print "Executing pre scripts...\n" if $config->verbose();
+    print "[$hostname] Executing pre-setup scripts...\n" if $config->verbose();
     $self->executeScripts($image->preScripts());
 
     my $setupScript = '/tmp/install.sh';
@@ -285,7 +285,7 @@ sub prepareSystem
         or die "Can't remove $setupScript: $!";
 
     # Execute post-install scripts
-    print "Executing post scripts...\n" if $config->verbose();
+    print "[$hostname] Executing post-setup scripts...\n" if $config->verbose();
     $self->executeScripts($image->postScripts());
 
     return 1;
@@ -423,7 +423,6 @@ sub resize # (size)
     my $config = ANSTE::Config->instance();
     my $imagePath = $config->imagePath();
 
-    print "Resizing the image to $size\n" if $config->verbose();
     $system->resizeImage($virtualizer->imageFile($imagePath, $image), $size);
 }
 
@@ -551,13 +550,14 @@ sub _executeSetup # (client, script)
 
     my $waiter = ANSTE::Comm::HostWaiter->instance();
     my $config = ANSTE::Config->instance();
-
-    print "Executing $script...\n" if $config->verbose();
-    $client->put($script) or print "Upload failed\n";
-    $client->exec($script) or print "Failed\n";
     my $image = $self->{image}->name();
+
+    print "[$image] Executing $script...\n" if $config->verbose();
+    $client->put($script) or print "[$image] Upload failed.\n";
+    $client->exec($script) or print "[$image] Execution failed.\n";
     my $ret = $waiter->waitForExecution($image);
-    print "Execution finished. Return value = $ret.\n" if $config->verbose();
+    print "[$image] Execution finished. Return value = $ret.\n" 
+        if $config->verbose();
 
     return ($ret);
 }
