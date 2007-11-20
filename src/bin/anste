@@ -46,6 +46,7 @@ my $out = '';
 my $path = '';
 my $video = '';
 my $format = '';
+my $wait = 0;
 my $help = 0;
 my $quiet = 0;
 
@@ -59,6 +60,7 @@ GetOptions('create' => \$create,
            'video' => \$video,
            'format=s' => \$format,
            'quiet' => \$quiet,
+           'wait' => \$wait,
            'help' => \$help) or pod2usage(2);
            
 pod2usage(1) if $help;           
@@ -76,6 +78,9 @@ if ($path) {
 }
 if ($quiet) {
     $config->setVerbose(0);
+}
+if ($wait) {
+    $config->setWait(1);
 }
 if ($out) {
     $config->setLogPath($out);
@@ -250,6 +255,7 @@ anste [options] [file ...]
    -out  <dir>     report output directory
    -video          save video recording of selenium tests
    -format <fmt>   select the output format for the reports
+   -wait           wait after tests are complete instead of shutting down
    -quiet          do not show output of commands
 
 =cut

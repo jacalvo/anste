@@ -100,6 +100,7 @@ sub check
     $self->virtualizer();
     $self->format();
     $self->verbose();
+    $self->wait();
     $self->imagePath();
     $self->logPath();
     $self->deployPath();
@@ -327,6 +328,61 @@ sub setVerbose # (value)
     }
 
     $self->{override}->{'global'}->{'verbose'} = $value;
+}
+
+# Method: wait
+#
+#   Gets the value for the wait option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub wait
+{
+    my ($self) = @_;
+
+    my $wait = $self->_getOption('global', 'wait');
+
+    if (not ANSTE::Validate::boolean($wait)) {
+        throw ANSTE::Exceptions::InvalidConfig('global/wait', 
+                                               $wait,
+                                               $self->{confFile});
+    }
+
+    return $wait;
+}
+
+# Method: setWait
+#
+#   Sets the value for the wait option.
+#
+# Parameters:
+#
+#   value - String with the value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setWait # (value)
+{
+    my ($self, $value) = @_;
+
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not ANSTE::Validate::boolean($value)) {
+        throw ANSTE::Exceptions::InvalidOption('global/wait', 
+                                               $value);
+    }
+
+    $self->{override}->{'global'}->{'wait'} = $value;
 }
 
 # Method: imagePath
@@ -1057,6 +1113,7 @@ sub _setDefaults
     $self->{default}->{'global'}->{'system'} = 'Debian';
     $self->{default}->{'global'}->{'virtualizer'} = 'Xen';
     $self->{default}->{'global'}->{'verbose'} = 1;
+    $self->{default}->{'global'}->{'wait'} = 0;
 
     $self->{default}->{'paths'}->{'images'} = '/home/xen/domains';
     $self->{default}->{'paths'}->{'deploy'} = "$data/deploy";

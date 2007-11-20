@@ -150,7 +150,7 @@ sub runSuite # (suite)
 
         $self->_runTests();
     } finally {
-        $deployer->shutdown();
+        $deployer->shutdown() unless ANSTE::Config->instance()->wait();
     };
     print "Finished testing of suite '$suiteName'.\n\n";
 
