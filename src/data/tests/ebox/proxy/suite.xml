@@ -52,4 +52,23 @@
         <host>test-client</host>
         <dir>forbid-download</dir>
     </test>
+
+    <test type="selenium">
+        <name>ContentFilter</name>
+        <desc>
+	Configure content filter setting its threshold to very strict.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>content-filter</dir>
+    </test>
+
+    <test>
+        <name>AccessAdultContent</name>
+        <desc>Try to access adult content with "very strict" filter mode</desc>
+
+        <host>test-client</host>
+        <dir>test-content</dir>
+    </test>
+
 </suite>
