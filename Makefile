@@ -58,12 +58,15 @@ install-anste:
 	cp -a src/lib/ANSTE/Exceptions $(DESTDIR)$(LIBPERL)/ANSTE
 	install -d $(DESTDIR)$(DATADIR)/deploy
 	install -d $(DESTDIR)$(DATADIR)/deploy/modules
-	ln -sf $(DESTDIR)$(LIBPERL)/ANSTE \
-		   $(DESTDIR)$(DATADIR)/deploy/modules/ANSTE
 	install -d $(DESTDIR)$(DATADIR)/deploy/bin
 	install -m755 src/data/deploy/bin/* $(DESTDIR)$(DATADIR)/deploy/bin
 	install -d $(DESTDIR)$(DATADIR)/deploy/scripts
 	install -m755 src/data/deploy/scripts/* $(DESTDIR)$(DATADIR)/deploy/scripts
+# Create symlink if we're not building the debian package	
+ifneq (,$(findstring debian,$(DESTDIR)))
+	ln -sf $(DESTDIR)$(LIBPERL)/ANSTE \
+		   $(DESTDIR)$(DATADIR)/deploy/modules/ANSTE
+endif		   
 
 uninstall-anste:
 	rm -f $(DESTDIR)$(SBINDIR)/anste
