@@ -1022,11 +1022,9 @@ sub _filePath # (file)
         if (-r $userFile) {
             return $userFile;
         }
-    }
-    else {
-        my $dataFile = "$data/$file";
-        return $dataFile;
-    }
+    }        
+    my $dataFile = "$data/$file";
+    return $dataFile;
 }
 
 sub _getOption # (section, option)
