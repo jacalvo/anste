@@ -4,7 +4,7 @@ echo "Setting the proxy"
 export http_proxy="192.168.2.1:3128"
 
 echo "HTTP request to www.marca.com"
-wget -t 0 www.marca.com -O output.html
+wget -r -t 3 www.marca.com -O output.html
 
 echo "Checking if access was denied"
 grep "Access has been Denied" output.html 

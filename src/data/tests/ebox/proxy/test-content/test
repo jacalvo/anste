@@ -3,7 +3,7 @@
 export http_proxy="192.168.2.1:3128"
 
 echo "HTTP request to www.lupaland.com"
-wget -t 0 www.lupaland.com -O output.html
+wget -r -t 3 www.lupaland.com -O output.html
 
 echo "Checking if access was denied"
 grep "Access has been Denied" output.html 
