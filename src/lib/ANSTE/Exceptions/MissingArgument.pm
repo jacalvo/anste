@@ -16,6 +16,9 @@
 
 package ANSTE::Exceptions::MissingArgument;
 
+use strict;
+use warnings;
+
 use base 'ANSTE::Exceptions::Base';
 
 # Class: MissingArgument
@@ -42,8 +45,8 @@ sub new
 
     my ($package, undef, $line, $method) = caller(2);
 
-	$self = $class->SUPER::new("Missing argument '$arg' calling " .
-                               "method '$method' at '$package:$line'\n");
+	my $self = $class->SUPER::new("Missing argument '$arg' calling " .
+                                  "method '$method' at '$package:$line'\n");
 
 	bless ($self, $class);
 

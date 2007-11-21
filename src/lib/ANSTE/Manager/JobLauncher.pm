@@ -109,7 +109,7 @@ sub _executeSavingLog # (command, log) # returns exit code
     }
     elsif ($pid == 0) {
         # Redirect stdout and stderr
-        open(STDOUT, "> $log")     or return 1;
+        open(STDOUT, '>', $log)     or return 1;
         open(STDERR, '>&STDOUT')   or return 1;
 
         exec($command);

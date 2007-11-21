@@ -15,6 +15,9 @@
 
 package ANSTE::Exceptions::InvalidOption;
 
+use strict;
+use warnings;
+
 use base 'ANSTE::Exceptions::Base';
 
 # Class: InvalidOption
@@ -39,7 +42,7 @@ sub new # (option, value)
 {
 	my ($class, $option, $value) = @_;
 
-	$self = $class->SUPER::new("Invalid value for option $option: $value\n");
+	my $self = $class->SUPER::new("Invalid value for option $option: $value\n");
 
 	bless ($self, $class);
 	return $self;

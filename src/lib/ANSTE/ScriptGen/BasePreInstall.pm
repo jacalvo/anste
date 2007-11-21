@@ -65,7 +65,7 @@ sub new # (image) returns new CommInstallGen object
     $self->{image} = $image;
     my $system = ANSTE::Config->instance()->system();
 
-    eval("use ANSTE::System::$system");
+    eval "use ANSTE::System::$system";
     die "Can't load package $system: $@" if $@;
 
     $self->{system} = "ANSTE::System::$system"->new();

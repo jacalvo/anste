@@ -15,6 +15,9 @@
 
 package ANSTE::Exceptions::InvalidData;
 
+use strict;
+use warnings;
+
 use base 'ANSTE::Exceptions::Base';
 
 # Class: InvalidData
@@ -41,8 +44,8 @@ sub new # (data, value)
 
     my ($package, undef, $line, $method) = caller(2);
 
-	$self = $class->SUPER::new("Invalid value for $data: '$value' in " .
-                               "method '$method' at '$package:$line'\n");
+	my $self = $class->SUPER::new("Invalid value for $data: '$value' in " .
+                                  "method '$method' at '$package:$line'\n");
 
 	bless ($self, $class);
 	return $self;

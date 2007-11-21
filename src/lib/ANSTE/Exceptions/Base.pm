@@ -16,6 +16,9 @@
 
 package ANSTE::Exceptions::Base;
 
+use strict;
+use warnings;
+
 use base 'Error';
 
 # Class: Base
@@ -39,7 +42,7 @@ sub new # (text)
 {
 	my ($class, $text) = @_;
 
-	$self = $class->SUPER::new(-text => "$text", @_);
+	my $self = $class->SUPER::new(-text => "$text", @_);
 	bless ($self, $class);
 	return $self;
 }

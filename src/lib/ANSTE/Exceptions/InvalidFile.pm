@@ -15,6 +15,9 @@
 
 package ANSTE::Exceptions::InvalidFile;
 
+use strict;
+use warnings;
+
 use base 'ANSTE::Exceptions::Base';
 
 # Class: InvalidFile
@@ -41,8 +44,8 @@ sub new # (arg)
 
     my ($package, undef, $line, $method) = caller(2);
 
-    $self = $class->SUPER::new("Argument '$arg' is not a file in " .
-                               "method '$method' at '$package:$line'\n");
+    my $self = $class->SUPER::new("Argument '$arg' is not a file in " .
+                                  "method '$method' at '$package:$line'\n");
 
     bless ($self, $class);
 

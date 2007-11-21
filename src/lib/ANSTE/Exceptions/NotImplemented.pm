@@ -16,6 +16,9 @@
 
 package ANSTE::Exceptions::NotImplemented;
 
+use strict;
+use warnings;
+
 use base 'ANSTE::Exceptions::Base';
 
 # Class: NotImplemented
@@ -37,8 +40,8 @@ sub new
 
     my ($package, undef, $line, $method) = caller(2);
 
-	$self = $class->SUPER::new("Method '$method' not implemented in ".
-				               "'$package:$line'\n");
+	my $self = $class->SUPER::new("Method '$method' not implemented in ".
+	                              "'$package:$line'\n");
 
 	bless ($self, $class);
 

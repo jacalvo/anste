@@ -16,6 +16,9 @@
 
 package ANSTE::Exceptions::InvalidType;
 
+use strict;
+use warnings;
+
 use base 'ANSTE::Exceptions::Base';
 
 # Class: InvalidType
@@ -47,9 +50,9 @@ sub new # (arg, type)
 
     my ($package, undef, $line, $method) = caller(2);
 
-    $self = $class->SUPER::new("Invalid type for argument: $arg with type " .
-	             		       "$argType , which should be $type in " .
-                               "method '$method' at '$package:$line'\n");
+    my $self = $class->SUPER::new("Invalid type for argument: $arg with type " .
+                                  "$argType , which should be $type in " .
+                                   "method '$method' at '$package:$line'\n");
 
     bless ($self, $class);
 

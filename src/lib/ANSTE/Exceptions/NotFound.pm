@@ -15,6 +15,9 @@
 
 package ANSTE::Exceptions::NotFound;
 
+use strict;
+use warnings;
+
 use base 'ANSTE::Exceptions::Base';
 
 # Class: NotFound
@@ -39,7 +42,7 @@ sub new # (what, value)
 {
 	my ($class, $what, $value) = @_;
 
-	$self = $class->SUPER::new("$what '$value' not present\n");
+	my $self = $class->SUPER::new("$what '$value' not present\n");
 
 	bless ($self, $class);
 	return $self;

@@ -223,7 +223,7 @@ sub test # (file)
 
     my $writerPackage = "ANSTE::Report::$format" . 'Writer';
 
-    eval("use $writerPackage");
+    eval "use $writerPackage";
     die "Can't load package $writerPackage: $@" if $@;
 
     my $writer = $writerPackage->new($report);

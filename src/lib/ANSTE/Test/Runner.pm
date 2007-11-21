@@ -55,7 +55,7 @@ sub new # returns new Runner object
     $self->{report} = new ANSTE::Report::Report();
     my $system = ANSTE::Config->instance()->system();
 
-    eval("use ANSTE::System::$system");
+    eval "use ANSTE::System::$system";
     die "Can't load package $system: $@" if $@;
 
     $self->{system} = "ANSTE::System::$system"->new();
@@ -300,7 +300,7 @@ sub _runTest # (test)
         # Editing the log to write the starting and ending times.
         my $contents = slurp "<$logfile";
         my $LOG;
-        open($LOG, ">$logfile");
+        open($LOG, '>', $logfile);
         my $startTime = $testResult->startTime();
         print $LOG "Starting test '$name' at $startTime.\n\n";
         print $LOG $contents;

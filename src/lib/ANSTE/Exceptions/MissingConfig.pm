@@ -15,6 +15,9 @@
 
 package ANSTE::Exceptions::MissingConfig;
 
+use strict;
+use warnings;
+
 use base 'ANSTE::Exceptions::Base';
 
 # Class: MissingConfig
@@ -37,8 +40,8 @@ sub new # (option)
 {
 	my ($class, $option) = @_;
 
-	$self = $class->SUPER::new("Missing mandatory option $option " .
-                               "in configuration file\n");
+	my $self = $class->SUPER::new("Missing mandatory option $option " .
+                                  "in configuration file\n");
 
 	bless ($self, $class);
 	return $self;

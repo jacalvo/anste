@@ -15,6 +15,9 @@
 
 package ANSTE::Exceptions::Error;
 
+use strict;
+use warnings;
+
 use base 'ANSTE::Exceptions::Base';
 
 # Class: Error
@@ -38,7 +41,7 @@ sub new # (msg)
 {
 	my ($class, $msg) = @_;
 
-	$self = $class->SUPER::new("ERROR: $msg\n");
+	my $self = $class->SUPER::new("ERROR: $msg\n");
 
 	bless ($self, $class);
 	return $self;

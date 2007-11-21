@@ -78,10 +78,10 @@ sub new # (host, ip) returns new HostDeployer object
     my $system = $config->system();
     my $virtualizer = $config->virtualizer();
 
-    eval("use ANSTE::System::$system");
+    eval "use ANSTE::System::$system";
     die "Can't load package $system: $@" if $@;
 
-    eval("use ANSTE::Virtualizer::$virtualizer");
+    eval "use ANSTE::Virtualizer::$virtualizer";
     die "Can't load package $virtualizer: $@" if $@;
 
     $self->{system} = "ANSTE::System::$system"->new();

@@ -124,10 +124,11 @@ sub put	# (file) returns boolean
 
     my $size = -s $file;
     # Reads the data
-    open(FILE, "<", $file) or die "Can't open(): $!";
+    my $FILE;
+    open($FILE, '<', $file) or die "Can't open(): $!";
     my $content;
-    read(FILE, $content, $size);
-    close(FILE);
+    read($FILE, $content, $size);
+    close($FILE);
 
     my $response = $soap->put(SOAP::Data->name('name' => $file),
 		                      SOAP::Data->name('content' => $content));
@@ -174,9 +175,10 @@ sub get	# (file)
         return 0;
     } else {
     	# Writes the file
-    	open(FILE, ">", $file) or die "Can't open(): $!";
-    	print FILE $content;
-    	close FILE;
+        my $FILE;
+    	open($FILE, ">", $file) or die "Can't open(): $!";
+    	print $FILE $content;
+    	close $FILE;
         return 1;
     }
 }

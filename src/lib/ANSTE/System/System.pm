@@ -550,35 +550,4 @@ sub stopVideoRecording
     throw ANSTE::Exceptions::NotImplemented();
 }
 
-sub _executeSavingLog # (command, log)
-{
-    my ($self, $command, $log) = @_;
-
-    # Take copies of the file descriptors
-    open(OLDOUT, '>&STDOUT')   or return 1;
-    open(OLDERR, '>&STDERR')   or return 1;
-
-    # Redirect stdout and stderr
-    open(STDOUT, "> $log")     or return 1;
-    open(STDERR, '>&STDOUT')   or return 1;
-
-    my $ret = system($command);
-
-    # Close the redirected filehandles
-    close(STDOUT)              or return 1;
-    close(STDERR)              or return 1;
-
-    # Restore stdout and stderr
-    open(STDERR, '>&OLDERR')   or return 1;
-    open(STDOUT, '>&OLDOUT')   or return 1;
-
-    # Avoid leaks by closing the independent copies
-    close(OLDOUT)              or return 1;
-    close(OLDERR)              or return 1;
-
-    return $ret;
-}
-
-
-
 1;

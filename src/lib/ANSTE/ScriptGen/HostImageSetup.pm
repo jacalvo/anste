@@ -63,7 +63,7 @@ sub new # (host) returns new HostImageSetup object
 	$self->{host} = $host;
     my $system = ANSTE::Config->instance()->system();
 
-    eval("use ANSTE::System::$system");
+    eval "use ANSTE::System::$system";
     die "Can't load package $system: $@" if $@;
 
     $self->{system} = "ANSTE::System::$system"->new();

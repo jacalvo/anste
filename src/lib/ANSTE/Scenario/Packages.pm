@@ -116,10 +116,11 @@ sub load # (node)
 	foreach my $profile ($node->getElementsByTagName('profile', 0)) {
 		my $name = $profile->getFirstChild()->getNodeValue();
         my $file = ANSTE::Config->instance()->profileFile($name);
-		open(FILE, $file) or die "Error loading $file";
+        my $FILE;
+		open($FILE, '<', $file) or die "Error loading $file";
 		my @names;
-		chomp(@names = <FILE>);
-		close FILE or die "Can't close $file";
+		chomp(@names = <$FILE>);
+		close $FILE or die "Can't close $file";
 		$self->add(@names);
 	}
 
