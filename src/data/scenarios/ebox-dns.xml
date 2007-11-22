@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario>
+    <name>eBox and client</name>
+    <desc>One eBox machine and a user client machine</desc>
+
+    <host>
+        <name>ebox-server</name>
+        <desc>eBox server</desc>
+        <baseimage>sarge-ebox-base</baseimage>
+        <network>
+            <interface type="static">
+                <name>eth1</name>
+                <address>192.168.2.1</address>
+                <netmask>255.255.255.0</netmask>
+            </interface>
+        </network>
+
+        <post-install>
+            <script>ebox-import-network.sh</script>
+            <script>ebox-start-and-wait.sh</script>
+        </post-install>
+    </host>
+
+    <host>
+        <name>test-client</name>
+        <desc>simple client host</desc>
+        <baseimage>sarge-mini</baseimage>
+
+        <network>
+         <interface type="static">
+            <name>eth1</name>
+            <address>192.168.2.2</address>
+            <netmask>255.255.255.0</netmask>
+         </interface>
+        </network>
+
+        <packages>
+            <package>dnsutils</package>
+        </packages>
+    </host>
+</scenario>

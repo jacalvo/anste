@@ -1,0 +1,3 @@
+#!/bin/sh
+
+host foo.foobar | grep 192.168.2.1
