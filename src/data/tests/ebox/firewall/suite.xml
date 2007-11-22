@@ -1,0 +1,40 @@
+<suite>
+    <name>eBox NTP and Firewall tests</name>
+    <desc>Contains tests for the NTP and Firewall modules.</desc>
+    
+    <scenario>ebox-firewall.xml</scenario>
+
+    <test type="selenium">
+        <name>ConfigNTPServer</name>
+        <desc>Enables NTP server.</desc>
+
+        <host>ebox-server</host>
+        <dir>config-ntp</dir>
+    </test>        
+
+    <test type="selenium">
+        <name>ConfigNTPFirewall</name>
+        <desc>
+        Allows NTP service for host Foo and denies it for host Bar.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-ntp-fw</dir>
+    </test>        
+
+    <test>
+        <name>TestAllow</name>
+        <desc>Checks that NTP access from host foo is allowed.</desc>
+
+        <host>client-foo</host>
+        <dir>test-ntp</dir>
+    </test>        
+
+    <test>
+        <name>TestDeny</name>
+        <desc>Checks that NTP access from host bar is denied.</desc>
+
+        <host>client-bar</host>
+        <dir>test-ntp-deny</dir>
+    </test>        
+</suite>
