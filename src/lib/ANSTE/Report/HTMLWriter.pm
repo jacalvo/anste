@@ -78,7 +78,7 @@ sub writeSuiteHeader # (name, desc)
 
     print $file "<h2>$name</h2>\n";
     print $file "<h3>$desc</h3>\n";
-    print $file "<table border='1'>\n";
+    print $file "<table border='1' width='100%'>\n";
     print $file "<th><tr>\n";
     print $file "<td>Test</td>\n";
     print $file "<td>Description</td>\n";
