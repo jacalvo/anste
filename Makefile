@@ -36,6 +36,8 @@ install-anste:
 	install -m644 src/data/profiles/* $(DESTDIR)$(DATADIR)/profiles
 	install -d $(DESTDIR)$(DATADIR)/scenarios
 	install -m644 src/data/scenarios/* $(DESTDIR)$(DATADIR)/scenarios
+	install -d src/data/files $(DESTDIR)$(DATADIR)/files
+	install -m644 src/data/files/* $(DESTDIR)$(DATADIR)/files
 	install -d $(DESTDIR)$(DATADIR)/scripts
 	install -m755 src/data/scripts/* $(DESTDIR)$(DATADIR)/scripts
 	install -d $(DESTDIR)$(DATADIR)/templates
@@ -73,6 +75,7 @@ uninstall-anste:
 	rm -rf $(DESTDIR)$(DATADIR)/images
 	rm -rf $(DESTDIR)$(DATADIR)/profiles
 	rm -rf $(DESTDIR)$(DATADIR)/scenarios
+	rm -rf $(DESTDIR)$(DATADIR)/files
 	rm -rf $(DESTDIR)$(DATADIR)/scripts
 	rm -rf $(DESTDIR)$(DATADIR)/tests
 	rm -rf $(DESTDIR)$(DATADIR)/templates
