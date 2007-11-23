@@ -1,3 +1,4 @@
 #!/bin/sh
 
-host 192.168.2.1 | grep foo.foobar
+# host {name} [server]
+host 192.168.2.1 192.168.2.1 | grep foo.foobar
