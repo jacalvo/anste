@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario>
+    <name>One client scenario</name>
+    <desc>Only one sarge base system.</desc>
+
+    <host>
+        <name>myhost</name>
+        <desc>Test machine.</desc>
+        <baseimage>sarge-mini</baseimage>
+        <network>
+            <interface type="static">
+                <name>eth1</name>
+                <address>192.168.3.1</address>
+                <netmask>255.255.255.0</netmask>
+            </interface>
+        </network>
+		<files>
+			<file>foo.txt</file>
+			<file>bar.txt</file>
+			<fileslists>list.txt</fileslists>
+		</files>
+    </host>
+</scenario>

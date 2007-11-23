@@ -499,6 +499,34 @@ sub executeScripts # (list)
     }
 }
 
+# Method: transferFiles
+#
+#   Transfer the given list of files on the running image.
+#
+# Parameters:
+#
+#   list - Reference to the list of files to be transferred.
+#
+sub transferFiles # (list)
+{
+    my ($self, $list) = @_;
+
+    my $image = $self->{image};
+
+    my $client = new ANSTE::Comm::MasterClient;
+
+    my $config = ANSTE::Config->instance();
+    my $port = $config->anstedPort();
+    my $ip = $self->ip();
+    $client->connect("http://$ip:$port");
+
+    foreach my $file (@{$list}) {
+        my $filePath = $config->listsFile($file);
+		$client->put($filePath) or 
+            print "[$image:$filePath] Transfer failed.\n";
+    }
+}
+
 sub _disableNAT
 {
     my ($self) = @_;

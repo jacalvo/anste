@@ -551,6 +551,25 @@ sub profileFile # (file)
     return $self->_filePath("profiles/$file");
 }
 
+# Method: listsFile
+#
+#   Gets the full path of a given list file name.
+#
+# Parameters:
+#
+#   file - String with the file name.
+#
+# Returns:
+#
+#   string - The full path of the file.
+#
+sub listsFile # (file)
+{
+    my ($self, $file) = @_;
+
+    return $self->_filePath("files/$file");
+}
+
 # Method: scriptFile
 #
 #   Gets the full path of a given script file name.

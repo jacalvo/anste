@@ -265,7 +265,16 @@ sub _deploy
     $self->_generateSetupScript(SETUP_SCRIPT);
     $self->_executeSetupScript($ip, SETUP_SCRIPT);
 
-    # NAT from with this address is not needed anymore
+    # FIXME - Copy files to target image
+    # It worths it stays here in order to be able to use pre/post-install
+    # scripts as well. This permits us to move trasferred file, 
+    # change their rights and so on.
+    my $list = $host->{files}->list(); # retrieve files list
+    print "[$hostname] Transferring files...";
+    $cmd->transferFiles($list);
+    print "... done\n";
+
+    # NAT with this address is not needed anymore
     my $iface = $config->natIface();
     $system->disableNAT($iface, $commIface->address());
     # Adding the new nat rule

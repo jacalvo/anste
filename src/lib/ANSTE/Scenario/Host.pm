@@ -21,6 +21,7 @@ use warnings;
 use ANSTE::Scenario::BaseImage;
 use ANSTE::Scenario::Network;
 use ANSTE::Scenario::Packages;
+use ANSTE::Scenario::Files;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 
@@ -48,8 +49,9 @@ sub new # returns new Host object
 	$self->{desc} = '';
 	$self->{isRouter} = 0;
     $self->{baseImage} = new ANSTE::Scenario::BaseImage;
-	$self->{network} = new ANSTE::Scenario::Network;
-	$self->{packages} = new ANSTE::Scenario::Packages;
+    $self->{network} = new ANSTE::Scenario::Network;
+    $self->{packages} = new ANSTE::Scenario::Packages;
+    $self->{files} = new ANSTE::Scenario::Files;
     $self->{'pre-scripts'} = [];
     $self->{'post-scripts'} = [];
 
@@ -312,6 +314,49 @@ sub setPackages # (packages)
 	$self->{packages} = $packages;
 }
 
+# Method: files
+#
+#   Gets the object with the information of files to be transferred.
+#
+# Returns:
+#
+#   ref - <ANSTE::Scenario::Files> object.
+#
+sub files # returns Files object
+{
+	my ($self) = @_;
+
+	return $self->{files};
+}
+
+# Method: setFiles
+#
+#   Sets the object with the information of files to be transferred.
+#
+# Parameters:
+#
+#   packages - <ANSTE::Scenario::Files> object.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
+#
+sub setFiles # (files)
+{
+    my ($self, $files) = @_;
+
+    defined $files or
+        throw ANSTE::Exceptions::MissingArgument('files');
+
+    if (not $files->isa('ANSTE::Scenario::Files')) {
+        throw ANSTE::Exceptions::InvalidType('files',
+                                             'ANSTE::Scenario::Files');
+    }
+
+    $self->{files} = $files;
+}
+
 # Method: preScripts
 #
 #   Gets the list of scripts that have to be executed before the setup.
@@ -400,6 +445,11 @@ sub load # (node)
 	my $packagesNode = $node->getElementsByTagName('packages', 0)->item(0);
 	if($packagesNode){
 		$self->packages()->load($packagesNode);
+	}
+
+	my $filesNode = $node->getElementsByTagName('files', 0)->item(0);
+	if($filesNode){
+		$self->files()->load($filesNode);
 	}
 
 	my $preNode = $node->getElementsByTagName('pre-install', 0)->item(0);
