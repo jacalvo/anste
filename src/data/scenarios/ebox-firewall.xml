@@ -41,7 +41,7 @@
         </network>
 
         <packages>
-            <package>ntpdate</package>
+            <package>ldap-utils</package>
         </packages>            
     </host>
 
@@ -59,7 +59,7 @@
         </network>
 
         <packages>
-            <package>ntpdate</package>
+            <package>ldap-utils</package>
         </packages>            
     </host>
 </scenario>
