@@ -216,7 +216,7 @@ sub installPackagesCommand # (packages) returns string
 
     my $packages = join(' ', @packages);
 
-    return 'apt-get install -y $APT_OPTIONS ' . $packages;
+    return 'apt-get install -y --force-yes $APT_OPTIONS ' . $packages;
 }
 
 # Method: installVars

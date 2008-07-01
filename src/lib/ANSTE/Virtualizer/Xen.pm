@@ -97,7 +97,7 @@ sub createBaseImage # (%params)
     my $modules = $config->xenModules();
 
     my $command = "xen-create-image --dir=$dir --hostname=$name" .
-                  " --ip='$ip' --config=$confFile"; 
+                  " --ip='$ip' --config=$confFile --force"; 
     
     if ($ide) {
         $command .= " --ide";

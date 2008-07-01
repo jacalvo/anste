@@ -9,7 +9,7 @@
 
     <install method="debootstrap">
         <dist>hardy</dist>
-        <command>/usr/sbin/debootstrap --exclude=libc6-i686</command>
+        <command>/usr/sbin/debootstrap --exclude=ubuntu-minimal,libc6-i686 --no-resolve-deps</command>
     </install>
     
     <packages>
