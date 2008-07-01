@@ -85,6 +85,8 @@ sub execute # (command)
 #   swap   - *optional* size of the swap partition to be used
 #   method - installation method to be used (depends of the virtualizer)
 #   source - source of the installation data (depends of the virtualizer)
+#   dist    - distribution to be installed (depends of the virtualizer)
+#   command - command to be used for the installation (depends of the virtualizer)
 #
 # Returns:
 #   

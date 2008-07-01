@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Start/stop the Advanced Network Service Testing Environment daemon.
 
 function notify_ready

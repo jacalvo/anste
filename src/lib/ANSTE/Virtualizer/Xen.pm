@@ -45,13 +45,14 @@ use constant XEN_CONFIG_TEMPLATE => 'xen-config.tmpl';
 #
 # Parameters: 
 #   
-#   name   - name of the image type to be created
-#   ip     - ip address that will be assigned to the image
-#   memory - *optional* size of the RAM memory to be used
-#   swap   - *optional* size of the swap partition to be used
-#   method - installation method to be used (debootstrap, copy, tarball)
-#   source - source of the installation data (for copy and tarball methods)
-#   dist   - distribution to be installed (for debootstrap method)
+#   name    - name of the image type to be created
+#   ip      - ip address that will be assigned to the image
+#   memory  - *optional* size of the RAM memory to be used
+#   swap    - *optional* size of the swap partition to be used
+#   method  - installation method to be used (debootstrap, copy, tarball)
+#   source  - source of the installation data (for copy and tarball methods)
+#   dist    - distribution to be installed (for debootstrap method)
+#   command - command to be used for the installation (for debootstrap method)
 #
 # Returns:
 #
@@ -80,12 +81,14 @@ sub createBaseImage # (%params)
     my $method = $params{method};
     my $dist = $params{dist};
     my $source = $params{source};
+    my $debootstrapCommand = $params{command};
 
     my $confFile = $self->_createXenToolsConfig(memory => $memory, 
                                                 swap => $swap,
                                                 method => $method,
                                                 dist => $dist,
-                                                source => $source);
+                                                source => $source,
+                                                command => $debootstrapCommand);
 
     my $config = ANSTE::Config->instance();
 
@@ -322,6 +325,7 @@ sub _createXenToolsConfig # (%params) returns filename
     my $method = $params{method};
     my $source = $params{source};
     my $dist = $params{dist};
+    my $command = $params{command};
 
     my ($fh, $filename) = tempfile();
 
@@ -345,6 +349,9 @@ sub _createXenToolsConfig # (%params) returns filename
     if ($dist) {
         print $fh "dist = $dist\n";
     }        
+    if ($command) {
+        print $fh "debootstrap-cmd = $command\n";
+    }
     if ($source) {
         print $fh "install-source = $source\n";
     }        

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<image>
+    <name>baseimage-ubuntu-ebox</name>
+    <desc>Ubuntu Hardy with ebox</desc>
+
+    <memory>256</memory>
+
+    <size>800M</size>
+
+    <install method="debootstrap">
+        <dist>hardy</dist>
+        <command>/usr/sbin/debootstrap --exclude=libc6-i686</command>
+    </install>
+    
+    <packages>
+        <package>postfix</package>
+        <profile>ebox</profile>
+    </packages>
+
+    <pre-install>
+        <script>write-ubuntu-ebox-sources.sh</script>
+    </pre-install>
+
+    <post-install>
+        <script>add-services-to-ebox-firewall</script>
+        <script>ebox-non-ssl.sh</script>
+        <script>ebox-autostart-off.sh</script>
+    </post-install>
+
+</image>

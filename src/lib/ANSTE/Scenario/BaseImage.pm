@@ -339,7 +339,6 @@ sub installDist # returns string
 
 # Dist: setInstallDist
 #
-#
 #   Sets the distribution to be installed.
 #
 # Parameters:
@@ -358,6 +357,43 @@ sub setInstallDist # installDist string
         throw ANSTE::Exceptions::MissingArgument('installDist');
 
 	$self->{installDist} = $installDist;
+}
+
+# Command: installCommand
+#
+#   Gets the command to be used for the dist install.
+#
+# Returns:
+#
+#   string - contains the command
+#
+sub installCommand # returns string
+{
+	my ($self) = @_;
+
+	return $self->{installCommand};
+}
+
+# Command: setInstallCommand
+#
+#   Gets the command to be used for the dist install.
+#
+# Parameters:
+#
+#   installCommand - String with the installation command
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setInstallCommand # installCommand string
+{
+	my ($self, $installCommand) = @_;	
+
+    defined $installCommand or
+        throw ANSTE::Exceptions::MissingArgument('installCommand');
+
+	$self->{installCommand} = $installCommand;
 }
 
 # Method: packages
@@ -483,6 +519,11 @@ sub loadFromFile # (filename)
     if ($distNode) {
     	my $dist = $distNode->getFirstChild()->getNodeValue();
 	    $self->setInstallDist($dist);
+    }        
+    my $commandNode = $installNode->getElementsByTagName('command', 0)->item(0);
+    if ($commandNode) {
+    	my $command = $commandNode->getFirstChild()->getNodeValue();
+	    $self->setInstallCommand($command);
     }        
     my $sourceNode = $installNode->getElementsByTagName('source', 0)->item(0);
     if ($sourceNode) {

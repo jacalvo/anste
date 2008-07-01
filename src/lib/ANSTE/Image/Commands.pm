@@ -120,6 +120,7 @@ sub create
     my $method = $image->installMethod();
     my $source = $image->installSource();
     my $dist = $image->installDist();
+    my $command = $image->installCommand();
 
     my $virtualizer = $self->{virtualizer};
 
@@ -129,7 +130,8 @@ sub create
                                   swap => $swap,
                                   method => $method,
                                   source => $source,
-                                  dist => $dist);
+                                  dist => $dist,
+                                  command => $command);
 }
 
 # Method: mount
