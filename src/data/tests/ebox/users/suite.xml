@@ -3,7 +3,7 @@
     <desc>Contains tests for user addition.
     </desc>
     
-    <scenario>one-ebox.xml</scenario>
+    <scenario>one-ubuntu-ebox.xml</scenario>
 
     <test type="selenium">
         <name>AddUser</name>
