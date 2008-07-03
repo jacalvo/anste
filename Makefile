@@ -45,6 +45,8 @@ install-anste:
 	install -d $(DESTDIR)$(DATADIR)/tests
 	cp -a src/data/tests/ebox $(DESTDIR)$(DATADIR)/tests
 	cp -a src/data/tests/sample $(DESTDIR)$(DATADIR)/tests
+	install -d $(DESTDIR)$(DATADIR)/common
+	cp -a src/data/common/ebox $(DESTDIR)$(DATADIR)/common
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE
 	install -m644 src/lib/ANSTE/Config.pm $(DESTDIR)$(LIBPERL)/ANSTE
 	install -m644 src/lib/ANSTE/Validate.pm $(DESTDIR)$(LIBPERL)/ANSTE
@@ -78,6 +80,7 @@ uninstall-anste:
 	rm -rf $(DESTDIR)$(DATADIR)/files
 	rm -rf $(DESTDIR)$(DATADIR)/scripts
 	rm -rf $(DESTDIR)$(DATADIR)/tests
+	rm -rf $(DESTDIR)$(DATADIR)/common
 	rm -rf $(DESTDIR)$(DATADIR)/templates
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Config.pm
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Validate.pm
