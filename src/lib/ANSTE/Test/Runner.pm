@@ -375,7 +375,7 @@ sub _runSeleniumRC # (hostname, file, log) returns result
     my $system = $self->{system};
 
     my $ip = $self->{hostIP}->{$hostname};
-    my $url = "http://$ip";
+    my $url = "http://$ip:1666";
 
     my $config = ANSTE::Config->instance();
 

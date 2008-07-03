@@ -24,6 +24,7 @@ use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
+use File::Basename;
 
 # Class: System
 #
@@ -216,7 +217,13 @@ sub installPackagesCommand # (packages) returns string
 
     my $packages = join(' ', @packages);
 
-    return 'apt-get install -y --force-yes $APT_OPTIONS ' . $packages;
+    my $date = `date +%y%m%d%H%M%S`;
+    chomp($date);
+    my $LOG_OUT = "/var/log/anste-install-$date.out";
+    my $LOG_ERR = "/var/log/anste-install-$date.err";
+
+    return 'apt-get install -y --force-yes $APT_OPTIONS ' . 
+           $packages . " 1>$LOG_OUT 2>$LOG_ERR";
 }
 
 # Method: installVars
@@ -639,11 +646,24 @@ sub executeSelenium # (%params)
     my $testFile = $params{testFile};
     my $resultFile = $params{resultFile};
 
+    my $date = `date +%y%m%d%H%M%S`;
+    chomp($date);
+    my $logPath = ANSTE::Config->instance()->logPath();
+    my $LOG =  "$logPath/anste-selenium-$date.log";
+
     my $cmd = 'java -jar ' . $jar . ' -htmlSuite "' . $browser . '" ' .
               '"' . $url . '" "' . $testFile . '" "' . $resultFile . '" ' .
-              '-multiWindow &> /dev/null';
+              "-multiWindow &> $LOG";
 
-    $self->execute($cmd);
+
+    my $ld_path = '';
+    my @browserSplit = split(/ /, $browser);
+    if ($browserSplit[1]) {
+        my $browserPath = dirname($browserSplit[1]);
+        $ld_path = "LD_LIBRARY_PATH=$browserPath ";
+    }
+
+    $self->execute($ld_path . $cmd);
 }
 
 # Method: startVideoRecording
