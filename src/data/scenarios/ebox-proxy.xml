@@ -26,7 +26,7 @@
 
         <post-install>
             <script>ebox-import-network.sh</script>
-            <script>ebox-start-and-wait.sh</script>
+            <script>ebox-wait-start.sh</script>
         </post-install>
     </host>
 

@@ -3,51 +3,71 @@
 # Temporary workaround
 cat << EOF > /usr/share/ebox/stubs/apache.mas
 <%args>
-        \$port
-        \$group
-        \$user
-        \$serverroot
-        \$debug => 'no'
+	\$port
+	\$group
+	\$user
+	\$serverroot
+	\$tmpdir
+    \$debug => 'no'
 </%args>
-
-ServerType standalone
-ServerRoot <% \$serverroot %>
-LockFile /var/lock/apache-perl.lock
-PidFile /var/run/apache-perl.pid
-ScoreBoardFile /var/run/apache-perl.scoreboard
 
 Timeout 300
 KeepAlive On
 MaxKeepAliveRequests 100
 KeepAliveTimeout 15
-MinSpareServers 1
-MaxSpareServers 2
-StartServers 2
-MaxClients 3
-MaxRequestsPerChild 100
-AddDefaultCharset utf-8
+AddDefaultCharset utf-8	
 
-# begin modules
-ClearModuleList
-AddModule mod_so.c
-AddModule mod_macro.c
-LoadModule config_log_module /usr/lib/apache/1.3/mod_log_config.so
-LoadModule mime_magic_module /usr/lib/apache/1.3/mod_mime_magic.so
-LoadModule mime_module /usr/lib/apache/1.3/mod_mime.so
-LoadModule dir_module /usr/lib/apache/1.3/mod_dir.so
-LoadModule cgi_module /usr/lib/apache/1.3/mod_cgi.so
-LoadModule alias_module /usr/lib/apache/1.3/mod_alias.so
-LoadModule rewrite_module /usr/lib/apache/1.3/mod_rewrite.so
-LoadModule access_module /usr/lib/apache/1.3/mod_access.so
-LoadModule auth_module /usr/lib/apache/1.3/mod_auth.so
-LoadModule expires_module /usr/lib/apache/1.3/mod_expires.so
-LoadModule setenvif_module /usr/lib/apache/1.3/mod_setenvif.so
-#LoadModule ssl_module /usr/lib/apache/1.3/mod_ssl.so
-AddModule mod_perl.c
-#AddModule mod_ssl.c
-# end modules
+PidFile <% \$tmpdir %>/apache.pid
 
-Port <% \$port %>
+<IfModule mpm_prefork_module>
+    StartServers          1 
+    MinSpareServers       1
+    MaxSpareServers       5
+    MaxClients            5 
+    MaxRequestsPerChild   20
+</IfModule>
+
+# worker MPM
+# StartServers: initial number of server processes to start
+# MaxClients: maximum number of simultaneous client connections
+# MinSpareThreads: minimum number of worker threads which are kept spare
+# MaxSpareThreads: maximum number of worker threads which are kept spare
+# ThreadsPerChild: constant number of worker threads in each server process
+# MaxRequestsPerChild: maximum number of requests a server process serves
+<IfModule mpm_worker_module>
+    StartServers         1 
+    MaxClients         	 5 
+    MinSpareThreads      1 
+    MaxSpareThreads      1 
+    ThreadsPerChild      1
+    MaxRequestsPerChild   20
+</IfModule>
+
+PerlInterpMaxRequests 20
+
+Include /etc/apache2/mods-available/auth_basic.load
+Include /etc/apache2/mods-available/authn_file.load
+Include /etc/apache2/mods-available/authz_default.load
+Include /etc/apache2/mods-available/authz_groupfile.load
+Include /etc/apache2/mods-available/authz_host.load
+Include /etc/apache2/mods-available/authz_user.load
+Include /etc/apache2/mods-available/autoindex.load
+Include /etc/apache2/mods-available/cgi.load
+Include /etc/apache2/mods-available/deflate.conf
+Include /etc/apache2/mods-available/deflate.load
+Include /etc/apache2/mods-available/dir.conf
+Include /etc/apache2/mods-available/dir.load
+Include /etc/apache2/mods-available/env.load
+Include /etc/apache2/mods-available/mime.load
+Include /etc/apache2/mods-available/negotiation.load
+Include /etc/apache2/mods-available/setenvif.load
+Include /etc/apache2/mods-available/rewrite.load
+#Include /etc/apache2/mods-available/ssl.conf
+#Include /etc/apache2/mods-available/ssl.load
+Include /etc/apache2/mods-available/status.load
+Include /etc/apache2/mods-available/perl.load
+
+Listen <% \$port %>
 User <% \$user %>
 Group <% \$group %>
 
@@ -69,6 +89,14 @@ DocumentRoot /usr/share/ebox/www/
     Allow from all
 </Directory>
 
+<Directory /var/lib/ebox/dynamicwww>
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+
+
 UseCanonicalName Off
 TypesConfig /etc/mime.types
 DefaultType text/plain
@@ -79,12 +107,12 @@ DefaultType text/plain
 
 HostnameLookups Off
 
-ErrorLog /var/lib/ebox/log/error.log
+ErrorLog /var/log/ebox/error.log
 LogLevel warn
 
 LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{forensic-id}n\"" combined
 
-CustomLog /var/lib/ebox/log/access.log combined
+CustomLog /var/log/ebox/access.log combined
 
 <IfModule mod_backtrace.c>
  EnableExceptionHook On
@@ -103,8 +131,8 @@ SSLEngine on
 SSLProtocol all
 SSLCipherSuite HIGH:MEDIUM
 
-SSLCertificateFile /etc/ebox/ssl.crt/ebox.cert
-SSLCertificateKeyFile /etc/ebox/ssl.key/ebox.key
+SSLCertificateFile /var/lib/ebox/conf/ssl.crt/ebox.cert
+SSLCertificateKeyFile /var/lib/ebox/conf/ssl.key/ebox.key
 </IfModule>
 
 <IfModule mod_setenvif.c>
@@ -115,52 +143,59 @@ SSLCertificateKeyFile /etc/ebox/ssl.key/ebox.key
     BrowserMatch "JDK/1\.0" force-response-1.0
 </IfModule>
 
-Alias /data/ /usr/share/ebox/www/
-ScriptAlias /ebox/ /usr/share/ebox/cgi/
-
 % if (\$debug eq 'yes') {
-PerlInitHandler Apache::Reload
+# Yes, this is useless right now.
+#PerlInitHandler	Apache2::Reload
 % }
 PerlWarn On
 
-PerlRequire "startup.pl"
+PerlRequire "/var/lib/ebox/conf/startup.pl"
 
 PerlModule EBox::Auth
 PerlSetVar EBoxPath /
 PerlSetVar EBoxLoginScript /ebox/Login/Index
 PerlSetVar EBoxSatisfy Any
 PerlSetVar AuthCookieDebug 0
+
 <Files LOGIN>
-        AuthType EBox::Auth
-        AuthName EBox
-        SetHandler perl-script
-        PerlHandler EBox::Auth->login
+	AuthType EBox::Auth
+	AuthName EBox
+	SetHandler perl-script
+	PerlHandler EBox::Auth->login
 </Files>
 
 <Directory /usr/share/ebox/cgi/>
    <IfModule mod_ssl.c>
-           SSLOptions +StdEnvVars
+	   SSLOptions +StdEnvVars
    </IfModule>
 
-#        AuthType EBox::Auth
-#        AuthName EBox
-#        PerlModule      EBox::Auth
-#        PerlAuthenHandler EBox::Auth->authenticate
-#        PerlAuthzHandler  EBox::Auth->authorize
-#        require valid-user
-        SetHandler perl-script
-        PerlHandler Apache::Registry
-        PerlSendHeader On
-        AllowOverride None
-        Options +ExecCGI
-        Order allow,deny
-        Allow from all
+#	AuthType EBox::Auth
+#	AuthName EBox
+#	PerlAuthenHandler EBox::Auth->authenticate
+#	PerlAuthzHandler  EBox::Auth->authorize
+#	require valid-user
+    SetHandler perl-script
+    PerlHandler ModPerl::Registry
+    PerlSendHeader On
+    AllowOverride None
+    Options +ExecCGI
+    Order allow,deny
+    Allow from all
 </Directory>
 
 RewriteEngine On
 
-RewriteRule ^/ebox$ /ebox/ [R]
-RewriteRule ^/$ /ebox/ [R]
-RewriteRule ^/ebox/ebox.cgi$ [S,PT]
-RewriteRule ^/ebox/(.*) /ebox/ebox.cgi [E=script:\$1,PT,L]
+# From /ebox to /ebox/ and redirect
+RewriteRule ^/ebox$ /ebox/
+# From / to /ebox and redirect
+RewriteRule ^/$ /ebox/
+# Map /ebox/ebox.cgi to the right Perl CGI and redirect
+RewriteRule ^/ebox/ebox.cgi$ /ebox/
+# From /data/ to / and finish
+RewriteRule ^/data(.*) \$1 [L]
+# From /dynamic-data/ to the right directory in FS and finish
+RewriteRule ^/dynamic-data(.*) /var/lib/ebox/dynamicwww\$1 [L]
+RewriteRule ^/ebox/(.*) /usr/share/ebox/cgi/ebox.cgi [E=script:\$1,L]
 EOF
+
+sed -i 's/https:/http:/g' /usr/share/perl5/EBox/CGI/Base.pm

@@ -24,9 +24,8 @@ $firewallMod->save();
 
 # Change apache port TODO: To be removed when working with SSL
 my $apacheMod = EBox::Global->modInstance('apache');
-$apacheMod->setPort(80);
+$apacheMod->setPort(1666);
 $apacheMod->save();
-
 
 1;
 

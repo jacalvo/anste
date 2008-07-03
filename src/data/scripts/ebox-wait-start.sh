@@ -1,12 +1,10 @@
 #!/bin/bash
 
-/etc/init.d/ebox start
-
 # Wait a maximum of ~60 seconds for apache start
 for i in `seq 1 60`
 do
     rm index.html
-    wget http://localhost
+    wget http://localhost:1666
     if [ -f index.html ]
     then
         rm index.html
