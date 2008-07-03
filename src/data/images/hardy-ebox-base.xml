@@ -3,7 +3,7 @@
     <name>baseimage-ubuntu-ebox</name>
     <desc>Ubuntu Hardy with ebox</desc>
 
-    <memory>256</memory>
+    <memory>512</memory>
 
     <size>800M</size>
 
@@ -13,7 +13,9 @@
     </install>
     
     <packages>
+        <package>ssl-cert</package>
         <package>postfix</package>
+        <package>postgresql</package>
         <profile>ebox</profile>
     </packages>
 
@@ -22,9 +24,10 @@
     </pre-install>
 
     <post-install>
+        <script>ssl-cert-workaround.sh</script>
+        <script>force-package-install.sh</script>
         <script>add-services-to-ebox-firewall</script>
         <script>ebox-non-ssl.sh</script>
-        <script>ebox-autostart-off.sh</script>
     </post-install>
 
 </image>

@@ -2,6 +2,7 @@ ebox
 libebox
 ebox-network
 ebox-objects
+ebox-services
 ebox-mail
 ebox-mailfilter
 ebox-firewall
@@ -17,3 +18,4 @@ ebox-printers
 ebox-jabber
 ebox-ca
 ebox-openvpn
+ebox-webserver
