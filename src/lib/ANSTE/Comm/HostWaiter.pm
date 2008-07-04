@@ -165,6 +165,7 @@ sub waitForAnyExecution # returns retValue
 
     use Perl6::Junction qw(any);
 
+    lock($lockExecuted);
     until (any (values %executed)) {
         cond_wait($lockExecuted);
     }

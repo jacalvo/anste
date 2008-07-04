@@ -385,6 +385,61 @@ sub setWait # (value)
     $self->{override}->{'global'}->{'wait'} = $value;
 }
 
+# Method: reuse
+#
+#   Gets the value for the reuse option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub reuse
+{
+    my ($self) = @_;
+
+    my $reuse = $self->_getOption('global', 'reuse');
+
+    if (not ANSTE::Validate::boolean($reuse)) {
+        throw ANSTE::Exceptions::InvalidConfig('global/reuse', 
+                                               $reuse,
+                                               $self->{confFile});
+    }
+
+    return $reuse;
+}
+
+# Method: setReuse
+#
+#   Sets the value for the reuse option.
+#
+# Parameters:
+#
+#   value - String with the value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setReuse # (value)
+{
+    my ($self, $value) = @_;
+
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not ANSTE::Validate::boolean($value)) {
+        throw ANSTE::Exceptions::InvalidOption('global/reuse', 
+                                               $value);
+    }
+
+    $self->{override}->{'global'}->{'reuse'} = $value;
+}
+
 # Method: imagePath
 #
 #   Gets the value for the images' path option. 
@@ -1133,6 +1188,7 @@ sub _setDefaults
     $self->{default}->{'global'}->{'virtualizer'} = 'Xen';
     $self->{default}->{'global'}->{'verbose'} = 1;
     $self->{default}->{'global'}->{'wait'} = 0;
+    $self->{default}->{'global'}->{'reuse'} = 0;
 
     $self->{default}->{'paths'}->{'images'} = '/home/xen/domains';
     $self->{default}->{'paths'}->{'deploy'} = "$data/deploy";

@@ -26,7 +26,7 @@ use File::Basename;
 #   to handle the requests from the master client.
 #
 
-my $DIR = '/tmp';
+my $DIR = '/var/local/anste';
 
 # Method: put
 #
@@ -170,7 +170,7 @@ sub _executeSavingLog # (command, log)
 {
     my ($self, $command, $log) = @_;
 
-    return system("$command &> $log");
+    return system("$command &> '$log'");
 }
 
 1;

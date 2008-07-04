@@ -219,11 +219,10 @@ sub installPackagesCommand # (packages) returns string
 
     my $date = `date +%y%m%d%H%M%S`;
     chomp($date);
-    my $LOG_OUT = "/var/log/anste-install-$date.out";
-    my $LOG_ERR = "/var/log/anste-install-$date.err";
+    my $LOG = "/var/log/anste/$date-install-packages.log";
 
     return 'apt-get install -y --force-yes $APT_OPTIONS ' . 
-           $packages . " 1>$LOG_OUT 2>$LOG_ERR";
+           $packages . " &>$LOG";
 }
 
 # Method: installVars

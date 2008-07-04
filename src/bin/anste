@@ -49,6 +49,7 @@ my $format = '';
 my $wait = 0;
 my $help = 0;
 my $quiet = 0;
+my $reuse = 0;
 
 GetOptions('create' => \$create,
            'remove' => \$remove,
@@ -61,6 +62,7 @@ GetOptions('create' => \$create,
            'format=s' => \$format,
            'quiet' => \$quiet,
            'wait' => \$wait,
+           'reuse' => \$reuse,
            'help' => \$help) or pod2usage(2);
            
 pod2usage(1) if $help;           
@@ -87,6 +89,9 @@ if ($out) {
 }
 if ($video) {
     $config->setSeleniumVideo(1);
+}
+if ($reuse) {
+    $config->setReuse(1);
 }
 
 # Check the config file for missing or malformed options
@@ -257,5 +262,6 @@ anste [options] [file ...]
    -format <fmt>   select the output format for the reports
    -wait           wait after tests are complete instead of shutting down
    -quiet          do not show output of commands
+   -reuse          reuse the created image if exists (with -create)
 
 =cut

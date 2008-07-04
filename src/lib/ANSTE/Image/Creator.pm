@@ -65,8 +65,9 @@ sub new # (image) returns new ImageCreator object
 
 # Method: createImage
 #
-#   Does the image creation. If the image already exists, does nothing.
-#
+#   Does the image creation. If the image already exists, does nothing,
+#   unless reuse config option is set.
+# 
 # Returns:
 #
 #   boolean - true if the image is created, false if already exists
@@ -81,16 +82,18 @@ sub createImage
 
     my $image = $self->{image};
     my $name = $image->name();
+    my $reuse = ANSTE::Config->instance()->reuse();
 
     my $cmd = new ANSTE::Image::Commands($image);
 
-    if ($cmd->exists()) {
+    if ($cmd->exists() and not $reuse) {
         return 0;
     }
-
-    print "[$name] Creating image...";
-    $cmd->create() or die 'Error creating base image.';
-    print "done.\n";
+    elsif (not $reuse or not $cmd->exists()) {
+        print "[$name] Creating image...";
+        $cmd->create() or die 'Error creating base image.';
+        print "done.\n";
+    }        
 
     print "[$name] Mounting image... ";
     $cmd->mount() or die 'Error mounting image.';

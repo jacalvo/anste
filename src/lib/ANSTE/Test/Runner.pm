@@ -138,25 +138,31 @@ sub runSuite # (suite)
 
     my $scenario = $self->_loadScenario($scenarioFile);
 
+    my $config = ANSTE::Config->instance();
+    my $reuse = $config->reuse();
+
     my $sceName = $scenario->name();
     my $suiteName = $suite->name();
-    print "Deploying scenario '$sceName' for suite '$suiteName'...\n";
+    print "Deploying scenario '$sceName' for suite '$suiteName'...\n"
+        if not $reuse;
 
     my $deployer = new ANSTE::Deploy::ScenarioDeployer($scenario);
     try {
         $self->{hostIP} = $deployer->deploy();
 
-        print "Finished deployment of scenario '$sceName'.\n";
+        print "Finished deployment of scenario '$sceName'.\n"
+            if not $reuse;
 
         $self->_runTests();
     } finally {
-        if (ANSTE::Config->instance()->wait()) {
+        if ($config->wait()) {
             print "Waiting for testing on the scenario. " .
                   "Press any key to shutdown it and continue.\n";
             my $key;                  
             read(STDIN, $key, 1);
         }
-        $deployer->shutdown();
+        $deployer->shutdown()
+            if not $reuse;
     };
     print "Finished testing of suite '$suiteName'.\n\n";
 

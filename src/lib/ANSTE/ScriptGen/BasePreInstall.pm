@@ -137,6 +137,12 @@ sub _writeCopyFiles # (file)
     my $excPath = '/usr/local/lib/site_perl/ANSTE/Exceptions/';
     $command = $system->createMountDirCommand($excPath);
     print $file "$command\n";
+    my $logPath = '/var/log/anste';
+    $command  = $system->createMountDirCommand($logPath);
+    print $file "$command\n";
+    my $miscPath = '/var/local/anste';
+    $command  = $system->createMountDirCommand($miscPath);
+    print $file "$command\n";
 
     my %fileDest = ("$deployPath/bin/ansted" => '/usr/local/bin/',
                     "$deployPath/bin/anste-slave" => '/usr/local/bin',
