@@ -67,7 +67,7 @@ sub execute # (command)
         throw ANSTE::Exceptions::MissingArgument('command');
 
     if (not ANSTE::Config->instance()->verbose()) {
-        $command .= ' &> /dev/null';
+        $command .= ' > /dev/null 2>&1';
     }
     return system($command) == 0;
 }

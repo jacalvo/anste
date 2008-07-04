@@ -222,7 +222,7 @@ sub installPackagesCommand # (packages) returns string
     my $LOG = "/var/log/anste/$date-install-packages.log";
 
     return 'apt-get install -y --force-yes $APT_OPTIONS ' . 
-           $packages . " &>$LOG";
+           $packages . " >$LOG 2>&1";
 }
 
 # Method: installVars
@@ -652,7 +652,7 @@ sub executeSelenium # (%params)
 
     my $cmd = 'java -jar ' . $jar . ' -htmlSuite "' . $browser . '" ' .
               '"' . $url . '" "' . $testFile . '" "' . $resultFile . '" ' .
-              "-multiWindow &> $LOG";
+              "-multiWindow > $LOG 2>&1";
 
 
     my $ld_path = '';

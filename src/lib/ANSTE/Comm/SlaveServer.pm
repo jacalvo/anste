@@ -170,7 +170,7 @@ sub _executeSavingLog # (command, log)
 {
     my ($self, $command, $log) = @_;
 
-    return system("$command &> '$log'");
+    return system("$command > '$log' 2>&1");
 }
 
 1;
