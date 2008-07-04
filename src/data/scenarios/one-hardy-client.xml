@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario>
+    <name>One client scenario</name>
+    <desc>Only one hardy base system.</desc>
+
+    <host>
+        <name>test-client</name>
+        <desc>Test machine.</desc>
+        <baseimage>hardy-mini</baseimage>
+        <network>
+            <interface type="static">
+                <name>eth1</name>
+                <address>192.168.3.1</address>
+                <netmask>255.255.255.0</netmask>
+                <gateway>10.6.7.1</gateway>
+            </interface>
+        </network>
+    </host>
+</scenario>

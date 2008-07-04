@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario>
+    <name>Scenario Name</name>
+    <desc>Description of the scenario</desc>
+
+    <host>
+        <name>hostname1</name>
+        <desc>Describes the role of the host in the test</desc>
+        <baseimage>hardy-mini</baseimage>
+        <memory>128</memory>
+        <network>
+            <interface type="static">
+                <name>eth1</name>
+                <address>192.168.2.1</address>
+                <netmask>255.255.255.0</netmask>
+            </interface>
+        </network>
+        <packages>
+            <package>netcat</package>
+            <package>less</package>
+        </packages>
+    </host>
+
+    <host>
+        <name>hostname2</name>
+        <desc>Blah blah blah</desc>
+        <baseimage>hardy-mini</baseimage>
+        <memory>128</memory>
+        <network>
+            <interface type="static">
+                <name>eth1</name>
+                <address>192.168.2.2</address>
+                <netmask>255.255.255.0</netmask>
+            </interface>
+        </network>
+        <packages>
+            <package>wget</package>
+        </packages>
+    </host>
+</scenario>
