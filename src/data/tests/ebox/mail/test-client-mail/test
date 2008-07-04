@@ -3,8 +3,7 @@
 use Mail::POP3Client;
 $pop = new Mail::POP3Client( HOST     => "192.168.2.1" );
 $pop->User('eboxtest@foobar');
-$pop->Pass('eboxtesta');
-exit 1;
+$pop->Pass('eboxtest');
 
 if (not $pop->Connect()) {
 	print "Authentication failed\n";
