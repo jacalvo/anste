@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite>
+    <name>eBox Mail tests</name>
+    <desc>
+    Contains a set of tests to check 
+    that the eBox mail module works properly.
+    </desc>
+    
+    <scenario>ebox-mail.xml</scenario>
+
+    <test type="selenium">
+        <name>ConfigNetwork</name>
+        <desc>
+        Sets the interface as external, etc.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-net</dir>
+    </test>        
+
+    <test type="selenium">
+        <name>ConfigMail</name>
+        <desc>
+        Config the mail server.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-mail</dir>
+    </test>        
+
+    <test>
+        <name>TestClientMail</name>
+        <desc>Checks if the user can send and receive mails</desc>
+
+        <host>test-client</host>
+        <dir>test-client-mail</dir>
+    </test>
+
+</suite>
