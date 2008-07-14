@@ -2,7 +2,7 @@
 
 XEND_CONFIG=/etc/xen/xend-config.sxp
 
-if ! grep ANSTE $XEND_CONFIG
+if ! grep -q ANSTE $XEND_CONFIG
 then
     cp $XEND_CONFIG $XEND_CONFIG.pre-anste
 
@@ -15,3 +15,9 @@ then
 
     /etc/init.d/xend restart
 fi    
+
+if ! [ -L /usr/lib/xen-tools/hardy.d ]
+then
+    cd /usr/lib/xen-tools
+    ln -s edgy.d hardy.d
+fi
