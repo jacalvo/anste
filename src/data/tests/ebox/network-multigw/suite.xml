@@ -1,0 +1,77 @@
+<suite>
+    <name>eBox multi-gateway Test Suite</name>
+    <desc>Contains a set of tests to ensure
+    that ebox multi-gateway capabilities work ok.
+    </desc>
+    
+    <scenario>ebox-multigw.xml</scenario>
+
+    <test type="selenium">
+        <name>EnableModules</name>
+        <desc>
+        Enable network and firewall modules.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>enable-modules</dir>
+    </test>        
+
+    <test type="selenium">
+        <name>ConfigNetwork</name>
+        <desc>
+        Sets the interface as external.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-net</dir>
+    </test>        
+
+    <test type="selenium">
+        <name>RemoveGateway</name>
+        <desc>Remote the default gateway on the anste's communication
+        interface.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>remove-default-gw</dir>
+    </test>        
+
+    <test type="selenium">
+        <name>AddGateways</name>
+        <desc>Adds the two routers as gateways</desc>
+
+        <host>ebox-server</host>
+        <dir>test-addgws</dir>
+    </test>
+
+    <test type="selenium">
+        <name>ConfigMultiGateway</name>
+        <desc>
+        Configure client A through router A and
+        client B through router B.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-multigw</dir>
+    </test>
+
+    <test>
+        <name>TestRouteA</name>
+        <desc>
+        Checks if client A reach google.com through router A.
+        </desc>
+        
+        <host>client-a</host>
+        <dir>test-route-a</dir>
+    </test>
+
+    <test>
+        <name>TestRouteB</name>
+        <desc>
+        Checks if client B reach google.com through router B.
+        </desc>
+        
+        <host>client-b</host>
+        <dir>test-route-b</dir>
+    </test>
+</suite>

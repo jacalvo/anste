@@ -57,10 +57,10 @@
 
     <test type="selenium">
         <name>RemoveGW</name>
-        <desc>Remove a GW  from eBox</desc>
+        <desc>Remove a GW from eBox</desc>
 
         <host>ebox-test</host>
-        <dir>test-remove-gw</dir>
+        <dir>remove-default-gw</dir>
     </test>        
 
     <test>
