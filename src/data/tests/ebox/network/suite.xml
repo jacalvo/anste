@@ -4,23 +4,105 @@
     that a ebox image works ok.
     </desc>
     
-    <scenario>one-ebox.xml</scenario>
+    <scenario>one-ubuntu-ebox.xml</scenario>
 
     <test type="selenium">
-        <name>RemoveGateway</name>
-        <desc>Remote the default gateway on the anste's communication
-        interface.
-        </desc>
+        <name>AddDNS</name>
+        <desc>Add a DNS to eBox</desc>
 
         <host>ebox-test</host>
-        <dir>test-removegw</dir>
+        <dir>test-adddns</dir>
     </test>        
 
-    <test type="selenium">
-        <name>AddGateway</name>
-        <desc>Adds the default gateway on the external interface</desc>
+    <test>
+        <name>TestDNSAdded</name>
+        <desc>Check id the DNS has been added to /etc/resolv.conf</desc>
 
         <host>ebox-test</host>
-        <dir>test-addgw</dir>
+        <dir>test-dns-added</dir>
     </test>
+
+    <test type="selenium">
+        <name>ChangeDNS</name>
+        <desc>Modify a DNS from eBox</desc>
+
+        <host>ebox-test</host>
+        <dir>test-change-dns</dir>
+    </test>        
+
+    <test>
+        <name>TestDNSChanged</name>
+        <desc>Check if the DNS has been changed in /etc/resolv.conf</desc>
+
+        <host>ebox-test</host>
+        <dir>test-dns-changed</dir>
+    </test>
+
+
+    <test type="selenium">
+        <name>RemoveDNS</name>
+        <desc>Remove a DNS from eBox</desc>
+
+        <host>ebox-test</host>
+        <dir>test-remove-dns</dir>
+    </test>        
+
+    <test>
+        <name>TestDNSRemoved</name>
+        <desc>Check if the DNS has been removed /etc/resolv.conf</desc>
+
+        <host>ebox-test</host>
+        <dir>test-dns-removed</dir>
+    </test>
+
+    <test type="selenium">
+        <name>RemoveGW</name>
+        <desc>Remove a GW  from eBox</desc>
+
+        <host>ebox-test</host>
+        <dir>test-remove-gw</dir>
+    </test>        
+
+    <test>
+        <name>TestRemoveGw</name>
+        <desc>Check if a gateway has been removed</desc>
+
+        <host>ebox-test</host>
+        <dir>test-gw-removed</dir>
+    </test>
+
+
+    <test type="selenium">
+        <name>AddGW</name>
+        <desc>Add a GW to eBox</desc>
+
+        <host>ebox-test</host>
+        <dir>test-add-gw</dir>
+    </test>        
+
+    <test>
+        <name>TestAddGw</name>
+        <desc>Check if a gateway has been added</desc>
+
+        <host>ebox-test</host>
+        <dir>test-gw-added</dir>
+    </test>
+
+    <test type="selenium">
+        <name>ChangeGW</name>
+        <desc>Change a eBox gw</desc>
+
+        <host>ebox-test</host>
+        <dir>test-change-gw</dir>
+    </test>        
+
+    <test>
+        <name>TestChangeGw</name>
+        <desc>Check if a gateway has been changed</desc>
+
+        <host>ebox-test</host>
+        <dir>test-gw-changed</dir>
+    </test>
+
+
 </suite>
