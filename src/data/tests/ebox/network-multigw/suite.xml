@@ -74,4 +74,36 @@
         <host>client-b</host>
         <dir>test-route-b</dir>
     </test>
+
+    <test type="selenium">
+        <name>ConfigBalance</name>
+        <desc>
+        Enable traffic balance.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-balance</dir>
+    </test>
+
+    <test>
+        <name>TestBalanceRouteA</name>
+        <desc>
+        Checks if client A reach google.com through router A
+        with traffic balance enabled.
+        </desc>
+        
+        <host>client-a</host>
+        <dir>test-route-a</dir>
+    </test>
+
+    <test>
+        <name>TestBalanceRouteB</name>
+        <desc>
+        Checks if client B reach google.com through router B
+        with traffic balance enabled.
+        </desc>
+        
+        <host>client-b</host>
+        <dir>test-route-b</dir>
+    </test>
 </suite>
