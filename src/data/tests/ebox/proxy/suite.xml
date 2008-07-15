@@ -56,7 +56,7 @@
     <test type="selenium">
         <name>ContentFilter</name>
         <desc>
-	Configure content filter setting its threshold to very strict.
+	    Configure content filter setting its threshold to very strict.
         </desc>
 
         <host>ebox-server</host>

@@ -1,0 +1,1 @@
+iptables -t nat -I PREROUTING -i eth2 -j DNAT --to-destination 192.168.3.1
