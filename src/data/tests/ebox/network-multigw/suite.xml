@@ -55,26 +55,6 @@
         <dir>config-multigw</dir>
     </test>
 
-    <test>
-        <name>TestRouteA</name>
-        <desc>
-        Checks if client A reach google.com through router A.
-        </desc>
-        
-        <host>client-a</host>
-        <dir>test-route-a</dir>
-    </test>
-
-    <test>
-        <name>TestRouteB</name>
-        <desc>
-        Checks if client B reach google.com through router B.
-        </desc>
-        
-        <host>client-b</host>
-        <dir>test-route-b</dir>
-    </test>
-
     <test type="selenium">
         <name>EnableBalance</name>
         <desc>
@@ -83,6 +63,16 @@
 
         <host>ebox-server</host>
         <dir>enable-traffic-balance</dir>
+    </test>
+
+    <test>
+        <name>DumpRoutes</name>
+        <desc>
+        Dump routes and iptables info 
+        </desc>
+        
+        <host>ebox-server</host>
+        <dir>dump-routes</dir>
     </test>
 
     <test>
@@ -106,4 +96,16 @@
         <host>client-b</host>
         <dir>test-route-b</dir>
     </test>
+
+    <test>
+        <name>DumpRoutes2</name>
+        <desc>
+        Dump routes and iptables info 
+        </desc>
+        
+        <host>ebox-server</host>
+        <dir>dump-routes</dir>
+    </test>
+
+
 </suite>
