@@ -170,7 +170,14 @@ sub _executeSavingLog # (command, log)
 {
     my ($self, $command, $log) = @_;
 
-    return system("$command > '$log' 2>&1");
+    my $date = `date +%y%m%d%H%M%S`;
+    chomp($date);
+    my $ret = system("$command > '$log' 2>&1");
+
+    # Save the log for debug purposes
+    system("cp $log /var/log/anste/$date-$log");
+
+    return $ret;
 }
 
 1;

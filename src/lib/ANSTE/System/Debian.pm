@@ -217,12 +217,7 @@ sub installPackagesCommand # (packages) returns string
 
     my $packages = join(' ', @packages);
 
-    my $date = `date +%y%m%d%H%M%S`;
-    chomp($date);
-    my $LOG = "/var/log/anste/$date-install-packages.log";
-
-    return 'apt-get install -y --force-yes $APT_OPTIONS ' . 
-           $packages . " >$LOG 2>&1";
+    return 'apt-get install -y --force-yes $APT_OPTIONS ' . $packages;
 }
 
 # Method: installVars
