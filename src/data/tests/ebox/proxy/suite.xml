@@ -29,13 +29,13 @@
     </test>        
 
     <test type="selenium">
-        <name>ConfigProxy</name>
+        <name>ConfigProxyFilter</name>
         <desc>
-        Config the proxy and forbid a host.
+        Config the proxy with filter mode and forbid a host.
         </desc>
 
         <host>ebox-server</host>
-        <dir>config-proxy</dir>
+        <dir>config-proxy-filter</dir>
     </test>        
 
     <test>
@@ -78,6 +78,42 @@
 
         <host>test-client</host>
         <dir>test-content</dir>
+    </test>
+
+    <test type="selenium">
+        <name>ConfigProxyDeny</name>
+        <desc>
+        Config the proxy with deny mode.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-proxy-deny</dir>
+    </test>        
+
+    <test>
+        <name>TestDenyAll</name>
+        <desc>Try to access google with deny all mode.</desc>
+
+        <host>test-client</host>
+        <dir>test-deny-all</dir>
+    </test>
+
+    <test type="selenium">
+        <name>ConfigProxyAllow</name>
+        <desc>
+        Config the proxy with allow mode.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-proxy-allow</dir>
+    </test>        
+
+    <test>
+        <name>TestAllowAll</name>
+        <desc>Try to access adult content with allow all mode.</desc>
+
+        <host>test-client</host>
+        <dir>test-allow-all</dir>
     </test>
 
 </suite>
