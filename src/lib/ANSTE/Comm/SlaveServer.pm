@@ -27,6 +27,7 @@ use File::Basename;
 #
 
 my $DIR = '/var/local/anste';
+my $LOGPATH = '/var/log/anste';
 
 # Method: put
 #
@@ -163,19 +164,26 @@ sub _execute # (command)
 {
     my ($self, $command) = @_;
 
-    return system($command);
+    my $name = fileparse($command);
+    my $date = `date +%y%m%d%H%M%S`;
+    chomp($date);
+
+    system("cp $command '$LOGPATH/$date-$name'");
+    return system("$command > $LOGPATH/$date-$name.log 2>&1");
 }
 
 sub _executeSavingLog # (command, log)
 {
     my ($self, $command, $log) = @_;
 
+    my $name = fileparse($command);
     my $date = `date +%y%m%d%H%M%S`;
     chomp($date);
     my $ret = system("$command > '$log' 2>&1");
 
-    # Save the log for debug purposes
-    system("cp $log /var/log/anste/$date-$log");
+    # Save the script and the log for debug purposes
+    system("cp $command '$LOGPATH/$date-$name'");
+    system("cp '$log' '$LOGPATH/$date-$name.log'");
 
     return $ret;
 }
