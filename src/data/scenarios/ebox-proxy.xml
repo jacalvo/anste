@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenario>
-    <name>eBox and client</name>
+    <name>eBox proxy test scenario</name>
     <desc>
     One eBox machine, a user client machine
     and a router to get internet access.
@@ -9,7 +9,7 @@
     <host>
         <name>ebox-server</name>
         <desc>eBox server</desc>
-        <baseimage>sarge-ebox-base</baseimage>
+        <baseimage>hardy-ebox-base</baseimage>
         <network>
             <interface type="static">
                 <name>eth1</name>
