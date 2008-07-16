@@ -1,0 +1,5 @@
+#!/bin/sh
+
+wget -r -t 3 http://192.168.4.1/foobar-server-client.tar.gz
+
+tar xvvzf foobar-server-client.tar.gz

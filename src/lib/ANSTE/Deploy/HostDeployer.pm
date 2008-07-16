@@ -34,8 +34,6 @@ use threads;
 use threads::shared;
 use Error qw(:try);
 
-use constant SETUP_SCRIPT => 'setup.sh';
-
 my $lockMount : shared;
 
 # Class: HostDeployer
@@ -267,9 +265,11 @@ sub _deploy
         $cmd->executeScripts($pre);
     }        
 
+    my $setupScript = "$hostname-setup.sh";
     print "[$hostname] Generating setup script...\n";
-    $self->_generateSetupScript(SETUP_SCRIPT);
-    $self->_executeSetupScript($ip, SETUP_SCRIPT);
+    $self->_generateSetupScript($setupScript);
+    print "(DEBUG) Executing setup script on host $hostname with address $ip\n";
+    $self->_executeSetupScript($ip, $setupScript);
 
     # FIXME - Copy files to target image
     # It worths it stays here in order to be able to use pre/post-install

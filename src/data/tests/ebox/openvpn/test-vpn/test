@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "Expecting foo on 192.168.2.2:1100"
+nc 192.168.2.2 1100 | grep foo 
