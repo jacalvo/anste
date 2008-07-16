@@ -161,7 +161,7 @@ sub runSuite # (suite)
             my $key;                  
             read(STDIN, $key, 1);
         }
-        $deployer->shutdown()
+        $deployer->destroy()
             if not $reuse;
     };
     print "Finished testing of suite '$suiteName'.\n\n";
