@@ -1,11 +1,16 @@
 #!/bin/sh
 
+echo "Setting the proxy"
 export http_proxy="192.168.2.1:3128"
 
 for i in `seq 1 10`
 do
-    echo "HTTP request to www.google.com"
-    wget -r -t 3 www.google.com -O - 2>&1 | grep 403
+    echo "HTTP request to www.marca.com"
+    wget -r -t 3 www.marca.com -O output.html
+
+    echo "Checking if access was denied"
+    grep "Access has been Denied" output.html 
+
     if [ $? ]
     then
         echo "Access denied."

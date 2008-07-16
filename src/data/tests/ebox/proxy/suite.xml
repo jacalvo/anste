@@ -39,37 +39,29 @@
     </test>        
 
     <test>
-        <name>TestWget</name>
-        <desc>Checks if wget is installed in the client</desc>
-
-        <host>test-client</host>
-        <dir>test-wget</dir>
-    </test>
-
-    <test>
-        <name>Download</name>
+        <name>FilterAllowDownload</name>
         <desc>Try to download a file of an allowed host</desc>
 
         <host>test-client</host>
-        <dir>download</dir>
+        <dir>test-filter-allow</dir>
     </test>
 
     <test>
-        <name>ForbidDownload</name>
+        <name>FilterForbidDownload</name>
         <desc>Try to download a file of a forbidden host</desc>
 
         <host>test-client</host>
-        <dir>forbid-download</dir>
+        <dir>test-filter-forbid</dir>
     </test>
 
     <test type="selenium">
-        <name>ContentFilter</name>
+        <name>ContentFilterStrict</name>
         <desc>
 	    Configure content filter setting its threshold to very strict.
         </desc>
 
         <host>ebox-server</host>
-        <dir>content-filter</dir>
+        <dir>content-filter-strict</dir>
     </test>
 
     <test>
@@ -77,7 +69,7 @@
         <desc>Try to access adult content with "very strict" filter mode</desc>
 
         <host>test-client</host>
-        <dir>test-content</dir>
+        <dir>test-content-filter</dir>
     </test>
 
     <test type="selenium">
