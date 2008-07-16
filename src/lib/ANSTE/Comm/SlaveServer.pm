@@ -165,11 +165,11 @@ sub _execute # (command)
     my ($self, $command) = @_;
 
     my $name = fileparse($command);
-    my $date = `date +%y%m%d%H%M%S`;
+    my $date = `date +%y%m%d-%H-%M-%S`;
     chomp($date);
 
-    system("cp $command '$LOGPATH/$date-$name'");
-    return system("$command > $LOGPATH/$date-$name.log 2>&1");
+    system("cp $command '$LOGPATH/$name-$date'");
+    return system("$command > $LOGPATH/$name-$date.log 2>&1");
 }
 
 sub _executeSavingLog # (command, log)
@@ -177,13 +177,13 @@ sub _executeSavingLog # (command, log)
     my ($self, $command, $log) = @_;
 
     my $name = fileparse($command);
-    my $date = `date +%y%m%d%H%M%S`;
+    my $date = `date +%y%m%d-%H-%M-%S`;
     chomp($date);
     my $ret = system("$command > '$log' 2>&1");
 
     # Save the script and the log for debug purposes
-    system("cp $command '$LOGPATH/$date-$name'");
-    system("cp '$log' '$LOGPATH/$date-$name.log'");
+    system("cp $command '$LOGPATH/$name-$date'");
+    system("cp '$log' '$LOGPATH/$name-$date.log'");
 
     return $ret;
 }
