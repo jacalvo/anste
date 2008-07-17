@@ -6,7 +6,7 @@
     <host>
         <name>ebox-server</name>
         <desc>eBox server</desc>
-        <baseimage>hardy-ebox-base</baseimage>
+        <baseimage>{$dist}-ebox-base</baseimage>
         <network>
             <interface type="static">
                 <name>eth1</name>
@@ -30,7 +30,7 @@
     <host>
         <name>test-client</name>
         <desc>simple client host</desc>
-        <baseimage>hardy-mini</baseimage>
+        <baseimage>sarge-mini</baseimage>
         <memory>64</memory>
         <network>
          <interface type="static">
@@ -41,8 +41,8 @@
          </interface>
         </network>
 
-	<packages>
-	   <package>libmail-pop3client-perl</package>
-	</packages>
+    	<packages>
+            <package>libmail-pop3client-perl</package>
+        </packages>
     </host>
 </scenario>

@@ -45,7 +45,7 @@
     <host>
         <name>ebox-server</name>
         <desc>Host used to test that ebox works properly.</desc>
-        <baseimage>hardy-ebox-base</baseimage>
+        <baseimage>{$dist}-ebox-base</baseimage>
         <network>
             <interface type="static">
                 <name>eth1</name>

@@ -1140,6 +1140,21 @@ sub xenMirror
     return $self->_getOption('xen-options', 'mirror');
 }
 
+# Method: variables
+#
+#   Gets the variables to be substituted on the XML files.
+#
+# Returns:
+#
+#   hash ref - Reference to the hash of variables
+#
+sub variables
+{
+    my ($self) = @_;
+
+    return $self->{variables};
+}
+
 sub _filePath # (file)
 {
     my ($self, $file) = @_;
@@ -1221,6 +1236,9 @@ sub _setDefaults
     $self->{default}->{'xen-options'}->{'initrd'} = "/boot/initrd.img-$version";
     $self->{default}->{'xen-options'}->{'mirror'} =
         'http://ftp.debian.org/debian';
+
+    # Default values for variables, overridable by commandline option
+    $self->{variables} = {dist => 'hardy'};
 }
 
 1;

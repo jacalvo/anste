@@ -6,7 +6,7 @@
     <host>
         <name>ebox-server</name>
         <desc>eBox server</desc>
-        <baseimage>sarge-ebox-base</baseimage>
+        <baseimage>{$dist}-ebox-base</baseimage>
         <network>
             <interface type="static">
                 <name>eth1</name>

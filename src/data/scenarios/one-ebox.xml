@@ -6,7 +6,7 @@
     <host>
         <name>ebox-test</name>
         <desc>Host used to test that ebox works properly.</desc>
-        <baseimage>sarge-ebox-base</baseimage>
+        <baseimage>{$dist}-ebox-base</baseimage>
         <network>
             <interface type="static">
                 <name>eth1</name>

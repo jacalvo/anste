@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenario>
     <name>eBox internal firewall test scenario</name>
-    <desc>One eBox machine and two clients. Test for internal networks</desc>
+    <desc>
+        One eBox machine and two clients. Test for internal networks
+    </desc>
 
     <host>
         <name>ebox-server</name>
         <desc>eBox server</desc>
-        <baseimage>hardy-ebox-base</baseimage>
+        <baseimage>{$dist}-ebox-base</baseimage>
         <network>
             <interface type="static">
                 <name>eth1</name>
@@ -29,13 +31,12 @@
         <packages>
             <package>netcat</package>
         </packages>            
-
     </host>
 
     <host>
         <name>client-foo</name>
         <desc>simple client host</desc>
-        <baseimage>hardy-ebox-base</baseimage>
+        <baseimage>sarge-mini</baseimage>
 
         <network>
          <interface type="static">
@@ -47,14 +48,12 @@
         <packages>
             <package>netcat</package>
         </packages>            
-
-
     </host>
 
     <host>
         <name>client-bar</name>
         <desc>simple client host</desc>
-        <baseimage>hardy-ebox-base</baseimage>
+        <baseimage>sarge-mini</baseimage>
 
         <network>
          <interface type="static">
@@ -66,7 +65,6 @@
         <packages>
             <package>netcat</package>
         </packages>            
+    </host>
 
-
-        </host>
 </scenario>

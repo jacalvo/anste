@@ -23,6 +23,8 @@ use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
 
+use Text::Template;
+use Safe;
 use XML::DOM;
 
 # Class: BaseImage
@@ -499,8 +501,14 @@ sub loadFromFile # (filename)
         throw ANSTE::Exceptions::InvalidFile('filename');
     }
 
+    my $template = new Text::Template(SOURCE => $file)
+        or die "Couldn't construct template: $Text::Template::ERROR";
+    my $variables = ANSTE::Config->instance()->variables();
+    my $text = $template->fill_in(HASH => $variables, SAFE => new Safe)
+        or die "Couldn't fill in the template: $Text::Template::ERROR";
+
 	my $parser = new XML::DOM::Parser;
-	my $doc = $parser->parsefile($file);
+	my $doc = $parser->parse($text);
 
 	my $image = $doc->getDocumentElement();
 

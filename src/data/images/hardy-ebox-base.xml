@@ -20,7 +20,7 @@
     </packages>
 
     <pre-install>
-        <script>write-ubuntu-ebox-sources.sh</script>
+        <script>write-hardy-ebox-sources.sh</script>
     </pre-install>
 
     <post-install>
