@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenario>
-    <name>eBox firewall test scenario</name>
-    <desc>One eBox machine and two clients.</desc>
+    <name>eBox internal firewall test scenario</name>
+    <desc>One eBox machine and two clients. Test for internal networks</desc>
 
     <host>
         <name>ebox-server</name>
         <desc>eBox server</desc>
-        <baseimage>sarge-ebox-base</baseimage>
+        <baseimage>hardy-ebox-base</baseimage>
         <network>
             <interface type="static">
                 <name>eth1</name>
@@ -25,12 +25,17 @@
             <script>ebox-import-network.sh</script>
             <script>ebox-wait-start.sh</script>
         </post-install>
+        
+        <packages>
+            <package>netcat</package>
+        </packages>            
+
     </host>
 
     <host>
         <name>client-foo</name>
         <desc>simple client host</desc>
-        <baseimage>sarge-mini</baseimage>
+        <baseimage>hardy-ebox-base</baseimage>
 
         <network>
          <interface type="static">
@@ -39,16 +44,17 @@
             <netmask>255.255.255.0</netmask>
          </interface>
         </network>
-
         <packages>
-            <package>ldap-utils</package>
+            <package>netcat</package>
         </packages>            
+
+
     </host>
 
     <host>
         <name>client-bar</name>
         <desc>simple client host</desc>
-        <baseimage>sarge-mini</baseimage>
+        <baseimage>hardy-ebox-base</baseimage>
 
         <network>
          <interface type="static">
@@ -57,9 +63,10 @@
             <netmask>255.255.255.0</netmask>
          </interface>
         </network>
-
         <packages>
-            <package>ldap-utils</package>
+            <package>netcat</package>
         </packages>            
-    </host>
+
+
+        </host>
 </scenario>
