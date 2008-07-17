@@ -87,23 +87,30 @@ sub runDir # (suites)
 
     my $dir = ANSTE::Config->instance()->testFile($suites); 
 
-    my $DIR;
-    opendir($DIR, $dir) or die "Can't open directory $suites";
-    my @dirs = readdir($DIR);
-    closedir($DIR);
+    my @dirs;
 
 #   FIXME: Throw an exception instead of dying??
-    if (@dirs == 0) {
+    if (not -r "$dir/suites.list") {
         die "There isn't any test suite in $suites";
     }
+    my $SUITES_FH;
+    open($SUITES_FH, '<', "$dir/suites.list");
+    @dirs = <$SUITES_FH>;
+    chomp(@dirs);
+    close($SUITES_FH);
 
     foreach my $dir (@dirs) {
-        # Skip all directorys beginning with dot.
-        next if $dir =~ /^\./;
-        my $suite = new ANSTE::Test::Suite;
-        my $suiteDir = "$suites/$dir";
-        $suite->loadFromDir($suiteDir);
-        $self->runSuite($suite);
+        # If the dir contains more suites, descend on it
+        if (-r "$suites/$dir/suites.list") {
+            $self->runDir("$suites/$dir");
+        }
+        else {
+            # If the dir contains a single suit, run it
+            my $suite = new ANSTE::Test::Suite;
+            my $suiteDir = "$suites/$dir";
+            $suite->loadFromDir($suiteDir);
+            $self->runSuite($suite);
+        }            
     }
 }
 
