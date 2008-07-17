@@ -203,19 +203,19 @@ sub test # (file)
 
     my $runner = new ANSTE::Test::Runner();
 
-    try {
-        if (ANSTE::Validate::suite($file)) {
+    if (ANSTE::Validate::suite($file)) {
+        try {
             my $suite = new ANSTE::Test::Suite;
             $suite->loadFromDir($file);
             $runner->runSuite($suite);
-        }
-        else {
-            $runner->runDir($file)
-        }
-    } catch ANSTE::Exceptions::InvalidFile with {
-        print STDERR "Can't load test suite $file.\n";
-        exit(1);
-    };
+        } catch ANSTE::Exceptions::InvalidFile with {
+            print STDERR "Can't load test suite $file.\n";
+            exit(1);
+        };
+    }
+    else {
+        $runner->runDir($file)
+    }
 
     my $report = $runner->report();
 

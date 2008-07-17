@@ -32,6 +32,8 @@ use ANSTE::Exceptions::InvalidFile;
 use Perl6::Slurp;
 use Error qw(:try);
 
+my $SUITE_LIST_FILE = 'suites.list';
+
 # Class: Runner
 #
 #   Class used to run separate test suites or entire directories
@@ -84,30 +86,29 @@ sub runDir # (suites)
 	defined $suites or
 		throw ANSTE::Exceptions::MissingArgument('suites');
 	
-
     my $dir = ANSTE::Config->instance()->testFile($suites); 
 
     my @dirs;
 
 #   FIXME: Throw an exception instead of dying??
-    if (not -r "$dir/suites.list") {
+    if (not -r "$dir/$SUITE_LIST_FILE") {
         die "There isn't any test suite in $suites";
     }
     my $SUITES_FH;
-    open($SUITES_FH, '<', "$dir/suites.list");
+    open($SUITES_FH, '<', "$dir/$SUITE_LIST_FILE");
     @dirs = <$SUITES_FH>;
     chomp(@dirs);
     close($SUITES_FH);
 
-    foreach my $dir (@dirs) {
+    foreach my $subdir (@dirs) {
         # If the dir contains more suites, descend on it
-        if (-r "$suites/$dir/suites.list") {
-            $self->runDir("$suites/$dir");
+        if (-r "$dir/$subdir/$SUITE_LIST_FILE") {
+            $self->runDir("$suites/$subdir");
         }
-        else {
+        elsif (-r "$dir/$subdir/suite.xml") {
             # If the dir contains a single suit, run it
             my $suite = new ANSTE::Test::Suite;
-            my $suiteDir = "$suites/$dir";
+            my $suiteDir = "$suites/$subdir";
             $suite->loadFromDir($suiteDir);
             $self->runSuite($suite);
         }            
