@@ -326,7 +326,11 @@ sub _runTest # (test)
     if (-r "$path/post") {
         $self->_runScript($hostname, "$path/post");
     }
-
+    
+    # Invert the result of the test when checking for fail
+    if ($test->assert() eq 'failed') {
+        $ret = ($ret != 0) ? 0 : 1;
+    }
     $testResult->setValue($ret);
 
 

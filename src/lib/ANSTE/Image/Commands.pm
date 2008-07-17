@@ -461,7 +461,6 @@ sub createVirtualMachine
 
     my $name = $self->{image}->name();
     my $addr = $self->ip();
-    print "(DEBUG) Creating virtual machine for host $name with address $addr\n";
 
     my $iface = ANSTE::Config->instance()->natIface();
 

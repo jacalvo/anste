@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+
 # Copyright (C) 2008 Warp Networks S.L.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,32 +16,30 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
+
 use strict;
 use warnings;
-
 
 use EBox;
 use EBox::Global;
 
+my ($name, $bundle, $service) = @ARGV;
+defined $bundle or
+    die 'no bundle path supplied';
+defined $name or
+    die 'no client name supplied';
+defined $service or
+    $service = 0;
+
 EBox::init();
 
-my ($serverName, $certificate, @serverAddr) = @ARGV;
+my $openvpn = EBox::Global->modInstance('openvpn');
+$openvpn->newClient($name, 
+                    bundle => $bundle,
+                    internal => 0,
+                    service  => $service
+                   );
 
-my $global = EBox::Global->getInstance(1);
-my $openvpn = $global->modInstance('openvpn');
-my $server =  $openvpn->server($serverName);
-
-
-my $type      = 'linux';
-my $installer = 0;
-
-my $bundle= $server->clientBundle(
-                                  clientType => $type, 
-                                  clientCertificate => $certificate, 
-                                  addresses => \@serverAddr,
-                                  installer => $installer,
-                                 );
-
-print EBox::Config::downloads() . $bundle;
+# XXX save changes?
 
 1;

@@ -28,8 +28,10 @@ use SOAP::Transport::HTTP;
 
 use constant PORT => 8000;
 
+my $DIR = '/var/local/anste';
+
 sub daemonize {
-    chdir('/')                  or die "Can't chdir to /: $!";
+    chdir($DIR)                  or die "Can't chdir to $DIR: $!";
     open(STDIN, '<', '/dev/null')    or die "Can't read /dev/null: $!";
     open(STDOUT, '>>', '/dev/null') or die "Can't write to /dev/null: $!";
     open(STDERR, '>>', '/dev/null') or die "Can't write to /dev/null: $!";

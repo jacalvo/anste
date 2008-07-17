@@ -104,9 +104,7 @@ sub new # (host, ip) returns new HostDeployer object
     $self->{cmd} = $cmd;
     $self->{ip} = $ip;
 
-    print "(DEBUG) Created HostDeployer object for host $hostname with address $ip\n";
     my $foo = $host->network()->interfaces()->[0]->address();
-    print "(DEBUG) Network configuration ip is: $foo\n";
 
 	bless($self, $class);
 
@@ -230,8 +228,6 @@ sub _deploy
     my $hostname = $host->name();
     my $ip = $image->ip();
 
-    print "(DEBUG) Started deploy thread for host $hostname with address $ip\n";
-
     my $config = ANSTE::Config->instance();
 
     print "[$hostname] Creating a copy of the base image...\n";
@@ -268,7 +264,6 @@ sub _deploy
     my $setupScript = "$hostname-setup.sh";
     print "[$hostname] Generating setup script...\n";
     $self->_generateSetupScript($setupScript);
-    print "(DEBUG) Executing setup script on host $hostname with address $ip\n";
     $self->_executeSetupScript($ip, $setupScript);
 
     # FIXME - Copy files to target image
@@ -346,11 +341,6 @@ sub _generateSetupScript # (script)
     open($FILE, '>', $script) or die "Can't open file $script: $!";
     $generator->writeScript($FILE);
     close($FILE) or die "Can't close file $script: $!";
-    # FIXME?
-    print "(DEBUG) Setup script generated for host $hostname:\n";
-    print "(DEBUG) -- begin --\n";
-    system("cat $script");
-    print "(DEBUG) --  end  --\n";
 }
 
 sub _executeSetupScript # (host, script)

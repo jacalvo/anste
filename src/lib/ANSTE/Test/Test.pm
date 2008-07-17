@@ -43,6 +43,7 @@ sub new # returns new Test object
     $self->{name} = '';
     $self->{desc} = '';
     $self->{dir} = '';
+    $self->{assert} = 'passed';
     $self->{selenium} = 0;
 	
 	bless($self, $class);
@@ -122,6 +123,43 @@ sub setDesc # desc string
         throw ANSTE::Exceptions::MissingArgument('desc');
 
 	$self->{desc} = $desc;
+}
+
+# Method: assert
+#
+#   Gets the assertion type of the test.
+#
+# Returns:
+#
+#   string - Name of the assertectory of this test.
+#
+sub assert # returns assert string
+{
+	my ($self) = @_;
+
+	return $self->{assert};
+}
+
+# Method: setAssert
+#
+#   Sets the assertion type of the test.
+#
+# Parameters:
+#
+#   assert - String with 'passed' or 'failed'.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
+sub setAssert # assert string
+{
+	my ($self, $assert) = @_;
+
+    defined $assert or
+        throw ANSTE::Exceptions::MissingArgument('assert');
+
+	$self->{assert} = $assert;
 }
 
 # Method: host
@@ -270,6 +308,12 @@ sub load # (node)
 	my $dirNode = $node->getElementsByTagName('dir', 0)->item(0);
 	my $dir = $dirNode->getFirstChild()->getNodeValue();
     $self->setDir($dir);
+
+	my $assertNode = $node->getElementsByTagName('assert', 0)->item(0);
+    if ($assertNode) {
+    	my $assert = $assertNode->getFirstChild()->getNodeValue();
+        $self->setAssert($assert);
+    }
 }
 
 1;
