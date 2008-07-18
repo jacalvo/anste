@@ -19,5 +19,5 @@ cat /tmp/$TESTFILE.log
 
 rm $TESTFILE $TESTFILE.log
 
-echo "Expecting foo on 192.168.2.2:1100"
-nc -w 5 192.168.2.2 1100 | grep foo 
+echo "Expecting foo on internal:1100"
+nc -w 5 internal 1100 | grep foo 

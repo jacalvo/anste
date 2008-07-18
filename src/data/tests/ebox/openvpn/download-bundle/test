@@ -2,6 +2,6 @@
 
 FILE=foobar-server-client.tar.gz
 
-wget -r -t 3 http://192.168.4.2/$FILE -O $FILE
+wget -r -t 3 http://router/$FILE -O $FILE
 
 tar xvvzf $FILE

@@ -287,6 +287,28 @@ sub networkConfig # (network) returns string
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: hostsConfig
+#
+#   Override this method to return the hosts configuration
+#   passed as an argument.
+#
+# Parameters:
+#
+#   hosts - Hash containining hostnames and ip addresses.
+#
+# Returns:
+#
+#   string - contains the hosts configuration
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub hostsConfig # (network) returns string
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 # Method: hostnameConfig
 #
 #   Override this method to return the hostname configuration
@@ -309,7 +331,7 @@ sub hostnameConfig # (hostname) returns string
     throw ANSTE::Exceptions::NotImplemented();
 }
 
-# Method: hostsConfig
+# Method: hostConfig
 #
 #   Override this method to return the hosts configuration
 #   for a the given hostname passed as an argument.
@@ -326,7 +348,7 @@ sub hostnameConfig # (hostname) returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented> 
 #
-sub hostsConfig # (hostname) returns string
+sub hostConfig # (hostname) returns string
 {
     throw ANSTE::Exceptions::NotImplemented();
 }

@@ -110,7 +110,7 @@ sub writeScript # (file)
     print $file 'MOUNT=$1'."\n\n";
 
     $self->_writeHostnameConfig($file);
-    $self->_writeHostsConfig($file);
+    $self->_writeHostConfig($file);
 	$self->_writeInitialNetworkConfig($file);
     $self->_writeMasterAddress($file);
 }
@@ -128,15 +128,15 @@ sub _writeHostnameConfig # (file)
     print $file "$config\n\n";
 }
 
-sub _writeHostsConfig # (file)
+sub _writeHostConfig # (file)
 {
     my ($self, $file) = @_;
 
     my $system = $self->{system};
     my $host = $self->{image}->name();
 
-    print $file "# Write hosts configuration\n";
-    my $config = $system->hostsConfig($host);
+    print $file "# Write host configuration\n";
+    my $config = $system->hostConfig($host);
     print $file "$config\n\n";
 }
 

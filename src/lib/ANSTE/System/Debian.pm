@@ -287,6 +287,39 @@ sub networkConfig # (network) returns string
     return $config;
 }
 
+# Method: hostsConfig
+#
+#   Overriden method that returns the hosts configuration
+#   passed as an argument.
+#
+# Parameters:
+#
+#   hosts - Hash containining hostnames and ip addresses.
+#
+# Returns:
+#
+#   string - contains the hosts configuration
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#
+sub hostsConfig # (%hosts) returns string
+{
+    my ($self, %hosts) = @_;
+
+    if (not %hosts) {
+        throw ANSTE::Exceptions::MissingArgument('hosts');
+    }
+
+    my $config = "echo '\n# ANSTE hosts' >> /etc/hosts\n";
+    while (my ($host, $address) = each(%hosts)) {
+        $config .= "echo '$address $host' >> /etc/hosts\n";
+    }
+
+    return $config;
+}
+
 # Method: initialNetworkConfig
 #
 #
@@ -351,9 +384,9 @@ sub hostnameConfig # (hostname) returns string
     return "echo $hostname > " . '$MOUNT/etc/hostname';
 }
 
-# Method: hostsConfig
+# Method: hostConfig
 #
-#   Overriden method that returns the hosts configuration
+#   Overriden method that returns the host configuration
 #   for a the given hostname passed as an argument.
 #
 # Parameters:
@@ -368,7 +401,7 @@ sub hostnameConfig # (hostname) returns string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub hostsConfig # (hostname) returns string
+sub hostConfig # (hostname) returns string
 {
     my ($self, $hostname) = @_;
 

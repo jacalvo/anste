@@ -54,6 +54,7 @@ sub new # returns new Host object
     $self->{files} = new ANSTE::Scenario::Files;
     $self->{'pre-scripts'} = [];
     $self->{'post-scripts'} = [];
+    $self->{scenario} = undef;
 
 	bless($self, $class);
 
@@ -385,6 +386,49 @@ sub postScripts # returns list
     my ($self) = @_;
 
     return $self->{'post-scripts'};
+}
+
+# Method: scenario
+#
+#   Gets the object with the scenario configuration for the host.
+#
+# Returns:
+#
+#   ref - <ANSTE::Scenario::Scenario> object.
+#
+sub scenario # returns Scenario object
+{
+	my ($self) = @_;
+
+	return $self->{scenario};
+}
+
+# Method: setScenario
+#
+#   Sets the object with the scenario configuration for the host.
+#
+# Parameters:
+#
+#   scenario - <ANSTE::Scenario::Scenario> object.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
+#
+sub setScenario # (scenario)
+{
+	my ($self, $scenario) = @_;	
+
+    defined $scenario or
+        throw ANSTE::Exceptions::MissingArgument('scenario');
+
+    if (not $scenario->isa('ANSTE::Scenario::Scenario')) {
+        throw ANSTE::Exceptions::InvalidType('scenario',
+                                             'ANSTE::Scenario::Scenario');
+    }
+
+	$self->{scenario} = $scenario;
 }
 
 # Method: load

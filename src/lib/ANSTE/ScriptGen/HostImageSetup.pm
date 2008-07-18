@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use ANSTE::Scenario::Host;
+use ANSTE::Scenario::NetworkInterface;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
@@ -111,6 +112,7 @@ sub writeScript # (file)
         $self->_writePostInstall($file);
     }        
 	$self->_writeNetworkConfig($file);
+	$self->_writeHostsConfig($file);
 }
 
 sub _writePreInstall # (file)
@@ -169,6 +171,82 @@ sub _writeNetworkConfig # (file)
         my $cmd = $system->enableRouting('eth0');
         print $file "$cmd\n";
     }
+}
+
+sub _writeHostsConfig # (file)
+{
+	my ($self, $file) = @_;
+
+    my $system = $self->{system};
+    my $thisHost = $self->{host};
+
+    my %hostAddress;
+
+    my $hosts = $thisHost->scenario()->hosts();
+    my $myInterfaces = $thisHost->network()->interfaces();
+
+    foreach my $host (@{$hosts}) {
+        my $hostname = $host->name();
+
+        # Skip this host
+        next if $hostname eq $thisHost->name();
+
+        # Check if the host has an interface in the same
+        # network of our host
+        my $address = _addressInNetwork($host->network()->interfaces(),
+                                        $myInterfaces);
+        if ($address) {
+            $hostAddress{$hostname} = $address;
+        }
+    }
+
+    my $config = $system->hostsConfig(%hostAddress);
+	print $file "# Write hosts configuration\n";
+    print $file "$config\n\n";
+}
+
+sub _addressInNetwork # (hostInterfaces, myInterfaces)
+{
+    my ($hostInterfaces, $myInterfaces) = @_;
+
+    foreach my $myIface (@{$myInterfaces}) {
+        next if $myIface->type() == 
+            ANSTE::Scenario::NetworkInterface::IFACE_TYPE_DHCP;
+
+        my $myMask = $myIface->netmask();
+        my $myMaskBits = _bitsFromMask($myMask);
+        my $myAddress = $myIface->address();
+        my $myAddressBits = _bitsFromMask($myAddress);
+
+        foreach my $hostIface (@{$hostInterfaces}) {
+            next if $hostIface->type() == 
+                ANSTE::Scenario::NetworkInterface::IFACE_TYPE_DHCP;
+
+            my $hostMask = $hostIface->netmask();
+            my $hostMaskBits = _bitsFromMask($hostMask);
+            my $hostAddress = $hostIface->address();
+            my $hostAddressBits = _bitsFromMask($hostAddress);
+
+            print "-- BEGIN DEBUG\n";
+            print "myAddress=$myAddress myMask=$myMask\n";
+            print "hostAddress=$hostAddress hostMask=$hostMask\n";
+            print "myAddressBits=$myAddressBits myMaskBits=$myMaskBits\n";
+            print "hostAddressBits=$hostAddressBits hostMaskBits=$hostMaskBits\n";
+            print "-- END DEBUG\n";
+
+            if (($myAddressBits & $myMaskBits) ==
+                ($hostAddressBits & $hostMaskBits)) {
+                return $hostAddress;
+            }
+        }
+    }
+    return undef;
+}
+
+sub _bitsFromMask # (mask)
+{
+    my ($mask) = @_;
+    return unpack("%B*", pack("CCCC", split(/\./, $mask)));
 }
 
 1;

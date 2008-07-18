@@ -244,6 +244,8 @@ sub addHost # (host)
                                              'ANSTE::Scenario::Host');
     }
 
+    $host->setScenario($self);
+
 	push(@{$self->{hosts}}, $host);
 }
 

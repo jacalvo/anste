@@ -164,8 +164,8 @@ sub _writeHostsConfig # (file)
     my $system = $self->{system};
     my $host = $self->{image}->name();
 
-    print $file "# Write hosts configuration\n";
-    my $config = $system->hostsConfig($host);
+    print $file "# Write host configuration\n";
+    my $config = $system->hostConfig($host);
     print $file "$config\n\n";
 }
 
