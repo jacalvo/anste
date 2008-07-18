@@ -265,7 +265,7 @@ sub loadFromDir # (dirname)
     my $file = ANSTE::Config->instance()->testFile("$dirname/suite.xml");
 
     if (not -r $file) {
-        throw ANSTE::Exceptions::InvalidFile($file);
+        throw ANSTE::Exceptions::InvalidFile('dirname', $file);
     }
 
     my $template = new Text::Template(SOURCE => $file)

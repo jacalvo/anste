@@ -152,7 +152,10 @@ sub create # (file)
     try {
         $image->loadFromFile($file);
     } catch ANSTE::Exceptions::InvalidFile with {
+        my $ex = shift;
+        my $filename = $ex->file();
         print STDERR "Can't load image $file.\n";
+        print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
     };
 
@@ -177,7 +180,10 @@ sub remove # (file)
     try {
         $image->loadFromFile($file);
     } catch ANSTE::Exceptions::InvalidFile with {
-        print STDERR "Can't load image $file.\n";
+        my $ex = shift;
+        my $filename = $ex->file();
+        print STDERR "Can't load scenario $file.\n";
+        print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
     };
 
@@ -198,7 +204,10 @@ sub deploy # (file)
     try {
         $scenario->loadFromFile($file);
     } catch ANSTE::Exceptions::InvalidFile with {
+        my $ex = shift;
+        my $filename = $ex->file();
         print STDERR "Can't load scenario $file.\n";
+        print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
     };
 
@@ -214,7 +223,10 @@ sub destroy # (file)
     try {
         $scenario->loadFromFile($file);
     } catch ANSTE::Exceptions::InvalidFile with {
+        my $ex = shift;
+        my $filename = $ex->file();
         print STDERR "Can't load scenario $file.\n";
+        print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
     };
 
@@ -234,7 +246,10 @@ sub test # (file)
             $suite->loadFromDir($file);
             $runner->runSuite($suite);
         } catch ANSTE::Exceptions::InvalidFile with {
+            my $ex = shift;
+            my $filename = $ex->file();
             print STDERR "Can't load test suite $file.\n";
+            print STDERR "Reason: Can't open file $filename.\n";
             exit(1);
         };
     }

@@ -200,7 +200,10 @@ sub _loadScenario # (file)
     try {
         $scenario->loadFromFile($file);
     } catch ANSTE::Exceptions::InvalidFile with {
+        my $ex = shift;
+        my $filename = $ex->file();
         print STDERR "Can't load scenario $file.\n";
+        print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
     };
     

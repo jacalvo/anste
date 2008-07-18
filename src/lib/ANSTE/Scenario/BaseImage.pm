@@ -498,7 +498,7 @@ sub loadFromFile # (filename)
     my $file = ANSTE::Config->instance()->imageTypeFile($filename);
 
     if (not -r $file) {
-        throw ANSTE::Exceptions::InvalidFile('filename');
+        throw ANSTE::Exceptions::InvalidFile('filename', $file);
     }
 
     my $template = new Text::Template(SOURCE => $file)

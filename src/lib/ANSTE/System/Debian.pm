@@ -683,7 +683,7 @@ sub startVideoRecording # (filename)
     my ($self, $filename) = @_;
 
     if (not ANSTE::Validate::fileWritable($filename)) {
-        throw ANSTE::Exceptions::InvalidFile($filename);
+        throw ANSTE::Exceptions::InvalidFile('filename', $filename);
     }
 
     my $pid = fork();

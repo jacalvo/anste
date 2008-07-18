@@ -96,7 +96,7 @@ sub writeScript # (file)
         throw ANSTE::Exceptions::MissingArgument('file');
 
     if (not -w $file) {
-        throw ANSTE::Exceptions::InvalidFile('file');
+        throw ANSTE::Exceptions::InvalidFile('file', $file);
     }
 
     my $system = $self->{system};

@@ -32,24 +32,42 @@ use base 'ANSTE::Exceptions::Base';
 #
 # Parameters:
 #
-#   arg - String with the mistaken argument
+#   arg  - String with the mistaken argument
+#   file - String with the invalid file.
 #
 # Returns:
 #
 #   A recently created <ANSTE::Exceptions::InvalidFile> object.
 #
-sub new # (arg)
+sub new # (arg, file)
 {
-    my ($class, $arg) = @_;
+    my ($class, $arg, $file) = @_;
 
     my ($package, undef, $line, $method) = caller(2);
 
     my $self = $class->SUPER::new("Argument '$arg' is not a file in " .
                                   "method '$method' at '$package:$line'\n");
 
+    $self->{file} = $file;
+
     bless ($self, $class);
 
     return $self;
+}
+
+# Method: file
+#
+#   Gets the filename associed with the exception.
+#
+# Returns:
+#
+#   string - Contains the filename.
+#
+sub file # returns string
+{
+    my ($self) = @_;
+
+    return $self->{file};
 }
 
 1;

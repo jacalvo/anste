@@ -117,7 +117,7 @@ sub put	# (file) returns boolean
         throw ANSTE::Exceptions::MissingArgument('file');
 
     if (not -r $file) {
-        throw ANSTE::Exceptions::InvalidFile('file');
+        throw ANSTE::Exceptions::InvalidFile('file', $file);
     }
 
     my $soap = $self->{soap};
