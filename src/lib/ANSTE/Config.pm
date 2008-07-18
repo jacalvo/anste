@@ -1140,6 +1140,36 @@ sub xenMirror
     return $self->_getOption('xen-options', 'mirror');
 }
 
+# Method: setVariable
+#
+#   Sets a variable to be substituted on the XML files.
+#
+# Parameters:
+#
+#   name  - Contains the name of the variable.
+#   value - Contains the value of the variable.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setVariable # (name, value)
+{
+    my ($self, $name, $value) = @_;
+
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not ANSTE::Validate::identifier($name)) {
+        throw ANSTE::Exceptions::InvalidOption('name', $name);
+    }
+
+    $self->{variables}->{$name} = $value;
+}
+
 # Method: variables
 #
 #   Gets the variables to be substituted on the XML files.

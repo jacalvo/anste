@@ -97,6 +97,31 @@ if ($reuse) {
 # Check the config file for missing or malformed options
 $config->check();
 
+my @files;
+
+# Separate args into files and variables
+foreach my $arg (@ARGV) {
+    if ($arg =~ /=/) {
+        my ($var, $value) = split(/=/, $arg);
+
+        if ($var and $value) {
+            try {
+                $config->setVariable($var, $value);
+            } catch ANSTE::Exceptions::InvalidOption with {
+                print STDERR "Invalid variable name: $var\n";
+                exit(1);
+            };
+        }
+        else {
+            print STDERR "Malformed variable declaration passed.\n";
+            exit(1);
+        }
+    }
+    else {
+        push(@files, $arg);
+    }
+}
+
 foreach my $file (@ARGV) {
     if ($create) {
         create($file);
@@ -247,7 +272,7 @@ anste - Advanced Network Service Testing Environment
 
 =head1 SYNOPSIS
 
-anste [options] [file ...]
+anste [options] [file ...] [var1=value1 var2=value2 ...]
 
  Options:
    -help           shows this help

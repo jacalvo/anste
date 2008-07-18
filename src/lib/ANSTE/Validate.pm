@@ -49,6 +49,25 @@ sub natural # (string)
     return $string =~ /^\d+$/;
 }
 
+# Function: identifier
+#
+#   Checks if the passed string is a valid identifier
+#
+# Parameters:
+#
+#   string - String to be validated.
+#
+# Returns:
+#
+#   boolean - true if it's valid, false otherwise
+#
+sub identifier # (string)
+{
+    my ($string) = @_;
+
+    return $string =~ /^[_a-zA-Z][_a-zA-Z0-9]*$/;
+}
+
 # Function: boolean
 #
 #   Checks if the passed value is a valid boolean number (0 or 1).
