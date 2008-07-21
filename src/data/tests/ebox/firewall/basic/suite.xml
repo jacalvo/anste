@@ -3,7 +3,7 @@
     <desc>Contains tests to test the eBox firewall, section internal
     networks to eBox.</desc>
     
-    <scenario>ebox-firewall.xml</scenario>
+    <scenario>ebox/firewall/basic.xml</scenario>
 
     <test type="selenium">
         <name>EnableModules</name>

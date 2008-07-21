@@ -4,7 +4,7 @@
     that ebox multi-gateway capabilities work ok.
     </desc>
     
-    <scenario>ebox-multigw.xml</scenario>
+    <scenario>ebox/network/multigw.xml</scenario>
 
     <test type="selenium">
         <name>EnableModules</name>

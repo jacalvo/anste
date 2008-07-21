@@ -4,7 +4,7 @@
     that ebox traffic balance capabilities work ok.
     </desc>
     
-    <scenario>ebox-balance.xml</scenario>
+    <scenario>ebox/network/balance.xml</scenario>
 
     <test type="selenium">
         <name>EnableModules</name>

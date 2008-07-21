@@ -2,7 +2,7 @@
     <name>eBox DNS tests</name>
     <desc>Contains tests for the DNS module.</desc>
     
-    <scenario>ebox-dns.xml</scenario>
+    <scenario>ebox/dns.xml</scenario>
 
     <test type="selenium">
         <name>ConfigDNSServer</name>

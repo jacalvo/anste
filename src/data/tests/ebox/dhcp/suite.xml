@@ -4,7 +4,7 @@
     that ebox-dhcp module  image works ok.
     </desc>
     
-    <scenario>ebox-dhcp.xml</scenario>
+    <scenario>ebox/dhcp.xml</scenario>
 
     <test type="selenium">
         <name>ConfigNetwork</name>

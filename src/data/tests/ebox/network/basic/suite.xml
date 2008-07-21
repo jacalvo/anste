@@ -4,7 +4,7 @@
     that a ebox image works ok.
     </desc>
     
-    <scenario>one-ubuntu-ebox.xml</scenario>
+    <scenario>ebox/single.xml</scenario>
 
     <test type="selenium">
         <name>AddDNS</name>
