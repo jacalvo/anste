@@ -43,6 +43,8 @@ sub new # returns new Test object
     $self->{name} = '';
     $self->{desc} = '';
     $self->{dir} = '';
+    $self->{params} = '';
+    $self->{env} = '';
     $self->{assert} = 'passed';
     $self->{selenium} = 0;
 	
@@ -236,6 +238,80 @@ sub setDir # dir string
 	$self->{dir} = $dir;
 }
 
+# Method: params
+#
+#   Gets the execution params for the test script.
+#
+# Returns:
+#
+#   string - String with the params to be pased to the test script.
+#
+sub params # returns params string
+{
+	my ($self) = @_;
+
+	return $self->{params};
+}
+
+# Method: setParams
+#
+#   Sets the execution params for the test script.
+#
+# Parameters:
+#
+#   params - String with the params to be pased to the test script.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
+sub setParams # params string
+{
+	my ($self, $params) = @_;
+
+    defined $params or
+        throw ANSTE::Exceptions::MissingArgument('params');
+
+	$self->{params} = $params;
+}
+
+# Method: env
+#
+#   Gets the environment string to be set before the test execution.
+#
+# Returns:
+#
+#   string - String containing list of variables (FOO=bar BAR=foo)
+#
+sub env # returns params string
+{
+	my ($self) = @_;
+
+	return $self->{env};
+}
+
+# Method: setEnv
+#
+#   Sets the environment string to be set before the test execution.
+#
+# Parameters:
+#
+#   env - String with the list of variable definitions.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
+sub setEnv # env string
+{
+	my ($self, $env) = @_;
+
+    defined $env or
+        throw ANSTE::Exceptions::MissingArgument('env');
+
+	$self->{env} = $env;
+}
+
 # Method: selenium
 #
 #   Gets if this is a selenium test.
@@ -313,6 +389,18 @@ sub load # (node)
     if ($assertNode) {
     	my $assert = $assertNode->getFirstChild()->getNodeValue();
         $self->setAssert($assert);
+    }
+
+	my $paramsNode = $node->getElementsByTagName('params', 0)->item(0);
+    if ($paramsNode) {
+    	my $params = $paramsNode->getFirstChild()->getNodeValue();
+        $self->setParams($params);
+    }
+
+	my $envNode = $node->getElementsByTagName('env', 0)->item(0);
+    if ($envNode) {
+    	my $env = $envNode->getFirstChild()->getNodeValue();
+        $self->setEnv($env);
     }
 }
 

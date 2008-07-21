@@ -28,6 +28,7 @@ use ANSTE::Report::Report;
 use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
+use ANSTE::Exceptions::NotFound;
 
 use Perl6::Slurp;
 use Error qw(:try);
@@ -141,16 +142,16 @@ sub runSuite # (suite)
     }
 
     $self->{suite} = $suite;
+    my $suiteName = $suite->name();
 
     my $scenarioFile = $suite->scenario();
 
-    my $scenario = $self->_loadScenario($scenarioFile);
+    my $scenario = $self->_loadScenario($scenarioFile, $suiteName);
 
     my $config = ANSTE::Config->instance();
     my $reuse = $config->reuse();
 
     my $sceName = $scenario->name();
-    my $suiteName = $suite->name();
     print "Deploying scenario '$sceName' for suite '$suiteName'...\n"
         if not $reuse;
 
@@ -192,9 +193,9 @@ sub report # returns report object
     return $self->{report};
 }
 
-sub _loadScenario # (file)
+sub _loadScenario # (file, suite)
 {
-    my ($self, $file) = @_;
+    my ($self, $file, $suite) = @_;
 
     my $scenario = new ANSTE::Scenario::Scenario();
     try {
@@ -202,7 +203,7 @@ sub _loadScenario # (file)
     } catch ANSTE::Exceptions::InvalidFile with {
         my $ex = shift;
         my $filename = $ex->file();
-        print STDERR "Can't load scenario $file.\n";
+        print STDERR "Can't load scenario $file for suite $suite.\n";
         print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
     };
@@ -280,6 +281,10 @@ sub _runTest # (test)
 
     # Run the test itself either it's a selenium one or a normal one 
     if ($test->selenium()) {
+        my $suiteFile = "$path/suite.html";
+        if (not -r $suiteFile) {
+            throw ANSTE::Exceptions::NotFound('Suite file', $suiteFile);
+        }
         my $video;
         if ($config->seleniumVideo()) {
             $video = "$logPath/video/$name.ogg";
@@ -288,7 +293,7 @@ sub _runTest # (test)
         }
 
         $logfile = "$logPath/selenium/$name.html";
-        $ret = $self->_runSeleniumRC($hostname, "$path/suite.html", $logfile);
+        $ret = $self->_runSeleniumRC($hostname, $suiteFile, $logfile);
 
         if ($config->seleniumVideo()) {
             print "Ending video recording for test $name... " if $verbose;
@@ -315,7 +320,8 @@ sub _runTest # (test)
                                               "$suiteDir/$testDir/test");
         }
         $logfile = "$logPath/out/$name.txt";
-        $ret = $self->_runScript($hostname, "$path/test", $logfile);
+        $ret = $self->_runScript($hostname, "$path/test", $logfile, 
+                                 $test->env(), $test->params());
         # Store end time
         my $endTime = $self->_time();
         $testResult->setEndTime($endTime);
@@ -359,9 +365,9 @@ sub _time
     return $str;
 }
 
-sub _runScript # (hostname, script, log?)
+sub _runScript # (hostname, script, log?, env?, params?)
 {
-    my ($self, $hostname, $script, $log) = @_;
+    my ($self, $hostname, $script, $log, $env, $params) = @_;
 
     my $client = new ANSTE::Comm::MasterClient();
 
@@ -372,7 +378,7 @@ sub _runScript # (hostname, script, log?)
 
     $client->put($script);
     if (defined $log) {
-        $client->exec($script, $log);
+        $client->exec($script, $log, $env, $params);
     }
     else {
         $client->exec($script);

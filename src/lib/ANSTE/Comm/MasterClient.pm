@@ -191,6 +191,8 @@ sub get	# (file)
 #
 #   command - String with the name of the command.
 #   log     - *optional* String with the name of the log file.
+#   env     - *optional* String with the environment variables.
+#   params  - *optional* String with the parameters of the program.
 #
 # Returns:
 #
@@ -200,9 +202,9 @@ sub get	# (file)
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub exec # (command, log) # - log optional
+sub exec # (command, log, env, params)
 {
-    my ($self, $command, $log) = @_;
+    my ($self, $command, $log, $env, $params) = @_;
 
     defined $command or
         throw ANSTE::Exceptions::MissingArgument('command');
@@ -212,6 +214,12 @@ sub exec # (command, log) # - log optional
     my @args = (SOAP::Data->name('name' => $command));
     if (defined($log)) {
         push(@args, SOAP::Data->name('log' => $log));
+    }
+    if (defined($env)) {
+        push(@args, SOAP::Data->name('env' => $env));
+    }
+    if (defined($params)) {
+        push(@args, SOAP::Data->name('params' => $params));
     }
     my $response = $soap->exec(@args);
     if ($response->fault) {

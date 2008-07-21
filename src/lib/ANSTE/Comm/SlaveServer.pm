@@ -98,16 +98,18 @@ sub get	# (file)
 #
 # Parameters:
 #
-#   file - String with the name of the file to be executed.
-#   log  - *optional* String with the name of the file to save the log.
+#   file   - String with the name of the file to be executed.
+#   log    - *optional* String with the name of the file to save the log.
+#   env    - *optional* String with the environment variables.
+#   params - *optional* String with the parameters of the program.
 #
 # Returns:
 #
 #   string - OK
 #
-sub exec # (file, log?)
+sub exec # (file, log?, env?, params?)
 {
-    my ($self, $file, $log) = @_;
+    my ($self, $file, $log, $env, $params) = @_;
 
     my $pid = fork();
     if (not defined $pid) {
@@ -121,7 +123,8 @@ sub exec # (file, log?)
         if (defined $log) {
             my $log = fileparse($log);
             my $logfile = "$DIR/$log";
-            $ret = $self->_executeSavingLog($command, $logfile);
+            $ret = $self->_executeSavingLog($command, $logfile, 
+                                            $env, $params);
         }
         else {
             $ret = $self->_execute($command);
@@ -172,14 +175,14 @@ sub _execute # (command)
     return system("$command > $LOGPATH/$name-$date.log 2>&1");
 }
 
-sub _executeSavingLog # (command, log)
+sub _executeSavingLog # (command, log, env, params)
 {
-    my ($self, $command, $log) = @_;
+    my ($self, $command, $log, $env, $params) = @_;
 
     my $name = fileparse($command);
     my $date = `date +%y%m%d-%H-%M-%S`;
     chomp($date);
-    my $ret = system("$command > '$log' 2>&1");
+    my $ret = system("$env $command $params > '$log' 2>&1");
 
     # Save the script and the log for debug purposes
     system("cp $command '$LOGPATH/$name-$date'");

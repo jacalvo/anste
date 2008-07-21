@@ -205,6 +205,7 @@ sub _writeHostsConfig # (file)
     print $file "$config\n\n";
 }
 
+# XXX: This doesn't works too well.
 sub _addressInNetwork # (hostInterfaces, myInterfaces)
 {
     my ($hostInterfaces, $myInterfaces) = @_;
@@ -226,13 +227,6 @@ sub _addressInNetwork # (hostInterfaces, myInterfaces)
             my $hostMaskBits = _bitsFromMask($hostMask);
             my $hostAddress = $hostIface->address();
             my $hostAddressBits = _bitsFromMask($hostAddress);
-
-            print "-- BEGIN DEBUG\n";
-            print "myAddress=$myAddress myMask=$myMask\n";
-            print "hostAddress=$hostAddress hostMask=$hostMask\n";
-            print "myAddressBits=$myAddressBits myMaskBits=$myMaskBits\n";
-            print "hostAddressBits=$hostAddressBits hostMaskBits=$hostMaskBits\n";
-            print "-- END DEBUG\n";
 
             if (($myAddressBits & $myMaskBits) ==
                 ($hostAddressBits & $hostMaskBits)) {
