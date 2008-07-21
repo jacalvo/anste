@@ -4,7 +4,7 @@
     that ebox firewall redirect capabilities work ok.
     </desc>
     
-    <scenario>ebox-redirect.xml</scenario>
+    <scenario>ebox/firewall/redirect.xml</scenario>
 
     <test type="selenium">
         <name>EnableModules</name>
