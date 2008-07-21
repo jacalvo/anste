@@ -3,7 +3,7 @@
 TESTFILE=/tmp/anste-openvpn-ready-$$
 
 # FIXME: temporary workaround until fixed in ebox-openvpn
-sed -i 's/^dev uninitialized/dev tap/g' foobar-server-$CLIENT.conf
+sed -i 's/^dev unitialized/dev tap/g' foobar-server-$CLIENT.conf
 
 openvpn --config foobar-server-$CLIENT.conf --daemon --route-up "touch $TESTFILE" --log /tmp/$TESTFILE.log
 
@@ -20,7 +20,11 @@ done
 
 cat $TESTFILE.log
 
-rm $TESTFILE $TESTFILE.log
+while true ; do echo foo | netcat -l -p 1100 -q 1 || exit 1 ; done &
 
-echo "Expecting foo on $HOST:1100"
-nc -w 5 $HOST 1100 | grep foo 
+sleep 1
+
+echo "Server started."
+
+exit 0
+

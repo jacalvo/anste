@@ -136,6 +136,7 @@
         
         <host>external-a</host>
         <dir>start-server</dir>
+        <env>CLIENT=client</env>
     </test>
 
 <!--
@@ -159,6 +160,7 @@
         
         <host>external-b</host>
         <dir>test-vpn</dir>
+        <env>CLIENT=client2 HOST=external-a</env>
     </test>
 
 </suite>
