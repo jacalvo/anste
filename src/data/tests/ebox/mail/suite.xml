@@ -6,7 +6,7 @@
     that the eBox mail module works properly.
     </desc>
     
-    <scenario>ebox-mail.xml</scenario>
+    <scenario>ebox/mail.xml</scenario>
 
     <test type="selenium">
         <name>ConfigNetwork</name>
