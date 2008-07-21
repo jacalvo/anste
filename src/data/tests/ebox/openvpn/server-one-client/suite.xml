@@ -1,0 +1,159 @@
+<suite>
+    <name>eBox OpenVPN Test Suite</name>
+    <desc>Contains a set of tests to ensure
+    that ebox OpenVPN module works ok.
+    </desc>
+    
+    <scenario>ebox/openvpn/server-one-client.xml</scenario>
+
+    <test type="selenium">
+        <name>EnableModules</name>
+        <desc>
+        Enable network, firewall and openvpn modules.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>enable-modules</dir>
+    </test>        
+
+    <test type="selenium">
+        <name>ConfigNetwork</name>
+        <desc>
+        Sets the interface as external.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-net</dir>
+    </test>        
+
+    <test type="selenium">
+        <name>RemoveGateway</name>
+        <desc>Remote the default gateway on the anste's communication
+        interface.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>remove-default-gw</dir>
+    </test>        
+
+    <test type="selenium">
+        <name>AddGateway</name>
+        <desc>Adds the scenario router as gateway</desc>
+
+        <host>ebox-server</host>
+        <dir>add-gateway</dir>
+    </test>
+
+    <test type="selenium">
+        <name>ConfigCA</name>
+        <desc>
+        Config CA.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-ca</dir>
+    </test>
+
+    <test>
+        <name>SetupRouter</name>
+        <desc>
+        Setup redirection to eBox machine.
+        </desc>
+
+        <host>router</host>
+        <dir>setup-router</dir>
+    </test>
+
+    <test>
+        <name>GenerateBundle</name>
+        <desc>
+        Generate OpenVPN bundle on eBox server.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>generate-bundle</dir>
+    </test>
+
+    <test>
+        <name>StartServer</name>
+        <desc>
+        Start server on the internal machine.
+        </desc>
+        
+        <host>internal</host>
+        <dir>start-server</dir>
+    </test>
+
+    <test>
+        <name>DownloadBundle</name>
+        <desc>
+        Generate OpenVPN bundle on eBox server.
+        </desc>
+
+        <host>external</host>
+        <dir>download-bundle</dir>
+        <env>HOST=router</env>
+    </test>
+
+    <test>
+        <name>TestFailVPN</name>
+        <desc>
+        Assure we can't access to the
+        internal machine if there's no
+        rule in the firewall for it.
+        </desc>
+        
+        <host>external</host>
+        <dir>test-vpn</dir>
+
+        <assert>failed</assert>
+    </test>
+
+    <test type="selenium">
+        <name>FirewallAllowInternal</name>
+        <desc>
+        Allow traffic from internal.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>firewall-allow-internal</dir>
+    </test>
+
+    <test>
+        <name>TestVPN</name>
+        <desc>
+        Connect to the VPN and try to access
+        server on the internal machine.
+        </desc>
+        
+        <host>external</host>
+        <dir>test-vpn</dir>
+
+        <assert>passed</assert>
+    </test>
+
+    <test type="selenium">
+        <name>EnableNAT</name>
+        <desc>
+        Enable NAT.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>enable-nat</dir>
+    </test>
+
+    <test>
+        <name>TestVPNwithNAT</name>
+        <desc>
+        Connect to the VPN and try to access
+        server on the internal machine with
+        NAT enabled on the ebox.
+        </desc>
+        
+        <host>external</host>
+        <dir>test-vpn</dir>
+
+        <assert>passed</assert>
+    </test>
+
+</suite>
