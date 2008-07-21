@@ -3,9 +3,9 @@
 TESTFILE=/tmp/anste-openvpn-ready-$$
 
 # FIXME: temporary workaround until fixed in ebox-openvpn
-sed -i 's/^dev unitialized/dev tap/g' foobar-server-client.conf
+sed -i 's/^dev unitialized/dev tap/g' foobar-server-$CLIENT.conf
 
-openvpn --config foobar-server-client.conf --daemon --route-up "touch $TESTFILE" --log /tmp/$TESTFILE.log
+openvpn --config foobar-server-$CLIENT.conf --daemon --route-up "touch $TESTFILE" --log /tmp/$TESTFILE.log
 
 for i in `seq 1 20`
 do
@@ -23,4 +23,4 @@ cat $TESTFILE.log
 rm $TESTFILE $TESTFILE.log
 
 echo "Expecting foo on internal:1100"
-nc -w 5 internal 1100 | grep foo 
+nc -w 5 $HOST 1100 | grep foo 
