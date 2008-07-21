@@ -1,7 +1,0 @@
-#!/bin/sh
-
-FILE=foobar-server-client.tar.gz
-
-wget -r -t 3 http://router/$FILE -O $FILE
-
-tar xvvzf $FILE

@@ -1,10 +1,10 @@
 <suite>
-    <name>eBox OpenVPN Test Suite</name>
+    <name>eBox OpenVPN (2 clients) Test Suite</name>
     <desc>Contains a set of tests to ensure
     that ebox OpenVPN module works ok.
     </desc>
     
-    <scenario>ebox-openvpn.xml</scenario>
+    <scenario>ebox/openvpn/server-two-clients.xml</scenario>
 
     <test type="selenium">
         <name>EnableModules</name>
@@ -37,11 +37,11 @@
     </test>        
 
     <test type="selenium">
-        <name>AddGateway</name>
-        <desc>Adds the scenario router as gateway</desc>
+        <name>AddGateways</name>
+        <desc>Adds the scenario routers as gateways</desc>
 
         <host>ebox-server</host>
-        <dir>add-gateway</dir>
+        <dir>add-two-gateways</dir>
     </test>
 
     <test type="selenium">
@@ -54,60 +54,91 @@
         <dir>config-ca</dir>
     </test>
 
+    <test type="selenium">
+        <name>AllowClientToClient</name>
+        <desc>
+        Allow client to client connections.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>allow-client-to-client</dir>
+    </test>
+
     <test>
-        <name>SetupRouter</name>
+        <name>SetupRouterA</name>
         <desc>
         Setup redirection to eBox machine.
         </desc>
 
-        <host>router</host>
+        <host>router-a</host>
         <dir>setup-router</dir>
     </test>
 
     <test>
-        <name>GenerateBundle</name>
+        <name>SetupRouterB</name>
+        <desc>
+        Setup redirection to eBox machine.
+        </desc>
+
+        <host>router-b</host>
+        <dir>setup-router</dir>
+    </test>
+
+    <test>
+        <name>GenerateBundleA</name>
         <desc>
         Generate OpenVPN bundle on eBox server.
         </desc>
 
         <host>ebox-server</host>
         <dir>generate-bundle</dir>
+        <env>CLIENT=client ROUTER=router-a</env>
+    </test>
+
+    <test>
+        <name>GenerateBundleB</name>
+        <desc>
+        Generate OpenVPN bundle on eBox server.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>generate-bundle</dir>
+        <env>CLIENT=client2 ROUTER=router-b</env>
+    </test>
+
+    <test>
+        <name>DownloadBundleA</name>
+        <desc>
+        Download OpenVPN bundle on external client A.
+        </desc>
+
+        <host>external-a</host>
+        <dir>download-bundle</dir>
+        <env>HOST=router-a</env>
+    </test>
+
+    <test>
+        <name>DownloadBundleB</name>
+        <desc>
+        Download OpenVPN bundle on external client B.
+        </desc>
+
+        <host>external-b</host>
+        <dir>download-bundle</dir>
+        <env>HOST=router-b</env>
     </test>
 
     <test>
         <name>StartServer</name>
         <desc>
-        Start server on the internal machine.
+        Start server on one of the external clients.
         </desc>
         
-        <host>internal</host>
+        <host>external-a</host>
         <dir>start-server</dir>
     </test>
 
-    <test>
-        <name>DownloadBundle</name>
-        <desc>
-        Generate OpenVPN bundle on eBox server.
-        </desc>
-
-        <host>external</host>
-        <dir>download-bundle</dir>
-    </test>
-
-    <test>
-        <name>TestFailVPN</name>
-        <desc>
-        Assure we can't access to the
-        internal machine if there's no
-        rule in the firewall for it.
-        </desc>
-        
-        <host>external</host>
-        <dir>test-vpn</dir>
-
-        <assert>failed</assert>
-    </test>
-
+<!--
     <test type="selenium">
         <name>FirewallAllowInternal</name>
         <desc>
@@ -117,6 +148,7 @@
         <host>ebox-server</host>
         <dir>firewall-allow-internal</dir>
     </test>
+-->    
 
     <test>
         <name>TestVPN</name>
@@ -125,34 +157,8 @@
         server on the internal machine.
         </desc>
         
-        <host>external</host>
+        <host>external-b</host>
         <dir>test-vpn</dir>
-
-        <assert>passed</assert>
-    </test>
-
-    <test type="selenium">
-        <name>EnableNAT</name>
-        <desc>
-        Enable NAT.
-        </desc>
-
-        <host>ebox-server</host>
-        <dir>enable-nat</dir>
-    </test>
-
-    <test>
-        <name>TestVPNwithNAT</name>
-        <desc>
-        Connect to the VPN and try to access
-        server on the internal machine with
-        NAT enabled on the ebox.
-        </desc>
-        
-        <host>external</host>
-        <dir>test-vpn</dir>
-
-        <assert>passed</assert>
     </test>
 
 </suite>
