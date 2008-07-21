@@ -6,7 +6,7 @@
     that the eBox HTTP Proxy module works properly.
     </desc>
     
-    <scenario>ebox-proxy.xml</scenario>
+    <scenario>ebox/proxy.xml</scenario>
 
     <test type="selenium">
         <name>EnableModules</name>
