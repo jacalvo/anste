@@ -8,11 +8,13 @@ BUNDLE=`perl $SCRIPT foobar-server $CLIENT $ROUTER`
 
 echo "Bundle generated at $BUNDLE"
 
+NEWNAME=/var/www/foobar-server-$CLIENT.tar.gz
+
 echo "Moving to /var/www ..."
-mv $BUNDLE /var/www/ || echo "Error"
+mv $BUNDLE $NEWNAME || echo "Error"
 
 
 echo "Giving read permission"
-chmod +r "/var/www/`basename $BUNDLE`" || echo "Error"
+chmod +r $NEWNAME || echo "Error"
 
-test -r "/var/www/`basename $BUNDLE`"
+test -r $NEWNAME

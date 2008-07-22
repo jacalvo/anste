@@ -205,7 +205,6 @@ sub _writeHostsConfig # (file)
     print $file "$config\n\n";
 }
 
-# XXX: This doesn't works too well.
 sub _addressInNetwork # (hostInterfaces, myInterfaces)
 {
     my ($hostInterfaces, $myInterfaces) = @_;
@@ -215,18 +214,18 @@ sub _addressInNetwork # (hostInterfaces, myInterfaces)
             ANSTE::Scenario::NetworkInterface::IFACE_TYPE_DHCP;
 
         my $myMask = $myIface->netmask();
-        my $myMaskBits = _bitsFromMask($myMask);
+        my $myMaskBits = _octetsToNumber($myMask);
         my $myAddress = $myIface->address();
-        my $myAddressBits = _bitsFromMask($myAddress);
+        my $myAddressBits = _octetsToNumber($myAddress);
 
         foreach my $hostIface (@{$hostInterfaces}) {
             next if $hostIface->type() == 
                 ANSTE::Scenario::NetworkInterface::IFACE_TYPE_DHCP;
 
             my $hostMask = $hostIface->netmask();
-            my $hostMaskBits = _bitsFromMask($hostMask);
+            my $hostMaskBits = _octetsToNumber($hostMask);
             my $hostAddress = $hostIface->address();
-            my $hostAddressBits = _bitsFromMask($hostAddress);
+            my $hostAddressBits = _octetsToNumber($hostAddress);
 
             if (($myAddressBits & $myMaskBits) ==
                 ($hostAddressBits & $hostMaskBits)) {
@@ -237,10 +236,10 @@ sub _addressInNetwork # (hostInterfaces, myInterfaces)
     return undef;
 }
 
-sub _bitsFromMask # (mask)
+sub _octetsToNumber # (str)
 {
-    my ($mask) = @_;
-    return unpack("%B*", pack("CCCC", split(/\./, $mask)));
+    my ($str) = @_;
+    return unpack("L", pack("CCCC", split(/\./, $str)));
 }
 
 1;

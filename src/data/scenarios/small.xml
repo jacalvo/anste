@@ -32,6 +32,21 @@
                 <address>192.168.2.2</address>
                 <netmask>255.255.255.0</netmask>
             </interface>
+            <interface type="static">
+                <name>eth2</name>
+                <address>192.168.3.2</address>
+                <netmask>255.255.255.0</netmask>
+            </interface>
+            <interface type="static">
+                <name>eth3</name>
+                <address>192.168.4.2</address>
+                <netmask>255.255.255.0</netmask>
+            </interface>
+            <interface type="static">
+                <name>eth4</name>
+                <address>192.168.5.2</address>
+                <netmask>255.255.255.0</netmask>
+            </interface>
         </network>
         <packages>
             <package>wget</package>

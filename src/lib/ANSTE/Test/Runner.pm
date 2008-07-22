@@ -254,6 +254,10 @@ sub _runTest # (test)
 
     my $path = $config->testFile("$suiteDir/$testDir");
 
+    if (not -d $path) {
+            throw ANSTE::Exceptions::NotFound('Test', $path);
+    }
+
     # Run pre-test script if exists
     if (-r "$path/pre") {
         $self->_runScript($hostname, "$path/pre");

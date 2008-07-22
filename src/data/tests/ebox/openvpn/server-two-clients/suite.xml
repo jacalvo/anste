@@ -54,16 +54,6 @@
         <dir>config-ca</dir>
     </test>
 
-    <test type="selenium">
-        <name>AllowClientToClient</name>
-        <desc>
-        Allow client to client connections.
-        </desc>
-
-        <host>ebox-server</host>
-        <dir>allow-client-to-client</dir>
-    </test>
-
     <test>
         <name>SetupRouterA</name>
         <desc>
@@ -114,7 +104,7 @@
 
         <host>external-a</host>
         <dir>download-bundle</dir>
-        <env>HOST=router-a</env>
+        <env>HOST=router-a CLIENT=client</env>
     </test>
 
     <test>
@@ -125,7 +115,7 @@
 
         <host>external-b</host>
         <dir>download-bundle</dir>
-        <env>HOST=router-b</env>
+        <env>HOST=router-b CLIENT=client2</env>
     </test>
 
     <test>
@@ -150,17 +140,42 @@
         <dir>firewall-allow-internal</dir>
     </test>
 -->    
+    <test>
+        <name>TestVPNFail</name>
+        <desc>
+        Connect to the VPN and try to access
+        the other machine before enabling
+        client to client connection.
+        </desc>
+        
+        <host>external-b</host>
+        <dir>test-vpn</dir>
+        <env>CLIENT=client2 HOST=192.168.200.2</env>
+
+        <assert>failed</assert>
+    </test>
+
+    <test type="selenium">
+        <name>AllowClientToClient</name>
+        <desc>
+        Allow client to client connections.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>allow-client-to-client</dir>
+    </test>
 
     <test>
         <name>TestVPN</name>
         <desc>
         Connect to the VPN and try to access
-        server on the internal machine.
+        the other machine after enabling
+        client to client connection.
         </desc>
         
         <host>external-b</host>
         <dir>test-vpn</dir>
-        <env>CLIENT=client2 HOST=external-a</env>
+        <env>CLIENT=client2 HOST=192.168.200.2</env>
     </test>
 
 </suite>

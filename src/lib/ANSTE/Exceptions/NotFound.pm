@@ -44,8 +44,41 @@ sub new # (what, value)
 
 	my $self = $class->SUPER::new("$what '$value' not present\n");
 
+    $self->{what} = $what;
+    $self->{value} = $value;
+
 	bless ($self, $class);
 	return $self;
+}
+
+# Method: what
+#
+#   Gets what is not found.
+#
+# Returns:
+#
+#   string - Contains the name of the type of element not found..
+#
+sub what # returns string
+{
+    my ($self) = @_;
+
+    return $self->{what};
+}
+
+# Method: value
+#
+#   Gets the value associed with the exception.
+#
+# Returns:
+#
+#   string - Contains the value.
+#
+sub value # returns string
+{
+    my ($self) = @_;
+
+    return $self->{value};
 }
 
 1;

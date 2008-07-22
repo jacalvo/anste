@@ -31,7 +31,13 @@ my $arg = $ARGV[0] ? $ARGV[0] : SCENARIO;
 my $scenario = new ANSTE::Scenario::Scenario;
 $scenario->loadFromFile($arg);
 my $hosts = $scenario->hosts();
-my $gen = new ANSTE::ScriptGen::HostImageSetup($hosts->[0], 
-                                               $scenario->system());
-my $file = \*STDOUT;
-$gen->writeScript($file);
+
+foreach my $host (@{$hosts}) {
+    my $name = $host->name();
+    print "------ BEGIN host $name ------\n";
+    my $gen = new ANSTE::ScriptGen::HostImageSetup($host,
+                                                   $scenario->system());
+    my $file = \*STDOUT;
+    $gen->writeScript($file);
+    print "------ END host $name ------\n\n";
+}    

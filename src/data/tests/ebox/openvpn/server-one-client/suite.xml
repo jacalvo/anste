@@ -106,7 +106,7 @@
         
         <host>external</host>
         <dir>test-vpn</dir>
-        <env>CLIENT=client HOST=internal</env>
+        <env>CLIENT=client HOST=192.168.2.2</env>
 
         <assert>failed</assert>
     </test>
@@ -130,7 +130,7 @@
         
         <host>external</host>
         <dir>test-vpn</dir>
-        <env>CLIENT=client HOST=internal</env>
+        <env>CLIENT=client HOST=192.168.2.2</env>
 
         <assert>passed</assert>
     </test>
@@ -155,7 +155,7 @@
         
         <host>external</host>
         <dir>test-vpn</dir>
-        <env>CLIENT=client HOST=internal</env>
+        <env>CLIENT=client HOST=192.168.2.2</env>
 
         <assert>passed</assert>
     </test>
