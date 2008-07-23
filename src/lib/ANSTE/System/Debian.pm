@@ -544,7 +544,7 @@ sub firewallDefaultRules # returns string
 #
 # Parameters:
 #
-#   iface - String with the interface to enable masquerading.
+#   ifaces - List of strings with the interfaces to enable masquerading.
 #
 # Returns:
 #
@@ -554,13 +554,15 @@ sub firewallDefaultRules # returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented> 
 #
-sub enableRouting # (iface)
+sub enableRouting # (@iface)
 {
-    my ($self, $iface) = @_;
+    my ($self, @ifaces) = @_;
 
     my $command = "echo 1 > /proc/sys/net/ipv4/ip_forward\n";
     $command .= "unset MODPROBE_OPTIONS\n";
-    $command .= "iptables -t nat -A POSTROUTING -o $iface -j MASQUERADE\n";
+    foreach my $iface (@ifaces) {
+        $command .= "iptables -t nat -A POSTROUTING -o $iface -j MASQUERADE\n";
+    }
 
     return $command;
 }

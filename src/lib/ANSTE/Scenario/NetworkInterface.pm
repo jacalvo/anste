@@ -61,6 +61,7 @@ sub new # returns new NetworkInterface object
 	$self->{hwAddress} = '';
 	$self->{netmask} = '';
 	$self->{gateway} = '';
+    $self->{external} = 0;
 
 	bless($self, $class);
 
@@ -321,6 +322,43 @@ sub removeGateway
     $self->{gateway} = '';
 }
 
+# Method: external
+#
+#   Gets if the interface is external or not.
+#
+# Returns:
+#
+#   boolean - true if it's external, false otherwise.
+#
+sub external # returns external string
+{
+	my ($self) = @_;
+
+	return $self->{external};
+}
+
+# Method: setExternal
+#
+#   Sets the if the interface is external or not.
+#
+# Parameters:
+#
+#   external - boolean.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setExternal # external string
+{
+	my ($self, $external) = @_;	
+
+    defined $external or
+        throw ANSTE::Exceptions::MissingArgument('external');
+
+	$self->{external} = $external;
+}
+
 # Method: load
 #
 #   Loads the information contained in the given XML node representing
@@ -367,6 +405,10 @@ sub load # (node)
         if ($hwAddrNode) {
     		my $hwAddress = $hwAddrNode->getFirstChild()->getNodeValue();
 	    	$self->setHwAddress($hwAddress);
+        }            
+		my $externalNode = $node->getElementsByTagName('external', 0)->item(0);
+        if ($externalNode) {
+            $self->setExternal(1);
         }            
 	} elsif ($type eq 'dhcp') {
 		$self->setTypeDHCP();

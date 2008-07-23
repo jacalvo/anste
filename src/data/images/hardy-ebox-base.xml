@@ -16,6 +16,7 @@
         <package>ssl-cert</package>
         <package>postfix</package>
         <package>postgresql</package>
+        <package>apache2-mpm-prefork</package>
         <profile>ebox</profile>
     </packages>
 

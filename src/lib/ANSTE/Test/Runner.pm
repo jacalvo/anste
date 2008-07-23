@@ -254,8 +254,8 @@ sub _runTest # (test)
 
     my $path = $config->testFile("$suiteDir/$testDir");
 
-    if (not -d $path) {
-            throw ANSTE::Exceptions::NotFound('Test', $path);
+    if (not -x $path) {
+        throw ANSTE::Exceptions::NotFound('Test', $path);
     }
 
     # Run pre-test script if exists
@@ -287,7 +287,11 @@ sub _runTest # (test)
     if ($test->selenium()) {
         my $suiteFile = "$path/suite.html";
         if (not -r $suiteFile) {
+            print "DEBUG: $suiteFile NOT FOUND\n";
             throw ANSTE::Exceptions::NotFound('Suite file', $suiteFile);
+        }
+        else {
+            print "DEBUG: $suiteFile FOUND\n";
         }
         my $video;
         if ($config->seleniumVideo()) {

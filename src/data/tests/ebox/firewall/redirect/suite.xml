@@ -63,6 +63,7 @@
         
         <host>router-a</host>
         <dir>setup-router</dir>
+        <env>DEST=192.168.3.1</env>
     </test>
 
     <test>

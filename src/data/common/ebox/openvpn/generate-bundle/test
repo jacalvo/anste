@@ -4,7 +4,7 @@ SCRIPT=/var/local/anste/generate-bundle
 
 echo "Trying to generate bundle..."
 
-BUNDLE=`perl $SCRIPT foobar-server $CLIENT $ROUTER`
+BUNDLE=`perl $SCRIPT $TYPE foobar-server $CLIENT $ROUTER`
 
 echo "Bundle generated at $BUNDLE"
 

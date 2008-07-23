@@ -168,7 +168,13 @@ sub _writeNetworkConfig # (file)
 
     if ($host->isRouter()) {
         print $file "# Enable routing\n";
-        my $cmd = $system->enableRouting('eth0');
+        my @ifaces = ('eth0');
+        foreach my $iface (@{$host->network()->interfaces()}) {
+            if ($iface->external()) {
+                push(@ifaces, $iface->name());
+            }
+        }
+        my $cmd = $system->enableRouting(@ifaces);
         print $file "$cmd\n";
     }
 }

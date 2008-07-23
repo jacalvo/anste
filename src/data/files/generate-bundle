@@ -24,14 +24,13 @@ use EBox::Global;
 
 EBox::init();
 
-my ($serverName, $certificate, @serverAddr) = @ARGV;
+my ($type, $serverName, $certificate, @serverAddr) = @ARGV;
 
 my $global = EBox::Global->getInstance(1);
 my $openvpn = $global->modInstance('openvpn');
 my $server =  $openvpn->server($serverName);
 
 
-my $type      = 'linux';
 my $installer = 0;
 
 my $bundle= $server->clientBundle(
