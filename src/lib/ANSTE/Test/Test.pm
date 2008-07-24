@@ -45,7 +45,7 @@ sub new # returns new Test object
     $self->{dir} = '';
     $self->{params} = '';
     $self->{env} = '';
-    $self->{variables} = ();
+    $self->{variables} = {};
     $self->{assert} = 'passed';
     $self->{selenium} = 0;
 	
