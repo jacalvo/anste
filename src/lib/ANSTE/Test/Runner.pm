@@ -96,9 +96,8 @@ sub runDir # (suites)
 
     my @dirs;
 
-#   FIXME: Throw an exception instead of dying??
     if (not -r "$dir/$SUITE_LIST_FILE") {
-        die "There isn't any test suite in $suites";
+        throw ANSTE::Exception::Error("There isn't any test suite in $suites");
     }
     my $SUITES_FH;
     open($SUITES_FH, '<', "$dir/$SUITE_LIST_FILE");

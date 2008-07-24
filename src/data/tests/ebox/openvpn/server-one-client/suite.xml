@@ -96,7 +96,7 @@
 
         <host>external</host>
         <dir>download-bundle</dir>
-        <env>HOST=router</env>
+        <env>HOST=router CLIENT=client</env>
     </test>
 
     <test>

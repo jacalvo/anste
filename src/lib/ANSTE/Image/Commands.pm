@@ -25,6 +25,7 @@ use ANSTE::ScriptGen::BasePreInstall;
 use ANSTE::ScriptGen::BaseImageSetup;
 use ANSTE::ScriptGen::HostPreInstall;
 use ANSTE::Image::Image;
+use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 

@@ -21,6 +21,7 @@ use strict;
 use ANSTE::Image::Commands;
 use ANSTE::Comm::WaiterServer;
 use ANSTE::Image::Image;
+use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 
@@ -74,7 +75,7 @@ sub new # (image) returns new ImageCreator object
 #
 # Exceptions:
 #
-#   TODO: Change dies to throw ANSTE::Exceptions::Generic??
+#   throws ANSTE::Exceptions::Error
 #
 sub createImage
 {
@@ -91,25 +92,30 @@ sub createImage
     }
     elsif (not $reuse or not $cmd->exists()) {
         print "[$name] Creating image...";
-        $cmd->create() or die 'Error creating base image.';
+        $cmd->create() 
+            or throw ANSTE::Exceptions::Error('Error creating base image.');
         print "done.\n";
     }        
 
     print "[$name] Mounting image... ";
-    $cmd->mount() or die 'Error mounting image.';
+    $cmd->mount() 
+        or throw ANSTE::Exceptions::Error('Error mounting image.');
     print "done.\n";
 
     try {
         print "[$name] Copying base files... ";
-        $cmd->copyBaseFiles() or die 'Error copying files.';
+        $cmd->copyBaseFiles() 
+            or throw ANSTE::Exceptions::Error('Error copying files.');
         print "done.\n";
 
         print "[$name] Installing base packages... ";
-        $cmd->installBasePackages() or die 'Error installing packages.';
+        $cmd->installBasePackages() 
+            or throw ANSTE::Exceptions::Error('Error installing packages.');
         print "done.\n";
     } finally {
         print "[$name] Umounting image... ";
-        $cmd->umount() or die 'Error unmounting image.';
+        $cmd->umount()
+            or throw ANSTE::Exceptions::Error('Error unmounting image.');
         print "done.\n";
     };
 
@@ -119,13 +125,15 @@ sub createImage
 
     try {
         print "[$name] Starting to prepare the system... \n";
-        $cmd->prepareSystem() or die 'Error preparing system.'; 
+        $cmd->prepareSystem()
+            or throw ANSTE::Exceptions::Error('Error preparing system.');
     } finally {
         $cmd->shutdown();
     };
 
     print "[$name] Resizing image... ";
-    $cmd->resize($image->size()) or die 'Error resizing image.';
+    $cmd->resize($image->size())
+        or throw ANSTE::Exceptions::Error('Error resizing image.');
     
     print "[$name] Image creation finished.\n";
 
