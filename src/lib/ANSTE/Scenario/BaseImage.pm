@@ -20,6 +20,7 @@ use warnings;
 
 use ANSTE::Scenario::Packages;
 use ANSTE::Config;
+use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
 
@@ -508,7 +509,13 @@ sub loadFromFile # (filename)
         or die "Couldn't fill in the template: $Text::Template::ERROR";
 
 	my $parser = new XML::DOM::Parser;
-	my $doc = $parser->parse($text);
+	my $doc;
+    eval {
+        $doc = $parser->parse($text);
+    };
+    if ($@) {
+        throw ANSTE::Exceptions::Error("Error parsing $filename: $@");
+    }
 
 	my $image = $doc->getDocumentElement();
 

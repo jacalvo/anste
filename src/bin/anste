@@ -157,6 +157,12 @@ sub create # (file)
         print STDERR "Can't load image $file.\n";
         print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
+    } catch ANSTE::Exceptions::Error with {
+        my $ex = shift;
+        my $msg = $ex->message();
+        print STDERR "Error creating image $file:\n";
+        print STDERR "$msg\n";
+        exit(1);
     };
 
     my $address = $config->firstAddress();
@@ -185,6 +191,12 @@ sub remove # (file)
         print STDERR "Can't load scenario $file.\n";
         print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
+    } catch ANSTE::Exceptions::Error with {
+        my $ex = shift;
+        my $msg = $ex->message();
+        print STDERR "Error removing image $file:\n";
+        print STDERR "$msg\n";
+        exit(1);
     };
 
     my $cmd = new ANSTE::Image::Commands($image);
@@ -209,6 +221,12 @@ sub deploy # (file)
         print STDERR "Can't load scenario $file.\n";
         print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
+    } catch ANSTE::Exceptions::Error with {
+        my $ex = shift;
+        my $msg = $ex->message();
+        print STDERR "Error deploying scenario $file:\n";
+        print STDERR "$msg\n";
+        exit(1);
     };
 
     my $deployer = new ANSTE::Deploy::ScenarioDeployer($scenario);
@@ -227,6 +245,12 @@ sub destroy # (file)
         my $filename = $ex->file();
         print STDERR "Can't load scenario $file.\n";
         print STDERR "Reason: Can't open file $filename.\n";
+        exit(1);
+    } catch ANSTE::Exceptions::Error with {
+        my $ex = shift;
+        my $msg = $ex->message();
+        print STDERR "Error destroying scenario $file:\n";
+        print STDERR "$msg\n";
         exit(1);
     };
 
@@ -257,6 +281,12 @@ sub test # (file)
             my $value = $ex->value();
             print STDERR "Error running test suite $file.\n";
             print STDERR "Reason: $what $value not found.\n";
+            exit(1);
+        } catch ANSTE::Exceptions::Error with {
+            my $ex = shift;
+            my $msg = $ex->message();
+            print STDERR "Error running test suite $file:\n";
+            print STDERR "$msg\n";
             exit(1);
         };
     }

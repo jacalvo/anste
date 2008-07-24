@@ -43,8 +43,25 @@ sub new # (msg)
 
 	my $self = $class->SUPER::new("ERROR: $msg\n");
 
+    $self->{message} = $msg;
+
 	bless ($self, $class);
 	return $self;
+}
+
+# Method: message
+#
+#   Gets the message associated with the error.
+#
+# Returns:
+#
+#   string - Contains the message
+#
+sub message # returns string
+{
+    my ($self) = @_;
+
+    return $self->{message};
 }
 
 1;

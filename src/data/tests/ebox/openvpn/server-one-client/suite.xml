@@ -64,7 +64,7 @@
 
         <host>router</host>
         <dir>setup-router</dir>
-        <env>DEST=192.168.3.1</dev>
+        <env>DEST=192.168.3.1</env>
     </test>
 
     <test>
