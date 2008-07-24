@@ -42,6 +42,7 @@
 
         <host>ebox-server</host>
         <dir>add-gateway</dir>
+        <env>GATEWAY=192.168.3.2</env>
     </test>
 
     <test type="selenium">
@@ -52,6 +53,7 @@
 
         <host>ebox-server</host>
         <dir>config-ca</dir>
+        <env>ADVERTISED_NETWORK=192.168.20.0</env>
     </test>
 
     <test type="selenium">
@@ -89,7 +91,8 @@
         <desc>Adds the scenario routers as gateways</desc>
 
         <host>ebox-client</host>
-        <dir>add-gateway-b</dir>
+        <dir>add-gateway</dir>
+        <env>GATEWAY=192.168.5.2</env>
     </test>
 
     <test>
@@ -151,6 +154,7 @@
         <name>CheckClientAdded</name>
         <desc>
         Check if client added and save changes.
+        Also allow traffic from internal.
         </desc>
 
         <host>ebox-client</host>
@@ -186,6 +190,7 @@
         <name>AllowEboxToEbox</name>
         <desc>
         Allow ebox to ebox tunnels.
+        Also allow traffic from internal.
         </desc>
 
         <host>ebox-server</host>

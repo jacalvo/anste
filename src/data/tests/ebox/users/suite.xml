@@ -13,6 +13,7 @@
 
         <host>ebox-test</host>
         <dir>test-adduser</dir>
+        <env>USERNAME=eboxtest PASSWORD=eboxtest</env>
     </test>        
 
     <test>

@@ -42,6 +42,7 @@
 
         <host>ebox-server</host>
         <dir>add-gateway</dir>
+        <env>GATEWAY=192.168.3.2</env>
     </test>
 
     <test type="selenium">
@@ -52,6 +53,7 @@
 
         <host>ebox-server</host>
         <dir>config-ca</dir>
+        <env>ADVERTISED_NETWORK=192.168.2.0</env>
     </test>
 
     <test>

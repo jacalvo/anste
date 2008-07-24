@@ -30,9 +30,14 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
 use ANSTE::Exceptions::NotFound;
 
+use Cwd;
+use File::Temp qw(tempdir);
+use Text::Template;
+use Safe;
 use Perl6::Slurp;
 use Error qw(:try);
 
+my $SUITE_FILE = 'suite.html';
 my $SUITE_LIST_FILE = 'suites.list';
 
 # Class: Runner
@@ -285,7 +290,7 @@ sub _runTest # (test)
 
     # Run the test itself either it's a selenium one or a normal one 
     if ($test->selenium()) {
-        my $suiteFile = "$path/suite.html";
+        my $suiteFile = "$path/$SUITE_FILE";
         if (not -r $suiteFile) {
             print "DEBUG: $suiteFile NOT FOUND\n";
             throw ANSTE::Exceptions::NotFound('Suite file', $suiteFile);
@@ -299,6 +304,37 @@ sub _runTest # (test)
             print "Starting video recording for test $name...\n" if $verbose;
             $system->startVideoRecording($video);
         }
+
+        my $variables = $test->variables();
+        if (%{$variables}) {
+            # Fill template in another directory
+            my $newPath = tempdir(CLEANUP => 1)
+                or die "Can't create temp directory: $!";
+            my $cwd = getcwd();
+            chdir($path);
+            my @templateFiles = <*.html>;
+            chdir($cwd);
+            foreach my $file (@templateFiles) {
+                system("cp $path/$file $newPath/$file");
+            }
+            $suiteFile = "$newPath/$SUITE_FILE";
+
+            foreach my $file (@templateFiles) {
+                # Skip suite.html
+                next if $file eq $SUITE_FILE;
+
+                my $template = new Text::Template(SOURCE => "$newPath/$file")
+                    or die "Couldn't construct template: $Text::Template::ERROR";
+                my $text = $template->fill_in(HASH => $variables, SAFE => new Safe)
+                    or die "Couldn't fill in the template: $Text::Template::ERROR";
+
+                # Write the filled file.
+                my $FH;
+                open($FH, '>', "$newPath/$file");
+                print $FH $text;
+                close($FH);
+            }
+        }                
 
         $logfile = "$logPath/selenium/$name.html";
         $ret = $self->_runSeleniumRC($hostname, $suiteFile, $logfile);

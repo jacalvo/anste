@@ -26,6 +26,7 @@
 
         <host>ebox-server</host>
         <dir>config-mail</dir>
+        <env>USERNAME=eboxtest PASSWORD=eboxtest</env>
     </test>        
 
     <test>

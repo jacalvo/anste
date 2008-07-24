@@ -45,6 +45,7 @@ sub new # returns new Test object
     $self->{dir} = '';
     $self->{params} = '';
     $self->{env} = '';
+    $self->{variables} = ();
     $self->{assert} = 'passed';
     $self->{selenium} = 0;
 	
@@ -310,6 +311,62 @@ sub setEnv # env string
         throw ANSTE::Exceptions::MissingArgument('env');
 
 	$self->{env} = $env;
+
+    my @vars = split(/ /, $env);
+    foreach my $var (@vars) {
+        my ($name, $value) = split(/=/, $var);
+        if ($name and $value) {
+            $self->setVariable($name, $value);
+        }
+        else {
+            throw ANSTE::Exceptions::Error('Malformed template variable list');
+        }
+    }
+}
+
+# Method: setVariable
+#
+#   Sets a variable to be substituted on the template files.
+#
+# Parameters:
+#
+#   name  - Contains the name of the variable.
+#   value - Contains the value of the variable.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setVariable # (name, value)
+{
+    my ($self, $name, $value) = @_;
+
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not ANSTE::Validate::identifier($name)) {
+        throw ANSTE::Exceptions::InvalidOption('name', $name);
+    }
+
+    $self->{variables}->{$name} = $value;
+}
+
+# Method: variables
+#
+#   Gets the variables to be substituted on the template files.
+#
+# Returns:
+#
+#   hash ref - Reference to the hash of variables
+#
+sub variables
+{
+    my ($self) = @_;
+
+    return $self->{variables};
 }
 
 # Method: selenium
