@@ -42,7 +42,7 @@
 
         <host>ebox-server</host>
         <dir>add-gateway</dir>
-        <env>GATEWAY=192.168.3.2</env>
+        <var name="GATEWAY" value="192.168.3.2"/>
     </test>
 
     <test type="selenium">
@@ -53,7 +53,7 @@
 
         <host>ebox-server</host>
         <dir>config-ca</dir>
-        <env>ADVERTISED_NETWORK=192.168.2.0</env>
+        <var name="ADVERTISED_NETWORK" value="192.168.2.0"/>
     </test>
 
     <test>
@@ -64,7 +64,7 @@
 
         <host>router</host>
         <dir>setup-router</dir>
-        <env>DEST=192.168.3.1</env>
+        <var name="DEST" value="192.168.3.1"/>
     </test>
 
     <test>
@@ -75,7 +75,9 @@
 
         <host>ebox-server</host>
         <dir>generate-bundle</dir>
-        <env>TYPE=linux CLIENT=client ROUTER=router</env>
+        <var name="TYPE" value="linux"/>
+        <var name="CLIENT" value="client"/>
+        <var name="ROUTER" value="router"/>
     </test>
 
     <test>
@@ -96,7 +98,8 @@
 
         <host>external</host>
         <dir>download-bundle</dir>
-        <env>HOST=router CLIENT=client</env>
+        <var name="HOST" value="router"/>
+        <var name="CLIENT" value="client"/>
     </test>
 
     <test>
@@ -109,7 +112,8 @@
         
         <host>external</host>
         <dir>test-vpn</dir>
-        <env>CLIENT=client HOST=192.168.2.2</env>
+        <var name="CLIENT" value="client"/>
+        <var name="HOST" value="192.168.2.2"/>
 
         <assert>failed</assert>
     </test>
@@ -133,7 +137,8 @@
         
         <host>external</host>
         <dir>test-vpn</dir>
-        <env>CLIENT=client HOST=192.168.2.2</env>
+        <var name="CLIENT" value="client"/>
+        <var name="HOST" value="192.168.2.2"/>
 
         <assert>passed</assert>
     </test>
@@ -158,7 +163,8 @@
         
         <host>external</host>
         <dir>test-vpn</dir>
-        <env>CLIENT=client HOST=192.168.2.2</env>
+        <var name="CLIENT" value="client"/>
+        <var name="HOST" value="192.168.2.2"/>
 
         <assert>passed</assert>
     </test>

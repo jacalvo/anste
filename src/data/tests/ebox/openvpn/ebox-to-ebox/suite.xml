@@ -38,11 +38,11 @@
 
     <test type="selenium">
         <name>AddGatewayServer</name>
-        <desc>Adds the scenario routers as gateways</desc>
+        <desc>Adds the scenario router as gateway</desc>
 
         <host>ebox-server</host>
         <dir>add-gateway</dir>
-        <env>GATEWAY=192.168.3.2</env>
+        <var name="GATEWAY" value="192.168.3.2"/>
     </test>
 
     <test type="selenium">
@@ -53,7 +53,7 @@
 
         <host>ebox-server</host>
         <dir>config-ca</dir>
-        <env>ADVERTISED_NETWORK=192.168.20.0</env>
+        <var name="ADVERTISED_NETWORK" value="192.168.20.0"/>
     </test>
 
     <test type="selenium">
@@ -92,7 +92,7 @@
 
         <host>ebox-client</host>
         <dir>add-gateway</dir>
-        <env>GATEWAY=192.168.5.2</env>
+        <var name="GATEWAY" value="192.168.5.2"/>
     </test>
 
     <test>
@@ -103,7 +103,7 @@
 
         <host>router-a</host>
         <dir>setup-router</dir>
-        <env>DEST=192.168.3.1</env>
+        <var name="DEST" value="192.168.3.1"/>
     </test>
 
     <test>
@@ -114,7 +114,7 @@
 
         <host>router-b</host>
         <dir>setup-router</dir>
-        <env>DEST=192.168.5.1</env>
+        <var name="DEST" value="192.168.5.1"/>
     </test>
 
     <test>
@@ -125,7 +125,9 @@
 
         <host>ebox-server</host>
         <dir>generate-bundle</dir>
-        <env>TYPE=EBoxToEBox CLIENT=client ROUTER=192.168.4.2</env>
+        <var name="TYPE" value="EBoxToEBox"/>
+        <var name="CLIENT" value="client"/>
+        <var name="ROUTER" value="192.168.4.2"/>
     </test>
 
     <test>
@@ -136,7 +138,8 @@
 
         <host>ebox-client</host>
         <dir>download-bundle</dir>
-        <env>HOST=192.168.4.2 CLIENT=client</env>
+        <var name="HOST" value="192.168.4.2"/>
+        <var name="CLIENT" value="client"/>
     </test>
 
     <test>
@@ -147,7 +150,7 @@
 
         <host>ebox-client</host>
         <dir>add-client-from-bundle</dir>
-        <env>CLIENT=client</env>
+        <var name="CLIENT" value="client"/>
     </test>
 
     <test type="selenium">
@@ -181,7 +184,7 @@
         
         <host>internal-b</host>
         <dir>test-client</dir>
-        <env>HOST=192.168.20.2</env>
+        <var name="HOST" value="192.168.20.2"/>
 
         <assert>failed</assert>
     </test>
@@ -207,7 +210,7 @@
         
         <host>internal-b</host>
         <dir>test-client</dir>
-        <env>HOST=192.168.20.2</env>
+        <var name="HOST" value="192.168.20.2"/>
     </test>
 
 </suite>

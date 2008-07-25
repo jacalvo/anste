@@ -97,7 +97,7 @@ sub runDir # (suites)
     my @dirs;
 
     if (not -r "$dir/$SUITE_LIST_FILE") {
-        throw ANSTE::Exception::Error("There isn't any test suite in $suites");
+        throw ANSTE::Exceptions::Error("There isn't any test suite in $suites");
     }
     my $SUITES_FH;
     open($SUITES_FH, '<', "$dir/$SUITE_LIST_FILE");

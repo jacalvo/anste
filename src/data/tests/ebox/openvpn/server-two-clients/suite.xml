@@ -62,7 +62,7 @@
 
         <host>router-a</host>
         <dir>setup-router</dir>
-        <env>DEST=192.168.3.1</env>
+        <var name="DEST" value="192.168.3.1"/>
     </test>
 
     <test>
@@ -73,7 +73,7 @@
 
         <host>router-b</host>
         <dir>setup-router</dir>
-        <env>DEST=192.168.3.1</env>
+        <var name="DEST" value="192.168.3.1"/>
     </test>
 
     <test>
@@ -84,7 +84,9 @@
 
         <host>ebox-server</host>
         <dir>generate-bundle</dir>
-        <env>TYPE=linux CLIENT=client ROUTER=router-a</env>
+        <var name="TYPE" value="linux"/>
+        <var name="CLIENT" value="client"/>
+        <var name="ROUTER" value="router-a"/>
     </test>
 
     <test>
@@ -95,7 +97,9 @@
 
         <host>ebox-server</host>
         <dir>generate-bundle</dir>
-        <env>TYPE=linux CLIENT=client2 ROUTER=router-b</env>
+        <var name="TYPE" value="linux"/>
+        <var name="CLIENT" value="client2"/>
+        <var name="ROUTER" value="router-b"/>
     </test>
 
     <test>
@@ -106,7 +110,8 @@
 
         <host>external-a</host>
         <dir>download-bundle</dir>
-        <env>HOST=router-a CLIENT=client</env>
+        <var name="HOST" value="router-a"/>
+        <var name="CLIENT" value="client"/>
     </test>
 
     <test>
@@ -117,7 +122,8 @@
 
         <host>external-b</host>
         <dir>download-bundle</dir>
-        <env>HOST=router-b CLIENT=client2</env>
+        <var name="HOST" value="router-b"/>
+        <var name="CLIENT" value="client2"/>
     </test>
 
     <test>
@@ -128,7 +134,7 @@
         
         <host>external-a</host>
         <dir>start-server</dir>
-        <env>CLIENT=client</env>
+        <var name="CLIENT" value="client"/>
     </test>
 
     <test>
@@ -141,7 +147,8 @@
         
         <host>external-b</host>
         <dir>test-vpn</dir>
-        <env>CLIENT=client2 HOST=192.168.200.2</env>
+        <var name="CLIENT" value="client2"/>
+        <var name="HOST" value="192.168.200.2"/>
 
         <assert>failed</assert>
     </test>
@@ -166,7 +173,8 @@
         
         <host>external-b</host>
         <dir>test-vpn</dir>
-        <env>CLIENT=client2 HOST=192.168.200.2</env>
+        <var name="CLIENT" value="client2"/>
+        <var name="HOST" value="192.168.200.2"/>
     </test>
 
 </suite>

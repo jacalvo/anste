@@ -288,40 +288,18 @@ sub env # returns params string
 {
 	my ($self) = @_;
 
-	return $self->{env};
-}
+    my $env = '';
 
-# Method: setEnv
-#
-#   Sets the environment string to be set before the test execution.
-#
-# Parameters:
-#
-#   env - String with the list of variable definitions.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
-#
-sub setEnv # env string
-{
-	my ($self, $env) = @_;
-
-    defined $env or
-        throw ANSTE::Exceptions::MissingArgument('env');
-
-	$self->{env} = $env;
-
-    my @vars = split(/ /, $env);
-    foreach my $var (@vars) {
-        my ($name, $value) = split(/=/, $var);
-        if ($name and $value) {
-            $self->setVariable($name, $value);
-        }
-        else {
-            throw ANSTE::Exceptions::Error('Malformed template variable list');
-        }
+    while (my ($name, $value) = each(%{$self->{variables}})) {
+        $env .= "$name=$value ";
     }
+
+    if ($env) {
+        # Remove last space
+        $env =~ s/ $//;
+    }        
+
+	return $env;
 }
 
 # Method: setVariable
@@ -454,11 +432,13 @@ sub load # (node)
         $self->setParams($params);
     }
 
-	my $envNode = $node->getElementsByTagName('env', 0)->item(0);
-    if ($envNode) {
-    	my $env = $envNode->getFirstChild()->getNodeValue();
-        $self->setEnv($env);
+	my $varNodes = $node->getElementsByTagName('var', 0);
+    for (my $i = 0; $i < $varNodes->getLength(); $i++) {
+    	my $name = $varNodes->item($i)->getAttribute('name');
+    	my $value = $varNodes->item($i)->getAttribute('value');
+        $self->setVariable($name, $value);
     }
+
 }
 
 1;
