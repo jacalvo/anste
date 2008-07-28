@@ -19,13 +19,14 @@
     </test>        
 
     <test type="selenium">
-        <name>ConfigNetwork</name>
+        <name>ConfigNetworkSetExternal</name>
         <desc>
-        Sets the interface as external, etc.
+        Sets the interface as external.
         </desc>
 
         <host>ebox-server</host>
-        <dir>config-net</dir>
+        <dir>set-external</dir>
+        <var name="IFACE" value="eth2"/>
     </test>        
 
     <test type="selenium">
