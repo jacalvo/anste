@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>save-changes</title>
+<title>test-logs</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">save-changes</td></tr>
+<tr><td rowspan="1" colspan="3">test-logs</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -18,30 +18,37 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>changes_menu</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>save</td>
+	<td>link=Logs</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>save</td>
+	<td>link=Query logs</td>
 	<td></td>
 </tr>
 <tr>
-    <td>waitForElementPresent</td>
-    <td>done</td>
+	<td>select</td>
+	<td>selected</td>
+	<td>label=HTTP proxy</td>
+</tr>
 <tr>
-	<td>waitForNotAttribute</td>
-	<td>done@style</td>
-	<td>display:none;</td>
+	<td>clickAndWait</td>
+	<td>View</td>
+	<td></td>
+</tr>
+<tr>
+    <td>type</td>
+    <td>filter-url</td>
+    <td>{$URL}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>search</td>
+	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>Changes saved</td>
+	<td>{$EVENT}</td>
 	<td></td>
 </tr>
 

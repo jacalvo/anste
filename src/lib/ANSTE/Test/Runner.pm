@@ -167,6 +167,14 @@ sub runSuite # (suite)
             if not $reuse;
 
         $self->_runTests();
+    } catch ANSTE::Exceptions::Error with {
+        my $ex = shift;
+        my $msg = $ex->message();
+        print "ERROR: $msg\n";
+    } catch Error with {
+        my $ex = shift;
+        my $msg = $ex->stringify();
+        print "ERROR: $msg\n";
     } finally {
         if ($config->wait()) {
             print "Waiting for testing on the scenario. " .
@@ -233,8 +241,18 @@ sub _runTests
     foreach my $test (@{$suite->tests()}) {
         my $testName = $test->name();
         print "Running test: $testName\n";
-        my $testResult = $self->_runTest($test);
-        my $ret = $testResult->value();
+        my ($testResult, $ret);
+        try {
+            $testResult = $self->_runTest($test);
+            $ret = $testResult->value();
+        } catch ANSTE::Exceptions::NotFound with {
+            my $ex = shift;
+            my $what = $ex->what();
+            my $value = $ex->value();
+            print STDERR "Error running test $testName.\n";
+            print STDERR "Reason: $what $value not found.\n";
+            $ret = -1;
+        };
         print "Result: $ret\n\n";
 
         # Adds the test report
@@ -291,11 +309,7 @@ sub _runTest # (test)
     if ($test->selenium()) {
         my $suiteFile = "$path/$SUITE_FILE";
         if (not -r $suiteFile) {
-            print "DEBUG: $suiteFile NOT FOUND\n";
             throw ANSTE::Exceptions::NotFound('Suite file', $suiteFile);
-        }
-        else {
-            print "DEBUG: $suiteFile FOUND\n";
         }
         my $video;
         if ($config->seleniumVideo()) {
@@ -460,7 +474,7 @@ sub _runSeleniumRC # (hostname, file, log) returns result
                                  resultFile => $log);
     } catch ANSTE::Exceptions::Error with {
         throw ANSTE::Exceptions::Error("Can't execute Selenium or Java. " .
-                                       "Ensure that everything is ok.");
+                                       "Ensure that everything is ok.");                                               
     };
 
     return $self->_seleniumResult($log);

@@ -648,7 +648,7 @@ sub disableNAT # (iface, sourceAddr)
 #
 # Returns:
 #
-#   string - contains the command
+#   boolean - true if execution was ok, false otherwise
 #
 # Exceptions:
 #
@@ -692,7 +692,7 @@ sub executeSelenium # (%params)
         $ld_path = "LD_LIBRARY_PATH=$browserPath ";
     }
 
-    $self->execute($ld_path . $cmd);
+    return $self->execute($ld_path . $cmd);
 }
 
 # Method: startVideoRecording

@@ -13,7 +13,8 @@
 
         <host>ebox-test</host>
         <dir>test-adduser</dir>
-        <env>USERNAME=eboxtest PASSWORD=eboxtest</env>
+        <var name="USERNAME" value="eboxtest"/>
+        <var name="PASSWORD" value="eboxtest"/>
     </test>        
 
     <test>

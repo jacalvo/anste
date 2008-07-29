@@ -1,22 +1,24 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "Setting the proxy"
 export http_proxy="192.168.2.1:3128"
 
 for i in `seq 1 10`
 do
-    echo "HTTP request to www.marca.com"
-    wget -r -t 3 www.marca.com -O output.html
+    [ -f output.html ] && rm output.html
+
+    echo "HTTP request to $HOST"
+    wget -r -t 3 $HOST -O output.html
 
     echo "Checking if access was denied"
     grep "Access has been Denied" output.html 
 
-    if [ $? ]
+    if [ $? = 0 ]
     then
         echo "Access denied."
         exit 0
     else
-        sleep 1
+        sleep 2
     fi
 done    
 

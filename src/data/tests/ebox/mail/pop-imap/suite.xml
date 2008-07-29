@@ -9,6 +9,15 @@
     <scenario>ebox/mail/only-internal.xml</scenario>
 
     <test type="selenium">
+        <name>ConfigNetSetExternal</name>
+        <desc>Sets eth2 as external.</desc>
+
+        <host>ebox-server</host>
+        <dir>set-external</dir>
+        <var name="IFACE" value="eth2"/>
+    </test>
+
+    <test type="selenium">
         <name>ConfigMail</name>
         <desc>
         Config the mail server.
@@ -16,7 +25,8 @@
 
         <host>ebox-server</host>
         <dir>config-mail</dir>
-        <env>USERNAME=eboxtest PASSWORD=eboxtest</env>
+        <var name="USERNAME" value="eboxtest"/>
+        <var name="PASSWORD" value="eboxtest"/>
     </test>        
 
     <test>

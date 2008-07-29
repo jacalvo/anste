@@ -40,19 +40,54 @@
     </test>        
 
     <test>
+        <name>TestDebugFilterAllow</name>
+        <desc>debug</desc>
+
+        <host>ebox-server</host>
+        <dir>test-debug</dir>
+    </test>
+
+    <test>
         <name>FilterAllowDownload</name>
         <desc>Try to download a file of an allowed host</desc>
 
         <host>test-client</host>
-        <dir>test-filter-allow</dir>
+        <dir>test-allow</dir>
+        <var name="HOST" value="www.google.com"/>
+    </test>
+    <test type="selenium">
+        <name>TestLogFilterAllowDownload</name>
+        <desc>Tests if proxy logs works ok</desc>
+
+        <host>ebox-server</host>
+        <dir>test-logs</dir>
+        <var name="URL" value="www.google.com"/>
+        <var name="EVENT" value="Accepted"/>
     </test>
 
+    <test>
+        <name>TestDebugFilterForbid</name>
+        <desc>debug</desc>
+
+        <host>ebox-server</host>
+        <dir>test-debug</dir>
+    </test>
     <test>
         <name>FilterForbidDownload</name>
         <desc>Try to download a file of a forbidden host</desc>
 
         <host>test-client</host>
-        <dir>test-filter-forbid</dir>
+        <dir>test-deny</dir>
+        <var name="HOST" value="www.marca.com"/>
+    </test>
+    <test type="selenium">
+        <name>TestLogFilterForbidDownload</name>
+        <desc>Tests if proxy logs works ok</desc>
+
+        <host>ebox-server</host>
+        <dir>test-logs</dir>
+        <var name="URL" value="www.marca.com"/>
+        <var name="EVENT" value="Filtered"/>
     </test>
 
     <test type="selenium">
@@ -66,11 +101,28 @@
     </test>
 
     <test>
+        <name>TestDebugAdultContent</name>
+        <desc>debug</desc>
+
+        <host>ebox-server</host>
+        <dir>test-debug</dir>
+    </test>
+    <test>
         <name>AccessAdultContent</name>
         <desc>Try to access adult content with "very strict" filter mode</desc>
 
         <host>test-client</host>
-        <dir>test-content-filter</dir>
+        <dir>test-deny</dir>
+        <var name="HOST" value="www.lupaland.com"/>
+    </test>
+    <test type="selenium">
+        <name>TestLogAdultContent</name>
+        <desc>Tests if proxy logs works ok</desc>
+
+        <host>ebox-server</host>
+        <dir>test-logs</dir>
+        <var name="URL" value="www.lupaland.com"/>
+        <var name="EVENT" value="Filtered"/>
     </test>
 
     <test type="selenium">
@@ -84,11 +136,27 @@
     </test>        
 
     <test>
+        <name>TestDebugDenyAll</name>
+        <desc>debug</desc>
+
+        <host>ebox-server</host>
+        <dir>test-debug</dir>
+    </test>
+    <test>
         <name>TestDenyAll</name>
         <desc>Try to access google with deny all mode.</desc>
 
         <host>test-client</host>
         <dir>test-deny-all</dir>
+    </test>
+    <test type="selenium">
+        <name>TestLogDenyAll</name>
+        <desc>Tests if proxy logs works ok</desc>
+
+        <host>ebox-server</host>
+        <dir>test-logs</dir>
+        <var name="URL" value="www.google.com"/>
+        <var name="EVENT" value="Denied"/>
     </test>
 
     <test type="selenium">
@@ -102,11 +170,28 @@
     </test>        
 
     <test>
+        <name>TestDebugAllowAll</name>
+        <desc>debug</desc>
+
+        <host>ebox-server</host>
+        <dir>test-debug</dir>
+    </test>
+    <test>
         <name>TestAllowAll</name>
         <desc>Try to access adult content with allow all mode.</desc>
 
         <host>test-client</host>
-        <dir>test-allow-all</dir>
+        <dir>test-allow</dir>
+        <var name="HOST" value="www.lupaland.com"/>
+    </test>
+    <test type="selenium">
+        <name>TestLogAllowAll</name>
+        <desc>Tests if proxy logs works ok</desc>
+
+        <host>ebox-server</host>
+        <dir>test-logs</dir>
+        <var name="URL" value="www.lupaland.com"/>
+        <var name="EVENT" value="Accepted"/>
     </test>
 
 </suite>
