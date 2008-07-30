@@ -401,11 +401,6 @@ sub load # (node)
     		my $gateway = $gatewayNode->getFirstChild()->getNodeValue();
             $self->setGateway($gateway);
         }
-		my $hwAddrNode = $node->getElementsByTagName('hw-addr', 0)->item(0);
-        if ($hwAddrNode) {
-    		my $hwAddress = $hwAddrNode->getFirstChild()->getNodeValue();
-	    	$self->setHwAddress($hwAddress);
-        }            
 		my $externalNode = $node->getElementsByTagName('external', 0)->item(0);
         if ($externalNode) {
             $self->setExternal(1);
@@ -413,6 +408,12 @@ sub load # (node)
 	} elsif ($type eq 'dhcp') {
 		$self->setTypeDHCP();
 	}
+    # MAC address may be specified on both dhcp and static interfaces
+	my $hwAddrNode = $node->getElementsByTagName('hw-addr', 0)->item(0);
+    if ($hwAddrNode) {
+        my $hwAddress = $hwAddrNode->getFirstChild()->getNodeValue();
+	    $self->setHwAddress($hwAddress);
+    }
 }
 
 1;

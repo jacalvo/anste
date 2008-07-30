@@ -35,6 +35,7 @@
         <network>
          <interface type="dhcp">
             <name>eth1</name>
+            <hw-addr>00:16:3E:72:55:34</hw-addr>
          </interface>
         </network>
     </host>

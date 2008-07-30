@@ -206,9 +206,11 @@ sub _writeHostsConfig # (file)
         }
     }
 
-    my $config = $system->hostsConfig(%hostAddress);
-	print $file "# Write hosts configuration\n";
-    print $file "$config\n\n";
+    if (%hostAddress) {
+        my $config = $system->hostsConfig(%hostAddress);
+	    print $file "# Write hosts configuration\n";
+        print $file "$config\n\n";
+    }        
 }
 
 sub _addressInNetwork # (hostInterfaces, myInterfaces)

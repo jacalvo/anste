@@ -3,5 +3,5 @@
 echo "Getting IP address"
 dhclient eth1
 
-echo "Foobar O_o"
-ifconfig eth1 | grep '192.168.3.31'
+echo "Checking if address assigned is 192.168.2.31"
+ifconfig eth1 | grep '192.168.2.31'

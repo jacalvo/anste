@@ -234,7 +234,8 @@ sub _deploy
     try {
         $self->_copyBaseImage() or die "Can't copy base image";
     } catch ANSTE::Exceptions::NotFound with {
-        die "[$hostname] Base image not found, can't continue.";
+        print "[$hostname] Base image not found, can't continue.";
+        return(-1);
     };
 
     # Critical section here to prevent mount errors with loop device busy
@@ -263,8 +264,17 @@ sub _deploy
 
     my $setupScript = "$hostname-setup.sh";
     print "[$hostname] Generating setup script...\n";
-    $self->_generateSetupScript($setupScript);
-    $self->_executeSetupScript($ip, $setupScript);
+#    try {
+    # FIXME: Change dies to exceptions and capture with try.
+    eval {
+        $self->_generateSetupScript($setupScript);
+        $self->_executeSetupScript($ip, $setupScript);
+
+#    } catch Error with {
+#        my $ex = shift;
+#        my $msg = $ex->stringify();
+#        die "ERROR: $msg\n";
+#    };
 
     # FIXME - Copy files to target image
     # It worths it stays here in order to be able to use pre/post-install
@@ -293,6 +303,12 @@ sub _deploy
         print "[$hostname] Executing post scripts...\n";
         $cmd->executeScripts($post);
     }        
+
+    };
+    if ($@) {
+        print "ERROR: $@\n";
+        return(-1);
+    }
 }
 
 sub _copyBaseImage
@@ -338,9 +354,11 @@ sub _generateSetupScript # (script)
 
     my $generator = new ANSTE::ScriptGen::HostImageSetup($host);
     my $FILE;
-    open($FILE, '>', $script) or die "Can't open file $script: $!";
+    open($FILE, '>', $script) 
+        or throw ANSTE::Exceptions::Error("Can't open file $script: $!");
     $generator->writeScript($FILE);
-    close($FILE) or die "Can't close file $script: $!";
+    close($FILE) 
+        or throw ANSTE::Exceptions::Error("Can't close file $script: $!");
 }
 
 sub _executeSetupScript # (host, script)
