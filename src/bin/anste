@@ -49,6 +49,8 @@ my $format = '';
 my $wait = 0;
 my $help = 0;
 my $quiet = 0;
+my $step = 0;
+my $nonStop = 0;
 my $reuse = 0;
 
 GetOptions('create' => \$create,
@@ -63,6 +65,8 @@ GetOptions('create' => \$create,
            'quiet' => \$quiet,
            'wait' => \$wait,
            'reuse' => \$reuse,
+           'step' => \$step,
+           'non-stop' => \$nonStop,
            'help' => \$help) or pod2usage(2);
            
 pod2usage(1) if $help;           
@@ -92,6 +96,12 @@ if ($video) {
 }
 if ($reuse) {
     $config->setReuse(1);
+}
+if ($step) {
+    $config->setStep(1);
+}
+if ($nonStop) {
+    $config->setNonStop(1);
 }
 
 # Check the config file for missing or malformed options
@@ -338,6 +348,8 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -video          save video recording of selenium tests
    -format <fmt>   select the output format for the reports
    -wait           wait after tests are complete instead of shutting down
+   -step           run tests step by step, waiting after each one
+   -non-stop       run all test without waiting, ignoring <stop/>'s
    -quiet          do not show output of commands
    -reuse          reuse the created image if exists (with -create)
 

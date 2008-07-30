@@ -42,6 +42,8 @@
 
         <host>test-client</host>
         <dir>test-range</dir>
+
+        <stop/>
     </test>
 
     <test type="selenium">
@@ -63,6 +65,7 @@
 
         <host>test-client</host>
         <dir>test-fixed-addr</dir>
-    </test>
 
+        <stop/>
+    </test>
 </suite>

@@ -978,6 +978,116 @@ sub seleniumRecordAll
     return $all;
 }
 
+# Method: step
+#
+#   Sets the value for step-by-step testing mode.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub step
+{
+    my ($self) = @_;
+
+    my $video = $self->_getOption('test', 'step');
+
+    if (not ANSTE::Validate::boolean($video)) {
+        throw ANSTE::Exceptions::InvalidConfig('test/step',
+                                               $video,
+                                               $self->{confFile});
+    }
+
+    return $video;
+}
+
+# Method: setStep
+#
+#   Sets the value for step-by-step testing mode.
+#
+# Parameters:
+#
+#   value - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present 
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setStep # (value)
+{
+    my ($self, $value) = @_;
+
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not ANSTE::Validate::boolean($value)) {
+        throw ANSTE::Exceptions::InvalidOption('test/step', 
+                                               $value);
+    }
+
+    $self->{override}->{'test'}->{'step'} = $value;
+}
+
+# Method: nonStop
+#
+#   Sets the value for non-stop testing mode.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub nonStop
+{
+    my ($self) = @_;
+
+    my $video = $self->_getOption('test', 'non-stop');
+
+    if (not ANSTE::Validate::boolean($video)) {
+        throw ANSTE::Exceptions::InvalidConfig('test/non-stop',
+                                               $video,
+                                               $self->{confFile});
+    }
+
+    return $video;
+}
+
+# Method: setNonStop
+#
+#   Sets the value for non-stop testing mode.
+#
+# Parameters:
+#
+#   value - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present 
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setNonStop # (value)
+{
+    my ($self, $value) = @_;
+
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not ANSTE::Validate::boolean($value)) {
+        throw ANSTE::Exceptions::InvalidOption('test/non-stop', 
+                                               $value);
+    }
+
+    $self->{override}->{'test'}->{'non-stop'} = $value;
+}
+
 # Method: xenUseIdeDevices
 #
 #
@@ -1252,6 +1362,9 @@ sub _setDefaults
     $self->{default}->{'selenium'}->{'browser'} = '*firefox';
     $self->{default}->{'selenium'}->{'video'} = 0;
     $self->{default}->{'selenium'}->{'record-all'} = 0;
+
+    $self->{default}->{'test'}->{'step'} = 0;
+    $self->{default}->{'test'}->{'non-stop'} = 0;
 
     $self->{default}->{'xen-options'}->{'dir'} = '/home/xen';
     $self->{default}->{'xen-options'}->{'use-ide-devices'} = 0;
