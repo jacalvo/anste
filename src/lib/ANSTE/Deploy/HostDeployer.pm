@@ -242,7 +242,18 @@ sub _deploy
     { 
         lock($lockMount);
         print "[$hostname] Updating hostname on the new image...\n";
-        $self->_updateHostname();
+        try {
+            my $ok = $self->_updateHostname();
+            if (not $ok) {
+                print "[$hostname] Error copying host files.\n";
+                return;                
+            }
+        } catch Error with {
+            my $err = shift;
+            my $msg = $err->stringify();
+            print "[$hostname] ERROR: $msg\n";
+            return;
+        };
     };
 
     print "[$hostname] Creating virtual machine ($ip)...\n"; 
@@ -255,60 +266,55 @@ sub _deploy
     $commIface->removeGateway() unless $host->isRouter();
     $host->network()->addInterface($commIface);
 
-    # Execute pre-install scripts
-    my $pre = $host->preScripts();
-    if (@{$pre}) {
-        print "[$hostname] Executing pre scripts...\n";
-        $cmd->executeScripts($pre);
-    }        
+    try {
 
-    my $setupScript = "$hostname-setup.sh";
-    print "[$hostname] Generating setup script...\n";
-#    try {
-    # FIXME: Change dies to exceptions and capture with try.
-    eval {
+        # Execute pre-install scripts
+        my $pre = $host->preScripts();
+        if (@{$pre}) {
+            print "[$hostname] Executing pre scripts...\n";
+            $cmd->executeScripts($pre);
+        }        
+
+        my $setupScript = "$hostname-setup.sh";
+        print "[$hostname] Generating setup script...\n";
         $self->_generateSetupScript($setupScript);
         $self->_executeSetupScript($ip, $setupScript);
 
-#    } catch Error with {
-#        my $ex = shift;
-#        my $msg = $ex->stringify();
-#        die "ERROR: $msg\n";
-#    };
+        # It worths it stays here in order to be able to use pre/post-install
+        # scripts as well. This permits us to move trasferred file, 
+        # change their rights and so on.
+        my $list = $host->{files}->list(); # retrieve files list
+            print "[$hostname] Transferring files...";
+        $cmd->transferFiles($list);
+        print "... done\n";
 
-    # FIXME - Copy files to target image
-    # It worths it stays here in order to be able to use pre/post-install
-    # scripts as well. This permits us to move trasferred file, 
-    # change their rights and so on.
-    my $list = $host->{files}->list(); # retrieve files list
-    print "[$hostname] Transferring files...";
-    $cmd->transferFiles($list);
-    print "... done\n";
-
-    # NAT with this address is not needed anymore
-    my $iface = $config->natIface();
-    $system->disableNAT($iface, $commIface->address());
-    # Adding the new nat rule
-    my $interfaces = $host->network()->interfaces();
-    foreach my $if (@{$interfaces}) {
-        if ($if->gateway() eq $config->gateway()) {
-            $system->enableNAT($iface, $if->address());
-            last;
+        # NAT with this address is not needed anymore
+        my $iface = $config->natIface();
+        $system->disableNAT($iface, $commIface->address());
+        # Adding the new nat rule
+        my $interfaces = $host->network()->interfaces();
+        foreach my $if (@{$interfaces}) {
+            if ($if->gateway() eq $config->gateway()) {
+                $system->enableNAT($iface, $if->address());
+                last;
+            }
         }
-    }
 
-    # Execute post-install scripts
-    my $post = $host->postScripts();
-    if (@{$post}) {
-        print "[$hostname] Executing post scripts...\n";
-        $cmd->executeScripts($post);
-    }        
-
+        # Execute post-install scripts
+        my $post = $host->postScripts();
+        if (@{$post}) {
+            print "[$hostname] Executing post scripts...\n";
+            $cmd->executeScripts($post);
+        }        
+    } catch ANSTE::Exceptions::Error with {
+        my $ex = shift;
+        my $msg = $ex->message();
+        print "[$hostname] ERROR: $msg\n";
+    } catch Error with {
+        my $err = shift;
+        my $msg = $err->stringify();
+        print "[$hostname] ERROR: $msg\n";
     };
-    if ($@) {
-        print "ERROR: $@\n";
-        return(-1);
-    }
 }
 
 sub _copyBaseImage
@@ -325,12 +331,14 @@ sub _copyBaseImage
     $virtualizer->createImageCopy($baseimage, $newimage);
 }
 
-sub _updateHostname
+sub _updateHostname # returns boolean
 {
     my ($self) = @_;
 
     my $cmd = $self->{cmd};
     
+    my $ok = 0;
+
     try {
         $cmd->mount() or die "Can't mount image: $!";
     } catch Error with {
@@ -340,9 +348,12 @@ sub _updateHostname
 
     try {
         $cmd->copyHostFiles() or die "Can't copy files: $!";
+        $ok = 1;
     } finally {
         $cmd->umount() or die "Can't unmount image: $!";
     };
+
+    return $ok;
 }
 
 sub _generateSetupScript # (script)
