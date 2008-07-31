@@ -5,6 +5,16 @@
     <scenario>ebox/dns.xml</scenario>
 
     <test type="selenium">
+        <name>EnableModules</name>
+        <desc>
+        Enables network and DNS modules.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>enable-modules</dir>
+    </test>        
+
+    <test type="selenium">
         <name>ConfigDNSServer</name>
         <desc>
         Enables DNS server and add a domain with a host

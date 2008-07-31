@@ -1,6 +1,0 @@
-#!/bin/sh
-
-dd if=/dev/zero of=test.bin bs=4096 count=1000
-
-smbclient '\\192.168.2.1\foo' foo -U foo -c 'put test.bin' | grep DISK_FULL
-

@@ -256,7 +256,9 @@ sub _runTests
         print "Result: $ret\n\n";
 
         # Adds the test report
-        $suiteResult->add($testResult);
+        if ($testResult) {
+            $suiteResult->add($testResult);
+        }
 
         my $config = ANSTE::Config->instance();
         # Wait user input if there is a breakpoint in the test
@@ -291,11 +293,6 @@ sub _runTest # (test)
         throw ANSTE::Exceptions::NotFound('Test', $path);
     }
 
-    # Run pre-test script if exists
-    if (-r "$path/pre") {
-        $self->_runScript($hostname, "$path/pre");
-    }
-
     my $logPath = $config->logPath();
     
     # Create directories
@@ -316,6 +313,19 @@ sub _runTest # (test)
     # Store start time
     $testResult->setStartTime($self->_time());
 
+    # Create a temp directory for this test
+    my $newPath = tempdir(CLEANUP => 1)
+        or die "Can't create temp directory: $!";
+
+    # Run pre-test script if exists
+    if (-r "$path/pre") {
+        my $script = "$newPath/$name.pre";
+        system("cp $path/pre $script");        
+        $self->_runScript($hostname, $script);
+    }
+
+    # TODO: separate this in two functions runSeleniumTest and runShellTest ??
+    
     # Run the test itself either it's a selenium one or a normal one 
     if ($test->selenium()) {
         my $suiteFile = "$path/$SUITE_FILE";
@@ -332,8 +342,6 @@ sub _runTest # (test)
         my $variables = $test->variables();
         if (%{$variables}) {
             # Fill template in another directory
-            my $newPath = tempdir(CLEANUP => 1)
-                or die "Can't create temp directory: $!";
             my $cwd = getcwd();
             chdir($path);
             my @templateFiles = <*.html>;
@@ -387,8 +395,13 @@ sub _runTest # (test)
             throw ANSTE::Exceptions::NotFound('Test script',
                                               "$suiteDir/$testDir/test");
         }
+
         $logfile = "$logPath/out/$name.txt";
-        $ret = $self->_runScript($hostname, "$path/test", $logfile, 
+
+        # Copy to temp directory and rename it to test name
+        system("cp $path/test $newPath/$name");        
+
+        $ret = $self->_runScript($hostname, "$newPath/$name", $logfile, 
                                  $test->env(), $test->params());
         # Store end time
         my $endTime = $self->_time();
@@ -407,11 +420,13 @@ sub _runTest # (test)
         $testResult->setLog("out/$name.txt");
     }
 
-    # Run pre-test script if exists
+    # Run post-test script if exists
     if (-r "$path/post") {
-        $self->_runScript($hostname, "$path/post");
+        my $script = "$newPath/$name.post";
+        system("cp $path/post $script");        
+        $self->_runScript($hostname, $script);
     }
-    
+
     # Invert the result of the test when checking for fail
     if ($test->assert() eq 'failed') {
         $ret = ($ret != 0) ? 0 : 1;

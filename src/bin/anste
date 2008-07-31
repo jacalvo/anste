@@ -337,20 +337,21 @@ anste - Advanced Network Service Testing Environment
 anste [options] [file ...] [var1=value1 var2=value2 ...]
 
  Options:
-   -help           shows this help
-   -create         creates a base image
-   -remove         deletes a base image
-   -deploy         deploys a scenario
-   -shutdown       finishes and deletes all the images of a scenario
-   -test           tests a suite
+   -help           show this help
+   -create         create a base image
+   -remove         delete a base image
+   -deploy         deploy a scenario
+   -shutdown       finish and delete all the images of a scenario
+   -test           test a suite
    -path <dir>     where to find the data  
    -out  <dir>     report output directory
    -video          save video recording of selenium tests
    -format <fmt>   select the output format for the reports
-   -wait           wait after tests are complete instead of shutting down
+   -wait           wait before shutting down after testing complete
    -step           run tests step by step, waiting after each one
    -non-stop       run all test without waiting, ignoring <stop/>'s
    -quiet          do not show output of commands
    -reuse          reuse the created image if exists (with -create)
+                   reuse a deployed scenario (with -test)
 
 =cut
