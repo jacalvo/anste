@@ -3,8 +3,6 @@ libebox
 ebox-network
 ebox-objects
 ebox-services
-ebox-mail
-ebox-mailfilter
 ebox-firewall
 ebox-trafficshaping
 ebox-samba

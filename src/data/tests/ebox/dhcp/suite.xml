@@ -37,13 +37,41 @@
     </test>        
 
     <test>
-        <name>TestRange</name>
+        <name>TestRange1</name>
         <desc>Check dhcp server serves an IP address within the range</desc>
 
         <host>test-client</host>
         <dir>test-range</dir>
+    </test>
 
-        <stop/>
+    <test type="selenium">
+        <name>TestLogsRange1</name>
+        <desc>
+        Search logs for the leased event.
+	    </desc>
+
+        <host>ebox-server</host>
+        <dir>test-logs</dir>
+        <var name="IP" value="192.168.2.29"/>
+    </test>
+
+    <test>
+        <name>TestRange2</name>
+        <desc>Check dhcp server serves an IP address within the range</desc>
+
+        <host>test-client</host>
+        <dir>test-range</dir>
+    </test>
+
+    <test type="selenium">
+        <name>TestLogsRange2</name>
+        <desc>
+        Search logs for the leased event.
+	    </desc>
+
+        <host>ebox-server</host>
+        <dir>test-logs</dir>
+        <var name="IP" value="192.168.2.28"/>
     </test>
 
     <test type="selenium">
@@ -65,7 +93,16 @@
 
         <host>test-client</host>
         <dir>test-fixed-addr</dir>
+    </test>
 
-        <stop/>
+    <test type="selenium">
+        <name>TestLogsFixed</name>
+        <desc>
+        Search logs for the leased event.
+	    </desc>
+
+        <host>ebox-server</host>
+        <dir>test-logs</dir>
+        <var name="IP" value="192.168.2.31"/>
     </test>
 </suite>
