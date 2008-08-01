@@ -53,6 +53,8 @@
 
         <host>ebox-server</host>
         <dir>config-ca</dir>
+        <!-- FIXME?? -->
+        <var name="ADVERTISED_NETWORK" value="192.168.2.0"/>
     </test>
 
     <test>
@@ -138,6 +140,18 @@
         <var name="CLIENT" value="client"/>
     </test>
 
+    <test type="selenium">
+        <name>TestLogConnectA</name>
+        <desc>
+        Query the logs for the connection event.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>test-logs</dir>
+        <var name="IP" value="192.168.4.4"/>
+        <var name="EVENT" value="Connection to server initiated"/>
+    </test>
+
     <test>
         <name>TestVPNFail</name>
         <desc>
@@ -152,6 +166,16 @@
         <var name="HOST" value="192.168.200.2"/>
 
         <assert>failed</assert>
+    </test>
+
+    <test>
+        <name>KillVPNFail</name>
+        <desc>
+        Kill openvpn connection.
+        </desc>
+        
+        <host>external-b</host>
+        <dir>kill-vpn</dir>
     </test>
 
     <test type="selenium">
@@ -176,6 +200,62 @@
         <dir>test-vpn</dir>
         <var name="CLIENT" value="client2"/>
         <var name="HOST" value="192.168.200.2"/>
+    </test>
+
+    <test type="selenium">
+        <name>TestLogConnectB</name>
+        <desc>
+        Query the logs for the connection event.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>test-logs</dir>
+        <var name="IP" value="192.168.5.4"/>
+        <var name="EVENT" value="Connection to server initiated"/>
+    </test>
+
+    <test>
+        <name>KillVPN-A</name>
+        <desc>
+        Kill openvpn connection.
+        </desc>
+        
+        <host>external-a</host>
+        <dir>kill-vpn</dir>
+    </test>
+
+    <test type="selenium">
+        <name>TestLogDisconnectA</name>
+        <desc>
+        Query the logs for the disconnection event.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>test-logs</dir>
+        <var name="IP" value="192.168.4.4"/>
+        <var name="EVENT" value="Client connection terminated"/>
+    </test>
+
+    <test>
+        <name>KillVPN-B</name>
+        <desc>
+        Kill openvpn connection.
+        </desc>
+        
+        <host>external-b</host>
+        <dir>kill-vpn</dir>
+    </test>
+
+    <test type="selenium">
+        <name>TestLogDisconnectB</name>
+        <desc>
+        Query the logs for the disconnection event.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>test-logs</dir>
+        <var name="IP" value="192.168.5.4"/>
+        <var name="EVENT" value="Client connection terminated"/>
     </test>
 
 </suite>
