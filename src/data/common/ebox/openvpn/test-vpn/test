@@ -25,4 +25,4 @@ cat $TESTFILE.log
 rm $TESTFILE $TESTFILE.log
 
 echo "Expecting foo on $HOST:1100"
-nc -w 5 $HOST 1100 | grep foo 
+nc -w 10 $HOST 1100 | grep foo 

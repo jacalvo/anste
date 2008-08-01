@@ -7,16 +7,6 @@
     <scenario>ebox/openvpn/server-one-client.xml</scenario>
 
     <test type="selenium">
-        <name>EnableModules</name>
-        <desc>
-        Enable network, firewall and openvpn modules.
-        </desc>
-
-        <host>ebox-server</host>
-        <dir>enable-modules</dir>
-    </test>        
-
-    <test type="selenium">
         <name>ConfigNetwork</name>
         <desc>
         Sets the interface as external.
@@ -25,6 +15,16 @@
         <host>ebox-server</host>
         <dir>set-external</dir>
         <var name="IFACE" value="eth2"/>
+    </test>        
+
+    <test type="selenium">
+        <name>EnableModules</name>
+        <desc>
+        Enable network, firewall and openvpn modules.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>enable-modules</dir>
     </test>        
 
     <test type="selenium">
@@ -142,6 +142,40 @@
         <var name="HOST" value="192.168.2.2"/>
 
         <assert>passed</assert>
+    </test>
+
+    <test type="selenium">
+        <name>TestLogConnect</name>
+        <desc>
+        Query the logs for the connection event.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>test-logs</dir>
+        <var name="IP" value="192.168.4.2"/>
+        <var name="EVENT" value="Connection to server initiated"/>
+    </test>
+
+    <test>
+        <name>KillVPN</name>
+        <desc>
+        Kill openvpn connection.
+        </desc>
+        
+        <host>external</host>
+        <dir>kill-vpn</dir>
+    </test>
+
+    <test type="selenium">
+        <name>TestLogDisconnect</name>
+        <desc>
+        Query the logs for the disconnection event.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>test-logs</dir>
+        <var name="IP" value="192.168.4.2"/>
+        <var name="EVENT" value="Client connection terminated"/>
     </test>
 
     <test type="selenium">

@@ -7,16 +7,6 @@
     <scenario>ebox/openvpn/ebox-to-ebox.xml</scenario>
 
     <test type="selenium">
-        <name>EnableModulesServer</name>
-        <desc>
-        Enable network, firewall and openvpn modules.
-        </desc>
-
-        <host>ebox-server</host>
-        <dir>enable-modules</dir>
-    </test>        
-
-    <test type="selenium">
         <name>ConfigNetworkServer</name>
         <desc>
         Sets the interface as external.
@@ -25,6 +15,16 @@
         <host>ebox-server</host>
         <dir>set-external</dir>
         <var name="IFACE" value="eth2"/>
+    </test>        
+
+    <test type="selenium">
+        <name>EnableModulesServer</name>
+        <desc>
+        Enable network, firewall and openvpn modules.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>enable-modules</dir>
     </test>        
 
     <test type="selenium">
@@ -58,16 +58,6 @@
     </test>
 
     <test type="selenium">
-        <name>EnableModulesClient</name>
-        <desc>
-        Enable network, firewall and openvpn modules.
-        </desc>
-
-        <host>ebox-client</host>
-        <dir>enable-modules</dir>
-    </test>        
-
-    <test type="selenium">
         <name>ConfigNetworkClient</name>
         <desc>
         Sets the interface as external.
@@ -75,6 +65,16 @@
 
         <host>ebox-client</host>
         <dir>config-net</dir>
+    </test>        
+
+    <test type="selenium">
+        <name>EnableModulesClient</name>
+        <desc>
+        Enable network, firewall and openvpn modules.
+        </desc>
+
+        <host>ebox-client</host>
+        <dir>enable-modules</dir>
     </test>        
 
     <test type="selenium">
