@@ -53,8 +53,6 @@
 
         <host>ebox-server</host>
         <dir>config-ca</dir>
-        <!-- FIXME?? -->
-        <var name="ADVERTISED_NETWORK" value="192.168.2.0"/>
     </test>
 
     <test>
