@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite>
+    <name>eBox Proxy tests</name>
+    <desc>
+    Contains a set of tests to check 
+    that the eBox HTTP Proxy module works properly.
+    </desc>
+    
+    <scenario>ebox/one-client.xml</scenario>
+
+    <test type="selenium">
+        <name>EnableModules</name>
+        <desc>
+        Enable webserver, samba, dns, network and users modules.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>enable-modules</dir>
+    </test>        
+
+    <test type="selenium">
+        <name>AddUser</name>
+        <desc>
+        Adds an user.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>add-user</dir>
+
+        <var name="USERNAME" value="foobar"/>
+        <var name="PASSWORD" value="foobar"/>
+    </test>        
+
+    <test type="selenium">
+        <name>ConfigWebserverDefault</name>
+        <desc>
+        Toogles webserver user public pages feature and sets
+        the listening port to the specified.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-webserver</dir>
+
+        <var name="PORT" value="80"/>
+    </test>        
+
+    <test>
+        <name>TestDebugDefault</name>
+        <desc>debug</desc>
+
+        <host>ebox-server</host>
+        <dir>test-debug</dir>
+    </test>
+
+    <test>
+        <name>CreateWeb</name>
+        <desc>Create a example page in the user directory</desc>
+
+        <host>ebox-server</host>
+        <dir>create-web</dir>
+    </test>
+
+    <test>
+        <name>TestAccessDefault</name>
+        <desc>Try to access the user page.</desc>
+
+        <host>test-client</host>
+        <dir>test-access</dir>
+
+        <var name="PORT" value="80"/>
+    </test>
+
+    <test type="selenium">
+        <name>ConfigWebserverDisabled</name>
+        <desc>
+        Toogles webserver user public pages feature and sets
+        the listening port to the specified.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-webserver</dir>
+
+        <var name="PORT" value="80"/>
+    </test>        
+
+    <test>
+        <name>TestDebugDisabled</name>
+        <desc>debug</desc>
+
+        <host>ebox-server</host>
+        <dir>test-debug</dir>
+    </test>
+
+    <test>
+        <name>TestAccessDisabled</name>
+        <desc>Try to access the user page.</desc>
+
+        <host>test-client</host>
+        <dir>test-access</dir>
+
+        <var name="PORT" value="80"/>
+
+        <assert>failed</assert>
+    </test>
+
+    <test type="selenium">
+        <name>ConfigWebserverOtherPort</name>
+        <desc>
+        Toogles webserver user public pages feature and sets
+        the listening port to the specified.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-webserver</dir>
+
+        <var name="PORT" value="666"/>
+    </test>        
+
+    <test>
+        <name>TestDebugOtherPort</name>
+        <desc>debug</desc>
+
+        <host>ebox-server</host>
+        <dir>test-debug</dir>
+    </test>
+
+    <test>
+        <name>TestAccessOtherPort</name>
+        <desc>Try to access the user page.</desc>
+
+        <host>test-client</host>
+        <dir>test-access</dir>
+
+        <var name="PORT" value="666"/>
+    </test>
+</suite>

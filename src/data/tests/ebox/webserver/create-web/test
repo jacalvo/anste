@@ -1,0 +1,7 @@
+#!/bin/bash
+
+DIR=/home/samba/users/foobar/public_html
+
+mkdir $DIR
+
+echo "foo" > $DIR/index.html

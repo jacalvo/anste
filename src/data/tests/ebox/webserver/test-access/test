@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+if [ -f index.html ]
+then 
+    rm index.html
+fi
+
+wget http://ebox-server:$PORT/~foobar
+
+grep foo index.html
