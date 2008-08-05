@@ -203,6 +203,14 @@
     </test>
 
     <test>
+        <name>WaitForRoute</name>
+        <desc>Waits until the routes has been interchanged.</desc>
+
+        <host>ebox-server</host>
+        <dir>wait-for-route</dir>
+    </test>
+
+    <test>
         <name>TestVPN</name>
         <desc>
         Connect to the VPN and try to access
@@ -213,6 +221,30 @@
         <host>internal-b</host>
         <dir>test-client</dir>
         <var name="HOST" value="192.168.20.2"/>
+    </test>
+
+    <test type="selenium">
+        <name>TestLogsClient</name>
+        <desc>
+        Query the logs for the connection event.
+        </desc>
+
+        <host>ebox-client</host>
+        <dir>test-logs</dir>
+        <var name="IP" value="192.168.4.2"/>
+        <var name="EVENT" value="Connection to server initiated"/>
+    </test>
+
+    <test type="selenium">
+        <name>TestLogsServer</name>
+        <desc>
+        Query the logs for the connection event.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>test-logs</dir>
+        <var name="IP" value="192.168.4.3"/>
+        <var name="EVENT" value="Connection to server initiated"/>
     </test>
 
 </suite>

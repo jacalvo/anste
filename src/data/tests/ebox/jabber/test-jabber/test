@@ -30,7 +30,14 @@ $receiver->SetCallBacks(
 
 print "Connecting bar...\n";
 
-$receiver->Connect(hostname => 'ebox-server', tls => $TLS);
+my $status = $receiver->Connect(hostname => 'ebox-server', 
+                                tls => $TLS, 
+                                port => $TLS ? 5223 : 5222);
+
+if (not defined $status) {
+    print "Jabber server is down or connection is not allowed\n";
+    exit 1;
+}
 
 $receiver->AuthSend(
                username => 'bar',
@@ -45,12 +52,9 @@ my $sender = new Net::Jabber::Client(debuglevel=> 1,
 
 print "Connecting foo...\n";
 
-my $status = $sender->Connect(hostname => 'ebox-server', timeout => 10, tls => $TLS);
-
-if (not defined $status) {
-    print "Jabber server is down or connection is not allowed\n";
-    exit 1;
-}
+my $status = $sender->Connect(hostname => 'ebox-server', 
+                              tls => $TLS,
+                              port => $TLS ? 5223 : 5222);
 
 my @result = $sender->AuthSend(
                username => 'foo',
