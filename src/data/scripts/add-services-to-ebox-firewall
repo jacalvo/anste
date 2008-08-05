@@ -14,18 +14,17 @@ unless ($serviceMod->serviceExists('name' => 'ansted')) {
                             'protocol' => 'tcp', 
                             'sourcePort' => 'any',
                             'destinationPort' => 8000);
-    $serviceMod->save();
 }
 
 my $firewallMod = EBox::Global->modInstance('firewall');
 $firewallMod->setInternalService('ansted', 'accept');
 $firewallMod->addOutputRule('tcp', '8001');
-$firewallMod->save();
 
 # Change apache port TODO: To be removed when working with SSL
 my $apacheMod = EBox::Global->modInstance('apache');
 $apacheMod->setPort(1666);
-$apacheMod->save();
+
+EBox::Global->getInstance()->saveAllModules();
 
 1;
 
