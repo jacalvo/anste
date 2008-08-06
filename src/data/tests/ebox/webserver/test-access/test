@@ -6,6 +6,6 @@ then
     rm index.html
 fi
 
-wget http://ebox-server:$PORT/~foobar
+wget $URL 
 
 grep foo index.html

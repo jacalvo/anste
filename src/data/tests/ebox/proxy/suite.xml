@@ -40,14 +40,6 @@
     </test>        
 
     <test>
-        <name>TestDebugFilterAllow</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>
-
-    <test>
         <name>FilterAllowDownload</name>
         <desc>Try to download a file of an allowed host</desc>
 
@@ -65,13 +57,6 @@
         <var name="EVENT" value="Accepted"/>
     </test>
 
-    <test>
-        <name>TestDebugFilterForbid</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>
     <test>
         <name>FilterForbidDownload</name>
         <desc>Try to download a file of a forbidden host</desc>
@@ -101,13 +86,6 @@
     </test>
 
     <test>
-        <name>TestDebugAdultContent</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>
-    <test>
         <name>AccessAdultContent</name>
         <desc>Try to access adult content with "very strict" filter mode</desc>
 
@@ -136,13 +114,6 @@
     </test>        
 
     <test>
-        <name>TestDebugDenyAll</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>
-    <test>
         <name>TestDenyAll</name>
         <desc>Try to access google with deny all mode.</desc>
 
@@ -169,13 +140,6 @@
         <dir>config-proxy-allow</dir>
     </test>        
 
-    <test>
-        <name>TestDebugAllowAll</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>
     <test>
         <name>TestAllowAll</name>
         <desc>Try to access adult content with allow all mode.</desc>

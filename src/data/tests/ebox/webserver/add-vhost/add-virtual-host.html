@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>config-proxy</title>
+<title>add-virtual-host</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">config-proxy</td></tr>
+<tr><td rowspan="1" colspan="3">add-virtual-host</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -17,28 +17,33 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>link=HTTP proxy</td>
-	<td></td>
-</tr>
-<tr>
 	<td>clickAndWait</td>
-	<td>//ul[@id='nav']/li[19]/ul/li[1]/a</td>
+	<td>link=Web</td>
 	<td></td>
 </tr>
 <tr>
-	<td>select</td>
-	<td>GeneralSettings_globalPolicy</td>
-	<td>label=Filter</td>
-</tr>
-<tr>
 	<td>click</td>
-	<td>change</td>
+	<td>link=Add new</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>Settings changed</td>
+	<td>Adding a new virtual host </td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>VHostTable_name</td>
+	<td>foobar.ebox-server</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+    <td>Virtual host foobar.ebox-server added</td>
 	<td></td>
 </tr>
 

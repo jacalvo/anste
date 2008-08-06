@@ -3,42 +3,42 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="" />
-<title>config-proxy</title>
+<link rel="selenium.base" href="http://10.6.7.10:1666/" />
+<title>enable-users</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">config-proxy</td></tr>
+<tr><td rowspan="1" colspan="3">enable-mail</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/</td>
+	<td>/ebox/Summary/Index</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=HTTP proxy</td>
+	<td>link=Module status</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
-	<td>//ul[@id='nav']/li[19]/ul/li[1]/a</td>
+	<td>waitForElementPresent</td>
+	<td>mail</td>
 	<td></td>
-</tr>
-<tr>
-	<td>select</td>
-	<td>GeneralSettings_globalPolicy</td>
-	<td>label=Filter</td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>change</td>
+	<td>mail</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Settings changed</td>
+	<td>waitForElementPresent</td>
+	<td>accept</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>accept</td>
 	<td></td>
 </tr>
 

@@ -17,3 +17,5 @@ ebox-jabber
 ebox-ca
 ebox-openvpn
 ebox-webserver
+ebox-mail
+ebox-mailfilter

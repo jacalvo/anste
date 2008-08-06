@@ -4,32 +4,47 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>config-proxy</title>
+<title>check-dns</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">config-proxy</td></tr>
+<tr><td rowspan="1" colspan="3">check-dns</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/</td>
+	<td>/ebox/DNS/Composite/DNSComposite</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>link=HTTP proxy</td>
+	<td>verifyTextPresent</td>
+	<td>ebox-server </td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//ul[@id='nav']/li[19]/ul/li[1]/a</td>
+	<td>//td[2]/a/img</td>
 	<td></td>
 </tr>
 <tr>
-	<td>select</td>
-	<td>GeneralSettings_globalPolicy</td>
-	<td>label=Filter</td>
+	<td>verifyTextPresent</td>
+	<td>foobar</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>edit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Editing hostname </td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>HostnameTable_ipaddr</td>
+	<td>192.168.2.1</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -38,10 +53,9 @@
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>Settings changed</td>
+	<td>hostname updated</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>
