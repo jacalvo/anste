@@ -3,45 +3,34 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://10.6.7.10:1666/" />
-<title>enable-users</title>
+<link rel="selenium.base" href="" />
+<title>config-pop-imap</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">enable-mail</td></tr>
+<tr><td rowspan="1" colspan="3">config-pop-imap</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/ebox/Summary/Index</td>
+	<td>/ebox/Mail/Composite/General</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Module status</td>
+	<td>RetrievalServices_{$SERVICE}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+    <td>//td[@id='buttons_RetrievalServices']/input</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>mail</td>
+	<td>Done</td>
 	<td></td>
 </tr>
-<tr>
-	<td>click</td>
-	<td>mail</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>accept</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>accept</td>
-	<td></td>
-</tr>
-
 </tbody></table>
 </body>
 </html>

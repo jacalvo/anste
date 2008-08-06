@@ -62,14 +62,6 @@
     </test>        
 
     <test>
-        <name>TestDebugNonSSL</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>
-
-    <test>
         <name>TestJabberNoSSL</name>
         <desc>Try to send and receive a message between the two users.</desc>
 
@@ -86,14 +78,6 @@
         <host>ebox-server</host>
         <dir>config-jabber-optional</dir>
     </test>        
-
-    <test>
-        <name>TestDebugSSLOptional</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>
 
     <test>
         <name>TestJabberSSLOptionalWithoutTLS</name>
@@ -122,14 +106,6 @@
         <host>ebox-server</host>
         <dir>config-jabber-ssl</dir>
     </test>        
-
-    <test>
-        <name>TestDebugSSLRequired</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>
 
     <test>
         <name>TestJabberSSLRequiredWithoutTLS</name>

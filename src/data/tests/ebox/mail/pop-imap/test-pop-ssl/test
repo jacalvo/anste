@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+
+use Mail::POP3Client;
+$pop = new Mail::POP3Client( HOST     => "192.168.2.1", USESSL => true);
+$pop->User('eboxtest@foobar');
+$pop->Pass('eboxtest');
+
+if (not $pop->Connect()) {
+	print "Authentication failed\n";
+	exit 1;
+} else {
+	print "Authentication OK\n";
+}
+
+$pop->Close();
+
+exit 0;

@@ -50,13 +50,6 @@
     </test>
 
     <test>
-        <name>DebugTestSmbClient</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>        
-    <test>
         <name>TestUserShareRead</name>
         <desc>Puts a file into the created user account</desc>
 
@@ -92,13 +85,6 @@
     </test>        
 
     <test>
-        <name>DebugTestQuota</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>        
-    <test>
         <name>TestQuota</name>
         <desc>Try to put a 4MB file in the user share and ensure
         this cannot be done.
@@ -130,13 +116,6 @@
         <var name="quota" value="100"/>
     </test>        
 
-    <test>
-        <name>DebugTestSmbClientEboxShare</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>        
     <test>
         <name>TestSmbClientEboxShareWriteNoPerm</name>
         <desc>Write to a share without perms</desc>
@@ -178,13 +157,6 @@
     </test>        
 
     <test>
-        <name>DebugTestSmbClientEboxShareReadWrite</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>        
-    <test>
         <name>TestSmbClientEboxShareWriteWithReadWrite</name>
         <desc>Write to a share with read/write perms</desc>
 
@@ -222,13 +194,6 @@
         <var name="PERM_LABEL" value="Read only"/>
     </test>        
 
-    <test>
-        <name>DebugTestSmbClientEboxShareReadOnly</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>        
     <test>
         <name>TestSmbClientEboxShareWriteWithReadOnly</name>
         <desc>Write to a share with ReadOnly perms</desc>
@@ -282,13 +247,6 @@
     </test>        
 
     <test>
-        <name>DebugTestSmbClientEboxShareAdmin</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>        
-    <test>
         <name>TestSmbClientEboxShareWriteAdmin</name>
         <desc>Write to a share with admin perms</desc>
 
@@ -327,13 +285,6 @@
         <var name="TYPE_LABEL" value="File system path"/>
     </test>
 
-    <test>
-        <name>DebugTestSmbClientFileSystemShare</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>        
     <test>
         <name>TestSmbClientFileSystemShareWriteNoPerm</name>
         <desc>Write to a share without perms</desc>
@@ -375,13 +326,6 @@
     </test>        
 
     <test>
-        <name>DebugTestSmbClientFileSystemShareReadWrite</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>        
-    <test>
         <name>TestSmbClientFileSystemShareWriteWithReadWrite</name>
         <desc>Write to a share with read/write perms</desc>
 
@@ -419,13 +363,6 @@
         <var name="PERM_LABEL" value="Read only"/>
     </test>        
 
-    <test>
-        <name>DebugTestSmbClientFileSystemShareReadOnly</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>        
     <test>
         <name>TestSmbClientFileSystemShareWriteWithReadOnly</name>
         <desc>Write to a share with ReadOnly perms</desc>
@@ -466,13 +403,6 @@
     </test>        
 
     <test>
-        <name>DebugTestSmbClientFileSystemShareAdmin</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>        
-    <test>
         <name>TestSmbClientFileSystemShareWriteAdmin</name>
         <desc>Write to a share with admin perms</desc>
 
@@ -509,13 +439,6 @@
         <var name="SHARE" value="foobar"/>
     </test>
 
-    <test>
-        <name>DebugTestSmbClientEboxShareDeleted</name>
-        <desc>debug</desc>
-
-        <host>ebox-server</host>
-        <dir>test-debug</dir>
-    </test>        
     <test>
         <name>TestSmbClientEboxShareDeletedWrite</name>
         <desc>Write to a share that has been deleted</desc>

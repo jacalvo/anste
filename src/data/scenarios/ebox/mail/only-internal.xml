@@ -43,6 +43,8 @@
 
     	<packages>
             <package>libmail-pop3client-perl</package>
+            <package>libmail-imapclient-perl</package>
+            <package>libio-socket-ssl-perl</package>
         </packages>
     </host>
 </scenario>

@@ -9,12 +9,11 @@
     <scenario>ebox/mail/only-internal.xml</scenario>
 
     <test type="selenium">
-        <name>ConfigNetSetExternal</name>
-        <desc>Sets eth2 as external.</desc>
+        <name>EnableModules</name>
+        <desc>Enable network, users and mail modules.</desc>
 
         <host>ebox-server</host>
-        <dir>set-external</dir>
-        <var name="IFACE" value="eth2"/>
+        <dir>enable-modules</dir>
     </test>
 
     <test type="selenium">
@@ -29,12 +28,228 @@
         <var name="PASSWORD" value="eboxtest"/>
     </test>        
 
+<!-- POP tests -->
+
     <test>
-        <name>TestClientMail</name>
-        <desc>Checks if the user can send and receive mails</desc>
+        <name>Test-POP-Disabled</name>
+        <desc>Checks if POP access works for the user.</desc>
 
         <host>test-client</host>
-        <dir>test-client-mail</dir>
+        <dir>test-pop</dir>
+
+        <assert>failed</assert>
     </test>
 
+    <test>
+        <name>Test-POP-SSL-Disabled</name>
+        <desc>Checks if POPS access works for the user.</desc>
+
+        <host>test-client</host>
+        <dir>test-pop-ssl</dir>
+
+        <assert>failed</assert>
+    </test>
+
+    <test type="selenium">
+        <name>EnablePOP</name>
+        <desc>
+        Enables POP.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>enable-pop-imap</dir>
+        <var name="SERVICE" value="pop3"/>
+    </test>        
+
+    <test>
+        <name>Test-POP-NOSSL</name>
+        <desc>Checks if POP access works for the user.</desc>
+
+        <host>test-client</host>
+        <dir>test-pop</dir>
+    </test>
+
+    <test>
+        <name>Test-POP-SSL-NOSSL</name>
+        <desc>Checks if POPS access works for the user.</desc>
+
+        <host>test-client</host>
+        <dir>test-pop-ssl</dir>
+
+        <assert>failed</assert>
+    </test>
+
+    <test type="selenium">
+        <name>Set-POP-SSL-Required</name>
+        <desc>
+        Sets SSL = required.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>set-ssl</dir>
+        <var name="VALUE" value="Required"/>
+    </test>        
+
+    <test>
+        <name>Test-POP-NOSSL-RequiredSSL</name>
+        <desc>Checks if POP access works for the user.</desc>
+
+        <host>test-client</host>
+        <dir>test-pop</dir>
+
+        <assert>failed</assert>
+    </test>
+
+    <test>
+        <name>Test-POP-SSL-RequiredSSL</name>
+        <desc>Checks if POPS access works for the user.</desc>
+
+        <host>test-client</host>
+        <dir>test-pop-ssl</dir>
+    </test>
+
+    <test type="selenium">
+        <name>Set-POP-SSL-Optional</name>
+        <desc>
+        Sets SSL = optional.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>set-ssl</dir>
+        <var name="VALUE" value="Optional"/>
+    </test>        
+
+    <test>
+        <name>Test-POP-NOSSL-Optional</name>
+        <desc>Checks if POP access works for the user.</desc>
+
+        <host>test-client</host>
+        <dir>test-pop</dir>
+    </test>
+
+    <test>
+        <name>Test-POP-SSL-Optional</name>
+        <desc>Checks if POPS access works for the user.</desc>
+
+        <host>test-client</host>
+        <dir>test-pop-ssl</dir>
+    </test>
+
+<!-- IMAP tests -->
+
+    <test>
+        <name>Test-IMAP-Disabled</name>
+        <desc>Checks if IMAP access works for the user.</desc>
+
+        <host>test-client</host>
+        <dir>test-imap</dir>
+
+        <assert>failed</assert>
+    </test>
+
+    <test>
+        <name>Test-IMAP-SSL-Disabled</name>
+        <desc>Checks if IMAPS access works for the user.</desc>
+
+        <host>test-client</host>
+        <dir>test-imap-ssl</dir>
+
+        <assert>failed</assert>
+    </test>
+
+    <test type="selenium">
+        <name>EnableIMAP</name>
+        <desc>
+        Enables IMAP. 
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>enable-pop-imap</dir>
+        <var name="SERVICE" value="imap"/>
+    </test>        
+
+    <test type="selenium">
+        <name>Set-NO-SSL</name>
+        <desc>
+        Sets SSL = no.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>set-ssl</dir>
+        <var name="VALUE" value="No"/>
+    </test>        
+
+    <test>
+        <name>Test-IMAP-NOSSL</name>
+        <desc>Checks if IMAP access works for the user.</desc>
+
+        <host>test-client</host>
+        <dir>test-imap</dir>
+    </test>
+
+    <test>
+        <name>Test-IMAP-SSL-NOSSL</name>
+        <desc>Checks if IMAPS access works for the user.</desc>
+
+        <host>test-client</host>
+        <dir>test-imap-ssl</dir>
+
+        <assert>failed</assert>
+    </test>
+
+    <test type="selenium">
+        <name>Set-IMAP-SSL-Required</name>
+        <desc>
+        Sets SSL = required.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>set-ssl</dir>
+        <var name="VALUE" value="Required"/>
+    </test>        
+
+    <test>
+        <name>Test-IMAP-NOSSL-RequiredSSL</name>
+        <desc>Checks if IMAP access works for the user.</desc>
+
+        <host>test-client</host>
+        <dir>test-imap</dir>
+
+        <assert>failed</assert>
+    </test>
+
+    <test>
+        <name>Test-IMAP-SSL-RequiredSSL</name>
+        <desc>Checks if IMAPS access works for the user.</desc>
+
+        <host>test-client</host>
+        <dir>test-imap-ssl</dir>
+    </test>
+
+    <test type="selenium">
+        <name>Set-IMAP-SSL-Optional</name>
+        <desc>
+        Sets SSL = optional.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>set-ssl</dir>
+        <var name="VALUE" value="Optional"/>
+    </test>        
+
+    <test>
+        <name>Test-IMAP-NOSSL-Optional</name>
+        <desc>Checks if IMAP access works for the user.</desc>
+
+        <host>test-client</host>
+        <dir>test-imap</dir>
+    </test>
+
+    <test>
+        <name>Test-IMAP-SSL-Optional</name>
+        <desc>Checks if IMAPS access works for the user.</desc>
+
+        <host>test-client</host>
+        <dir>test-imap-ssl</dir>
+    </test>
 </suite>

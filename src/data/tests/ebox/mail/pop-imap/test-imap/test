@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+
+use Mail::IMAPClient;
+
+$imap = new Mail::IMAPClient( Server => '192.168.2.1',
+                              User => 'eboxtest@foobar',
+                              Password => 'eboxtest');
+
+if (not $imap) {
+	print "Authentication failed\n";
+	exit 1;
+} else {
+	print "Authentication OK\n";
+}
+
+exit 0;

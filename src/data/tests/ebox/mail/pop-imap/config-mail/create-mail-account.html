@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>config-mail</title>
+<title>create-mail-account</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">config-mail</td></tr>
+<tr><td rowspan="1" colspan="3">create-mail-account</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -18,48 +18,38 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Mail</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Virtual domains</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>vdomain</td>
-	<td>foobar</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>addVDomain</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
 	<td>link=Users</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Edit user</td>
 	<td></td>
 </tr>
 <tr>
-        <td>waitForTextPresent</td>
-        <td>eboxtest</td>
-        <td></td>
+	<td>type</td>
+	<td>Users_filter</td>
+	<td>{$USERNAME}</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>filter</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>ebox test user {$USERNAME}</td>
+	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//tr[@id='NOT_USED']/td[3]/a/img</td>
+	<td>//td[3]/a/img</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>lhs</td>
-	<td>eboxtest</td>
+	<td>{$USERNAME}</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -67,23 +57,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>link=Mail</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>//ul[@id='nav']/li[20]/ul/li[1]/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>popCheckBox</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>applyChanges</td>
+	<td>verifyTextPresent</td>
+	<td>Mail address:{$USERNAME}@foobar </td>
 	<td></td>
 </tr>
 
