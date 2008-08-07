@@ -17,13 +17,13 @@
     </test>
 
     <test type="selenium">
-        <name>ConfigMail</name>
+        <name>ConfigMailAccount</name>
         <desc>
-        Config the mail server.
+        Config the mail account.
         </desc>
 
         <host>ebox-server</host>
-        <dir>config-mail</dir>
+        <dir>config-mail-account</dir>
         <var name="USERNAME" value="eboxtest"/>
         <var name="PASSWORD" value="eboxtest"/>
     </test>        
