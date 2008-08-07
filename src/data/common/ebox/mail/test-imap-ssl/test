@@ -7,7 +7,7 @@ $imap = new Mail::IMAPClient( User => 'eboxtest@foobar',
                               Password => 'eboxtest',
                               Socket => IO::Socket::SSL->new
                               ( Proto => 'tcp',
-                                PeerAddr => '192.168.2.1',
+                                PeerAddr => $ENV{SERVER},
                                 PeerPort => 993
                               ));
 

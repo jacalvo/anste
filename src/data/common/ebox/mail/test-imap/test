@@ -2,7 +2,7 @@
 
 use Mail::IMAPClient;
 
-$imap = new Mail::IMAPClient( Server => '192.168.2.1',
+$imap = new Mail::IMAPClient( Server => $ENV{SERVER},
                               User => 'eboxtest@foobar',
                               Password => 'eboxtest');
 
