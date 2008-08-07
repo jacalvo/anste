@@ -49,7 +49,7 @@
         <name>ebox-server</name>
         <desc>Host used to test that ebox works properly.</desc>
         <baseimage>{$dist}-ebox-base</baseimage>
-        <memory>350</memory>
+        <memory>375</memory>
         <network>
             <interface type="static">
                 <name>eth1</name>
@@ -79,7 +79,7 @@
         <name>ebox-client</name>
         <desc>Host used to test that ebox works properly.</desc>
         <baseimage>{$dist}-ebox-base</baseimage>
-        <memory>350</memory>
+        <memory>375</memory>
         <network>
             <interface type="static">
                 <name>eth1</name>

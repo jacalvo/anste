@@ -296,10 +296,9 @@ sub _runTest # (test)
     my $logPath = $config->logPath();
     
     # Create directories
-    mkdir $logPath;
-    mkdir "$logPath/selenium";
-    mkdir "$logPath/out";
-    mkdir "$logPath/video" if $config->seleniumVideo();
+    use File::Path;
+    mkpath "$logPath/$suiteDir";
+    mkdir "$logPath/$suiteDir/video" if $config->seleniumVideo();
 
     my $name = $test->name();
 
@@ -334,7 +333,7 @@ sub _runTest # (test)
         }
         my $video;
         if ($config->seleniumVideo()) {
-            $video = "$logPath/video/$name.ogg";
+            $video = "$logPath/$suiteDir/video/$name.ogg";
             print "Starting video recording for test $name...\n" if $verbose;
             $system->startVideoRecording($video);
         }
@@ -368,7 +367,7 @@ sub _runTest # (test)
             }
         }                
 
-        $logfile = "$logPath/selenium/$name.html";
+        $logfile = "$logPath/$suiteDir/$name.html";
         $ret = $self->_runSeleniumRC($hostname, $suiteFile, $logfile);
 
         if ($config->seleniumVideo()) {
@@ -382,13 +381,13 @@ sub _runTest # (test)
                 unlink($video);
             } 
             else {
-                $testResult->setVideo("video/$name.ogg");
+                $testResult->setVideo("$suiteDir/video/$name.ogg");
             }
         }            
         # Store end time
         my $endTime = $self->_time();
         $testResult->setEndTime($endTime);
-        $testResult->setLog("selenium/$name.html");
+        $testResult->setLog("$suiteDir/$name.html");
     }
     else {
         if (not -r "$path/test") {
@@ -396,7 +395,7 @@ sub _runTest # (test)
                                               "$suiteDir/$testDir/test");
         }
 
-        $logfile = "$logPath/out/$name.txt";
+        $logfile = "$logPath/$suiteDir/$name.txt";
 
         # Copy to temp directory and rename it to test name
         system("cp $path/test $newPath/$name");        
@@ -417,7 +416,7 @@ sub _runTest # (test)
         print $LOG "\nTest finished at $endTime.\n";
         close($LOG);
 
-        $testResult->setLog("out/$name.txt");
+        $testResult->setLog("$suiteDir/$name.txt");
     }
 
     # Run post-test script if exists
