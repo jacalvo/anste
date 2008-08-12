@@ -47,6 +47,7 @@ my $path = '';
 my $video = '';
 my $format = '';
 my $wait = 0;
+my $waitFail = 0;
 my $help = 0;
 my $quiet = 0;
 my $step = 0;
@@ -64,6 +65,7 @@ GetOptions('create' => \$create,
            'format=s' => \$format,
            'quiet' => \$quiet,
            'wait' => \$wait,
+           'wait-fail' => \$waitFail,
            'reuse' => \$reuse,
            'step' => \$step,
            'non-stop' => \$nonStop,
@@ -87,6 +89,9 @@ if ($quiet) {
 }
 if ($wait) {
     $config->setWait(1);
+}
+if ($waitFail) {
+    $config->setWaitFail(1);
 }
 if ($out) {
     $config->setLogPath($out);
@@ -348,6 +353,7 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -video          save video recording of selenium tests
    -format <fmt>   select the output format for the reports
    -wait           wait before shutting down after testing complete
+   -wait-fail      wait after a test fails
    -step           run tests step by step, waiting after each one
    -non-stop       run all test without waiting, ignoring <stop/>'s
    -quiet          do not show output of commands

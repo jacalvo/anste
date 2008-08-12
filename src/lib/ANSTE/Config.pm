@@ -101,6 +101,7 @@ sub check
     $self->format();
     $self->verbose();
     $self->wait();
+    $self->waitFail();
     $self->imagePath();
     $self->logPath();
     $self->deployPath();
@@ -383,6 +384,61 @@ sub setWait # (value)
     }
 
     $self->{override}->{'global'}->{'wait'} = $value;
+}
+
+# Method: waitFail
+#
+#   Gets the value for the waitFail option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub waitFail
+{
+    my ($self) = @_;
+
+    my $waitFail = $self->_getOption('global', 'wait-fail');
+
+    if (not ANSTE::Validate::boolean($waitFail)) {
+        throw ANSTE::Exceptions::InvalidConfig('global/wait-fail', 
+                                               $waitFail,
+                                               $self->{confFile});
+    }
+
+    return $waitFail;
+}
+
+# Method: setWaitFail
+#
+#   Sets the value for the wait-fail option.
+#
+# Parameters:
+#
+#   value - String with the value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setWaitFail # (value)
+{
+    my ($self, $value) = @_;
+
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not ANSTE::Validate::boolean($value)) {
+        throw ANSTE::Exceptions::InvalidOption('global/wait-fail', 
+                                               $value);
+    }
+
+    $self->{override}->{'global'}->{'wait-fail'} = $value;
 }
 
 # Method: reuse
@@ -1343,6 +1399,7 @@ sub _setDefaults
     $self->{default}->{'global'}->{'virtualizer'} = 'Xen';
     $self->{default}->{'global'}->{'verbose'} = 1;
     $self->{default}->{'global'}->{'wait'} = 0;
+    $self->{default}->{'global'}->{'wait-fail'} = 0;
     $self->{default}->{'global'}->{'reuse'} = 0;
 
     $self->{default}->{'paths'}->{'images'} = '/home/xen/domains';

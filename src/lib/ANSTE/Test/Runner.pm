@@ -264,7 +264,8 @@ sub _runTests
         # Wait user input if there is a breakpoint in the test
         # and not in non-stop mode, or wait always if we are
         # in step by step mode.
-        if (($test->stop() && !$config->nonStop) || $config->step()) {
+        if (($test->stop() && !$config->nonStop) || 
+            ($config->waitFail() && $ret != 0) || $config->step()) {
             print "Stop requested after this test. " .
                   "Press any key to continue.\n";
             my $key;                  
