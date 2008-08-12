@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>save-changes</title>
+<title>toggle</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">save-changes</td></tr>
+<tr><td rowspan="1" colspan="3">toggle</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -18,37 +18,27 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>changes_menu</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>save</td>
+	<td>link=Mail</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>save</td>
+	<td>//a[contains(@href, '/ebox/Mail/Composite/General')]</td>
 	<td></td>
 </tr>
 <tr>
-    <td>setTimeout</td>
-    <td>60000</td>
-    <td></td>
+	<td>click</td>
+	<td>SMTPAuth_{$OPTION}</td>
+	<td></td>
 </tr>
 <tr>
-    <td>waitForValue</td>
-    <td>ajax_request_cookie</td>
-    <td>1337</td>
+	<td>click</td>
+	<td>change</td>
+	<td></td>
 </tr>
 <tr>
-    <td>setTimeout</td>
-    <td>30000</td>
-    <td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>Changes saved</td>
+	<td>waitForTextPresent</td>
+	<td>Done</td>
 	<td></td>
 </tr>
 

@@ -12,7 +12,7 @@ cat << EOF > /usr/share/ebox/stubs/apache.mas
 </%args>
 
 Timeout 300
-KeepAlive On
+KeepAlive Off
 MaxKeepAliveRequests 100
 KeepAliveTimeout 15
 AddDefaultCharset utf-8	
@@ -22,8 +22,8 @@ PidFile <% \$tmpdir %>/apache.pid
 <IfModule mpm_prefork_module>
     StartServers          1 
     MinSpareServers       1
-    MaxSpareServers       5
-    MaxClients            5 
+    MaxSpareServers       2
+    MaxClients            2 
     MaxRequestsPerChild   20
 </IfModule>
 

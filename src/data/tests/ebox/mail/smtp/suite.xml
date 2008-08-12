@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite>
+    <name>eBox SMTP tests</name>
+    <desc>
+    Contains a set of tests to check 
+    that the eBox mail module works properly.
+    </desc>
+    
+    <scenario>ebox/mail/only-internal.xml</scenario>
+
+    <test type="selenium">
+        <name>EnableModules</name>
+        <desc>Enable network, users and mail modules.</desc>
+
+        <host>ebox-server</host>
+        <dir>enable-modules</dir>
+    </test>
+
+    <test type="selenium">
+        <name>ConfigMailAccount</name>
+        <desc>
+        Config the mail account.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>config-mail-account</dir>
+        <var name="USERNAME" value="eboxtest"/>
+        <var name="PASSWORD" value="eboxtest"/>
+    </test>        
+
+    <test type="selenium">
+        <name>SetSSLOff</name>
+        <desc>
+        Toggles tls checkbox.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>toggle-auth-or-ssl</dir>
+        <var name="OPTION" value="tls"/>
+    </test>        
+
+    <test>
+        <name>Test-SMTP-NoAuth-NoSSL</name>
+        <desc>Checks if mail sending works.</desc>
+
+        <host>test-client</host>
+        <dir>test-smtp</dir>
+        <var name="SERVER" value="192.168.2.1"/>
+        <var name="SSL" value="0"/>
+        <var name="AUTH" value="0"/>
+    </test>
+
+    <test type="selenium">
+        <name>SetSSLOn</name>
+        <desc>
+        Toggles authentication checkbox.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>toggle-auth-or-ssl</dir>
+        <var name="OPTION" value="tls"/>
+    </test>        
+
+    <test>
+        <name>Test-SMTP-NoAuth-SSL</name>
+        <desc>Checks if mail sending works.</desc>
+
+        <host>test-client</host>
+        <dir>test-smtp</dir>
+        <var name="SERVER" value="192.168.2.1"/>
+        <var name="SSL" value="1"/>
+        <var name="AUTH" value="0"/>
+    </test>
+
+    <test type="selenium">
+        <name>SetAuthOn</name>
+        <desc>
+        Toggles authentication checkbox.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>toggle-auth-or-ssl</dir>
+        <var name="OPTION" value="sasl"/>
+    </test>        
+
+    <test>
+        <name>Test-SMTP-Auth-SSL</name>
+        <desc>Checks if mail sending works.</desc>
+
+        <host>test-client</host>
+        <dir>test-smtp</dir>
+        <var name="SERVER" value="192.168.2.1"/>
+        <var name="SSL" value="1"/>
+        <var name="AUTH" value="1"/>
+    </test>
+
+</suite>

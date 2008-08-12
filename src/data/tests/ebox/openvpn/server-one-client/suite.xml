@@ -119,6 +119,16 @@
         <assert>failed</assert>
     </test>
 
+    <test>
+        <name>KillFailVPN</name>
+        <desc>
+        Kill openvpn connection.
+        </desc>
+        
+        <host>external</host>
+        <dir>kill-vpn</dir>
+    </test>
+
     <test type="selenium">
         <name>FirewallAllowInternal</name>
         <desc>

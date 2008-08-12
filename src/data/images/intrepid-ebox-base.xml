@@ -5,11 +5,11 @@
 
     <memory>512</memory>
 
-    <size>800M</size>
+    <size>900M</size>
 
     <install method="debootstrap">
-        <dist>hardy</dist>
-        <command>/usr/sbin/debootstrap --exclude=ubuntu-minimal,libc6-i686 --no-resolve-deps</command>
+        <dist>intrepid</dist>
+        <command>/usr/sbin/debootstrap --exclude=ubuntu-minimal,libc6-i686</command>
     </install>
     
     <packages>
@@ -17,7 +17,8 @@
         <package>postfix</package>
         <package>postgresql</package>
         <package>apache2-mpm-prefork</package>
-        <profile>ebox</profile>
+        <profile>ebox-intrepid</profile>
+        <package>wget</package>
     </packages>
 
     <pre-install>
