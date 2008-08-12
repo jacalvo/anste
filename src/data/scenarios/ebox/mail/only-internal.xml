@@ -30,7 +30,7 @@
     <host>
         <name>test-client</name>
         <desc>simple client host</desc>
-        <baseimage>sarge-mini</baseimage>
+        <baseimage>lenny-mini</baseimage>
         <memory>64</memory>
         <network>
          <interface type="static">
@@ -45,6 +45,7 @@
             <package>libmail-pop3client-perl</package>
             <package>libmail-imapclient-perl</package>
             <package>libio-socket-ssl-perl</package>
+            <package>libnet-smtp-ssl-perl</package>
         </packages>
     </host>
 </scenario>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite>
-    <name>eBox Proxy tests</name>
+    <name>eBox WebServer tests</name>
     <desc>
     Contains a set of tests to check 
-    that the eBox HTTP Proxy module works properly.
+    that the eBox WebServer module works properly.
     </desc>
     
     <scenario>ebox/one-client.xml</scenario>
