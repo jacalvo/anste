@@ -243,7 +243,7 @@
         <dir>add-share-perms</dir>
         <var name="USER" value="admin"/>
         <var name="SHARE" value="foobar"/>
-        <var name="PERM_LABEL" value="Admnistrator"/>
+        <var name="PERM_LABEL" value="Administrator"/>
     </test>        
 
     <test>
@@ -399,7 +399,7 @@
         <dir>add-share-perms</dir>
         <var name="USER" value="admin"/>
         <var name="SHARE" value="myshare"/>
-        <var name="PERM_LABEL" value="Admnistrator"/>
+        <var name="PERM_LABEL" value="Administrator"/>
     </test>        
 
     <test>
