@@ -135,4 +135,25 @@ sub tests # returns list ref
     return $self->{tests};
 }
 
+# Method: value
+#
+#   Gets the value of the test suite (sumatory of test result values).
+#
+# Returns:
+#
+#   integer - result value
+#
+sub value # returns value
+{
+    my ($self) = @_;
+
+    my $total = 0;
+
+    foreach my $result (@{$self->{tests}}) {
+        $total += $result->value();
+    }
+
+    return $total;
+}
+
 1;

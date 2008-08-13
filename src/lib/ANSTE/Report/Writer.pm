@@ -65,13 +65,21 @@ sub new # (report) returns new Write object
 #
 # Parameters:
 #
-#   file - String with the file name.
+#   file - String with the file name or an opened file descriptor.
 #
 sub write # (file) 
 {
     my ($self, $file) = @_;
 
-    $self->{file} = $file; 
+    my $needClose = 0;
+
+    if (ref($file)) {
+        $self->{file} = $file;
+    }
+    else {
+        $needClose = 1;
+        open($self->{file}, '>', $file);
+    }
 
     $self->writeHeader();
 
@@ -94,6 +102,10 @@ sub write # (file)
     }
 
     $self->writeEnd();
+
+    if ($needClose) {
+        close($self->{file});
+    }
 }
 
 # Method: writeHeader

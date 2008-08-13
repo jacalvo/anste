@@ -59,14 +59,23 @@ sub new # returns new Runner object
 	my ($class) = @_;
 	my $self = {};
 
+    my $config = ANSTE::Config->instance();
+
     $self->{suite} = undef;
     $self->{report} = new ANSTE::Report::Report();
-    my $system = ANSTE::Config->instance()->system();
+    my $system = $config->system();
 
     eval "use ANSTE::System::$system";
     die "Can't load package $system: $@" if $@;
 
     $self->{system} = "ANSTE::System::$system"->new();
+
+    my $format = $config->format();
+    my $writerPackage = "ANSTE::Report::$format" . 'Writer';
+    eval "use $writerPackage";
+    die "Can't load package $writerPackage: $@" if $@;
+
+    $self->{writer} = $writerPackage->new($self->{report});
 
 	bless($self, $class);
 
@@ -227,10 +236,9 @@ sub _runTests
 {
     my ($self) = @_;
 
+    my $config = ANSTE::Config->instance();
     my $suite = $self->{suite};
-
     my $suiteName = $suite->name();
-
     my $report = $self->{report};
 
     print "\n\nRunning test suite: $suiteName\n\n";
@@ -260,7 +268,6 @@ sub _runTests
             $suiteResult->add($testResult);
         }
 
-        my $config = ANSTE::Config->instance();
         # Wait user input if there is a breakpoint in the test
         # and not in non-stop mode, or wait always if we are
         # in step by step mode.
@@ -274,6 +281,11 @@ sub _runTests
     }
 
     $report->add($suiteResult);
+
+    # Write test reports
+    my $writer = $self->{writer};
+    my $logPath = $config->logPath();
+    $writer->write("$logPath/" . $writer->filename());
 }
 
 sub _runTest # (test)

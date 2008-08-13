@@ -15,148 +15,128 @@
 
 package ANSTE::Report::HTMLWriter;
 
-use base 'ANSTE::Report::Writer';
+use base 'ANSTE::Report::SimpleHTMLWriter';
 
 use strict;
 use warnings;
+
+use File::Basename;
 
 # Class: HTMLWriter
 #
 #   Implementation of class Writer for writing reports in HTML format.
 #
 
-# Method: writeHeader
+# Method: write
 #
-#   Overriden method that writes the header of the report in HTML.
-#
-sub writeHeader 
-{
-    my ($self) = @_;
-
-    my $file = $self->{file};
-
-    print $file "<html>\n";
-    print $file "<head>\n";
-    print $file "<title>ANSTE Test report</title>\n";
-    print $file "</head>\n";
-    print $file "<body>\n";
-    print $file "<h1>ANSTE Test report</h1>\n";
-}    
-
-# Method: writeEnd
-#
-#   Overriden method that writes the end of the report in HTML.
-#
-sub writeEnd
-{
-    my ($self) = @_;
-
-    my $file = $self->{file};
-
-    my $time = $self->{report}->time();
-
-    print $file "<p><i>Report generated at $time</i></p>\n";
-
-    print $file "</body>\n";
-    print $file "</html>\n";
-}    
-
-# Method: writeSuiteHeader
-#
-#   Overriden method that writes the header of a suite result in HTML.
+#   Overriden method that writes a report index to the given file and
+#   a set of aditional files for each test suite.
 #
 # Parameters:
 #
-#   name - String with the suite name.
-#   desc - String with the suite description.
+#   file - String with the file name.
 #
-sub writeSuiteHeader # (name, desc)
+sub write # (file) 
 {
-    my ($self, $name, $desc) = @_;
+    my ($self, $file) = @_;
+
+    if (ref($file)) {
+        die "HTML reports couldn't be written to a file descriptor";
+    }
+
+    my $FILE;
+    open($FILE, '>', $file);
+    $self->{file} = $FILE;
+
+    $self->writeHeader();
+    $self->_writeReportHeader();
+
+    my $report = $self->{report};
+    foreach my $suite (@{$report->suites()}) {
+        my $dir = dirname($file);
+        my $suiteDir = $suite->suite()->dir();
+        my $reportFile = "$dir/$suiteDir/index.html";
+
+        $self->_writeSuiteFile($suite, $reportFile);
+
+        $self->{file} = $FILE;
+        $self->_writeSuiteLink($suite);
+    }
+
+    $self->writeSuiteEnd();
+    $self->writeEnd();
+
+    close($FILE);
+}
+
+sub _writeSuiteFile # (suite, file)
+{
+    my ($self, $suite, $file) = @_;
+
+    my $FILE;
+    open($FILE, '>', $file);
+
+    $self->{file} = $FILE;
+
+    my $name = $suite->suite()->name();
+    my $desc = $suite->suite()->desc();
+    $self->writeSuiteHeader($name, $desc);
+    foreach my $test (@{$suite->tests()}) {
+        $name = $test->test()->name();
+        $desc = $test->test()->desc();
+        my $video = $test->video();
+        if ($video) {
+            $video = basename($video);
+        }
+        $self->writeTestResult(name => $name,
+                desc => $desc,
+                value => $test->value(),
+                log => basename($test->log()),
+                video => $video);
+    }
+    $self->writeSuiteEnd();
+
+    close($FILE);
+}
+
+sub _writeReportHeader
+{
+    my ($self) = @_;
 
     my $file = $self->{file};
 
-    print $file "<h2>$name</h2>\n";
-    print $file "<h3>$desc</h3>\n";
     print $file "<table border='1' width='100%'>\n";
     print $file "<th><tr>\n";
-    print $file "<td>Test</td>\n";
+    print $file "<td>Suite</td>\n";
     print $file "<td>Description</td>\n";
     print $file "<td>Result</td>\n";
     print $file "</tr></th>\n";
 }    
 
-# Method: writeSuiteEnd
-#
-#   Overriden method that writes the end of a suite result in HTML.
-#
-sub writeSuiteEnd
+sub _writeSuiteLink # (suite)
 {
-    my ($self) = @_;
+    my ($self, $suite) = @_;
 
-    my $file = $self->{file};
-
-    print $file "</table>\n";
-}    
-
-# Method: writeTestResult
-#
-#   Overriden method that writes a test result in HTML.
-#
-# Parameters:
-#
-#   name  - String with the test name.
-#   value - String with the test result value.
-#   desc  - *optional* String with the test description.
-#   log   - *optional* String with the log path.
-#   video - *optional* String with the video path.
-#
-sub writeTestResult # (%params)
-{
-    my ($self, %params) = @_;
-
-    my $name = $params{name};
-    my $desc = $params{desc};
-    my $result = $params{value};
-    my $file = $params{log};
-    my $video = $params{video};
+    my $name = $suite->suite()->name();
+    my $desc = $suite->suite()->desc();
+    my $result = $suite->value();
+    my $file = $suite->suite()->dir() . '/index.html';
 
     my $filehandle = $self->{file};
 
     my $resultStr = $result == 0 ? "<font color='#00FF00'>OK</font>" : 
                                    "<font color='#FF0000'>ERROR</font>";
-    if ($file) {
-        $resultStr = "<a href=\"$file\">" . $resultStr . "</a>";
-    }        
-
-    if ($video) {
-        $resultStr .= " (<a href=\"$video\">video</a>)";
-    }
+    my $linkStr = "<a href=\"$file\">" . $name . "</a>";
 
     if (not $desc) {
         $desc = '&nbsp;';
     }
 
     print $filehandle "<tr>\n" . 
-                      "<td>$name</td>\n" .
+                      "<td>$linkStr</td>\n" .
                       "<td>$desc</td>\n" .
                       "<td>$resultStr</td>\n" .
                       "</tr>\n";
-}    
-
-# Method: filename
-#
-#   Overriden method that returns the name of the file for the HTML report.
-#
-# Returns:
-#
-#   string - contains the name of the file
-#
-sub filename
-{
-    my ($self) = @_;
-
-    return 'index.html';
 }    
 
 1;

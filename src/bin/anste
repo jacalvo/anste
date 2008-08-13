@@ -283,7 +283,11 @@ sub test # (file)
         try {
             my $suite = new ANSTE::Test::Suite;
             $suite->loadFromDir($file);
-            $runner->runSuite($suite);
+            try {
+                $runner->runSuite($suite);
+            } finally {
+                printResults($runner->report());
+            };
         } catch ANSTE::Exceptions::InvalidFile with {
             my $ex = shift;
             my $filename = $ex->file();
@@ -306,29 +310,20 @@ sub test # (file)
         };
     }
     else {
-        $runner->runDir($file)
+        try {
+            $runner->runDir($file);
+        } finally {
+            printResults($runner->report());
+        };
     }
+}
 
-    my $report = $runner->report();
+sub printResults # (report)
+{
+    my ($report) = @_;
 
     my $txtWriter = new ANSTE::Report::TextWriter($report); 
     $txtWriter->write(\*STDOUT);
-
-    my $LOGPATH = $config->logPath();
-    my $format = $config->format();
-    print "\nWriting $format reports to $LOGPATH...";
-
-    my $writerPackage = "ANSTE::Report::$format" . 'Writer';
-
-    eval "use $writerPackage";
-    die "Can't load package $writerPackage: $@" if $@;
-
-    my $writer = $writerPackage->new($report);
-    my $FILE;
-    open($FILE, '>', "$LOGPATH/" . $writer->filename());
-    $writer->write($FILE);
-    close($FILE);
-    print "Done.\n";
 }
 
 __END__
