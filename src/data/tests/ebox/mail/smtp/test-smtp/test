@@ -8,23 +8,23 @@ my $smtp;
 my $TO = $ENV{TO};
 
 if ($ENV{SSL}) {
-    $smtp = new Net::SMTP::SSL($ENV{SERVER}, Port => 465);
+    $smtp = new Net::SMTP::SSL($ENV{SERVER}, Port => 465) or die "CONNECT error";
 }
 else {
-    $smtp = new Net::SMTP($ENV{SERVER});
+    $smtp = new Net::SMTP($ENV{SERVER}) or die "CONNECT error";
 }
 
 if ($ENV{AUTH}) {
-    $smtp->auth('eboxtest@foobar', 'eboxtest');
+    $smtp->auth('eboxtest@foobar', 'eboxtest') or die "AUTH error";
 }
 
-$smtp->mail('eboxtest@foobar');
-$smtp->to($TO);
+$smtp->mail('eboxtest@foobar') or die "MAIL FROM error";
+$smtp->to($TO) or die "RCPT TO error";
 
 $smtp->data();
 $smtp->datasend("To: $TO");
 $smtp->datasend("\n");
 $smtp->datasend("que barbaro\n");
-$smtp->dataend();
+$smtp->dataend() or die "SEND error";
 
 $smtp->quit();
