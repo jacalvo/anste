@@ -30,6 +30,7 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 
 use Cwd;
+use Error qw(:try);
 use File::Temp qw(tempfile tempdir);
 
 # Class: Commands
@@ -221,18 +222,28 @@ sub installBasePackages
         die "Can't fork: $!";
     }
     elsif ($pid == 0) { # child
+        chdir('/');
         chroot($mountPoint) or die "Can't chroot: $!";
         $ENV{HOSTNAME} = $self->{image}->name();
         
         my $system = $self->{system};
 
-        my $ret = $system->installBasePackages();
+        my $ret;
 
-        exit($ret);
+        try {
+            $ret = $system->installBasePackages();
+        } catch Error with {
+            my $err = shift; 
+            my $msg = $err->stringify();
+            print "ERROR: $msg\n";
+        } finally {            
+            exit($ret);
+        };            
     }
     else { # parent
         waitpid($pid, 0);
         return($?);
+        # TODO: Abort process if exit code != 0 ??
     }
 }
 

@@ -13,6 +13,7 @@
     </install>
     
     <packages>
+        <package>slapd</package>
         <package>ssl-cert</package>
         <package>postfix</package>
         <package>postgresql</package>

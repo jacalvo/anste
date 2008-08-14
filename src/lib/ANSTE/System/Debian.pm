@@ -677,8 +677,7 @@ sub executeSelenium # (%params)
 
     my $date = `date +%y%m%d%H%M%S`;
     chomp($date);
-    my $logPath = ANSTE::Config->instance()->logPath();
-    my $LOG =  "$logPath/anste-selenium-$date.log";
+    my $LOG =  "/tmp/anste-selenium-$date.log";
 
     my $cmd = 'java -jar ' . $jar . ' -htmlSuite "' . $browser . '" ' .
               '"' . $url . '" "' . $testFile . '" "' . $resultFile . '" ' .
