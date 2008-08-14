@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cat /var/vmail/ebox-smtp/receiver/new/*
+
+grep "que barbaro" /var/vmail/ebox-smtp/receiver/new/*

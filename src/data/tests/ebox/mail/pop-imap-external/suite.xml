@@ -54,6 +54,7 @@
 
         <host>ebox-server</host>
         <dir>config-mail-account</dir>
+        <var name="VDOMAIN" value="foobar"/>
         <var name="USERNAME" value="eboxtest"/>
         <var name="PASSWORD" value="eboxtest"/>
     </test>        
