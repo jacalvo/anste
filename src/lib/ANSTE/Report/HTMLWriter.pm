@@ -86,7 +86,7 @@ sub _writeSuiteFile # (suite, file)
         $desc = $test->test()->desc();
         my $video = $test->video();
         if ($video) {
-            $video = basename($video);
+            $video = 'video/' . basename($video);
         }
         $self->writeTestResult(name => $name,
                 desc => $desc,

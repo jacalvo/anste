@@ -228,7 +228,7 @@ sub installBasePackages
         
         my $system = $self->{system};
 
-        my $ret;
+        my $ret = -1;
 
         try {
             $ret = $system->installBasePackages();
