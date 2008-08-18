@@ -8,18 +8,19 @@ my $smtp;
 my $TO = $ENV{TO};
 
 if ($ENV{SSL}) {
-    $smtp = new Net::SMTP::SSL($ENV{SERVER}, Port => 465) or die "CONNECT error";
+    $smtp = new Net::SMTP::SSL($ENV{SERVER}, Port => 465) or 
+        die "CONNECT error: $@";
 }
 else {
-    $smtp = new Net::SMTP($ENV{SERVER}) or die "CONNECT error";
+    $smtp = new Net::SMTP($ENV{SERVER}) or die "CONNECT error: $@";
 }
 
 if ($ENV{AUTH}) {
-    $smtp->auth('eboxtest@foobar', 'eboxtest') or die "AUTH error";
+    $smtp->auth('eboxtest@foobar.mail', 'eboxtest') or die "AUTH error: $@";
 }
 
-$smtp->mail('eboxtest@foobar') or die "MAIL FROM error";
-$smtp->to($TO) or die "RCPT TO error";
+$smtp->mail('eboxtest@foobar.mail') or die "MAIL FROM error: $@";
+$smtp->recipient($TO) or die "RCPT TO error: $@";
 
 $smtp->data();
 $smtp->datasend("To: $TO");

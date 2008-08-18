@@ -24,7 +24,7 @@
 
         <host>ebox-server</host>
         <dir>config-mail-account</dir>
-        <var name="VDOMAIN" value="foobar"/>
+        <var name="VDOMAIN" value="foobar.mail"/>
         <var name="USERNAME" value="eboxtest"/>
         <var name="PASSWORD" value="eboxtest"/>
     </test>        
@@ -47,7 +47,7 @@
         <host>test-client</host>
         <dir>test-smtp</dir>
         <var name="SERVER" value="192.168.2.1"/>
-        <var name="TO" value="ebox-test@foobar"/>
+        <var name="TO" value="eboxtest@foobar.mail"/>
         <var name="SSL" value="0"/>
         <var name="AUTH" value="0"/>
     </test>
@@ -70,7 +70,7 @@
         <host>test-client</host>
         <dir>test-smtp</dir>
         <var name="SERVER" value="192.168.2.1"/>
-        <var name="TO" value="ebox-test@foobar"/>
+        <var name="TO" value="eboxtest@foobar.mail"/>
         <var name="SSL" value="1"/>
         <var name="AUTH" value="0"/>
     </test>
@@ -93,7 +93,7 @@
         <host>test-client</host>
         <dir>test-smtp</dir>
         <var name="SERVER" value="192.168.2.1"/>
-        <var name="TO" value="ebox-test@foobar"/>
+        <var name="TO" value="eboxtest@foobar.mail"/>
         <var name="SSL" value="1"/>
         <var name="AUTH" value="1"/>
     </test>

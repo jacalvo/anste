@@ -246,6 +246,8 @@ sub _runTests
     my $suiteResult = new ANSTE::Report::SuiteResult();
     $suiteResult->setSuite($suite);
 
+    $report->add($suiteResult);
+
     foreach my $test (@{$suite->tests()}) {
         my $testName = $test->name();
         print "Running test: $testName\n";
@@ -266,6 +268,11 @@ sub _runTests
         # Adds the test report
         if ($testResult) {
             $suiteResult->add($testResult);
+            
+            # Write test reports
+            my $writer = $self->{writer};
+            my $logPath = $config->logPath();
+            $writer->write("$logPath/" . $writer->filename());
         }
 
         # Wait user input if there is a breakpoint in the test
@@ -279,13 +286,6 @@ sub _runTests
             read(STDIN, $key, 1);
         }
     }
-
-    $report->add($suiteResult);
-
-    # Write test reports
-    my $writer = $self->{writer};
-    my $logPath = $config->logPath();
-    $writer->write("$logPath/" . $writer->filename());
 }
 
 sub _runTest # (test)
