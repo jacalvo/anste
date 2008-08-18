@@ -126,7 +126,7 @@
         <assert>failed</assert>
         <var name="USER" value="foo"/>
         <var name="PASS" value="foo"/>
-        <var name="ERROR" value="NT_STATUS_LOGON_FAILURE"/>
+        <var name="ERROR" value="NT_STATUS_BAD_NETWORK_NAME"/>
         <var name="SHARE" value="foobar"/>
     </test>        
     <test>
@@ -140,7 +140,7 @@
         <var name="USER" value="foo"/>
         <var name="PASS" value="foo"/>
         <var name="SHARE" value="foobar"/>
-        <var name="ERROR" value="NT_STATUS_LOGON_FAILURE"/>
+        <var name="ERROR" value="NT_STATUS_BAD_NETWORK_NAME"/>
     </test>
 
     <test type="selenium">
@@ -207,6 +207,7 @@
         <var name="SHARE" value="foobar"/>
         <var name="ERROR" value="NT_STATUS_ACCESS_DENIED"/>
     </test>        
+
     <test>
         <name>TestSmbClientEboxShareReadWithReadOnly</name>
         <desc>Read from a share with read/write perms</desc>
@@ -218,6 +219,24 @@
         <var name="PASS" value="foo"/>
         <var name="SHARE" value="foobar"/>
         <var name="ERROR" value="NT_"/>
+    </test>
+
+    <test>
+        <name>TestSmbClientEboxShareReadWithReadOnlyBadLogin</name>
+        <desc>
+        Try to read from a share with read/write perms
+        with incorrect password.
+        </desc>
+
+        <host>test-client</host>
+        <dir>test-read</dir>
+
+        <var name="USER" value="foo"/>
+        <var name="PASS" value="bar"/>
+        <var name="SHARE" value="foobar"/>
+        <var name="ERROR" value="NT_STATUS_LOGON_FAILURE"/>
+
+        <assert>failed</assert>
     </test>
 
     <test type="selenium">
@@ -270,6 +289,20 @@
         <var name="SHARE" value="foobar"/>
         <var name="ERROR" value="NT_"/>
     </test>
+    <test>
+        <name>TestSmbClientEboxShareReadAdminBadLogin</name>
+        <desc>Read from a share with admin perms</desc>
+
+        <host>test-client</host>
+        <dir>test-read</dir>
+
+        <var name="USER" value="admin"/>
+        <var name="PASS" value="badpass"/>
+        <var name="SHARE" value="foobar"/>
+        <var name="ERROR" value="NT_STATUS_LOGON_FAILURE"/>
+
+        <assert>failed</assert>
+    </test>
 
     <test type="selenium">
         <name>AddFileSystemShare</name>
@@ -295,7 +328,7 @@
         <assert>failed</assert>
         <var name="USER" value="foo"/>
         <var name="PASS" value="foo"/>
-        <var name="ERROR" value="NT_STATUS_LOGON_FAILURE"/>
+        <var name="ERROR" value="NT_STATUS_BAD_NETWORK_NAME"/>
         <var name="SHARE" value="myshare"/>
     </test>        
     <test>
@@ -309,7 +342,7 @@
         <var name="USER" value="foo"/>
         <var name="PASS" value="foo"/>
         <var name="SHARE" value="myshare"/>
-        <var name="ERROR" value="NT_STATUS_LOGON_FAILURE"/>
+        <var name="ERROR" value="NT_STATUS_BAD_NETWORK_NAME"/>
     </test>
 
     <test type="selenium">
@@ -336,6 +369,20 @@
         <var name="PASS" value="foo"/>
         <var name="SHARE" value="myshare"/>
         <var name="ERROR" value="NT_"/>
+    </test>        
+    <test>
+        <name>TestSmbClientFileSystemShareWriteWithReadWriteBadLogin</name>
+        <desc>Write to a share with read/write perms with bad password</desc>
+
+        <host>test-client</host>
+        <dir>test-write</dir>
+
+        <var name="USER" value="foo"/>
+        <var name="PASS" value="bar"/>
+        <var name="SHARE" value="myshare"/>
+        <var name="ERROR" value="NT_STATUS_LOGON_FAILURE"/>
+
+        <assert>failed</assert>
     </test>        
     <test>
         <name>TestSmbClientFileSystemShareReadWithReadWrite</name>
@@ -450,7 +497,7 @@
         <var name="USER" value="foo"/>
         <var name="PASS" value="foo"/>
         <var name="SHARE" value="foobar"/>
-        <var name="ERROR" value="NT_"/>
+        <var name="ERROR" value="NT_STATUS_BAD_NETWORK_NAME"/>
     </test>        
 
     <test>
@@ -464,6 +511,6 @@
         <var name="USER" value="foo"/>
         <var name="PASS" value="foo"/>
         <var name="SHARE" value="foobar"/>
-        <var name="ERROR" value="NT_"/>
+        <var name="ERROR" value="NT_STATUS_BAD_NETWORK_NAME"/>
     </test>
 </suite>
