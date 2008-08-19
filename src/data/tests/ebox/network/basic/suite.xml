@@ -1,7 +1,7 @@
 <suite>
-    <name>One eBox machine Test Suite</name>
-    <desc>Contains a set of tests to ensure
-    that a ebox image works ok.
+    <name>One eBox Network Basic Tests</name>
+    <desc>
+    Adding and removing DNS and gateways.
     </desc>
     
     <scenario>ebox/single.xml</scenario>

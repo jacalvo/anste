@@ -1,5 +1,5 @@
 <suite>
-    <name>eBox to eBox Test Suite</name>
+    <name>eBox OpenVPN (eBox to eBox) Test Suite</name>
     <desc>Contains a set of tests to ensure
     that ebox OpenVPN module works ok.
     </desc>

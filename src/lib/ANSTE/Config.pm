@@ -1438,7 +1438,7 @@ sub _setDefaults
         'http://ftp.debian.org/debian';
 
     # Default values for variables, overridable by commandline option
-    $self->{variables} = {dist => 'hardy'};
+    $self->{variables} = {dist => 'intrepid'};
 }
 
 1;
