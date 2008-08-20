@@ -136,23 +136,23 @@ sub writeTestResult # (%params)
 
     my $filehandle = $self->{file};
 
-    print $filehandle "<testcase name=\"$name\">\n";
+    print $filehandle "<testcase classname=\"$name\">\n";
 
-    if ($desc) {
-        print $filehandle "<desc>$desc</desc>\n";
-    }        
+#    if ($desc) {
+#        print $filehandle "<desc>$desc</desc>\n";
+#    }        
 
     if ($result != 0) {
         print $filehandle "<failure/>\n";
     }        
 
-    if ($file) {
-        print $filehandle "<log>$file</log>\n";
-    }        
+#    if ($file) {
+#        print $filehandle "<log>$file</log>\n";
+#    }        
 
-    if ($video) {
-        print $filehandle "<video>$video</video>\n";
-    }
+#    if ($video) {
+#        print $filehandle "<video>$video</video>\n";
+#    }
 
     print $filehandle "</testcase>\n";
 }    

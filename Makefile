@@ -35,13 +35,13 @@ install-anste:
 	install -d $(DESTDIR)$(DATADIR)/profiles
 	install -m644 src/data/profiles/* $(DESTDIR)$(DATADIR)/profiles
 	install -d $(DESTDIR)$(DATADIR)/scenarios
-	install -m644 src/data/scenarios/* $(DESTDIR)$(DATADIR)/scenarios
+	cp -a src/data/scenarios/* $(DESTDIR)$(DATADIR)/scenarios
 	install -d src/data/files $(DESTDIR)$(DATADIR)/files
-	install -m644 src/data/files/* $(DESTDIR)$(DATADIR)/files
+	cp -a src/data/files/* $(DESTDIR)$(DATADIR)/files
 	install -d $(DESTDIR)$(DATADIR)/scripts
 	install -m755 src/data/scripts/* $(DESTDIR)$(DATADIR)/scripts
 	install -d $(DESTDIR)$(DATADIR)/templates
-	install -m755 src/data/templates/* $(DESTDIR)$(DATADIR)/templates
+	cp -a src/data/templates/* $(DESTDIR)$(DATADIR)/templates
 	install -d $(DESTDIR)$(DATADIR)/tests
 	cp -a src/data/tests/ebox $(DESTDIR)$(DATADIR)/tests
 	cp -a src/data/tests/sample $(DESTDIR)$(DATADIR)/tests
