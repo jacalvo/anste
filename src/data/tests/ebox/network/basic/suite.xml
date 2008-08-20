@@ -1,5 +1,5 @@
 <suite>
-    <name>One eBox Network Basic Tests</name>
+    <name>eBox Network Basic Tests</name>
     <desc>
     Adding and removing DNS and gateways.
     </desc>

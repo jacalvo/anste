@@ -21,6 +21,10 @@
             </interface>
         </network>
 
+        <packages>
+            <package>mpack</package>
+        </packages>
+
         <post-install>
             <script>ebox-import-network.sh</script>
             <script>ebox-wait-start.sh</script>

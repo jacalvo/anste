@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cat /var/vmail/ebox-smtp/receiver/new/*
+cat /var/vmail/$VDOMAIN/$USER/new/*
 
-grep "que barbaro" /var/vmail/ebox-smtp/receiver/new/*
+grep "que barbaro" /var/vmail/$VDOMAIN/$USER/new/*

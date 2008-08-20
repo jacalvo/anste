@@ -194,7 +194,26 @@
         <host>ebox-smtp</host>
         <dir>check-mailbox</dir>
 
-        <assert>failed</assert>
+        <var name="USER" value="receiver"/>
+        <var name="VDOMAIN" value="mail.ebox-smtp"/>
+    </test>
+
+    <test type="selenium">
+        <name>EnableMailfilter</name>
+        <desc>
+        Enable mailfilter module and add the virtual domain to its settings.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>enable-mailfilter</dir>
+    </test>        
+
+    <test>
+        <name>Send-Virus</name>
+        <desc>Sends a mail with virus attached</desc>
+
+        <host>ebox-server</host>
+        <dir>send-virus</dir>
     </test>
 
 </suite>

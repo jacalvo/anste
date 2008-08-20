@@ -198,4 +198,3 @@ RewriteRule ^/dynamic-data(.*) /var/lib/ebox/dynamicwww\$1 [L]
 RewriteRule ^/ebox/(.*) /usr/share/ebox/cgi/ebox.cgi [E=script:\$1,L]
 EOF
 
-sed -i 's/https:/http:/g' /usr/share/perl5/EBox/CGI/Base.pm
