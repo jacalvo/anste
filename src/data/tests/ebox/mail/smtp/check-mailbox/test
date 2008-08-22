@@ -2,4 +2,5 @@
 
 cat /var/vmail/$VDOMAIN/$USER/new/*
 
-grep "que barbaro" /var/vmail/$VDOMAIN/$USER/new/*
+grep "$PATTERN" /var/vmail/$VDOMAIN/$USER/new/*
+

@@ -292,7 +292,7 @@ sub env # returns params string
     my $env = '';
 
     while (my ($name, $value) = each(%{$self->{variables}})) {
-        $env .= "$name=$value ";
+        $env .= "$name=\"$value\" ";
     }
 
     if ($env) {
