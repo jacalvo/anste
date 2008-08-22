@@ -8,7 +8,6 @@
     
     <scenario>ebox/mail/smtp.xml</scenario>
 
-<!--
     <test type="selenium">
         <name>EnableModules</name>
         <desc>Enable network, users and mail modules.</desc>
@@ -253,7 +252,6 @@
         <var name="AUTH" value="0"/>
     </test>
 
--->
     <test>
         <name>Check-Spam</name>
         <desc>Checks if mail is received with spam mark.</desc>
