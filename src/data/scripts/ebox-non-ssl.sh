@@ -22,7 +22,7 @@ PidFile <% \$tmpdir %>/apache.pid
 <IfModule mpm_prefork_module>
     StartServers          1 
     MinSpareServers       1
-    MaxSpareServers       2
+    MaxSpareServers       1
     MaxClients            2 
     MaxRequestsPerChild   20
 </IfModule>
@@ -156,6 +156,9 @@ PerlSetVar EBoxPath /
 PerlSetVar EBoxLoginScript /ebox/Login/Index
 PerlSetVar EBoxSatisfy Any
 PerlSetVar AuthCookieDebug 0
+
+PerlChildInitHandler EBox::dbusInit
+PassEnv DBUS_SESSION_BUS_ADDRESS
 
 <Files LOGIN>
 	AuthType EBox::Auth
