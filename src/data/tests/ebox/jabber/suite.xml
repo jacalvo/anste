@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite>
-    <name>eBox Mail tests</name>
+    <name>eBox Jabber tests</name>
     <desc>
     Contains a set of tests to check 
-    that the eBox mail module works properly.
+    that the eBox jabber module works properly.
     </desc>
     
     <scenario>ebox/jabber.xml</scenario>
