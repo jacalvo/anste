@@ -1,0 +1,33 @@
+<domain type='kvm'>
+    <name>{$hostname}</name>
+    <memory>{$memory * 1024}</memory>
+    <vcpu>1</vcpu>
+    <os>
+        <type arch="i686">hvm</type>
+    </os>
+    <clock sync="localtime"/>
+    <on_poweroff>destroy</on_poweroff>
+    <on_reboot>restart</on_reboot>
+    <on_crash>restart</on_crash>
+    <devices>
+        <emulator>/usr/bin/kvm</emulator>
+        <disk type='file' device='disk'>
+            {
+                my $image = "$path/root.qcow2";
+                $OUT .= "<source file='$image'/>";
+            }
+            <target dev='hda' bus='ide'/>
+        </disk>
+        <interface type='bridge'>
+            <mac address='54:52:00:7a:49:8c'/>
+            <source bridge='br0'/>
+            <model type='virtio'/>
+        </interface>
+        <interface type='bridge'>
+            <mac address='54:52:00:7b:a3:da'/>
+            <source bridge='br0'/>
+        </interface>
+        <graphics type='vnc' port='-1' autoport='yes' keymap='es'/>
+    </devices>
+</domain>    
+

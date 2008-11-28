@@ -55,8 +55,22 @@ sub mountImage # (image, mountPoint)
     defined $mountPoint or
         throw ANSTE::Exceptions::MissingArgument('mountPoint');
 
-    my $cmd = "mount -t ext3 -o loop $image $mountPoint";
+# FIXME: Unhardcode this
 
+#   Xen old way
+#    my $cmd = "mount -t ext3 -o loop $image $mountPoint";
+
+#    $self->execute($cmd);
+
+#   Kvm new way
+#
+    my $cmd = "kvm-nbd --connect=/dev/nbd0 $image";
+    $self->execute($cmd);
+
+    $cmd = "kpartx -a /dev/nbd0";
+    $self->execute($cmd);
+
+    $cmd = "mount /dev/mapper/nbd0p1 $mountPoint";
     $self->execute($cmd);
 }
 
@@ -81,6 +95,12 @@ sub unmount # (mountPoint)
         throw ANSTE::Exceptions::MissingArgument('mountPoint');
 
     $self->execute("umount -d $mountPoint");
+
+#FIXME: Only do this with kvm
+    $self->execute("kpartx -d /dev/nbd0");
+
+    my $cmd = "kvm-nbd --disconnect /dev/nbd0";
+    $self->execute($cmd);
 }
 
 # Method: installBasePackages 
@@ -98,6 +118,9 @@ sub installBasePackages
     my ($self) = @_;
 
     my @PACKAGES = ('libsoap-lite-perl', 'liberror-perl', 'hping2');
+ 
+#FIXME: Do this only when using ubuntu or find an alternative:
+    $self->execute("echo \"deb http://en.archive.ubuntu.com/ubuntu hardy universe\" >> /etc/apt/sources.list");
 
     $self->execute('apt-get update') 
         or die "apt-get update failed: $!";
@@ -137,6 +160,11 @@ sub resizeImage # (image, size)
         throw ANSTE::Exceptions::MissingArgument('size');
 
     my ($ret, $tries) = (1, 0); 
+
+#FIXME: This doesn't work with kvm, only with xen
+# temporary unimplemented.
+
+    return 0;
 
     # Sometimes it needs two (or more?) passes to work.
     do {
@@ -559,6 +587,8 @@ sub enableRouting # (@iface)
     my ($self, @ifaces) = @_;
 
     my $command = "echo 1 > /proc/sys/net/ipv4/ip_forward\n";
+#    $command .= "echo 0 > /proc/sys/net/ipv4/conf/all/arp_filter\n";
+#    $command .= "echo 0 > /proc/sys/net/ipv4/conf/all/rp_filter\n";
     $command .= "unset MODPROBE_OPTIONS\n";
     foreach my $iface (@ifaces) {
         $command .= "iptables -t nat -A POSTROUTING -o $iface -j MASQUERADE\n";

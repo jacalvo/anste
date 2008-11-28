@@ -125,6 +125,8 @@ sub check
     $self->xenKernel();
     $self->xenInitrd();
     $self->xenMirror();
+    $self->virtSize();
+    $self->virtMemory();
     
     return 1;
 }
@@ -1306,6 +1308,37 @@ sub xenMirror
     return $self->_getOption('xen-options', 'mirror');
 }
 
+# Method: virtSize
+#
+#
+#   Gets the value of the Xen's size option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+sub virtSize
+{
+    my ($self) = @_;
+
+    return $self->_getOption('virt-options', 'size');
+}
+
+# Method: virtMemory
+#
+#   Gets the value of the Xen's memory option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+sub virtMemory
+{
+    my ($self) = @_;
+
+    return $self->_getOption('virt-options', 'memory');
+}
+
 # Method: setVariable
 #
 #   Sets a variable to be substituted on the XML files.
@@ -1436,6 +1469,9 @@ sub _setDefaults
     $self->{default}->{'xen-options'}->{'initrd'} = "/boot/initrd.img-$version";
     $self->{default}->{'xen-options'}->{'mirror'} =
         'http://ftp.debian.org/debian';
+
+    $self->{default}->{'virt-options'}->{'size'} = '2200';
+    $self->{default}->{'virt-options'}->{'memory'} = '512';
 
     # Default values for variables, overridable by commandline option
     $self->{variables} = {dist => 'intrepid'};
