@@ -64,14 +64,19 @@ sub mountImage # (image, mountPoint)
 
 #   Kvm new way
 #
-    my $cmd = "kvm-nbd --connect=/dev/nbd0 $image";
-    $self->execute($cmd);
+    my $loopDev = `losetup -f`;
+    chomp($loopDev);
 
-    $cmd = "kpartx -a /dev/nbd0";
-    $self->execute($cmd);
+    $self->execute("losetup $loopDev $image");
 
-    $cmd = "mount /dev/mapper/nbd0p1 $mountPoint";
-    $self->execute($cmd);
+    $self->execute("kpartx -a $loopDev");
+    $self->{loopDev} = $loopDev;
+
+    my $mapper = $loopDev;
+    $mapper =~ s{/dev/}{/dev/mapper/};
+    my $partition = $mapper . 'p1';
+
+    $self->execute("mount $partition $mountPoint");
 }
 
 # Method: unmount 
@@ -94,13 +99,11 @@ sub unmount # (mountPoint)
     defined $mountPoint or
         throw ANSTE::Exceptions::MissingArgument('mountPoint');
 
-    $self->execute("umount -d $mountPoint");
+    $self->execute("umount $mountPoint");
 
-#FIXME: Only do this with kvm
-    $self->execute("kpartx -d /dev/nbd0");
-
-    my $cmd = "kvm-nbd --disconnect /dev/nbd0";
-    $self->execute($cmd);
+    my $loopDev = $self->{loopDev};
+    $self->execute("kpartx -d $loopDev");
+    $self->execute("losetup -d $loopDev");
 }
 
 # Method: installBasePackages 
@@ -117,11 +120,12 @@ sub installBasePackages
 {
     my ($self) = @_;
 
-    my @PACKAGES = ('libsoap-lite-perl', 'liberror-perl', 'hping2');
+    my @PACKAGES = ('libsoap-lite-perl', 
+                    'liberror-perl', 
+                    'iptables', 
+                    'netcat',
+                    'tcpdump');
  
-#FIXME: Do this only when using ubuntu or find an alternative:
-    $self->execute("echo \"deb http://en.archive.ubuntu.com/ubuntu hardy universe\" >> /etc/apt/sources.list");
-
     $self->execute('apt-get update') 
         or die "apt-get update failed: $!";
 
@@ -163,19 +167,18 @@ sub resizeImage # (image, size)
 
 #FIXME: This doesn't work with kvm, only with xen
 # temporary unimplemented.
+    return 1;
 
-    return 0;
-
-    # Sometimes it needs two (or more?) passes to work.
-    do {
-        $self->execute("e2fsck -f $image");
-
-        $ret = $self->execute("resize2fs $image $size");
-
-        $tries++;
-    } while ($ret == 0 and $tries < 2);
-
-    return $ret ;
+#    # Sometimes it needs two (or more?) passes to work.
+#    do {
+#        $self->execute("e2fsck -f $image");
+#
+#        $ret = $self->execute("resize2fs $image $size");
+#
+#        $tries++;
+#    } while ($ret == 0 and $tries < 2);
+#
+#    return $ret ;
 }
 
 # Method: updatePackagesCommand
@@ -376,6 +379,10 @@ sub initialNetworkConfig # (iface) returns string
     }
 
     my $config = '';
+
+    # HACK: To avoid problems with udev in Ubuntu
+    $config .= "rm -f /etc/udev/rules.d/70-persistent-net.rules\n";
+
 	$config .= "cat << EOF > \$MOUNT/etc/network/interfaces\n";
     $config .= "auto lo\n";
 	$config .= "iface lo inet loopback\n\n";
@@ -841,7 +848,7 @@ sub _installPackages # (list)
 
     my $forceNew = '-o DPkg::Options::=--force-confnew';
     my $forceDef = '-o DPkg::Options::=--force-confdef';
-    my $options = "-y $forceNew $forceDef";
+    my $options = "-y --force-yes $forceNew $forceDef";
 
     my $list = join(' ', @list);
     my $command = "apt-get install $options $list";

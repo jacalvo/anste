@@ -11,4 +11,9 @@
         <dist>hardy</dist>
         <command>/usr/sbin/debootstrap --exclude=ubuntu-minimal,libc6-i686 --no-resolve-deps</command>
     </install>        
+
+    <pre-install>
+        <script>write-hardy-sources.sh</script>
+    </pre-install>
+
 </image>

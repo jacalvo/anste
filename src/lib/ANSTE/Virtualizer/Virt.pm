@@ -101,7 +101,8 @@ sub createBaseImage # (%params)
         $command .= " --swapsize $swap";
     }
     
-    $self->execute($command);
+    $self->execute($command) or
+        die "Error executing ubuntu-vm-builder";
 
     # Creates the configuration file for the new image
     my $image = new ANSTE::Image::Image(name => $name,
@@ -111,10 +112,16 @@ sub createBaseImage # (%params)
 
     # Writes the qemu configuration file
     my $FILE;
-    my $xmlFile = "/etc/libvirt/qemu/$name.xml";
+    my $xmlFile = "$dir/domain.xml";
     open($FILE, '>', $xmlFile) or return 0;
     print $FILE $xml;
     close($FILE) or return 0; 
+
+    # Convert to raw format so we can mount it with -o loop
+    $self->execute("kvm-img convert $dir/root.qcow2 -O raw $dir/root.img");
+
+    # Delete qcow2 image
+    unlink("$dir/root.qcow2");
 }
 
 # Method: shutdownImage 
@@ -177,11 +184,11 @@ sub destroyImage # (image)
 
 # Method: createVM
 #
-#   Overriden method that creates a Xen Virtual Machine.
+#   Overriden method that creates a KVM Virtual Machine.
 #
 # Parameters:
 #
-#   name - name of the xen configuration file for the image 
+#   name - name of the libvirt configuration file for the image 
 #
 # Returns:
 #   
@@ -197,8 +204,9 @@ sub createVM # (name)
 
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
-
-    $self->execute("virsh create /etc/libvirt/qemu/$name.xml");
+    
+    my $path = ANSTE::Config->instance()->imagePath();
+    $self->execute("virsh create $path/$name/domain.xml");
 }
 
 # Method: imageFile
@@ -227,7 +235,7 @@ sub imageFile # (path, name)
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-    return "$path/$name/root.qcow2";
+    return "$path/$name/root.img";
 }
 
 # Method: copyImage
@@ -280,11 +288,11 @@ sub createImageCopy # (baseimage, newimage)
     dircopy("$path/$basename", "$path/$newname");
 
     # Creates the configuration file for the new image
-    my $config = $self->_createImageConfig($newimage, $path);
+    my $config = $self->_createImageConfig($newimage, "$path/$newname");
 
     # Writes the xen configuration file
     my $FILE;
-    my $configFile = "/etc/libvirt/qemu/$newname.xml";
+    my $configFile = "$path/$newname/domain.xml";
     open($FILE, '>', $configFile) or return 0;
     print $FILE $config;
     close($FILE) or return 0; 

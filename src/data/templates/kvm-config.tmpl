@@ -13,19 +13,26 @@
         <emulator>/usr/bin/kvm</emulator>
         <disk type='file' device='disk'>
             {
-                my $image = "$path/root.qcow2";
+                my $image = "$path/root.img";
                 $OUT .= "<source file='$image'/>";
             }
             <target dev='hda' bus='ide'/>
         </disk>
         <interface type='bridge'>
-            <mac address='54:52:00:7a:49:8c'/>
-            <source bridge='br0'/>
-            <model type='virtio'/>
+            <mac address='54:52:00:7b:a3:01'/>
+            <source bridge='virbr1'/>
         </interface>
         <interface type='bridge'>
-            <mac address='54:52:00:7b:a3:da'/>
-            <source bridge='br0'/>
+            <mac address='54:52:00:7b:a3:02'/>
+            <source bridge='virbr1'/>
+        </interface>
+        <interface type='bridge'>
+            <mac address='54:52:00:7b:a3:03'/>
+            <source bridge='virbr1'/>
+        </interface>
+        <interface type='bridge'>
+            <mac address='54:52:00:7b:a3:04'/>
+            <source bridge='virbr1'/>
         </interface>
         <graphics type='vnc' port='-1' autoport='yes' keymap='es'/>
     </devices>
