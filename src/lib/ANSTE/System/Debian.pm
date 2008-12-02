@@ -382,6 +382,7 @@ sub initialNetworkConfig # (iface) returns string
 
     # HACK: To avoid problems with udev in Ubuntu
     $config .= "rm -f /etc/udev/rules.d/70-persistent-net.rules\n";
+    $config .= "rm -f /etc/udev/rules.d/75-persistent-net-generator.rules\n";
 
 	$config .= "cat << EOF > \$MOUNT/etc/network/interfaces\n";
     $config .= "auto lo\n";

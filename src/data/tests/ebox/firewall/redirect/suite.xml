@@ -64,6 +64,7 @@
         
         <host>router-a</host>
         <dir>setup-router</dir>
+        <var name="IP" value="192.168.4.2"/>
         <var name="DEST" value="192.168.3.1"/>
     </test>
 
@@ -76,6 +77,7 @@
         
         <host>router-b</host>
         <dir>setup-router</dir>
+        <var name="IP" value="192.168.5.3"/>
         <var name="DEST" value="192.168.3.1"/>
     </test>
 

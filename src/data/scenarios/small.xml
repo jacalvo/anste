@@ -11,11 +11,13 @@
         <network>
             <interface type="static">
                 <name>eth1</name>
+                <bridge>virbr2</bridge>
                 <address>192.168.2.1</address>
                 <netmask>255.255.255.0</netmask>
             </interface>
             <interface type="static">
                 <name>eth2</name>
+                <bridge>virbr4</bridge>
                 <address>192.168.4.1</address>
                 <netmask>255.255.255.0</netmask>
             </interface>
@@ -34,16 +36,19 @@
         <network>
             <interface type="static">
                 <name>eth1</name>
+                <bridge>virbr2</bridge>
                 <address>192.168.2.2</address>
                 <netmask>255.255.255.0</netmask>
             </interface>
             <interface type="static">
                 <name>eth2</name>
+                <bridge>virbr3</bridge>
                 <address>192.168.3.2</address>
                 <netmask>255.255.255.0</netmask>
             </interface>
             <interface type="static">
                 <name>eth3</name>
+                <bridge>virbr4</bridge>
                 <address>192.168.4.2</address>
                 <netmask>255.255.255.0</netmask>
             </interface>

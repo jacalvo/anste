@@ -97,9 +97,11 @@ sub createBaseImage # (%params)
                   " --mask $netmask --gw $gateway --rootsize $size" .
                   " --components main,universe"; 
     
-    if ($swap) {
-        $command .= " --swapsize $swap";
-    }
+    # FIXME
+    $command .= " --swapsize 0";
+    #if ($swap) {
+    #   $command .= " --swapsize $swap";
+    #}
     
     $self->execute($command) or
         die "Error executing ubuntu-vm-builder";
@@ -108,6 +110,16 @@ sub createBaseImage # (%params)
     my $image = new ANSTE::Image::Image(name => $name,
                                         ip => $ip,
                                         memory => $memory);
+    my $network = new ANSTE::Scenario::Network();
+    my $iface = new ANSTE::Scenario::NetworkInterface();
+    $iface->setName('eth0');
+    $iface->setTypeStatic();
+    $iface->setAddress($ip);
+    $iface->setNetmask($netmask);
+    $iface->setGateway($gateway);
+    $iface->setBridge('virbr1'); # FIXME: unhardcode this?
+    $network->addInterface($iface);
+    $image->setNetwork($network);
     my $xml = $self->_createImageConfig($image, $dir);
 
     # Writes the qemu configuration file
@@ -341,28 +353,22 @@ sub _createImageConfig # (image, path) returns config string
     my $template = new Text::Template(SOURCE => $confFile)
         or die "Couldn't construct template: $Text::Template::ERROR";
 
-    my $ip = $image->{ip};
+    my $ifaces = '';
 
-#    my $ifaceList = "'ip=$ip'";
-
-#    foreach my $iface (@{$image->network()->interfaces()}) {
-#        $ip = $iface->address();
-#        my $mac = $iface->hwAddress();
-#        if ($ip and $mac) {
-#            $ifaceList .= ", 'ip=$ip,mac=$mac'";
-#        }
-#        elsif ($mac) {
-#            $ifaceList .= ", 'mac=$mac'";
-#       }
-#       else {
-#           $ifaceList .= ", 'ip=$ip'";
-#       }
-#   }
+    foreach my $iface (@{$image->network()->interfaces()}) {
+        $ifaces .= "\t\t<interface type='bridge'>\n";
+        my $bridge = $iface->bridge();
+        my $mac = $iface->hwAddress();
+        $ifaces .= "\t\t\t<source bridge='$bridge'/>\n"; 
+        $ifaces .= "\t\t\t<mac address='$mac'/>\n"; 
+        $ifaces .= "\t\t</interface>\n";
+    }
 
     my $config = ANSTE::Config->instance();
 
     my %vars = (hostname => $image->name(),
                 memory => $image->memory(),
+                ifaces => $ifaces,
                 path => $path);
 
     my $imageConfig = $template->fill_in(HASH => \%vars)

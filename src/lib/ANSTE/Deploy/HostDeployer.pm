@@ -230,6 +230,13 @@ sub _deploy
 
     my $config = ANSTE::Config->instance();
 
+    # Add communications interface
+    my $commIface = $image->commInterface();
+    # This gateway is not needed anymore
+    # and may conflict with the real one.
+    $commIface->removeGateway() unless $host->isRouter();
+    unshift(@{$host->network()->interfaces()}, $commIface);
+
     print "[$hostname] Creating a copy of the base image...\n";
     try {
         $self->_copyBaseImage() or die "Can't copy base image";
@@ -258,13 +265,6 @@ sub _deploy
 
     print "[$hostname] Creating virtual machine ($ip)...\n"; 
     $cmd->createVirtualMachine();
-
-    # Add communications interface
-    my $commIface = $image->commInterface();
-    # This gateway is not needed anymore
-    # and may conflict with the real one.
-    $commIface->removeGateway() unless $host->isRouter();
-    $host->network()->addInterface($commIface);
 
     try {
 

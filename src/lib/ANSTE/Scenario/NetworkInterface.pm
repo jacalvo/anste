@@ -23,6 +23,14 @@ use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidData;
 use ANSTE::Validate;
 
+use threads::shared;
+
+use constant AUTOASSIGNED_MAC_ADDR_START => 'DE:AD:BE:EF:00:';
+
+# Autoassignation of mac addressses decreasing this value
+our $MAC_ADDR_COUNTER : shared = 99;
+our $lockAddress : shared;
+
 # Class: NetworkInterface
 #
 #   Contains the information of a network interface.
@@ -58,10 +66,16 @@ sub new # returns new NetworkInterface object
 	$self->{type} = IFACE_TYPE_STATIC;
 	$self->{name} = '';
 	$self->{address} = '';
-	$self->{hwAddress} = '';
 	$self->{netmask} = '';
 	$self->{gateway} = '';
     $self->{external} = 0;
+    $self->{bridge} = 'virbr1';
+    # Autoassing mac address
+    {
+        lock($lockAddress);
+        $self->{hwAddress} = AUTOASSIGNED_MAC_ADDR_START . $MAC_ADDR_COUNTER;
+        $MAC_ADDR_COUNTER--;
+    }
 
 	bless($self, $class);
 
@@ -359,6 +373,43 @@ sub setExternal # external string
 	$self->{external} = $external;
 }
 
+# Method: bridge
+#
+#   Gets the interface bridge.
+#
+# Returns:
+#
+#   string - contains the bridge of the interface
+#
+sub bridge # returns interface bridge string
+{
+	my ($self) = @_;
+
+	return $self->{bridge};
+}
+
+# Method: setBridge
+#
+#   Sets the interface bridge.
+#
+# Parameters:
+#
+#   bridge - String with the bridge of the interface.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setBridge # (bridge) 
+{
+	my ($self, $bridge) = @_;	
+    
+    defined $bridge or
+        throw ANSTE::Exceptions::MissingArgument('bridge');
+
+	$self->{bridge} = $bridge;
+}
+
 # Method: load
 #
 #   Loads the information contained in the given XML node representing
@@ -408,11 +459,18 @@ sub load # (node)
 	} elsif ($type eq 'dhcp') {
 		$self->setTypeDHCP();
 	}
+    my $hwAddress;
     # MAC address may be specified on both dhcp and static interfaces
 	my $hwAddrNode = $node->getElementsByTagName('hw-addr', 0)->item(0);
     if ($hwAddrNode) {
-        my $hwAddress = $hwAddrNode->getFirstChild()->getNodeValue();
+        $hwAddress = $hwAddrNode->getFirstChild()->getNodeValue();
 	    $self->setHwAddress($hwAddress);
+    }
+
+	my $bridgeNode = $node->getElementsByTagName('bridge', 0)->item(0);
+    if ($bridgeNode) {
+        my $bridge = $bridgeNode->getFirstChild()->getNodeValue();
+        $self->setBridge($bridge);
     }
 }
 
