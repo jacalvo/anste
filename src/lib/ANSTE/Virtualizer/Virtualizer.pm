@@ -241,4 +241,42 @@ sub deleteImage # (image)
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: createNetwork
+#
+#   Override this method to do the stuff needed
+#   to set up the network for a scenario, on your
+#   specific virtualizer.
+#
+# Parameters: 
+#   
+#   network   - a <ANSTE::Scenario::Network> object
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub createNetwork # (network)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: destroyNetwork
+#
+#   Override this method to do the stuff needed
+#   to destroy the network of a scenario, on your
+#   specific virtualizer.
+#
+# Parameters: 
+#   
+#   network   - a <ANSTE::Scenario::Network> object
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented> 
+#
+sub destroyNetwork # (network)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 1;

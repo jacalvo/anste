@@ -69,7 +69,7 @@ sub new # returns new NetworkInterface object
 	$self->{netmask} = '';
 	$self->{gateway} = '';
     $self->{external} = 0;
-    $self->{bridge} = 'virbr1';
+    $self->{bridge} = 1;
     # Autoassing mac address
     {
         lock($lockAddress);
@@ -467,11 +467,12 @@ sub load # (node)
 	    $self->setHwAddress($hwAddress);
     }
 
-	my $bridgeNode = $node->getElementsByTagName('bridge', 0)->item(0);
-    if ($bridgeNode) {
-        my $bridge = $bridgeNode->getFirstChild()->getNodeValue();
-        $self->setBridge($bridge);
-    }
+# FIXME: allow <bridge>?
+#    my $bridgeNode = $node->getElementsByTagName('bridge', 0)->item(0);
+#    if ($bridgeNode) {
+#        my $bridge = $bridgeNode->getFirstChild()->getNodeValue();
+#        $self->setBridge($bridge);
+#    }
 }
 
 1;

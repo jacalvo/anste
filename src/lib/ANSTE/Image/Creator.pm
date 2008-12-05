@@ -56,6 +56,11 @@ sub new # (image) returns new ImageCreator object
         throw ANSTE::Exceptions::InvalidType('image',
                                              'ANSTE::Scenario::BaseImage');
     }
+
+    my $virtualizer = ANSTE::Config->instance()->virtualizer();
+    eval "use ANSTE::Virtualizer::$virtualizer";
+    die "Can't load package $virtualizer: $@" if $@;
+    $self->{virtualizer} = "ANSTE::Virtualizer::$virtualizer"->new();
 	
 	$self->{image} = $image;
 
@@ -123,6 +128,22 @@ sub createImage
     my $server = new ANSTE::Comm::WaiterServer();
     $server->startThread();
 
+    # Set up the network before deploy
+    print "[$name] Setting up network... ";
+    my $virtualizer = $self->{virtualizer};
+
+    # Get the network address for the communications interface
+    # and add the bridge to the a mock scenario
+    my $scenario = new ANSTE::Scenario::Scenario();
+    my $firstAddress = ANSTE::Config->instance()->firstAddress();
+    my ($net, $unused) = 
+        $firstAddress =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3})\.(\d{1,3})$/;
+    $scenario->addBridge($net);
+
+    $virtualizer->createNetwork($scenario)
+        or throw ANSTE::Exceptions::Error('Error creating network.');
+    print "done.\n";
+
     try {
         print "[$name] Starting to prepare the system... \n";
         $cmd->prepareSystem()
@@ -131,9 +152,12 @@ sub createImage
         $cmd->shutdown();
     };
 
+    $virtualizer->destroyNetwork($scenario);
+
     print "[$name] Resizing image... ";
     $cmd->resize($image->size())
         or throw ANSTE::Exceptions::Error('Error resizing image.');
+    print "done.\n";
     
     print "[$name] Image creation finished.\n";
 

@@ -64,7 +64,7 @@ sub interfaces # returns interfaces list reference
     return $self->{interfaces};
 }
 
-# Method: add
+# Method: addInterface
 #
 #   Adds an interface object to the list.
 #
@@ -107,7 +107,7 @@ sub routes # returns routes list reference
     return $self->{routes};
 }
 
-# Method: add
+# Method: addRoute
 #
 #   Adds a network route object to the list.
 #

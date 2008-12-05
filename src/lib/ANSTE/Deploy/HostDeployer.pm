@@ -69,7 +69,7 @@ sub new # (host, ip) returns new HostDeployer object
 
     if (not $host->isa('ANSTE::Scenario::Host')) {
         throw ANSTE::Exception::InvalidType('host',
-                                           'ANSTE::Scenario::Host');
+                                            'ANSTE::Scenario::Host');
     }
 
     my $config = ANSTE::Config->instance();

@@ -58,17 +58,26 @@ sub new # (scenario) returns new ScenarioDeployer object
         throw ANSTE::Exception::InvalidType('scenario',
                                             'ANSTE::Scenario::Scenario');
     }
+    my $config = ANSTE::Config->instance();
+
+    my $virtualizer = $config->virtualizer();
+    eval "use ANSTE::Virtualizer::$virtualizer";
+    die "Can't load package $virtualizer: $@" if $@;
+    $self->{virtualizer} = "ANSTE::Virtualizer::$virtualizer"->new();
 	
 	$self->{scenario} = $scenario;
 
     # Create host deployers
     $self->{deployers} = [];
 
-    my $firstAddress = ANSTE::Config->instance()->firstAddress();
+    my $firstAddress = $config->firstAddress();
 
     # Separate the last number of the ip in order to increment it.
     my ($base, $number) = 
         $firstAddress =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3})\.(\d{1,3})$/;
+
+    # Add the bridge for the comunications interface
+    $scenario->addBridge($base);
 
     foreach my $host (@{$scenario->hosts()}) {
         my $ip = "$base.$number";
@@ -76,6 +85,16 @@ sub new # (scenario) returns new ScenarioDeployer object
         my $deployer = new ANSTE::Deploy::HostDeployer($host, $ip);
         push(@{$self->{deployers}}, $deployer);
         $number++;
+
+        # Add the bridges needed for each host
+        foreach my $iface (@{$host->network()->interfaces()}) {
+            my ($net, $unused) = 
+                $iface->address() =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3})\.(\d{1,3})$/;
+            if ($net) {
+                my $bridge = $scenario->addBridge($net);
+                $iface->setBridge($bridge);
+            }
+        }
     }        
 
 	bless($self, $class);
@@ -98,6 +117,11 @@ sub deploy # returns hash ref with the ip of each host
     my ($self) = @_;
 
     my $scenario = $self->{scenario};
+
+    # Set up the network before deploy
+    print "Setting up network...\n";
+    $self->{virtualizer}->createNetwork($scenario)
+        or throw ANSTE::Exceptions::Error('Error creating network.');
 
     my $hostIP = {};
 
@@ -147,6 +171,7 @@ sub shutdown
         $deployer->shutdown();
         $deployer->deleteImage();
     }
+    $self->{virtualizer}->destroyNetwork($self->{scenario});
 }
 
 # Method: destroy
@@ -164,6 +189,7 @@ sub destroy
         $deployer->destroy();
         $deployer->deleteImage();
     }        
+    $self->{virtualizer}->destroyNetwork($self->{scenario});
 }
 
 sub _createMissingBaseImages

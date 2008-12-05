@@ -29,8 +29,10 @@ use ANSTE::Exceptions::NotFound;
 use File::Temp qw(tempfile);
 use File::Copy;
 use File::Copy::Recursive qw(dircopy);
+use Text::Template;
 
 use constant KVM_CONFIG_TEMPLATE => 'kvm-config.tmpl';
+use constant KVM_NETWORK_CONFIG_TEMPLATE => 'kvm-bridge.tmpl';
 
 # Class: Virt
 #
@@ -87,17 +89,20 @@ sub createBaseImage # (%params)
     }        
 
     my $dir = $config->imagePath() . '/' . $name;
-    # FIXME: si el directorio ya existe avisar...
+    if (-d $dir) {
+        die "Directory $dir already exists";
+    }
 
-    my $mirror = $config->xenMirror(); # TODO: change this to generic ->mirror() ?
+    # TODO: change this to generic $config->mirror() ?
+    my $mirror = $config->xenMirror(); 
 
-    my $vm = 'kvm'; # FIXME: Unhardcode this
+    my $vm = 'kvm'; # TODO: Unhardcode this when supporting other virtualizers
     my $command = "ubuntu-vm-builder $vm $dist --dest $dir --hostname $name" .
                   " --ip $ip --mirror $mirror --mem $memory" . 
                   " --mask $netmask --gw $gateway --rootsize $size" .
                   " --components main,universe"; 
     
-    # FIXME
+    # FIXME: We don't use swap at the moment to speed up the process
     $command .= " --swapsize 0";
     #if ($swap) {
     #   $command .= " --swapsize $swap";
@@ -110,15 +115,7 @@ sub createBaseImage # (%params)
     my $image = new ANSTE::Image::Image(name => $name,
                                         ip => $ip,
                                         memory => $memory);
-    my $network = new ANSTE::Scenario::Network();
-    my $iface = new ANSTE::Scenario::NetworkInterface();
-    $iface->setName('eth0');
-    $iface->setTypeStatic();
-    $iface->setAddress($ip);
-    $iface->setNetmask($netmask);
-    $iface->setGateway($gateway);
-    $iface->setBridge('virbr1'); # FIXME: unhardcode this?
-    $network->addInterface($iface);
+    my $network = $self->networkForBaseImage($ip);
     $image->setNetwork($network);
     my $xml = $self->_createImageConfig($image, $dir);
 
@@ -269,6 +266,7 @@ sub imageFile # (path, name)
 # Exceptions:
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType>     - throw if argument has invalid type
 #
 sub createImageCopy # (baseimage, newimage)
 {
@@ -314,8 +312,7 @@ sub createImageCopy # (baseimage, newimage)
 
 # Method: deleteImage 
 #
-#   Overriden method that deletes an Xen image using
-#   the xen-delete-image program from xen-tools.
+#   Overriden method that deletes the kvm image.
 #
 # Parameters: 
 #   
@@ -338,14 +335,92 @@ sub deleteImage # (image)
 
     my $dir = ANSTE::Config->instance()->imagePath();
 
-    $self->execute("xen-delete-image $image --dir $dir");
+    $self->execute("rm -rf $dir/$image");
+}
+
+# Method: createNetwork
+#
+#   Overriden method that creates bridges with
+#   libvirt for the network of the given scenario.
+#
+# Parameters: 
+#   
+#   scenario   - a <ANSTE::Scenario::Scenario> object
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType>     - throw if argument has invalid type
+#
+sub createNetwork # (scenario)
+{
+    my ($self, $scenario) = @_;
+
+    defined $scenario or
+        throw ANSTE::Exceptions::MissingArgument('scenario');
+
+    if (not $scenario->isa('ANSTE::Scenario::Scenario')) {
+        throw ANSTE::Exceptions::InvalidType('scenario',
+                                            'ANSTE::Scenario::Scenario');
+    }                                            
+
+    my $path = ANSTE::Config->instance()->imagePath();
+
+    my %bridges = %{$scenario->bridges()};
+    while (my ($net, $num) = each %bridges) {
+        # Writes the libvirt XML
+        my $xml = $self->_createNetworkConfig($net, $num);
+
+        my $FILE;
+        my $xmlFile = "$path/bridge$num.xml";
+        open($FILE, '>', $xmlFile) or return 0;
+        print $FILE $xml;
+        close($FILE) or return 0; 
+        $self->execute("virsh net-create $xmlFile") or return 0;
+    }
+    return 1;
+}
+
+
+# Method: destroyNetwork
+#
+#   Overriden method that destroy previously creaated bridges with
+#   libvirt for the network of the given scenario.
+#
+# Parameters: 
+#   
+#   scenario   - a <ANSTE::Scenario::Scenario> object
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType>     - throw if argument has invalid type
+#
+sub destroyNetwork # (scenario)
+{
+    my ($self, $scenario) = @_;
+
+    defined $scenario or
+        throw ANSTE::Exceptions::MissingArgument('scenario');
+
+    if (not $scenario->isa('ANSTE::Scenario::Scenario')) {
+        throw ANSTE::Exceptions::InvalidType('scenario',
+                                            'ANSTE::Scenario::Scenario');
+    }                                            
+    my $path = ANSTE::Config->instance()->imagePath();
+
+    my %bridges = %{$scenario->bridges()};
+    while (my ($net, $num) = each %bridges) {
+        $self->execute("virsh net-destroy bridge$num");
+        unlink("$path/bridge$num.xml");
+        $self->execute("ifconfig virbr$num down");
+        $self->execute("brctl delbr virbr$num");
+    }
 }
 
 sub _createImageConfig # (image, path) returns config string
 {
     my ($self, $image, $path) = @_;
-
-    use Text::Template;
 
     my $tmplPath = ANSTE::Config->instance()->templatePath();
     my $confFile = "$tmplPath/" . KVM_CONFIG_TEMPLATE;
@@ -359,7 +434,7 @@ sub _createImageConfig # (image, path) returns config string
         $ifaces .= "\t\t<interface type='bridge'>\n";
         my $bridge = $iface->bridge();
         my $mac = $iface->hwAddress();
-        $ifaces .= "\t\t\t<source bridge='$bridge'/>\n"; 
+        $ifaces .= "\t\t\t<source bridge='virbr$bridge'/>\n"; 
         $ifaces .= "\t\t\t<mac address='$mac'/>\n"; 
         $ifaces .= "\t\t</interface>\n";
     }
@@ -376,5 +451,55 @@ sub _createImageConfig # (image, path) returns config string
 
     return $imageConfig;
 }
+
+sub _createNetworkConfig # (net, bridge) returns config string
+{
+    my ($self, $net, $bridge) = @_;
+
+    my $config = ANSTE::Config->instance();
+
+    # Only allow forward for the first bridge (ANSTE communication network)
+    my $forward = ($bridge == 1);
+
+    my $address = ($bridge == 1) ? $config->gateway() : "$net.254";
+
+    my $name = "virbr$bridge";
+    my $netmask = '255.255.255.0'; # FIXME: Unharcode this
+
+    my $networkConfig = "<network>\n";
+    $networkConfig .= "\t<name>$name</name>\n";
+    $networkConfig .= "\t<uuid></uuid>\n";
+    $networkConfig .= "\t<bridge name=\"$name\" />\n";
+    if ($forward) {
+        $networkConfig .= "\t<forward/>\n";
+    }
+    $networkConfig .= "\t<ip address=\"$address\" netmask=\"$netmask\" />\n";
+    $networkConfig .= "</network>\n";
+
+    return $networkConfig;
+}
+
+sub _networkForBaseImage # (ip) returns network object
+{
+    my ($self, $ip) = @_;
+
+    my $config = ANSTE::Config->instance();
+
+    my $gateway = $config->gateway();
+    my $netmask = '255.255.255.0';
+
+    my $network = new ANSTE::Scenario::Network();
+    my $iface = new ANSTE::Scenario::NetworkInterface();
+    $iface->setName('eth0');
+    $iface->setTypeStatic();
+    $iface->setAddress($ip);
+    $iface->setNetmask($netmask);
+    $iface->setGateway($gateway);
+    $iface->setBridge(1);
+    $network->addInterface($iface);
+
+    return $network;
+}
+
 
 1;

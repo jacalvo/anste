@@ -27,6 +27,7 @@ use Text::Template;
 use Safe;
 use XML::DOM;
 
+
 # Class: Scenario
 #
 #   Contains all the information of a scenario needed for its deployment.
@@ -50,6 +51,7 @@ sub new # returns new Scenario object
 	$self->{virtualizer} = '';
 	$self->{system} = '';
 	$self->{hosts} = [];
+    $self->{bridges} = {};
 
 	bless($self, $class);
 
@@ -247,6 +249,52 @@ sub addHost # (host)
     $host->setScenario($self);
 
 	push(@{$self->{hosts}}, $host);
+}
+
+# Method: bridges
+#
+#   Gets the hash of bridges, indexed by network address.
+#
+# Returns:
+#
+#   hash ref - list of <ANSTE::Scenario::NetworkBridge> objects 
+#
+sub bridges # returns bridges hash reference
+{
+    my ($self) = @_;
+
+    return $self->{bridges};
+}
+
+# Method: addBridge
+#
+#   Adds a bridge for the specified network address if not exists previously.
+#
+# Parameters:
+#
+#   network - beggining of network address string (three first octects).
+#
+# Returns:
+#
+#   scalar  - bridge number
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub addBridge # (network)
+{
+    my ($self, $network) = @_;
+
+    defined $network or
+        throw ANSTE::Exceptions::MissingArgument('network');
+
+    if (not $self->{bridges}->{$network}) {
+        my $num_bridges = scalar(keys %{$self->{bridges}});
+        $num_bridges++;
+        $self->{bridges}->{$network} = $num_bridges;
+    }
+    return $self->{bridges}->{$network};
 }
 
 # Method: loadFromFile
