@@ -1429,7 +1429,7 @@ sub _setDefaults
     $self->{format} = 'HTML';
 
     $self->{default}->{'global'}->{'system'} = 'Debian';
-    $self->{default}->{'global'}->{'virtualizer'} = 'Xen';
+    $self->{default}->{'global'}->{'virtualizer'} = 'Virt';
     $self->{default}->{'global'}->{'verbose'} = 1;
     $self->{default}->{'global'}->{'wait'} = 0;
     $self->{default}->{'global'}->{'wait-fail'} = 0;
