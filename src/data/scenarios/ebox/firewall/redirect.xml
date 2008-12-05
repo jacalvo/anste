@@ -13,13 +13,11 @@
         <network>
             <interface type="static">
                 <name>eth1</name>
-                <bridge>virbr3</bridge>
                 <address>192.168.3.2</address>
                 <netmask>255.255.255.0</netmask>
             </interface>
             <interface type="static">
                 <name>eth2</name>
-                <bridge>virbr4</bridge>
                 <address>192.168.4.2</address>
                 <netmask>255.255.255.0</netmask>
             </interface>
@@ -35,13 +33,11 @@
         <network>
             <interface type="static">
                 <name>eth1</name>
-                <bridge>virbr3</bridge>
                 <address>192.168.3.3</address>
                 <netmask>255.255.255.0</netmask>
             </interface>
             <interface type="static">
                 <name>eth2</name>
-                <bridge>virbr5</bridge>
                 <address>192.168.5.3</address>
                 <netmask>255.255.255.0</netmask>
             </interface>
@@ -57,13 +53,11 @@
         <network>
             <interface type="static">
                 <name>eth1</name>
-                <bridge>virbr4</bridge>
                 <address>192.168.4.4</address>
                 <netmask>255.255.255.0</netmask>
             </interface>
             <interface type="static">
                 <name>eth2</name>
-                <bridge>virbr5</bridge>
                 <address>192.168.5.4</address>
                 <netmask>255.255.255.0</netmask>
             </interface>
@@ -80,14 +74,12 @@
         <network>
             <interface type="static">
                 <name>eth1</name>
-                <bridge>virbr2</bridge>
                 <address>192.168.2.1</address>
                 <hw-addr>00:16:3E:72:55:34</hw-addr>
                 <netmask>255.255.255.0</netmask>
             </interface>
             <interface type="static">
                 <name>eth2</name>
-                <bridge>virbr3</bridge>
                 <address>192.168.3.1</address>
                 <hw-addr>00:16:3E:72:55:35</hw-addr>
                 <netmask>255.255.255.0</netmask>
@@ -108,7 +100,6 @@
         <network>
             <interface type="static">
                 <name>eth1</name>
-                <bridge>virbr2</bridge>
                 <address>192.168.2.2</address>
                 <netmask>255.255.255.0</netmask>
                 <gateway>192.168.2.1</gateway>
