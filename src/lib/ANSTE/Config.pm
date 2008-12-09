@@ -1474,7 +1474,7 @@ sub _setDefaults
     $self->{default}->{'virt-options'}->{'memory'} = '512';
 
     # Default values for variables, overridable by commandline option
-    $self->{variables} = {dist => 'intrepid'};
+    $self->{variables} = {dist => 'hardy'};
 }
 
 1;

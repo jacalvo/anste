@@ -24,6 +24,7 @@ use ANSTE::Image::Image;
 use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
+use ANSTE::Scenario::Scenario;
 
 use Error qw(:try);
 

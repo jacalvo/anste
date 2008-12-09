@@ -111,6 +111,13 @@ sub exec # (file, log?, env?, params?)
 {
     my ($self, $file, $log, $env, $params) = @_;
 
+    unless(defined $env) {
+        $env = '';
+    }
+    unless(defined $params) {
+        $params = '';
+    }
+
     my $pid = fork();
     if (not defined $pid) {
         die "Can't fork: $!";

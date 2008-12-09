@@ -8,7 +8,7 @@
     <host type="router">
         <name>router-a</name>
         <desc>Host that acts like a router</desc>
-        <baseimage>sarge-mini</baseimage>
+        <baseimage>hardy-mini</baseimage>
         <memory>64</memory>
         <network>
             <interface type="static">
@@ -27,7 +27,7 @@
     <host type="router">
         <name>router-b</name>
         <desc>Host that acts like a router</desc>
-        <baseimage>sarge-mini</baseimage>
+        <baseimage>hardy-mini</baseimage>
         <memory>64</memory>
         <network>
             <interface type="static">
@@ -46,7 +46,7 @@
     <host>
         <name>external-a</name>
         <desc>External machine</desc>
-        <baseimage>sarge-mini</baseimage>
+        <baseimage>hardy-mini</baseimage>
         <memory>64</memory>
         <network>
             <interface type="static">
@@ -64,7 +64,7 @@
     <host>
         <name>external-b</name>
         <desc>External machine</desc>
-        <baseimage>sarge-mini</baseimage>
+        <baseimage>hardy-mini</baseimage>
         <memory>64</memory>
         <network>
             <interface type="static">

@@ -24,7 +24,7 @@ use lib "$Bin/../lib";
 use ANSTE::Scenario::BaseImage;
 use ANSTE::ScriptGen::BasePreInstall;
 
-use constant IMAGE => 'sarge-ebox-base.xml';
+use constant IMAGE => 'hardy-ebox-base.xml';
 
 my $image = new ANSTE::Scenario::BaseImage;
 $image->loadFromFile(IMAGE);

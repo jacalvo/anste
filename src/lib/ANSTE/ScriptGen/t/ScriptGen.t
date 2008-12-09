@@ -33,7 +33,7 @@ use ANSTE::Exceptions::InvalidFile;
 use Test::More tests => 7;
 use Error qw(:try);
 
-use constant IMAGE => 'sarge-ebox-base.xml';
+use constant IMAGE => 'hardy-ebox-base.xml';
 use constant SCENARIO => 'scenario.xml';
 use constant HOSTNAME => 'hostname1';
 use constant IP => '192.168.45.192';

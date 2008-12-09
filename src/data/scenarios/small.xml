@@ -50,6 +50,7 @@
         </network>
         <packages>
             <package>wget</package>
+            <package>traceroute</package>
         </packages>
     </host>
 </scenario>

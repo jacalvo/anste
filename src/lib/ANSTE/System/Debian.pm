@@ -70,7 +70,10 @@ sub mountImage # (image, mountPoint)
     $self->execute("losetup $loopDev $image");
 
     $self->execute("kpartx -a $loopDev");
-    $self->{loopDev} = $loopDev;
+    if (not defined $self->{loopDevs}) {
+        $self->{loopDevs} = {};
+    }
+    $self->{loopDevs}->{$mountPoint} = $loopDev;
 
     my $mapper = $loopDev;
     $mapper =~ s{/dev/}{/dev/mapper/};
@@ -101,7 +104,7 @@ sub unmount # (mountPoint)
 
     $self->execute("umount $mountPoint");
 
-    my $loopDev = $self->{loopDev};
+    my $loopDev = $self->{loopDevs}->{$mountPoint};
     $self->execute("kpartx -d $loopDev");
     $self->execute("losetup -d $loopDev");
 }
@@ -122,6 +125,7 @@ sub installBasePackages
 
     my @PACKAGES = ('libsoap-lite-perl', 
                     'liberror-perl', 
+                    'hping2',
                     'iptables', 
                     'netcat',
                     'tcpdump');

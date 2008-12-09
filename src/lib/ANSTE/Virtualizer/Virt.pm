@@ -29,7 +29,6 @@ use ANSTE::Exceptions::NotFound;
 use File::Temp qw(tempfile);
 use File::Copy;
 use File::Copy::Recursive qw(dircopy);
-use Text::Template;
 
 use constant KVM_CONFIG_TEMPLATE => 'kvm-config.tmpl';
 use constant KVM_NETWORK_CONFIG_TEMPLATE => 'kvm-bridge.tmpl';
@@ -115,7 +114,7 @@ sub createBaseImage # (%params)
     my $image = new ANSTE::Image::Image(name => $name,
                                         ip => $ip,
                                         memory => $memory);
-    my $network = $self->networkForBaseImage($ip);
+    my $network = $self->_networkForBaseImage($ip);
     $image->setNetwork($network);
     my $xml = $self->_createImageConfig($image, $dir);
 
@@ -376,7 +375,12 @@ sub createNetwork # (scenario)
         open($FILE, '>', $xmlFile) or return 0;
         print $FILE $xml;
         close($FILE) or return 0; 
-        $self->execute("virsh net-create $xmlFile") or return 0;
+        
+        if (not $self->execute("virsh net-create $xmlFile")) {
+            $self->execute("ifconfig virbr$num down");
+            $self->execute("brctl delbr virbr$num");
+            $self->execute("virsh net-create $xmlFile") or return 0;
+        }
     }
     return 1;
 }
@@ -413,8 +417,6 @@ sub destroyNetwork # (scenario)
     while (my ($net, $num) = each %bridges) {
         $self->execute("virsh net-destroy bridge$num");
         unlink("$path/bridge$num.xml");
-        $self->execute("ifconfig virbr$num down");
-        $self->execute("brctl delbr virbr$num");
     }
 }
 
@@ -422,32 +424,36 @@ sub _createImageConfig # (image, path) returns config string
 {
     my ($self, $image, $path) = @_;
 
-    my $tmplPath = ANSTE::Config->instance()->templatePath();
-    my $confFile = "$tmplPath/" . KVM_CONFIG_TEMPLATE;
+    my $config = ANSTE::Config->instance();
+    my $name = $image->name();
+    my $memory = $image->memory() * 1024;
 
-    my $template = new Text::Template(SOURCE => $confFile)
-        or die "Couldn't construct template: $Text::Template::ERROR";
-
-    my $ifaces = '';
-
+    my $imageConfig = "<domain type='kvm'>\n"; # TODO: Unhardcode kvm
+    $imageConfig .= "\t<name>$name</name>\n";
+    $imageConfig .= "\t<memory>$memory</memory>\n";
+    $imageConfig .= "\t<vcpu>1</vcpu>\n";
+    $imageConfig .= "\t<os><type arch='i686'>hvm</type></os>\n";
+    $imageConfig .= "\t<clock sync='localtime'/>\n";
+    $imageConfig .= "\t<on_poweroff>destroy</on_poweroff>\n";
+    $imageConfig .= "\t<on_reboot>restart</on_reboot>\n";
+    $imageConfig .= "\t<on_crash>restart</on_crash>\n";
+    $imageConfig .= "\t<devices>\n";
+    $imageConfig .= "\t\t<emulator>/usr/bin/kvm</emulator>\n";
+    $imageConfig .= "\t\t<disk type='file' device='disk'>\n";
+    $imageConfig .= "\t\t\t<source file='$path/root.img'/>\n";
+    $imageConfig .= "\t\t\t<target dev='hda' bus='ide'/>\n";
+    $imageConfig .= "\t\t</disk>\n";
     foreach my $iface (@{$image->network()->interfaces()}) {
-        $ifaces .= "\t\t<interface type='bridge'>\n";
+        $imageConfig .= "\t\t<interface type='bridge'>\n";
         my $bridge = $iface->bridge();
         my $mac = $iface->hwAddress();
-        $ifaces .= "\t\t\t<source bridge='virbr$bridge'/>\n"; 
-        $ifaces .= "\t\t\t<mac address='$mac'/>\n"; 
-        $ifaces .= "\t\t</interface>\n";
+        $imageConfig .= "\t\t\t<source bridge='virbr$bridge'/>\n"; 
+        $imageConfig .= "\t\t\t<mac address='$mac'/>\n"; 
+        $imageConfig .= "\t\t</interface>\n";
     }
-
-    my $config = ANSTE::Config->instance();
-
-    my %vars = (hostname => $image->name(),
-                memory => $image->memory(),
-                ifaces => $ifaces,
-                path => $path);
-
-    my $imageConfig = $template->fill_in(HASH => \%vars)
-        or die "Couldn't fill in the template: $Text::Template::ERROR";
+    $imageConfig .= "\t\t<graphics type='vnc' port='-1' autoport='yes' keymap='es'/>\n";
+    $imageConfig .= "\t</devices>\n";
+    $imageConfig .= "</domain>\n";
 
     return $imageConfig;
 }
@@ -463,13 +469,12 @@ sub _createNetworkConfig # (net, bridge) returns config string
 
     my $address = ($bridge == 1) ? $config->gateway() : "$net.254";
 
-    my $name = "virbr$bridge";
     my $netmask = '255.255.255.0'; # FIXME: Unharcode this
 
     my $networkConfig = "<network>\n";
-    $networkConfig .= "\t<name>$name</name>\n";
+    $networkConfig .= "\t<name>bridge$bridge</name>\n";
     $networkConfig .= "\t<uuid></uuid>\n";
-    $networkConfig .= "\t<bridge name=\"$name\" />\n";
+    $networkConfig .= "\t<bridge name=\"virbr$bridge\" />\n";
     if ($forward) {
         $networkConfig .= "\t<forward/>\n";
     }

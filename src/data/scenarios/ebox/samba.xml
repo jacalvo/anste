@@ -30,7 +30,7 @@
     <host>
         <name>test-client</name>
         <desc>simple client host</desc>
-        <baseimage>sarge-mini</baseimage>
+        <baseimage>hardy-mini</baseimage>
 
         <network>
          <interface type="static">
