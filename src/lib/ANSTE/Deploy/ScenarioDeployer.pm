@@ -77,7 +77,7 @@ sub new # (scenario) returns new ScenarioDeployer object
         $firstAddress =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3})\.(\d{1,3})$/;
 
     # Add the bridge for the comunications interface
-    $scenario->addBridge($base);
+    $scenario->addBridge($base, 1);
 
     foreach my $host (@{$scenario->hosts()}) {
         my $ip = "$base.$number";
@@ -86,16 +86,18 @@ sub new # (scenario) returns new ScenarioDeployer object
         push(@{$self->{deployers}}, $deployer);
         $number++;
 
-        # Add the bridges needed for each host
-        foreach my $iface (@{$host->network()->interfaces()}) {
-            my ($net, $unused) = 
-                $iface->address() =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3})\.(\d{1,3})$/;
-            if ($net) {
-                my $bridge = $scenario->addBridge($net);
-                $iface->setBridge($bridge);
+        # Add the bridges needed for each host if no manual bridging option is set
+        unless ($scenario->manualBridging()) {
+            foreach my $iface (@{$host->network()->interfaces()}) {
+                my ($net, $unused) = 
+                    $iface->address() =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3})\.(\d{1,3})$/;
+                if ($net) {
+                    my $bridge = $scenario->addBridge($net);
+                    $iface->setBridge($bridge);
+                }
             }
         }
-    }        
+    }
 
 	bless($self, $class);
 

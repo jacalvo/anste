@@ -48,6 +48,7 @@ sub new # returns new Scenario object
 	
 	$self->{name} = '';
 	$self->{desc} = '';
+    $self->{manualBridging} = 0;
 	$self->{virtualizer} = '';
 	$self->{system} = '';
 	$self->{hosts} = [];
@@ -130,6 +131,43 @@ sub setDesc # desc string
         throw ANSTE::Exceptions::MissingArgument('desc');
 
 	$self->{desc} = $desc;
+}
+
+# Method: manualBridging
+#
+#   Gets the manual bridging option of the scenario.
+#
+# Returns:
+#
+#   boolean - value of the option
+#
+sub manualBridging # returns boolean
+{
+	my ($self) = @_;
+
+	return $self->{manualBridging};
+}
+
+# Method: setManualBridging
+#
+#   Sets the manual bridging option of the scenario.
+#
+# Parameters:
+#
+#   boolean - manual bridging enabled or disabled
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setManualBridging # (value)
+{
+	my ($self, $manualBridging) = @_;	
+
+    defined $manualBridging or
+        throw ANSTE::Exceptions::MissingArgument('manualBridging');
+
+	$self->{manualBridging} = $manualBridging;
 }
 
 # Method: virtualizer
@@ -273,6 +311,7 @@ sub bridges # returns bridges hash reference
 # Parameters:
 #
 #   network - beggining of network address string (three first octects).
+#   num     - bridge number (optional)
 #
 # Returns:
 #
@@ -282,17 +321,22 @@ sub bridges # returns bridges hash reference
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub addBridge # (network)
+sub addBridge # (network, num?)
 {
-    my ($self, $network) = @_;
+    my ($self, $network, $num) = @_;
 
     defined $network or
         throw ANSTE::Exceptions::MissingArgument('network');
 
     if (not $self->{bridges}->{$network}) {
-        my $num_bridges = scalar(keys %{$self->{bridges}});
-        $num_bridges++;
-        $self->{bridges}->{$network} = $num_bridges;
+        if (defined $num) {
+            $self->{bridges}->{$network} = $num;
+        }
+        else {
+            my $num_bridges = scalar(keys %{$self->{bridges}});
+            $num_bridges++;
+            $self->{bridges}->{$network} = $num_bridges;
+        }
     }
     return $self->{bridges}->{$network};
 }
@@ -351,6 +395,18 @@ sub loadFromFile # (filename)
 	my $descNode = $scenario->getElementsByTagName('desc', 0)->item(0);
 	my $desc = $descNode->getFirstChild()->getNodeValue();
 	$self->setDesc($desc);
+	my $manualBridgingNode = $scenario->getElementsByTagName('manual-bridging', 0)->item(0);
+    if ($manualBridgingNode) {
+        $self->setManualBridging(1);
+
+        # Read <bridges> block
+        my $bridgesNode = $scenario->getElementsByTagName('bridges', 0)->item(0);
+        foreach my $bridgeNode ($bridgesNode->getElementsByTagName('bridge', 0)) {
+            my $id = $bridgeNode->getAttribute('id');
+            my $net = $bridgeNode->getFirstChild()->getNodeValue();
+            $self->{bridges}->{$net} = $id;
+        }
+    }
 
 	# Read the <host> elements 
 	foreach my $element ($scenario->getElementsByTagName('host', 0)) {

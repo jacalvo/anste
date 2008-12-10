@@ -3,6 +3,12 @@
     <name>eBox and client</name>
     <desc>One eBox machine and a user client machine</desc>
 
+    <manual-bridging/>
+    <bridges>
+        <bridge id="2">192.168.2.254</bridge>
+        <bridge id="3">192.168.3.254</bridge>
+    </bridges>
+
     <host>
         <name>ebox-server</name>
         <desc>eBox server</desc>
@@ -10,11 +16,13 @@
         <network>
             <interface type="static">
                 <name>eth1</name>
+                <bridge>2</bridge>
                 <address>192.168.2.1</address>
                 <netmask>255.255.255.0</netmask>
             </interface>
             <interface type="static">
                 <name>eth2</name>
+                <bridge>3</bridge>
                 <address>192.168.3.1</address>
                 <netmask>255.255.255.0</netmask>
                 <gateway>10.6.7.1</gateway>
@@ -35,6 +43,7 @@
         <network>
          <interface type="dhcp">
             <name>eth1</name>
+            <bridge>2</bridge>
             <hw-addr>00:16:3E:72:55:34</hw-addr>
          </interface>
         </network>

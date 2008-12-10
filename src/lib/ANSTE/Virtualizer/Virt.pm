@@ -465,11 +465,17 @@ sub _createNetworkConfig # (net, bridge) returns config string
     my $config = ANSTE::Config->instance();
 
     # Only allow forward for the first bridge (ANSTE communication network)
-    my $forward = ($bridge == 1);
-
-    my $address = ($bridge == 1) ? $config->gateway() : "$net.254";
-
+    my $forward = 0;
+    my $address;
     my $netmask = '255.255.255.0'; # FIXME: Unharcode this
+
+    if ($bridge == 1) {
+        $forward = 1;
+        $address = $config->gateway();
+    }
+    else {
+        $address = ANSTE::Validate::ip($net) ? $net : "$net.254";
+    }
 
     my $networkConfig = "<network>\n";
     $networkConfig .= "\t<name>bridge$bridge</name>\n";

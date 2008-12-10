@@ -467,12 +467,11 @@ sub load # (node)
 	    $self->setHwAddress($hwAddress);
     }
 
-# FIXME: allow <bridge>?
-#    my $bridgeNode = $node->getElementsByTagName('bridge', 0)->item(0);
-#    if ($bridgeNode) {
-#        my $bridge = $bridgeNode->getFirstChild()->getNodeValue();
-#        $self->setBridge($bridge);
-#    }
+    my $bridgeNode = $node->getElementsByTagName('bridge', 0)->item(0);
+    if ($bridgeNode) {
+        my $bridge = $bridgeNode->getFirstChild()->getNodeValue();
+        $self->setBridge($bridge);
+    }
 }
 
 1;
