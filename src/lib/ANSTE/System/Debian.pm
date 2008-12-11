@@ -396,7 +396,7 @@ sub initialNetworkConfig # (iface, network) returns string
     my $config = '';
 
     # HACK: To avoid problems with udev and mac addresses
-#   $config .= "rm -f \$MOUNT/etc/udev/rules.d/75-persistent-net-generator.rules\n";
+    $config .= "rm -f \$MOUNT/etc/udev/rules.d/75-persistent-net-generator.rules\n";
     $config .= "cat << EOF > \$MOUNT/etc/udev/rules.d/70-persistent-net.rules\n";
     foreach my $if (@{$network->interfaces()}) {
         my $mac = $if->hwAddress();
