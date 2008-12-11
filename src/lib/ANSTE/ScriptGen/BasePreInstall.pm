@@ -121,6 +121,10 @@ sub writeScript # (file)
     print $file "# Stores the master address so anste-slave can read it\n";
     my $command = $system->storeMasterAddress($MASTER);
     print $file "$command\n";
+
+    # It seems that sometimes notification to master fails at startup,
+    # so we do a last try at the end.
+    print $file "echo '/usr/local/bin/anste-slave ready\n' > \$MOUNT/etc/rc.local\n"
 }
 
 sub _writeCopyFiles # (file)

@@ -49,6 +49,7 @@ use constant KVM_NETWORK_CONFIG_TEMPLATE => 'kvm-bridge.tmpl';
 #   name    - name of the image type to be created
 #   ip      - ip address that will be assigned to the image
 #   memory  - *optional* size of the RAM memory to be used
+#   size    - *optional* size of the root partition
 #   swap    - *optional* size of the swap partition to be used
 #   dist    - distribution to be installed (for debootstrap method)
 #   command - command to be used for the installation (for debootstrap method)
@@ -76,13 +77,16 @@ sub createBaseImage # (%params)
     my $memory = $params{memory};
     my $swap = $params{swap};
     my $dist = $params{dist};
+    my $size = $params{size};
 
     my $config = ANSTE::Config->instance();
 
-    my $size = $config->virtSize();
     my $gateway = $config->gateway();
     my $netmask = '255.255.255.0';
 
+    if (not $size) {
+        $size = $config->virtSize();
+    }
     if (not $memory) {
         $memory = $config->virtMemory();
     }        

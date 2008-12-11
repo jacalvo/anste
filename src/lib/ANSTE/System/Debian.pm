@@ -361,6 +361,9 @@ sub hostsConfig # (%hosts) returns string
 #
 # Parameters:
 #
+#   iface    - communications interface
+#   network  - <ANSTE::Scenario::Network> object
+#
 #
 # Returns:
 #
@@ -370,23 +373,38 @@ sub hostsConfig # (%hosts) returns string
 #
 #
 #
-sub initialNetworkConfig # (iface) returns string
+sub initialNetworkConfig # (iface, network) returns string
 {
-    my ($self, $iface) = @_;
+    my ($self, $iface, $network) = @_;
 
     defined $iface or
         throw ANSTE::Exceptions::MissingArgument('iface');
+
+    defined $network or
+        throw ANSTE::Exceptions::MissingArgument('network');
 
     if (not $iface->isa('ANSTE::Scenario::NetworkInterface')) {
         throw ANSTE::Exceptions::InvalidType('iface',
             'ANSTE::Scenario::NetworkInterface');
     }
 
+    if (not $network->isa('ANSTE::Scenario::Network')) {
+        throw ANSTE::Exceptions::InvalidType('network',
+            'ANSTE::Scenario::Network');
+    }
+
     my $config = '';
 
-    # HACK: To avoid problems with udev in Ubuntu
-    $config .= "rm -f /etc/udev/rules.d/70-persistent-net.rules\n";
-    $config .= "rm -f /etc/udev/rules.d/75-persistent-net-generator.rules\n";
+    # HACK: To avoid problems with udev and mac addresses
+#   $config .= "rm -f \$MOUNT/etc/udev/rules.d/75-persistent-net-generator.rules\n";
+    $config .= "cat << EOF > \$MOUNT/etc/udev/rules.d/70-persistent-net.rules\n";
+    foreach my $if (@{$network->interfaces()}) {
+        my $mac = $if->hwAddress();
+        my $name = $if->name();
+        $config .= 'ACTION=="add", SUBSYSTEM=="net", ';
+        $config .= "SYSFS{address}==\"$mac\", NAME=\"$name\"\n";
+    }
+	$config .= "EOF\n\n";
 
 	$config .= "cat << EOF > \$MOUNT/etc/network/interfaces\n";
     $config .= "auto lo\n";

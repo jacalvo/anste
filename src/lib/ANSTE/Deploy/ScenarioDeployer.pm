@@ -120,22 +120,22 @@ sub deploy # returns hash ref with the ip of each host
 
     my $scenario = $self->{scenario};
 
+    my $hostIP = {};
+
+    my $reuse = ANSTE::Config->instance()->reuse();
+
+    if (ANSTE::Config->instance->autoCreateImages() and not $reuse) {
+        $self->_createMissingBaseImages();
+    }
+
     # Set up the network before deploy
     print "Setting up network...\n";
     $self->{virtualizer}->createNetwork($scenario)
         or throw ANSTE::Exceptions::Error('Error creating network.');
 
-    my $hostIP = {};
-
-    my $reuse = ANSTE::Config->instance()->reuse();
-
     # Starts Master Server thread
     my $server = new ANSTE::Comm::WaiterServer();
     $server->startThread();
-
-    if (ANSTE::Config->instance->autoCreateImages() and not $reuse) {
-        $self->_createMissingBaseImages();
-    }
 
     foreach my $deployer (@{$self->{deployers}}) {
         my $hostname = $deployer->host()->name();

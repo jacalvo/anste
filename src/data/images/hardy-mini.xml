@@ -5,7 +5,7 @@
 
     <memory>128</memory>
     
-    <size>500M</size>
+    <size>500</size>
 
     <install method="debootstrap">
         <dist>hardy</dist>
