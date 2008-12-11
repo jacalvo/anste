@@ -161,6 +161,10 @@ sub shutdownImage # (image)
 
     my $config = ANSTE::Config->instance();
 
+    # It seems that virsh shutdown destroys the machine immediately,
+    # so we wait a few seconds until some operations finish
+    sleep 5;
+
     $self->execute("virsh shutdown $image");
 
     # Wait until shutdown finishes
