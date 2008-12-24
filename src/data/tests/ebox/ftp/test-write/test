@@ -1,0 +1,23 @@
+#!/bin/sh
+
+LOG=/tmp/smbclient-test-$$.log
+
+echo "Creating test.bin"
+dd if=/dev/zero of=test.bin bs=4096 count=1000
+
+echo "Trying to put test.bin"
+echo "put test.bin" | lftp 192.168.2.1 -u $USER,$PASS > $LOG 2>&1
+
+cat $LOG
+
+echo "Checking for error $ERROR:"
+grep $ERROR $LOG
+
+if [ $? != 0 ]
+then
+    echo "Test ok."
+    exit 0
+else
+    echo "Failed."
+    exit 1
+fi
