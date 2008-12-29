@@ -3,7 +3,7 @@
     <desc>Contains a set of tests to ensure
     that ebox firewall redirect capabilities work ok.
     </desc>
-    
+
     <scenario>ebox/firewall/redirect.xml</scenario>
 
     <test type="selenium">
@@ -14,7 +14,7 @@
 
         <host>ebox-server</host>
         <dir>enable-modules</dir>
-    </test>        
+    </test>
 
     <test type="selenium">
         <name>ConfigNetwork</name>
@@ -25,7 +25,7 @@
         <host>ebox-server</host>
         <dir>set-external</dir>
         <var name="IFACE" value="eth2"/>
-    </test>        
+    </test>
 
     <test type="selenium">
         <name>RemoveGateway</name>
@@ -35,7 +35,7 @@
 
         <host>ebox-server</host>
         <dir>remove-default-gw</dir>
-    </test>        
+    </test>
 
     <test type="selenium">
         <name>AddGateways</name>
@@ -55,13 +55,23 @@
         <dir>config-redirect</dir>
     </test>
 
+    <test type="selenium">
+        <name>RedirectChecks</name>
+        <desc>
+        Check NetworkObserver implementation and validateTypedRow.
+        </desc>
+
+        <host>ebox-server</host>
+        <dir>redirect-checks</dir>
+    </test>
+
     <test>
         <name>SetupRouterA</name>
         <desc>
         Setup redirection to eBox machine
         on router A.
         </desc>
-        
+
         <host>router-a</host>
         <dir>setup-router</dir>
         <var name="IP" value="192.168.4.2"/>
@@ -74,7 +84,7 @@
         Setup redirection to eBox machine
         on router B.
         </desc>
-        
+
         <host>router-b</host>
         <dir>setup-router</dir>
         <var name="IP" value="192.168.5.3"/>
@@ -87,7 +97,7 @@
         Start servers on the client listening
         on two ports.
         </desc>
-        
+
         <host>client</host>
         <dir>start-servers</dir>
     </test>
@@ -99,7 +109,7 @@
         the external machine and the client
         through the two routers.
         </desc>
-        
+
         <host>external</host>
         <dir>test-redirect</dir>
     </test>
@@ -122,7 +132,7 @@
         through the two routers with traffic
         balance enabled.
         </desc>
-        
+
         <host>external</host>
         <dir>test-redirect</dir>
     </test>
