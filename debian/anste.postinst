@@ -1,23 +1,24 @@
 #!/bin/bash
 
-XEND_CONFIG=/etc/xen/xend-config.sxp
+# Old Xen stuff, not needed for KVM
+#XEND_CONFIG=/etc/xen/xend-config.sxp
 
-if ! grep -q ANSTE $XEND_CONFIG
-then
-    cp $XEND_CONFIG $XEND_CONFIG.pre-anste
+#if ! grep -q ANSTE $XEND_CONFIG
+#then
+#    cp $XEND_CONFIG $XEND_CONFIG.pre-anste
 
-    sed -i 's/^(network-script/#(network-script/g' $XEND_CONFIG
-    sed -i 's/^(vif-script/#(vif-script/g' $XEND_CONFIG
+#    sed -i 's/^(network-script/#(network-script/g' $XEND_CONFIG
+#    sed -i 's/^(vif-script/#(vif-script/g' $XEND_CONFIG
 
-    echo "# Added by ANSTE installation" >> $XEND_CONFIG
-    echo "(network-script network-virtual)" >> $XEND_CONFIG
-    echo "(vif-script vif-bridge)" >> $XEND_CONFIG
+#    echo "# Added by ANSTE installation" >> $XEND_CONFIG
+#    echo "(network-script network-virtual)" >> $XEND_CONFIG
+#    echo "(vif-script vif-bridge)" >> $XEND_CONFIG
 
-    /etc/init.d/xend restart
-fi    
+#    /etc/init.d/xend restart
+#fi
 
-if ! [ -L /usr/lib/xen-tools/hardy.d ]
-then
-    cd /usr/lib/xen-tools
-    ln -s edgy.d hardy.d
-fi
+#if ! [ -L /usr/lib/xen-tools/hardy.d ]
+#then
+#    cd /usr/lib/xen-tools
+#    ln -s edgy.d hardy.d
+#fi
