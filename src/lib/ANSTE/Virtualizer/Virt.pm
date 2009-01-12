@@ -132,9 +132,9 @@ sub createBaseImage # (%params)
     # Convert to raw format so we can mount it with -o loop
     my $imgcommand;
     if (-f '/usr/bin/kvm-img') { 
-    	$command = 'kvm-img'; 
+    	$imgcommand = 'kvm-img'; 
     } else {
-    	$command = 'qemu-img'; 
+    	$imgcommand = 'qemu-img'; 
     }
     $self->execute("$imgcommand convert $dir/root.qcow2 -O raw $dir/root.img");
 
