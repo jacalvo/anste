@@ -18,7 +18,7 @@ distclean:
 	rm -f anste_$(VERSION)*
 	rm -f *.deb
 
-export:
+export: distclean
 	svn export . $(EXPORT) 
 	find $(EXPORT)/src/lib -name 't' -print | xargs rm -rf
 
@@ -153,4 +153,7 @@ uninstall-anste-job:
 install: install-anste install-anste-manager install-anste-job
 
 uninstall: uninstall-anste uninstall-anste-manager uninstall-anste-job
-	
+
+pkg: dist
+	cd $(EXPORT) &&  dpkg-buildpackage -rfakeroot
+
