@@ -130,7 +130,13 @@ sub createBaseImage # (%params)
     close($FILE) or return 0; 
 
     # Convert to raw format so we can mount it with -o loop
-    $self->execute("kvm-img convert $dir/root.qcow2 -O raw $dir/root.img");
+    my $imgcommand;
+    if (-f '/usr/bin/kvm-img') { 
+    	$command = 'kvm-img' 
+    } else {
+    	$command = 'qemu-img' 
+    }
+    $self->execute("$imgcommand convert $dir/root.qcow2 -O raw $dir/root.img");
 
     # Delete qcow2 image
     unlink("$dir/root.qcow2");
