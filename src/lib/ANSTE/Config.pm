@@ -1,4 +1,4 @@
-# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -48,7 +48,7 @@ my $singleton;
 #
 #   ref - the class unique instance of type <ANSTE::Config>.
 #
-sub instance 
+sub instance
 {
     my $class = shift;
     unless (defined $singleton) {
@@ -70,7 +70,7 @@ sub instance
                 last;
             }
         }
-        
+
         $singleton = bless($self, $class);
 
         $singleton->_setDefaults();
@@ -127,7 +127,7 @@ sub check
     $self->xenMirror();
     $self->virtSize();
     $self->virtMemory();
-    
+
     return 1;
 }
 
@@ -192,7 +192,7 @@ sub format
     my $format = $self->{format};
 
     if (not ANSTE::Validate::format($format)) {
-        throw ANSTE::Exceptions::NotFound('Format', 
+        throw ANSTE::Exceptions::NotFound('Format',
                                           $format);
     }
 
@@ -245,7 +245,7 @@ sub system
     my $system = $self->_getOption('global', 'system');
 
     if (not ANSTE::Validate::system($system)) {
-        throw ANSTE::Exceptions::NotFound('System', 
+        throw ANSTE::Exceptions::NotFound('System',
                                           $system);
     }
 
@@ -271,7 +271,7 @@ sub virtualizer
     my $virtualizer = $self->_getOption('global', 'virtualizer');
 
     if (not ANSTE::Validate::virtualizer($virtualizer)) {
-        throw ANSTE::Exceptions::NotFound('Virtualizer', 
+        throw ANSTE::Exceptions::NotFound('Virtualizer',
                                           $virtualizer);
     }
 
@@ -297,7 +297,7 @@ sub verbose
     my $verbose = $self->_getOption('global', 'verbose');
 
     if (not ANSTE::Validate::boolean($verbose)) {
-        throw ANSTE::Exceptions::InvalidConfig('global/verbose', 
+        throw ANSTE::Exceptions::InvalidConfig('global/verbose',
                                                $verbose,
                                                $self->{confFile});
     }
@@ -326,7 +326,7 @@ sub setVerbose # (value)
         throw ANSTE::Exceptions::MissingArgument('value');
 
     if (not ANSTE::Validate::boolean($value)) {
-        throw ANSTE::Exceptions::InvalidOption('global/verbose', 
+        throw ANSTE::Exceptions::InvalidOption('global/verbose',
                                                $value);
     }
 
@@ -352,7 +352,7 @@ sub wait
     my $wait = $self->_getOption('global', 'wait');
 
     if (not ANSTE::Validate::boolean($wait)) {
-        throw ANSTE::Exceptions::InvalidConfig('global/wait', 
+        throw ANSTE::Exceptions::InvalidConfig('global/wait',
                                                $wait,
                                                $self->{confFile});
     }
@@ -381,7 +381,7 @@ sub setWait # (value)
         throw ANSTE::Exceptions::MissingArgument('value');
 
     if (not ANSTE::Validate::boolean($value)) {
-        throw ANSTE::Exceptions::InvalidOption('global/wait', 
+        throw ANSTE::Exceptions::InvalidOption('global/wait',
                                                $value);
     }
 
@@ -407,7 +407,7 @@ sub waitFail
     my $waitFail = $self->_getOption('global', 'wait-fail');
 
     if (not ANSTE::Validate::boolean($waitFail)) {
-        throw ANSTE::Exceptions::InvalidConfig('global/wait-fail', 
+        throw ANSTE::Exceptions::InvalidConfig('global/wait-fail',
                                                $waitFail,
                                                $self->{confFile});
     }
@@ -436,7 +436,7 @@ sub setWaitFail # (value)
         throw ANSTE::Exceptions::MissingArgument('value');
 
     if (not ANSTE::Validate::boolean($value)) {
-        throw ANSTE::Exceptions::InvalidOption('global/wait-fail', 
+        throw ANSTE::Exceptions::InvalidOption('global/wait-fail',
                                                $value);
     }
 
@@ -462,7 +462,7 @@ sub reuse
     my $reuse = $self->_getOption('global', 'reuse');
 
     if (not ANSTE::Validate::boolean($reuse)) {
-        throw ANSTE::Exceptions::InvalidConfig('global/reuse', 
+        throw ANSTE::Exceptions::InvalidConfig('global/reuse',
                                                $reuse,
                                                $self->{confFile});
     }
@@ -491,7 +491,7 @@ sub setReuse # (value)
         throw ANSTE::Exceptions::MissingArgument('value');
 
     if (not ANSTE::Validate::boolean($value)) {
-        throw ANSTE::Exceptions::InvalidOption('global/reuse', 
+        throw ANSTE::Exceptions::InvalidOption('global/reuse',
                                                $value);
     }
 
@@ -500,7 +500,7 @@ sub setReuse # (value)
 
 # Method: imagePath
 #
-#   Gets the value for the images' path option. 
+#   Gets the value for the images' path option.
 #
 # Returns:
 #
@@ -517,7 +517,7 @@ sub imagePath
     my $imagePath = $self->_getOption('paths', 'images');
 
     if (not ANSTE::Validate::path($imagePath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/images', 
+        throw ANSTE::Exceptions::InvalidConfig('paths/images',
                                                $imagePath,
                                                $self->{confFile});
     }
@@ -527,7 +527,7 @@ sub imagePath
 
 # Method: logPath
 #
-#   Gets the value for the logs' path option. 
+#   Gets the value for the logs' path option.
 #
 # Returns:
 #
@@ -581,7 +581,7 @@ sub setLogPath # (logPath)
 
 # Method: deployPath
 #
-#   Gets the value for the deploy path option. 
+#   Gets the value for the deploy path option.
 #
 # Returns:
 #
@@ -724,7 +724,7 @@ sub testFile # (file)
 
 # Method: templatePath
 #
-#   Gets the value for the templates' path option. 
+#   Gets the value for the templates' path option.
 #
 # Returns:
 #
@@ -741,7 +741,7 @@ sub templatePath
     my $templatePath = $self->_getOption('paths', 'templates');
 
     if (not ANSTE::Validate::path($templatePath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/templates', 
+        throw ANSTE::Exceptions::InvalidConfig('paths/templates',
                                                $templatePath,
                                                $self->{confFile});
     }
@@ -772,7 +772,7 @@ sub anstedPort
                                                $anstedPort,
                                                $self->{confFile});
     }
-    
+
     return $anstedPort;
 }
 
@@ -850,7 +850,7 @@ sub gateway
     my $gateway =  $self->_getOption('comm', 'gateway');
 
     if (not ANSTE::Validate::ip($gateway)) {
-        throw ANSTE::Exceptions::InvalidConfig('gateway', 
+        throw ANSTE::Exceptions::InvalidConfig('gateway',
                                                $gateway,
                                                $self->{confFile});
     }
@@ -896,7 +896,7 @@ sub autoCreateImages
     my $auto = $self->_getOption('deploy', 'auto-create-images');
 
     if (not ANSTE::Validate::boolean($auto)) {
-        throw ANSTE::Exceptions::InvalidConfig('deploy/auto-create-images', 
+        throw ANSTE::Exceptions::InvalidConfig('deploy/auto-create-images',
                                                $auto,
                                                $self->{confFile});
     }
@@ -923,11 +923,8 @@ sub seleniumRCjar
 
     my $jar = $self->_getOption('selenium', 'rc-jar');
 
-    if (not defined $jar) {
-        throw ANSTE::Exceptions::MissingConfig('selenium/rc-jar');
-    }                                          
-    if (not ANSTE::Validate::fileReadable($jar)) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/rc-jar', 
+    if (defined $jar and not ANSTE::Validate::fileReadable($jar)) {
+        throw ANSTE::Exceptions::InvalidConfig('selenium/rc-jar',
                                                $jar,
                                                $self->{confFile});
     }
@@ -991,7 +988,7 @@ sub seleniumVideo
 #
 # Exceptions:
 #
-#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present 
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
 sub setSeleniumVideo # (value)
@@ -1002,7 +999,7 @@ sub setSeleniumVideo # (value)
         throw ANSTE::Exceptions::MissingArgument('value');
 
     if (not ANSTE::Validate::boolean($value)) {
-        throw ANSTE::Exceptions::InvalidOption('selenium/video', 
+        throw ANSTE::Exceptions::InvalidOption('selenium/video',
                                                $value);
     }
 
@@ -1073,7 +1070,7 @@ sub step
 #
 # Exceptions:
 #
-#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present 
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
 sub setStep # (value)
@@ -1084,7 +1081,7 @@ sub setStep # (value)
         throw ANSTE::Exceptions::MissingArgument('value');
 
     if (not ANSTE::Validate::boolean($value)) {
-        throw ANSTE::Exceptions::InvalidOption('test/step', 
+        throw ANSTE::Exceptions::InvalidOption('test/step',
                                                $value);
     }
 
@@ -1128,7 +1125,7 @@ sub nonStop
 #
 # Exceptions:
 #
-#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present 
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
 sub setNonStop # (value)
@@ -1139,7 +1136,7 @@ sub setNonStop # (value)
         throw ANSTE::Exceptions::MissingArgument('value');
 
     if (not ANSTE::Validate::boolean($value)) {
-        throw ANSTE::Exceptions::InvalidOption('test/non-stop', 
+        throw ANSTE::Exceptions::InvalidOption('test/non-stop',
                                                $value);
     }
 
@@ -1262,7 +1259,7 @@ sub xenKernel
     my $kernel = $self->_getOption('xen-options', 'kernel');
 
     if (not ANSTE::Validate::fileReadable($kernel)) {
-        throw ANSTE::Exceptions::InvalidConfig('xen-options/kernel', 
+        throw ANSTE::Exceptions::InvalidConfig('xen-options/kernel',
                                                $kernel,
                                                $self->{confFile});
     }
@@ -1285,7 +1282,7 @@ sub xenInitrd
     my $initrd = $self->_getOption('xen-options', 'initrd');
 
     if (not ANSTE::Validate::fileReadable($initrd)) {
-        throw ANSTE::Exceptions::InvalidConfig('xen-options/initrd', 
+        throw ANSTE::Exceptions::InvalidConfig('xen-options/initrd',
                                                $initrd,
                                                $self->{confFile});
     }
@@ -1396,7 +1393,7 @@ sub _filePath # (file)
         if (-r $userFile) {
             return $userFile;
         }
-    }        
+    }
     my $dataFile = "$data/$file";
     return $dataFile;
 }
@@ -1416,7 +1413,7 @@ sub _getOption # (section, option)
     if (defined $config) {
         return $config;
     }
-    
+
     # If not in config, return default value.
     return $self->{default}->{$section}->{$option};
 }
