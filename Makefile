@@ -155,5 +155,5 @@ install: install-anste install-anste-manager install-anste-job
 uninstall: uninstall-anste uninstall-anste-manager uninstall-anste-job
 
 pkg: dist
-	cd $(EXPORT) &&  dpkg-buildpackage -rfakeroot
+	cd $(EXPORT) &&  dpkg-buildpackage -rfakeroot -uc -us
 
