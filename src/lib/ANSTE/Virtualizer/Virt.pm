@@ -103,10 +103,10 @@ sub createBaseImage # (%params)
     my $command = "ubuntu-vm-builder $vm $dist --dest $dir --hostname $name" .
                   " --ip $ip --mirror $mirror --mem $memory" . 
                   " --mask $netmask --gw $gateway --rootsize $size" .
-                  " --components main,universe"; 
+                  " --components main,universe --domain $name"; 
     
     # FIXME: We don't use swap at the moment to speed up the process
-    $command .= " --swapsize 0";
+    $command .= " --swapsize 8";
     #if ($swap) {
     #   $command .= " --swapsize $swap";
     #}
@@ -136,10 +136,10 @@ sub createBaseImage # (%params)
     } else {
     	$imgcommand = 'qemu-img'; 
     }
-    $self->execute("$imgcommand convert $dir/root.qcow2 -O raw $dir/root.img");
+    $self->execute("$imgcommand convert $dir/disk0.qcow2 -O raw $dir/disk0.img");
 
     # Delete qcow2 image
-    unlink("$dir/root.qcow2");
+    unlink("$dir/disk0.qcow2");
 }
 
 # Method: shutdownImage 
@@ -257,7 +257,7 @@ sub imageFile # (path, name)
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-    return "$path/$name/root.img";
+    return "$path/$name/disk0.img";
 }
 
 # Method: copyImage
@@ -454,7 +454,7 @@ sub _createImageConfig # (image, path) returns config string
     $imageConfig .= "\t<devices>\n";
     $imageConfig .= "\t\t<emulator>/usr/bin/kvm</emulator>\n";
     $imageConfig .= "\t\t<disk type='file' device='disk'>\n";
-    $imageConfig .= "\t\t\t<source file='$path/root.img'/>\n";
+    $imageConfig .= "\t\t\t<source file='$path/disk0.img'/>\n";
     $imageConfig .= "\t\t\t<target dev='hda' bus='ide'/>\n";
     $imageConfig .= "\t\t</disk>\n";
     foreach my $iface (@{$image->network()->interfaces()}) {

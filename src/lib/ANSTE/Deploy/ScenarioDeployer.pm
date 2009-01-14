@@ -129,9 +129,11 @@ sub deploy # returns hash ref with the ip of each host
     }
 
     # Set up the network before deploy
-    print "Setting up network...\n";
-    $self->{virtualizer}->createNetwork($scenario)
-        or throw ANSTE::Exceptions::Error('Error creating network.');
+    if (not $reuse) {
+        print "Setting up network...\n";
+        $self->{virtualizer}->createNetwork($scenario)
+            or throw ANSTE::Exceptions::Error('Error creating network.');
+    }
 
     # Starts Master Server thread
     my $server = new ANSTE::Comm::WaiterServer();
