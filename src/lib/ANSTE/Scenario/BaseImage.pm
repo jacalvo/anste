@@ -1,4 +1,4 @@
-# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -45,7 +45,7 @@ sub new # returns new BaseImage object
 {
 	my $class = shift;
 	my $self = {};
-	
+
 	$self->{name} = '';
 	$self->{desc} = '';
 	$self->{memory} = '';
@@ -54,6 +54,7 @@ sub new # returns new BaseImage object
 	$self->{installMethod} = '';
 	$self->{installSource} = '';
 	$self->{packages} = new ANSTE::Scenario::Packages();
+    $self->{files} = new ANSTE::Scenario::Files;
     $self->{'pre-scripts'} = [];
     $self->{'post-scripts'} = [];
 
@@ -91,7 +92,7 @@ sub name # returns name string
 #
 sub setName # name string
 {
-	my ($self, $name) = @_;	
+	my ($self, $name) = @_;
 
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
@@ -128,7 +129,7 @@ sub desc # returns desc string
 #
 sub setDesc # desc string
 {
-	my ($self, $desc) = @_;	
+	my ($self, $desc) = @_;
 
     defined $desc or
         throw ANSTE::Exceptions::MissingArgument('desc');
@@ -144,7 +145,7 @@ sub setDesc # desc string
 #
 #   string - contains the memory size
 #
-sub memory # returns memory string 
+sub memory # returns memory string
 {
 	my ($self) = shift;
 
@@ -157,7 +158,7 @@ sub memory # returns memory string
 #
 # Parameters:
 #
-#   memory - String with the memory size.    
+#   memory - String with the memory size.
 #
 # Exceptions:
 #
@@ -203,7 +204,7 @@ sub size # returns size string
 #
 sub setSize # size string
 {
-	my ($self, $size) = @_;	
+	my ($self, $size) = @_;
 
     defined $size or
         throw ANSTE::Exceptions::MissingArgument('size');
@@ -241,7 +242,7 @@ sub swap # returns size string
 #
 sub setSwap # returns string
 {
-	my ($self, $size) = @_;	
+	my ($self, $size) = @_;
 
     defined $size or
         throw ANSTE::Exceptions::MissingArgument('size');
@@ -279,7 +280,7 @@ sub installMethod # returns string
 #
 sub setInstallMethod # installMethod string
 {
-	my ($self, $installMethod) = @_;	
+	my ($self, $installMethod) = @_;
 
     defined $installMethod or
         throw ANSTE::Exceptions::MissingArgument('installMethod');
@@ -317,7 +318,7 @@ sub installSource # returns string
 #
 sub setInstallSource # installSource string
 {
-	my ($self, $installSource) = @_;	
+	my ($self, $installSource) = @_;
 
     defined $installSource or
         throw ANSTE::Exceptions::MissingArgument('installSource');
@@ -354,7 +355,7 @@ sub installDist # returns string
 #
 sub setInstallDist # installDist string
 {
-	my ($self, $installDist) = @_;	
+	my ($self, $installDist) = @_;
 
     defined $installDist or
         throw ANSTE::Exceptions::MissingArgument('installDist');
@@ -391,7 +392,7 @@ sub installCommand # returns string
 #
 sub setInstallCommand # installCommand string
 {
-	my ($self, $installCommand) = @_;	
+	my ($self, $installCommand) = @_;
 
     defined $installCommand or
         throw ANSTE::Exceptions::MissingArgument('installCommand');
@@ -442,6 +443,49 @@ sub setPackages # (packages)
 	$self->{packages} = $packages;
 }
 
+# Method: files
+#
+#   Gets the object with the information of files to be transferred.
+#
+# Returns:
+#
+#   ref - <ANSTE::Scenario::Files> object.
+#
+sub files # returns Files object
+{
+	my ($self) = @_;
+
+	return $self->{files};
+}
+
+# Method: setFiles
+#
+#   Sets the object with the information of files to be transferred.
+#
+# Parameters:
+#
+#   packages - <ANSTE::Scenario::Files> object.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
+#
+sub setFiles # (files)
+{
+    my ($self, $files) = @_;
+
+    defined $files or
+        throw ANSTE::Exceptions::MissingArgument('files');
+
+    if (not $files->isa('ANSTE::Scenario::Files')) {
+        throw ANSTE::Exceptions::InvalidType('files',
+                                             'ANSTE::Scenario::Files');
+    }
+
+    $self->{files} = $files;
+}
+
 # Method: preScripts
 #
 #   Gets the list of scripts that have to be executed before the setup.
@@ -482,7 +526,7 @@ sub postScripts # returns list ref
 #
 # Returns:
 #
-#   boolean - true if loaded correctly 
+#   boolean - true if loaded correctly
 #
 # Exceptions:
 #
@@ -532,25 +576,25 @@ sub loadFromFile # (filename)
     $self->setInstallMethod($method);
     my $distNode = $installNode->getElementsByTagName('dist', 0)->item(0);
     if ($distNode) {
-    	my $dist = $distNode->getFirstChild()->getNodeValue();
+        my $dist = $distNode->getFirstChild()->getNodeValue();
 	    $self->setInstallDist($dist);
-    }        
+    }
     my $commandNode = $installNode->getElementsByTagName('command', 0)->item(0);
     if ($commandNode) {
-    	my $command = $commandNode->getFirstChild()->getNodeValue();
+        my $command = $commandNode->getFirstChild()->getNodeValue();
 	    $self->setInstallCommand($command);
-    }        
+    }
     my $sourceNode = $installNode->getElementsByTagName('source', 0)->item(0);
     if ($sourceNode) {
-    	my $source = $sourceNode->getFirstChild()->getNodeValue();
+        my $source = $sourceNode->getFirstChild()->getNodeValue();
 	    $self->setInstallSource($source);
-    }        
+    }
 
 	my $memoryNode = $image->getElementsByTagName('memory', 0)->item(0);
     if ($memoryNode) {
-    	my $memory = $memoryNode->getFirstChild()->getNodeValue();
+        my $memory = $memoryNode->getFirstChild()->getNodeValue();
 	    $self->setMemory($memory);
-    }        
+    }
 
 	my $sizeNode = $image->getElementsByTagName('size', 0)->item(0);
 	my $size = $sizeNode->getFirstChild()->getNodeValue();
@@ -558,13 +602,18 @@ sub loadFromFile # (filename)
 
 	my $swapNode = $image->getElementsByTagName('swap', 0)->item(0);
     if ($swapNode) {
-    	my $swap = $swapNode->getFirstChild()->getNodeValue();
+        my $swap = $swapNode->getFirstChild()->getNodeValue();
 	    $self->setSwap($swap);
-    }        
+    }
 
 	my $packagesNode = $image->getElementsByTagName('packages', 0)->item(0);
 	if ($packagesNode) {
 		$self->packages()->load($packagesNode);
+	}
+
+	my $filesNode = $image->getElementsByTagName('files', 0)->item(0);
+	if($filesNode){
+		$self->files()->load($filesNode);
 	}
 
 	my $preNode = $image->getElementsByTagName('pre-install', 0)->item(0);
@@ -587,7 +636,7 @@ sub _addScripts # (list, node)
 
 	foreach my $scriptNode ($node->getElementsByTagName('script', 0)) {
         my $script = $scriptNode->getFirstChild()->getNodeValue();
-    	push(@{$self->{$list}}, $script);
+        push(@{$self->{$list}}, $script);
     }
 }
 

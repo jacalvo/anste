@@ -300,6 +300,11 @@ sub prepareSystem
     unlink($setupScript)
         or die "Can't remove $setupScript: $!";
 
+    my $list = $image->{files}->list(); # retrieve files list
+    print "[$hostname] Transferring files...";
+    $self->transferFiles($list);
+    print "... done\n";
+
     # Execute post-install scripts
     print "[$hostname] Executing post-setup scripts...\n" if $config->verbose();
     $self->executeScripts($image->postScripts());

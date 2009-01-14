@@ -1,4 +1,4 @@
-# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -27,7 +27,7 @@ use ANSTE::Exceptions::InvalidFile;
 
 # Class: HostImageSetup
 #
-#   Writes the setup script for a host image (a copy of a base image) 
+#   Writes the setup script for a host image (a copy of a base image)
 #   that needs to be executed with the virtual machine running.
 #
 
@@ -60,7 +60,7 @@ sub new # (host) returns new HostImageSetup object
         throw ANSTE::Exceptions::InvalidType('host',
                                             'ANSTE::Scenario::Host');
     }
-	
+
 	$self->{host} = $host;
     my $system = ANSTE::Config->instance()->system();
 
@@ -108,9 +108,9 @@ sub writeScript # (file)
 	my @packages = @{$self->{host}->packages()->list()};
     if (@packages) {
         $self->_writePreInstall($file);
-    	$self->_writePackageInstall($file, @packages);
+        $self->_writePackageInstall($file, @packages);
         $self->_writePostInstall($file);
-    }        
+    }
 	$self->_writeNetworkConfig($file);
 	$self->_writeHostsConfig($file);
 }
@@ -133,7 +133,7 @@ sub _writePackageInstall # (file, @packages)
 	my ($self, $file, @packages) = @_;
 
     my $system = $self->{system};
-    
+
     print $file "# Install packages\n";
     my $command = $system->installPackagesCommand(@packages);
     print $file "$command\n\n";
@@ -210,7 +210,7 @@ sub _writeHostsConfig # (file)
         my $config = $system->hostsConfig(%hostAddress);
 	    print $file "# Write hosts configuration\n";
         print $file "$config\n\n";
-    }        
+    }
 }
 
 sub _addressInNetwork # (hostInterfaces, myInterfaces)
@@ -218,7 +218,7 @@ sub _addressInNetwork # (hostInterfaces, myInterfaces)
     my ($hostInterfaces, $myInterfaces) = @_;
 
     foreach my $myIface (@{$myInterfaces}) {
-        next if $myIface->type() == 
+        next if $myIface->type() ==
             ANSTE::Scenario::NetworkInterface::IFACE_TYPE_DHCP;
 
         my $myMask = $myIface->netmask();
@@ -227,7 +227,7 @@ sub _addressInNetwork # (hostInterfaces, myInterfaces)
         my $myAddressBits = _octetsToNumber($myAddress);
 
         foreach my $hostIface (@{$hostInterfaces}) {
-            next if $hostIface->type() == 
+            next if $hostIface->type() ==
                 ANSTE::Scenario::NetworkInterface::IFACE_TYPE_DHCP;
 
             my $hostMask = $hostIface->netmask();

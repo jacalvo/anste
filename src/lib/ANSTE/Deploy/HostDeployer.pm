@@ -273,7 +273,7 @@ sub _deploy
         if (@{$pre}) {
             print "[$hostname] Executing pre scripts...\n";
             $cmd->executeScripts($pre);
-        }        
+        }
 
         my $setupScript = "$hostname-setup.sh";
         print "[$hostname] Generating setup script...\n";
@@ -281,10 +281,10 @@ sub _deploy
         $self->_executeSetupScript($ip, $setupScript);
 
         # It worths it stays here in order to be able to use pre/post-install
-        # scripts as well. This permits us to move trasferred file, 
+        # scripts as well. This permits us to move trasferred file,
         # change their rights and so on.
         my $list = $host->{files}->list(); # retrieve files list
-            print "[$hostname] Transferring files...";
+        print "[$hostname] Transferring files...";
         $cmd->transferFiles($list);
         print "... done\n";
 
