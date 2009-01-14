@@ -13,7 +13,7 @@
         <emulator>/usr/bin/kvm</emulator>
         <disk type='file' device='disk'>
             {
-                my $image = "$path/root.img";
+                my $image = "$path/disk0.img";
                 $OUT .= "<source file='$image'/>";
             }
             <target dev='hda' bus='ide'/>
