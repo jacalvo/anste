@@ -1,4 +1,4 @@
-# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -36,6 +36,8 @@ use Text::Template;
 use Safe;
 use Perl6::Slurp;
 use Error qw(:try);
+
+use constant DEFAULT_SELENIUM_PORT => 1666;
 
 my $SUITE_FILE = 'suite.html';
 my $SUITE_LIST_FILE = 'suites.list';
@@ -100,8 +102,8 @@ sub runDir # (suites)
 
 	defined $suites or
 		throw ANSTE::Exceptions::MissingArgument('suites');
-	
-    my $dir = ANSTE::Config->instance()->testFile($suites); 
+
+    my $dir = ANSTE::Config->instance()->testFile($suites);
 
     my @dirs;
 
@@ -125,7 +127,7 @@ sub runDir # (suites)
             my $suiteDir = "$suites/$subdir";
             $suite->loadFromDir($suiteDir);
             $self->runSuite($suite);
-        }            
+        }
     }
 }
 
@@ -188,7 +190,7 @@ sub runSuite # (suite)
         if ($config->wait()) {
             print "Waiting for testing on the scenario. " .
                   "Press any key to shutdown it and continue.\n";
-            my $key;                  
+            my $key;
             read(STDIN, $key, 1);
         }
         $deployer->destroy()
@@ -228,7 +230,7 @@ sub _loadScenario # (file, suite)
         print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
     };
-    
+
     return $scenario;
 }
 
@@ -268,7 +270,7 @@ sub _runTests
         # Adds the test report
         if ($testResult) {
             $suiteResult->add($testResult);
-            
+
             # Write test reports
             my $writer = $self->{writer};
             my $logPath = $config->logPath();
@@ -278,11 +280,11 @@ sub _runTests
         # Wait user input if there is a breakpoint in the test
         # and not in non-stop mode, or wait always if we are
         # in step by step mode.
-        if (($test->stop() && !$config->nonStop) || 
+        if (($test->stop() && !$config->nonStop) ||
             ($config->waitFail() && $ret != 0) || $config->step()) {
             print "Stop requested after this test. " .
                   "Press any key to continue.\n";
-            my $key;                  
+            my $key;
             read(STDIN, $key, 1);
         }
     }
@@ -307,7 +309,7 @@ sub _runTest # (test)
     }
 
     my $logPath = $config->logPath();
-    
+
     # Create directories
     use File::Path;
     mkpath "$logPath/$suiteDir";
@@ -332,13 +334,13 @@ sub _runTest # (test)
     # Run pre-test script if exists
     if (-r "$path/pre") {
         my $script = "$newPath/$name.pre";
-        system("cp $path/pre $script");        
+        system("cp $path/pre $script");
         $self->_runScript($hostname, $script);
     }
 
     # TODO: separate this in two functions runSeleniumTest and runShellTest ??
-    
-    # Run the test itself either it's a selenium one or a normal one 
+
+    # Run the test itself either it's a selenium one or a normal one
     if ($test->selenium()) {
         my $suiteFile = "$path/$SUITE_FILE";
         if (not -r $suiteFile) {
@@ -378,25 +380,26 @@ sub _runTest # (test)
                 print $FH $text;
                 close($FH);
             }
-        }                
+        }
 
         $logfile = "$logPath/$suiteDir/$name.html";
-        $ret = $self->_runSeleniumRC($hostname, $suiteFile, $logfile);
+        my $port = $test->port();
+        $ret = $self->_runSeleniumRC($hostname, $suiteFile, $logfile, $port);
 
         if ($config->seleniumVideo()) {
             print "Ending video recording for test $name... " if $verbose;
             $system->stopVideoRecording();
-            print "Done.\n" if $verbose; 
+            print "Done.\n" if $verbose;
 
             # If test was correct and record all videos option
             # is not activated, delete the video
             if (!$config->seleniumRecordAll() && $ret == 0) {
                 unlink($video);
-            } 
+            }
             else {
                 $testResult->setVideo("$suiteDir/video/$name.ogg");
             }
-        }            
+        }
         # Store end time
         my $endTime = $self->_time();
         $testResult->setEndTime($endTime);
@@ -411,9 +414,9 @@ sub _runTest # (test)
         $logfile = "$logPath/$suiteDir/$name.txt";
 
         # Copy to temp directory and rename it to test name
-        system("cp $path/test $newPath/$name");        
+        system("cp $path/test $newPath/$name");
 
-        $ret = $self->_runScript($hostname, "$newPath/$name", $logfile, 
+        $ret = $self->_runScript($hostname, "$newPath/$name", $logfile,
                                  $test->env(), $test->params());
         # Store end time
         my $endTime = $self->_time();
@@ -435,7 +438,7 @@ sub _runTest # (test)
     # Run post-test script if exists
     if (-r "$path/post") {
         my $script = "$newPath/$name.post";
-        system("cp $path/post $script");        
+        system("cp $path/post $script");
         $self->_runScript($hostname, $script);
     }
 
@@ -486,18 +489,22 @@ sub _runScript # (hostname, script, log?, env?, params?)
         $client->get($log);
         $client->del($log);
     }
-    
+
     return $ret;
 }
 
-sub _runSeleniumRC # (hostname, file, log) returns result 
+sub _runSeleniumRC # (hostname, file, log, port?) returns result
 {
-    my ($self, $hostname, $file, $log) = @_;
+    my ($self, $hostname, $file, $log, $port) = @_;
 
     my $system = $self->{system};
 
     my $ip = $self->{hostIP}->{$hostname};
-    my $url = "http://$ip:1666";
+
+    unless (defined ($port)) {
+        $port = DEFAULT_SELENIUM_PORT;
+    }
+    my $url = "http://$ip:$port";
 
     my $config = ANSTE::Config->instance();
 
@@ -506,13 +513,13 @@ sub _runSeleniumRC # (hostname, file, log) returns result
 
     try {
         $system->executeSelenium(jar => $jar,
-                                 browser => $browser, 
-                                 url => $url, 
-                                 testFile => $file, 
+                                 browser => $browser,
+                                 url => $url,
+                                 testFile => $file,
                                  resultFile => $log);
     } catch ANSTE::Exceptions::Error with {
         throw ANSTE::Exceptions::Error("Can't execute Selenium or Java. " .
-                                       "Ensure that everything is ok.");                                               
+                                       "Ensure that everything is ok.");
     };
 
     return $self->_seleniumResult($log);

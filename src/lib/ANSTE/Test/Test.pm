@@ -1,4 +1,4 @@
-# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -49,7 +49,7 @@ sub new # returns new Test object
     $self->{assert} = 'passed';
     $self->{stop} = 0;
     $self->{selenium} = 0;
-	
+
 	bless($self, $class);
 
 	return $self;
@@ -84,7 +84,7 @@ sub name # returns name string
 #
 sub setName # name string
 {
-	my ($self, $name) = @_;	
+	my ($self, $name) = @_;
 
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
@@ -203,6 +203,43 @@ sub setHost # host string
 	$self->{host} = $host;
 }
 
+# Method: port
+#
+#   Gets the port where the test have to be executed (selenium only).
+#
+# Returns:
+#
+#   string - port number of the web server to be tested
+#
+sub port # returns port string
+{
+	my ($self) = @_;
+
+	return $self->{port};
+}
+
+# Method: setPort
+#
+#   Sets the execution port for this test object to the given value.
+#
+# Parameters:
+#
+#   name - String with the port number of the webserver
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
+sub setPort # port string
+{
+	my ($self, $port) = @_;
+
+    defined $port or
+        throw ANSTE::Exceptions::MissingArgument('port');
+
+	$self->{port} = $port;
+}
+
 # Method: dir
 #
 #   Gets the directory of the test scripts.
@@ -298,7 +335,7 @@ sub env # returns params string
     if ($env) {
         # Remove last space
         $env =~ s/ $//;
-    }        
+    }
 
 	return $env;
 }
@@ -407,7 +444,7 @@ sub setStop
 #
 # Parameters:
 #
-#   node - <XML::DOM::Element> object containing the test data.    
+#   node - <XML::DOM::Element> object containing the test data.
 #
 # Exceptions:
 #
@@ -443,13 +480,19 @@ sub load # (node)
 	my $host = $hostNode->getFirstChild()->getNodeValue();
     $self->setHost($host);
 
+	my $portNode = $node->getElementsByTagName('port', 0)->item(0);
+    if ($portNode) {
+        my $port = $portNode->getFirstChild()->getNodeValue();
+        $self->setPort($port);
+    }
+
 	my $dirNode = $node->getElementsByTagName('dir', 0)->item(0);
 	my $dir = $dirNode->getFirstChild()->getNodeValue();
     $self->setDir($dir);
 
 	my $assertNode = $node->getElementsByTagName('assert', 0)->item(0);
     if ($assertNode) {
-    	my $assert = $assertNode->getFirstChild()->getNodeValue();
+        my $assert = $assertNode->getFirstChild()->getNodeValue();
         $self->setAssert($assert);
     }
 
@@ -460,14 +503,14 @@ sub load # (node)
 
 	my $paramsNode = $node->getElementsByTagName('params', 0)->item(0);
     if ($paramsNode) {
-    	my $params = $paramsNode->getFirstChild()->getNodeValue();
+        my $params = $paramsNode->getFirstChild()->getNodeValue();
         $self->setParams($params);
     }
 
 	my $varNodes = $node->getElementsByTagName('var', 0);
     for (my $i = 0; $i < $varNodes->getLength(); $i++) {
-    	my $name = $varNodes->item($i)->getAttribute('name');
-    	my $value = $varNodes->item($i)->getAttribute('value');
+        my $name = $varNodes->item($i)->getAttribute('name');
+        my $value = $varNodes->item($i)->getAttribute('value');
         $self->setVariable($name, $value);
     }
 }
