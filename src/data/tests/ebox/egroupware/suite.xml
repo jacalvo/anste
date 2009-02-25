@@ -42,6 +42,7 @@
         <desc>Login with default-created eGroupware user.</desc>
 
         <host>ebox-server</host>
+        <port>80</port>
         <dir>egw-login</dir>
     </test>
 
@@ -60,7 +61,17 @@
         <desc>Login with the same user that is now an admin.</desc>
 
         <host>ebox-server</host>
+        <port>80</port>
         <dir>egw-admin-login</dir>
+    </test>
+
+    <test type="selenium">
+        <name>ConfigMail</name>
+        <desc>Configure mail vdomain and try to send/receive a mail
+        from inside egroupware.</desc>
+
+        <host>ebox-server</host>
+        <dir>config-mail</dir>
     </test>
 
     <test type="selenium">
@@ -69,6 +80,7 @@
         from inside egroupware.</desc>
 
         <host>ebox-server</host>
+        <port>80</port>
         <dir>test-mail</dir>
     </test>
 </suite>
