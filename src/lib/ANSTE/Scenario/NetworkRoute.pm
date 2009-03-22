@@ -40,9 +40,9 @@ sub new # returns new NetworkRoute object
 {
 	my ($class) = @_;
 	my $self = {};
-	
+
 	$self->{destination} = '';
-	$self->{gateway} = '';
+	$self->{gateway} = '*';
 	$self->{netmask} = '';
 	$self->{iface} = '';
 
@@ -236,8 +236,10 @@ sub load # (node)
     $self->setDestination($destination);
 
     my $gatewayNode = $node->getElementsByTagName('gateway', 0)->item(0);
-    my $gateway = $gatewayNode->getFirstChild()->getNodeValue();
-    $self->setGateway($gateway);
+    if ($gatewayNode) {
+        my $gateway = $gatewayNode->getFirstChild()->getNodeValue();
+        $self->setGateway($gateway);
+    }
 
     my $netmaskNode = $node->getElementsByTagName('netmask', 0)->item(0);
     if ($netmaskNode) {
