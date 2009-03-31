@@ -62,7 +62,7 @@ sub new # (image) returns new ImageCreator object
     eval "use ANSTE::Virtualizer::$virtualizer";
     die "Can't load package $virtualizer: $@" if $@;
     $self->{virtualizer} = "ANSTE::Virtualizer::$virtualizer"->new();
-	
+
 	$self->{image} = $image;
 
 	bless($self, $class);
@@ -74,7 +74,7 @@ sub new # (image) returns new ImageCreator object
 #
 #   Does the image creation. If the image already exists, does nothing,
 #   unless reuse config option is set.
-# 
+#
 # Returns:
 #
 #   boolean - true if the image is created, false if already exists
@@ -89,7 +89,8 @@ sub createImage
 
     my $image = $self->{image};
     my $name = $image->name();
-    my $reuse = ANSTE::Config->instance()->reuse();
+    my $config = ANSTE::Config->instance();
+    my $reuse = $config->reuse();
 
     my $cmd = new ANSTE::Image::Commands($image);
 
@@ -98,24 +99,24 @@ sub createImage
     }
     elsif (not $reuse or not $cmd->exists()) {
         print "[$name] Creating image...";
-        $cmd->create() 
+        $cmd->create()
             or throw ANSTE::Exceptions::Error('Error creating base image.');
         print "done.\n";
-    }        
+    }
 
     print "[$name] Mounting image... ";
-    $cmd->mount() 
+    $cmd->mount()
         or throw ANSTE::Exceptions::Error('Error mounting image.');
     print "done.\n";
 
     try {
         print "[$name] Copying base files... ";
-        $cmd->copyBaseFiles() 
+        $cmd->copyBaseFiles()
             or throw ANSTE::Exceptions::Error('Error copying files.');
         print "done.\n";
 
         print "[$name] Installing base packages... ";
-        $cmd->installBasePackages() 
+        $cmd->installBasePackages()
             or throw ANSTE::Exceptions::Error('Error installing packages.');
         print "done.\n";
     } finally {
@@ -137,7 +138,7 @@ sub createImage
     # and add the bridge to the a mock scenario
     my $scenario = new ANSTE::Scenario::Scenario();
     my $firstAddress = ANSTE::Config->instance()->firstAddress();
-    my ($net, $unused) = 
+    my ($net, $unused) =
         $firstAddress =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3})\.(\d{1,3})$/;
     $scenario->addBridge($net);
 
@@ -150,6 +151,12 @@ sub createImage
         $cmd->prepareSystem()
             or throw ANSTE::Exceptions::Error('Error preparing system.');
     } finally {
+        if ($config->wait()) {
+            print "Waiting for testing on the image. " .
+                  "Press any key to shutdown it and finish.\n";
+            my $key;
+            read(STDIN, $key, 1);
+        }
         $cmd->shutdown();
     };
 
@@ -159,7 +166,7 @@ sub createImage
     $cmd->resize($image->size())
         or throw ANSTE::Exceptions::Error('Error resizing image.');
     print "done.\n";
-    
+
     print "[$name] Image creation finished.\n";
 
     return 1;
