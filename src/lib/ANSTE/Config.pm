@@ -517,9 +517,10 @@ sub imagePath
     my $imagePath = $self->_getOption('paths', 'images');
 
     if (not ANSTE::Validate::path($imagePath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/images',
-                                               $imagePath,
-                                               $self->{confFile});
+        mkdir $imagePath or
+            throw ANSTE::Exceptions::InvalidConfig('paths/images',
+                                                   $imagePath,
+                                                   $self->{confFile});
     }
 
     return $imagePath;
