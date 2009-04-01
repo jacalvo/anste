@@ -130,11 +130,14 @@ sub _writePackageInstall # (file, @packages)
 
     my $system = $self->{system};
 
+    print $file "# Install ssh\n";
+    my $command = $system->installPackagesCommand('ssh');
+    print $file "$command\n\n";
 
     if (@packages > 0) {
-    	print $file "# Install packages\n";
-        my $command = $system->installPackagesCommand(@packages); 
-    	print $file "$command\n\n";
+        print $file "# Install packages\n";
+        $command = $system->installPackagesCommand(@packages);
+        print $file "$command\n\n";
     }
 }
 

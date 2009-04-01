@@ -128,7 +128,6 @@ sub installBasePackages
                     'hping2',
                     'iptables',
                     'netcat',
-                    'ssh',
                     'tcpdump');
 
     $self->execute('apt-get update')
