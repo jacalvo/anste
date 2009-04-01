@@ -116,29 +116,30 @@ sub unmount # (mountPoint)
 #   Also creates the init.d symlinks for ansted.
 #
 # Returns:
-#   
+#
 #   boolean - indicates if the process has been successful
-#               
+#
 sub installBasePackages
 {
     my ($self) = @_;
 
-    my @PACKAGES = ('libsoap-lite-perl', 
-                    'liberror-perl', 
+    my @PACKAGES = ('libsoap-lite-perl',
+                    'liberror-perl',
                     'hping2',
-                    'iptables', 
+                    'iptables',
                     'netcat',
+                    'ssh',
                     'tcpdump');
- 
-    $self->execute('apt-get update') 
+
+    $self->execute('apt-get update')
         or die "apt-get update failed: $!";
 
     my $ret = $self->_installPackages(@PACKAGES);
 
-    $self->execute('apt-get clean') 
+    $self->execute('apt-get clean')
         or die "apt-get clean failed: $!";
 
-    $self->execute('update-rc.d ansted defaults 99') 
+    $self->execute('update-rc.d ansted defaults 99')
         or die "update-rc.d failed: $!";
 
     return($ret);
