@@ -30,7 +30,7 @@
     <host>
         <name>test-client</name>
         <desc>simple client host</desc>
-        <baseimage>lenny-mini</baseimage>
+        <baseimage>jaunty-mini</baseimage>
         <memory>64</memory>
         <network>
          <interface type="static">
