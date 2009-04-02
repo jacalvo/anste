@@ -5,13 +5,13 @@
 
     <memory>512</memory>
 
-    <size>900M</size>
+    <size>950</size>
 
     <install method="debootstrap">
         <dist>intrepid</dist>
         <command>/usr/sbin/debootstrap --exclude=ubuntu-minimal,libc6-i686</command>
     </install>
-    
+
     <packages>
         <package>slapd</package>
         <package>ssl-cert</package>
