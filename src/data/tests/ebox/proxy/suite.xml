@@ -2,10 +2,10 @@
 <suite>
     <name>eBox Proxy tests</name>
     <desc>
-    Contains a set of tests to check 
+    Contains a set of tests to check
     that the eBox HTTP Proxy module works properly.
     </desc>
-    
+
     <scenario>ebox/proxy.xml</scenario>
 
     <test type="selenium">
@@ -16,7 +16,7 @@
 
         <host>ebox-server</host>
         <dir>enable-modules</dir>
-    </test>        
+    </test>
 
     <test type="selenium">
         <name>ConfigNetworkSetExternal</name>
@@ -27,7 +27,7 @@
         <host>ebox-server</host>
         <dir>set-external</dir>
         <var name="IFACE" value="eth2"/>
-    </test>        
+    </test>
 
     <test type="selenium">
         <name>ConfigProxyFilter</name>
@@ -37,7 +37,7 @@
 
         <host>ebox-server</host>
         <dir>config-proxy-filter</dir>
-    </test>        
+    </test>
 
     <test>
         <name>FilterAllowDownload</name>
@@ -111,7 +111,7 @@
 
         <host>ebox-server</host>
         <dir>config-proxy-deny</dir>
-    </test>        
+    </test>
 
     <test>
         <name>TestDenyAll</name>
@@ -138,7 +138,7 @@
 
         <host>ebox-server</host>
         <dir>config-proxy-allow</dir>
-    </test>        
+    </test>
 
     <test>
         <name>TestAllowAll</name>

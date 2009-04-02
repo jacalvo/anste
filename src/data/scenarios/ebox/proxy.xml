@@ -40,7 +40,7 @@
                 <address>192.168.3.254</address>
                 <netmask>255.255.255.0</netmask>
             </interface>
-        </network>            
+        </network>
     </host>
 
 
@@ -61,7 +61,6 @@
 
         <packages>
             <package>wget</package>
-            <package>netcat</package>
         </packages>
     </host>
 </scenario>
