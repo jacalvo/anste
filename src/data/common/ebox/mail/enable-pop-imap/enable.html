@@ -17,7 +17,27 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>uncheck</td>
+	<td>RetrievalServices_pop3</td>
+	<td></td>
+</tr>
+<tr>
+	<td>uncheck</td>
+	<td>RetrievalServices_pop3s</td>
+	<td></td>
+</tr>
+<tr>
+	<td>uncheck</td>
+	<td>RetrievalServices_imap</td>
+	<td></td>
+</tr>
+<tr>
+	<td>uncheck</td>
+	<td>RetrievalServices_imaps</td>
+	<td></td>
+</tr>
+<tr>
+	<td>check</td>
 	<td>RetrievalServices_{$SERVICE}</td>
 	<td></td>
 </tr>
@@ -30,6 +50,11 @@
 	<td>waitForTextPresent</td>
 	<td>Done</td>
 	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>RetrievalServices_{$SERVICE}</td>
+	<td>on</td>
 </tr>
 </tbody></table>
 </body>
