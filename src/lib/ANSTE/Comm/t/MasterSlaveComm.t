@@ -101,8 +101,8 @@ exit(0);
 
 sub _startSlaveServer
 {
-    my $server = new SOAP::Transport::HTTP::Daemon(LocalPort => PORT, 
+    my $server = new SOAP::Transport::HTTP::Daemon(LocalPort => PORT,
                                                    Reuse => 1);
     $server->dispatch_to('ANSTE::Comm::SlaveServer');
-    $server->handle();    
+    $server->handle();
 }

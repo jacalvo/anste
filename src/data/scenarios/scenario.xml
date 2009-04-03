@@ -45,7 +45,7 @@
     <host>
         <name>hostname3</name>
         <desc>Bleh bleh bleh</desc>
-        <baseimage>hardy-ebox-base</baseimage>
+        <baseimage>hardy-base</baseimage>
         <network>
             <interface type="dhcp">
                 <name>eth0</name>

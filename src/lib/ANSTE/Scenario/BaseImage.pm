@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use ANSTE::Scenario::Packages;
+use ANSTE::Scenario::Files;
 use ANSTE::Config;
 use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
@@ -54,7 +55,7 @@ sub new # returns new BaseImage object
 	$self->{installMethod} = '';
 	$self->{installSource} = '';
 	$self->{packages} = new ANSTE::Scenario::Packages();
-    $self->{files} = new ANSTE::Scenario::Files;
+    $self->{files} = new ANSTE::Scenario::Files();
     $self->{'pre-scripts'} = [];
     $self->{'post-scripts'} = [];
 

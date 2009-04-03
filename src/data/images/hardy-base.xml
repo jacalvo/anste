@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <image>
-    <name>baseimage-hardy-mini</name>
+    <name>baseimage-hardy</name>
     <desc>Ubuntu Hardy</desc>
 
     <memory>128</memory>
 
-    <size>500</size>
+    <size>1500</size>
 
     <install method="debootstrap">
         <dist>hardy</dist>

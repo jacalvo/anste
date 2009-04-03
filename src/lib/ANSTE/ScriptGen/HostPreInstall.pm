@@ -147,7 +147,9 @@ sub _writeInitialNetworkConfig # (file)
     my $system = $self->{system};
     my $iface = $self->{image}->commInterface();
     my $network = $self->{image}->network();
-    print "\n\nSHIT\n\n" unless ($network);
+    unless ($network) {
+        return;
+    }
 
     my $config = $system->initialNetworkConfig($iface, $network);
 

@@ -8,12 +8,12 @@
     <size>imageSize</size>
 
     <install method="copy">
-        <source>/tmp</source>    
+        <source>/tmp</source>
     </install>
-    
+
     <packages>
         <package>postfix</package>
-        <profile>ebox</profile>
+        <profile>test-profile</profile>
     </packages>
 
     <pre-install>
