@@ -70,8 +70,8 @@ GetOptions('create' => \$create,
            'step' => \$step,
            'non-stop' => \$nonStop,
            'help' => \$help) or pod2usage(2);
-           
-pod2usage(1) if $help;           
+
+pod2usage(1) if $help;
 
 if (none($create, $remove, $deploy, $shutdown, $test) == 1) {
     pod2usage("$0: No action specified.");
@@ -81,9 +81,11 @@ pod2usage("$0: No files given.") if @ARGV == 0;
 
 my $config = ANSTE::Config->instance();
 
-if ($path) {
-    $config->setUserPath($path);
+unless ($path) {
+    $path = '.';
 }
+$config->setUserPath($path);
+
 if ($quiet) {
     $config->setVerbose(0);
 }
@@ -188,7 +190,7 @@ sub create # (file)
         my $name = $image->name();
         print STDERR "The image $name already exists.\n".
                      "Delete it before trying to create it again.\n";
-        exit(1);                     
+        exit(1);
     }
 }
 
@@ -219,7 +221,7 @@ sub remove # (file)
         my $name = $image->name();
         print STDERR "The image $name can't be delete.\n".
                      "Maybe it doesn't exists.\n";
-        exit(1);                     
+        exit(1);
     }
 }
 
@@ -322,7 +324,7 @@ sub printResults # (report)
 {
     my ($report) = @_;
 
-    my $txtWriter = new ANSTE::Report::TextWriter($report); 
+    my $txtWriter = new ANSTE::Report::TextWriter($report);
     $txtWriter->write(\*STDOUT);
 }
 
@@ -343,7 +345,7 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -deploy         deploy a scenario
    -shutdown       finish and delete all the images of a scenario
    -test           test a suite
-   -path <dir>     where to find the data  
+   -path <dir>     where to find the data (CWD if not specified)
    -out  <dir>     report output directory
    -video          save video recording of selenium tests
    -format <fmt>   select the output format for the reports

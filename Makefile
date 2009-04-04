@@ -8,9 +8,9 @@ EXPORT = anste-$(VERSION)
 
 ifeq ($(PREFIX),/usr/local)
 	LIBPERL = $(PREFIX)/lib/site_perl
-else	
+else
 	LIBPERL = $(PREFIX)/share/perl5
-endif	
+endif
 
 distclean:
 	rm -rf $(EXPORT)
@@ -19,12 +19,15 @@ distclean:
 	rm -f *.deb
 
 export: distclean
-	svn export . $(EXPORT) 
+	svn export . $(EXPORT)
 	find $(EXPORT)/src/lib -name 't' -print | xargs rm -rf
 
 dist: export
 	mv $(EXPORT)/src/data/conf $(EXPORT)
 	tar cvvzf anste-$(VERSION).tar.gz $(EXPORT)
+
+deb: dist
+	cd anste-$(VERSION) && dpkg-buildpackage -rfakeroot -uc -us
 
 install-anste:
 	install -d $(DESTDIR)$(SBINDIR)
@@ -43,10 +46,8 @@ install-anste:
 	install -d $(DESTDIR)$(DATADIR)/templates
 	cp -a src/data/templates/* $(DESTDIR)$(DATADIR)/templates
 	install -d $(DESTDIR)$(DATADIR)/tests
-	cp -a src/data/tests/ebox $(DESTDIR)$(DATADIR)/tests
 	cp -a src/data/tests/sample $(DESTDIR)$(DATADIR)/tests
 	install -d $(DESTDIR)$(DATADIR)/common
-	cp -a src/data/common/ebox $(DESTDIR)$(DATADIR)/common
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE
 	install -m644 src/lib/ANSTE/Config.pm $(DESTDIR)$(LIBPERL)/ANSTE
 	install -m644 src/lib/ANSTE/Validate.pm $(DESTDIR)$(LIBPERL)/ANSTE
@@ -66,11 +67,11 @@ install-anste:
 	install -m755 src/data/deploy/bin/* $(DESTDIR)$(DATADIR)/deploy/bin
 	install -d $(DESTDIR)$(DATADIR)/deploy/scripts
 	install -m755 src/data/deploy/scripts/* $(DESTDIR)$(DATADIR)/deploy/scripts
-# Create symlink if we're not building the debian package	
+# Create symlink if we're not building the debian package
 ifneq (,$(findstring debian,$(DESTDIR)))
 	ln -sf $(DESTDIR)$(LIBPERL)/ANSTE \
 		   $(DESTDIR)$(DATADIR)/deploy/modules/ANSTE
-endif		   
+endif
 
 uninstall-anste:
 	rm -f $(DESTDIR)$(SBINDIR)/anste
@@ -136,7 +137,7 @@ uninstall-anste-manager:
 	-rmdir $(DESTDIR)$(LIBPERL)/ANSTE/Manager
 	-rmdir $(DESTDIR)$(LIBPERL)/ANSTE
 
-install-anste-job: 
+install-anste-job:
 	install -d $(DESTDIR)$(BINDIR)
 	install -m755 src/bin/anste-job $(DESTDIR)$(BINDIR)
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE
@@ -144,7 +145,7 @@ install-anste-job:
 	install -m644 src/lib/ANSTE/Manager/Client.pm \
 			      $(DESTDIR)$(LIBPERL)/ANSTE/Manager
 
-uninstall-anste-job: 
+uninstall-anste-job:
 	rm -f $(DESTDIR)$(BINDIR)/anste-job
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/Client.pm
 	-rmdir $(DESTDIR)$(LIBPERL)/ANSTE/Manager
