@@ -150,6 +150,14 @@ sub createImage
         print "[$name] Starting to prepare the system... \n";
         $cmd->prepareSystem()
             or throw ANSTE::Exceptions::Error('Error preparing system.');
+    } catch ANSTE::Exceptions::Error with {
+        my $ex = shift;
+        my $msg = $ex->message();
+        print "ERROR: $msg\n";
+    } catch Error with {
+        my $ex = shift;
+        my $msg = $ex->stringify();
+        print "ERROR: $msg\n";
     } finally {
         if ($config->wait()) {
             print "Waiting for testing on the image. " .
