@@ -115,7 +115,7 @@ if ($nonStop) {
 $config->check();
 
 # Check if another instance of ANSTE is running
-if (system ('ps aux | grep -v grep | grep anste') != 0) {
+if (system ('ps aux | grep -v grep | grep -q anste') == 0) {
     print STDERR "Another instance of ANSTE is already running\n";
     exit(1);
 }
