@@ -114,6 +114,12 @@ if ($nonStop) {
 # Check the config file for missing or malformed options
 $config->check();
 
+# Check if another instance of ANSTE is running
+if (system ('ps aux | grep -v grep | grep anste') != 0) {
+    print STDERR "Another instance of ANSTE is already running\n";
+    exit(1);
+}
+
 my @files;
 
 # Separate args into files and variables
