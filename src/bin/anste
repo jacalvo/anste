@@ -120,12 +120,14 @@ if (system ("ps aux | grep -v ' $$ ' | grep -v grep | grep -q anste") == 0) {
     exit(1);
 }
 
-# Check virtual machines already running
-if (system ('virsh list | grep running') == 0) {
-    print "WARNING: The above virtual machines are running.\n" .
-          "Press any key to continue or Control-C to stop.\n";
-    my $key;
-    read(STDIN, $key, 1);
+unless ($shutdown or $remove) {
+    # Check virtual machines already running
+    if (system ('virsh list | grep running') == 0) {
+        print "WARNING: The above virtual machines are running.\n" .
+              "Press any key to continue or Control-C to stop.\n";
+        my $key;
+        read(STDIN, $key, 1);
+    }
 }
 
 my @files;
