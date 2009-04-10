@@ -23,6 +23,7 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
 
 use SOAP::Lite; # +trace => 'debug'; 
+use MIME::Base64;
 
 use constant URI => 'urn:ANSTE::Comm::SlaveServer';
 
@@ -131,7 +132,8 @@ sub put	# (file) returns boolean
     close($FILE);
 
     my $response = $soap->put(SOAP::Data->name('name' => $file),
-		                      SOAP::Data->name('content' => $content));
+		                      SOAP::Data->type('base64')->name('content' =>
+                                                                   $content));
     if ($response->fault) {
     	die "SOAP request failed: $!";
     }
@@ -177,7 +179,7 @@ sub get	# (file)
     	# Writes the file
         my $FILE;
     	open($FILE, ">", $file) or die "Can't open(): $!";
-    	print $FILE $content;
+    	print $FILE decode_base64($content);
     	close $FILE;
         return 1;
     }

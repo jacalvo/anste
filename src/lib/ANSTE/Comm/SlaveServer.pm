@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use File::Basename;
+use MIME::Base64;
 
 # Class: SlaveServer
 #
@@ -82,7 +83,7 @@ sub get	# (file)
     if (open($FILE, '<', "$DIR/$name")) {
 	    chomp(my @lines = <$FILE>);
 	    close $FILE;
-	    return join("\n", @lines)."\n";
+	    return encode_base64(join("\n", @lines) . "\n");
     } else {
 	    return 'ERR';
     }
