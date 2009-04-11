@@ -22,6 +22,7 @@ use ANSTE::Config;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Deploy::ScenarioDeployer;
 use ANSTE::Test::Suite;
+use ANSTE::Test::Validator;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::HostWaiter;
 use ANSTE::Report::Report;
@@ -155,6 +156,9 @@ sub runSuite # (suite)
         throw ANSTE::Exception::InvalidType('suite',
                                             'ANSTE::Test::Suite');
     }
+
+    my $validator = new ANSTE::Test::Validator;
+    $validator->validateSuite($suite);
 
     $self->{suite} = $suite;
     my $suiteName = $suite->name();
