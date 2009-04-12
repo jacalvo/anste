@@ -101,7 +101,7 @@ sub validateSuite # (suite)
             # Validate selenium suite files
             my @lines = slurp "<$suiteFile";
             my @htmls = map {substr ((split /"/)[1], 2)}
-                            (grep /.\/.*.html/, @lines);
+                            (grep /href=".\/.*.html"/, @lines);
             foreach my $html (@htmls) {
                 my $file = "$path/$html";
                 if (not -r $file) {
