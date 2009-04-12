@@ -53,6 +53,7 @@ my $quiet = 0;
 my $step = 0;
 my $nonStop = 0;
 my $reuse = 0;
+my $break = '';
 
 GetOptions('create' => \$create,
            'remove' => \$remove,
@@ -68,6 +69,7 @@ GetOptions('create' => \$create,
            'wait-fail' => \$waitFail,
            'reuse' => \$reuse,
            'step' => \$step,
+           'break=s' => \$break,
            'non-stop' => \$nonStop,
            'help' => \$help) or pod2usage(2);
 
@@ -106,6 +108,12 @@ if ($reuse) {
 }
 if ($step) {
     $config->setStep(1);
+}
+if ($break) {
+    my @breakpoints = split (/,/, $break);
+    foreach my $breakpoint (@breakpoints) {
+        $config->setBreakpoint($breakpoint);
+    }
 }
 if ($nonStop) {
     $config->setNonStop(1);
@@ -348,22 +356,23 @@ anste - Advanced Network Service Testing Environment
 anste [options] [file ...] [var1=value1 var2=value2 ...]
 
  Options:
-   -help           show this help
-   -create         create a base image
-   -remove         delete a base image
-   -deploy         deploy a scenario
-   -shutdown       finish and delete all the images of a scenario
-   -test           test a suite
-   -path <dir>     where to find the data (CWD if not specified)
-   -out  <dir>     report output directory
-   -video          save video recording of selenium tests
-   -format <fmt>   select the output format for the reports
-   -wait           wait before shutting down after testing complete
-   -wait-fail      wait after a test fails
-   -step           run tests step by step, waiting after each one
-   -non-stop       run all test without waiting, ignoring <stop/>'s
-   -quiet          do not show output of commands
-   -reuse          reuse the created image if exists (with -create)
-                   reuse a deployed scenario (with -test)
+   -help              show this help
+   -create            create a base image
+   -remove            delete a base image
+   -deploy            deploy a scenario
+   -shutdown          finish and delete all the images of a scenario
+   -test              test a suite
+   -path <dir>        where to find the data (CWD if not specified)
+   -out  <dir>        report output directory
+   -video             save video recording of selenium tests
+   -format <fmt>      select the output format for the reports
+   -wait              wait before shutting down after testing complete
+   -wait-fail         wait after a test fails
+   -step              run tests step by step, waiting after each one
+   -break <t1,t2,...> set breakpoints after the given test names
+   -non-stop          run all test without waiting, ignoring <stop/>'s
+   -quiet             do not show output of commands
+   -reuse             reuse the created image if exists (with -create)
+                      reuse a deployed scenario (with -test)
 
 =cut

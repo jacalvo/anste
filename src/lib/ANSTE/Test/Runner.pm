@@ -285,6 +285,7 @@ sub _runTests
         # and not in non-stop mode, or wait always if we are
         # in step by step mode.
         if (($test->stop() && !$config->nonStop) ||
+            ($config->breakpoint($testName)) ||
             ($config->waitFail() && $ret != 0) || $config->step()) {
             print "Stop requested after this test. " .
                   "Press any key to continue.\n";

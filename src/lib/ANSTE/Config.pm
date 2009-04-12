@@ -1382,6 +1382,44 @@ sub variables
     return $self->{variables};
 }
 
+# Method: setBreakpoint
+#
+#   Sets a breakpoint after a test.
+#
+# Parameters:
+#
+#   name  - Contains the name of the test.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setBreakpoint # (name)
+{
+    my ($self, $name) = @_;
+
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
+    $self->{breakpoints}->{$name} = 1;
+}
+
+# Method: breakpoint
+#
+#   Get if there is a breakpoint for the given test name.
+#
+# Returns:
+#
+#   true  - if there is a breakpoint for the test
+#   undef - otherwise
+#
+sub breakpoint # (name)
+{
+    my ($self, $name) = @_;
+
+    return $self->{breakpoints}->{$name};
+}
+
 sub _filePath # (file)
 {
     my ($self, $file) = @_;
@@ -1473,6 +1511,9 @@ sub _setDefaults
 
     # Default values for variables, overridable by commandline option
     $self->{variables} = {dist => 'hardy'};
+
+    # Breakpoints
+    $self->{breakpoints} = {};
 }
 
 1;
