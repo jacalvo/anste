@@ -1,4 +1,5 @@
 0.7
+    + Added name of the user that executed ANSTE on the HTML report
     + Bugfix: missing HTML report generation time
     + Added scripts executed to the test results
 0.6
