@@ -1,3 +1,9 @@
+anste (0.7) hardy; urgency=low
+
+  * New upstream release.
+
+ -- José A. Calvo <jacalvo@ebox-platform.com> Mon, 13 Apr 2009 11:47:28 +0200
+
 anste (0.6) hardy; urgency=low
 
   * New upstream release.
@@ -12,13 +18,13 @@ anste (0.5) hardy; urgency=low
 
 anste (0.4.6) unstable; urgency=low
 
-  * New upstream release. 
+  * New upstream release.
 
  -- José Antonio Calvo <jacalvo@warp.es>  Thu, 24 Jul 2008 16:29:31 +0200
 
 anste (0.4.5) unstable; urgency=low
 
-  * New upstream release. 
+  * New upstream release.
 
  -- José Antonio Calvo <jacalvo@warp.es>  Thu, 03 Jul 2008 15:25:13 +0200
 

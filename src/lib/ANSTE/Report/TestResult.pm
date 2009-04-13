@@ -44,6 +44,7 @@ sub new # returns new TestResult object
     $self->{value} = undef;
     $self->{log} = undef;
     $self->{video} = undef;
+    $self->{script} = undef;
     $self->{startTime} = undef;
     $self->{endTime} = undef;
 
@@ -167,6 +168,43 @@ sub setLog # (log)
         throw ANSTE::Exceptions::MissingArgument('log');
 
     $self->{log} = $log;        
+}
+
+# Method: script
+#
+#   Returns the path of the execution script for the test.
+#
+# Returns:
+#
+#   string - contains the path of the execution script
+#
+sub script # returns script
+{
+    my ($self) = @_;
+
+    return $self->{script};
+}
+
+# Method: setScript
+#
+#   Sets the path of the script executed for the test.
+#
+# Parameters:
+#
+#   script - String with the path of the script executed.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#
+sub setScript # (script)
+{
+    my ($self, $script) = @_;
+
+    defined $script or
+        throw ANSTE::Exceptions::MissingArgument('script');
+
+    $self->{script} = $script;        
 }
 
 # Method: video

@@ -1,3 +1,5 @@
+0.7
+    + Added scripts executed to the test results
 0.6
     + Added -break commandline option for setting breakpoints
     + Added suite validation

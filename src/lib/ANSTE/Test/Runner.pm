@@ -319,6 +319,7 @@ sub _runTest # (test)
     use File::Path;
     mkpath "$logPath/$suiteDir";
     mkdir "$logPath/$suiteDir/video" if $config->seleniumVideo();
+    mkdir "$logPath/$suiteDir/script";
 
     my $name = $test->name();
 
@@ -417,12 +418,34 @@ sub _runTest # (test)
         }
 
         $logfile = "$logPath/$suiteDir/$name.txt";
+        my $scriptfile = "$logPath/$suiteDir/script/$name.txt";
 
         # Copy to temp directory and rename it to test name
         system("cp $path/test $newPath/$name");
 
+        my $env = $test->env();
+        my $params = $test->params();
+
+        # Copy the script to the results adding env and params
+        my $SCRIPT;
+        open ($SCRIPT, '>', $scriptfile);
+
+        if ($env) {
+            my $envStr = "# Environment passed to the test:\n";
+            $envStr .= "# $env\n";
+            print $SCRIPT $envStr;
+        }
+        if ($params) {
+            my $paramsStr = "# Arguments passed to the test: $params\n";
+            print $SCRIPT $paramsStr;
+        }
+        my $scriptContent = slurp "<$path/test";
+        print $SCRIPT "# Test script executed:\n";
+        print $SCRIPT $scriptContent;
+        close ($SCRIPT);
+
         $ret = $self->_runScript($hostname, "$newPath/$name", $logfile,
-                                 $test->env(), $test->params());
+                                 $env, $params);
         # Store end time
         my $endTime = $self->_time();
         $testResult->setEndTime($endTime);
@@ -438,6 +461,7 @@ sub _runTest # (test)
         close($LOG);
 
         $testResult->setLog("$suiteDir/$name.txt");
+        $testResult->setScript("$suiteDir/script/$name.txt");
     }
 
     # Run post-test script if exists

@@ -88,10 +88,15 @@ sub _writeSuiteFile # (suite, file)
         if ($video) {
             $video = 'video/' . basename($video);
         }
+        my $script = $test->script();
+        if ($script) {
+            $script = 'script/' . basename($script);
+        }
         $self->writeTestResult(name => $name,
                 desc => $desc,
                 value => $test->value(),
                 log => basename($test->log()),
+                script => $script,
                 video => $video);
     }
     $self->writeSuiteEnd();

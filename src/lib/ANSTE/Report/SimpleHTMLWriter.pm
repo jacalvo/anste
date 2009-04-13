@@ -105,11 +105,12 @@ sub writeSuiteEnd
 #
 # Parameters:
 #
-#   name  - String with the test name.
-#   value - String with the test result value.
-#   desc  - *optional* String with the test description.
-#   log   - *optional* String with the log path.
-#   video - *optional* String with the video path.
+#   name   - String with the test name.
+#   value  - String with the test result value.
+#   desc   - *optional* String with the test description.
+#   log    - *optional* String with the log path.
+#   video  - *optional* String with the video path.
+#   script - *optional* String with the script path.
 #
 sub writeTestResult # (%params)
 {
@@ -120,29 +121,33 @@ sub writeTestResult # (%params)
     my $result = $params{value};
     my $file = $params{log};
     my $video = $params{video};
+    my $script = $params{script};
 
     my $filehandle = $self->{file};
 
-    my $resultStr = $result == 0 ? "<font color='#00FF00'>OK</font>" : 
+    my $resultStr = $result == 0 ? "<font color='#00FF00'>OK</font>" :
                                    "<font color='#FF0000'>ERROR</font>";
     if ($file) {
         $resultStr = "<a href=\"$file\">" . $resultStr . "</a>";
-    }        
+    }
 
     if ($video) {
         $resultStr .= " (<a href=\"$video\">video</a>)";
+    }
+    if ($script) {
+        $resultStr .= " (<a href=\"$script\">script</a>)";
     }
 
     if (not $desc) {
         $desc = '&nbsp;';
     }
 
-    print $filehandle "<tr>\n" . 
+    print $filehandle "<tr>\n" .
                       "<td>$name</td>\n" .
                       "<td>$desc</td>\n" .
                       "<td>$resultStr</td>\n" .
                       "</tr>\n";
-}    
+}
 
 # Method: filename
 #
