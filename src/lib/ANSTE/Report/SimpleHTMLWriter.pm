@@ -59,7 +59,7 @@ sub writeEnd
 
     print $file "</body>\n";
     print $file "</html>\n";
-}    
+}
 
 # Method: writeSuiteHeader
 #

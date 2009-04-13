@@ -279,6 +279,7 @@ sub _runTests
             my $writer = $self->{writer};
             my $logPath = $config->logPath();
             $writer->write("$logPath/" . $writer->filename());
+            $report->setTime($self->_time());
         }
 
         # Wait user input if there is a breakpoint in the test
