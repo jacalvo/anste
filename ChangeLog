@@ -1,4 +1,5 @@
 0.7
+    + Bugfix: use flock for allowing only one instance of anste
     + Added name of the user that executed ANSTE on the HTML report
     + Bugfix: missing HTML report generation time
     + Added scripts executed to the test results

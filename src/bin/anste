@@ -36,6 +36,9 @@ use Getopt::Long;
 use Pod::Usage;
 use Error qw(:try);
 use Perl6::Junction qw(none);
+use Fcntl qw(:flock);
+
+use constant LOCK_FILE => '/var/run/anste.lock';
 
 my $create = '';
 my $remove = '';
@@ -123,10 +126,14 @@ if ($nonStop) {
 $config->check();
 
 # Check if another instance of ANSTE is running
-if (system ("ps aux | grep -v ' $$ ' | grep -v grep | grep -q anste") == 0) {
-    print STDERR "Another instance of ANSTE is already running\n";
+my $lockFile;
+open ($lockFile, '>', LOCK_FILE);
+unless (flock ($lockFile, LOCK_EX | LOCK_NB)) {
+    print STDERR 'Could not get the lock for ' . LOCK_FILE . ": $!\n";
+    print STDERR "Maybe another instance of ANSTE is already running\n";
     exit(1);
 }
+
 
 unless ($shutdown or $remove) {
     # Check virtual machines already running
@@ -183,6 +190,12 @@ foreach my $file (@files) {
         test($file);
     }
 }
+
+flock ($lockFile, LOCK_UN);
+close ($lockFile);
+exit 0;
+
+############## Function declarations ##########################
 
 sub create # (file)
 {
