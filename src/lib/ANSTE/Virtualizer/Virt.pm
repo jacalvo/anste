@@ -1,4 +1,4 @@
-# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -44,8 +44,8 @@ use constant KVM_NETWORK_CONFIG_TEMPLATE => 'kvm-bridge.tmpl';
 #   Overriden method that creates a new base image using the xen-create-image
 #   utility from xen-tools.
 #
-# Parameters: 
-#   
+# Parameters:
+#
 #   name    - name of the image type to be created
 #   ip      - ip address that will be assigned to the image
 #   memory  - *optional* size of the RAM memory to be used
@@ -89,7 +89,7 @@ sub createBaseImage # (%params)
     }
     if (not $memory) {
         $memory = $config->virtMemory();
-    }        
+    }
 
     my $dir = $config->imagePath() . '/' . $name;
     if (-d $dir) {
@@ -97,20 +97,20 @@ sub createBaseImage # (%params)
     }
 
     # TODO: change this to generic $config->mirror() ?
-    my $mirror = $config->xenMirror(); 
+    my $mirror = $config->xenMirror();
 
     my $vm = 'kvm'; # TODO: Unhardcode this when supporting other virtualizers
     my $command = "ubuntu-vm-builder $vm $dist --dest $dir --hostname $name" .
-                  " --ip $ip --mirror $mirror --mem $memory" . 
+                  " --ip $ip --mirror $mirror --mem $memory" .
                   " --mask $netmask --gw $gateway --rootsize $size" .
-                  " --components main,universe --domain $name"; 
-    
+                  " --components main,universe --domain $name";
+
     # FIXME: We don't use swap at the moment to speed up the process
     $command .= " --swapsize 8";
     #if ($swap) {
     #   $command .= " --swapsize $swap";
     #}
-    
+
     $self->execute($command) or
         die "Error executing ubuntu-vm-builder";
 
@@ -127,14 +127,14 @@ sub createBaseImage # (%params)
     my $xmlFile = "$dir/domain.xml";
     open($FILE, '>', $xmlFile) or return 0;
     print $FILE $xml;
-    close($FILE) or return 0; 
+    close($FILE) or return 0;
 
     # Convert to raw format so we can mount it with -o loop
     my $imgcommand;
-    if (-f '/usr/bin/kvm-img') { 
-    	$imgcommand = 'kvm-img'; 
+    if (-f '/usr/bin/kvm-img') {
+    	$imgcommand = 'kvm-img';
     } else {
-    	$imgcommand = 'qemu-img'; 
+    	$imgcommand = 'qemu-img';
     }
     $self->execute("$imgcommand convert $dir/disk0.qcow2 -O raw $dir/disk0.img");
 
@@ -142,16 +142,16 @@ sub createBaseImage # (%params)
     unlink("$dir/disk0.qcow2");
 }
 
-# Method: shutdownImage 
+# Method: shutdownImage
 #
 #   Overriden method that shuts down a Xen running image.
 #
 # Parameters:
 #
-#   image - name of the image to shutdown 
+#   image - name of the image to shutdown
 #
 # Returns:
-#   
+#
 #   boolean - indicates if the process has been successful
 #
 # Exceptions:
@@ -178,16 +178,16 @@ sub shutdownImage # (image)
     system("$waitScript $image");
 }
 
-# Method: destroyImage 
+# Method: destroyImage
 #
 #   Overriden method that destroys a Xen running image.
 #
 # Parameters:
 #
-#   image - name of the image to shutdown 
+#   image - name of the image to shutdown
 #
 # Returns:
-#   
+#
 #   boolean - indicates if the process has been successful
 #
 # Exceptions:
@@ -210,10 +210,10 @@ sub destroyImage # (image)
 #
 # Parameters:
 #
-#   name - name of the libvirt configuration file for the image 
+#   name - name of the libvirt configuration file for the image
 #
 # Returns:
-#   
+#
 #   boolean - indicates if the process has been successful
 #
 # Exceptions:
@@ -226,14 +226,14 @@ sub createVM # (name)
 
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
-    
+
     my $path = ANSTE::Config->instance()->imagePath();
     $self->execute("virsh create $path/$name/domain.xml");
 }
 
 # Method: imageFile
 #
-#   Overriden method to get the path o a KVM disk image. 
+#   Overriden method to get the path o a KVM disk image.
 #
 # Parameters:
 #
@@ -241,7 +241,7 @@ sub createVM # (name)
 #   name - name of the image (of the directory in the KVM case)
 #
 # Returns:
-#   
+#
 #   boolean - indicates if the process has been successful
 #
 # Exceptions:
@@ -269,11 +269,11 @@ sub imageFile # (path, name)
 #
 #   baseimage - an <ANSTE::Scenario::BaseImage> object with the configuration
 #               of the base image
-#   newimage  - an <ANSTE::Image::Image> object with the configuration 
+#   newimage  - an <ANSTE::Image::Image> object with the configuration
 #               of the new image
 #
 # Returns:
-#   
+#
 #   boolean   - indicates if the process has been successful
 #
 # Exceptions:
@@ -318,23 +318,23 @@ sub createImageCopy # (baseimage, newimage)
     my $configFile = "$path/$newname/domain.xml";
     open($FILE, '>', $configFile) or return 0;
     print $FILE $config;
-    close($FILE) or return 0; 
+    close($FILE) or return 0;
 
     return 1;
 }
 
-# Method: deleteImage 
+# Method: deleteImage
 #
 #   Overriden method that deletes the kvm image.
 #
-# Parameters: 
-#   
+# Parameters:
+#
 #   image - name of the image to be deleted
 #
 # Returns:
-#   
+#
 #   boolean - indicates if the process has been successful
-#               
+#
 # Exceptions:
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
@@ -356,8 +356,8 @@ sub deleteImage # (image)
 #   Overriden method that creates bridges with
 #   libvirt for the network of the given scenario.
 #
-# Parameters: 
-#   
+# Parameters:
+#
 #   scenario   - a <ANSTE::Scenario::Scenario> object
 #
 # Exceptions:
@@ -375,7 +375,7 @@ sub createNetwork # (scenario)
     if (not $scenario->isa('ANSTE::Scenario::Scenario')) {
         throw ANSTE::Exceptions::InvalidType('scenario',
                                             'ANSTE::Scenario::Scenario');
-    }                                            
+    }
 
     my $path = ANSTE::Config->instance()->imagePath();
 
@@ -388,8 +388,8 @@ sub createNetwork # (scenario)
         my $xmlFile = "$path/bridge$num.xml";
         open($FILE, '>', $xmlFile) or return 0;
         print $FILE $xml;
-        close($FILE) or return 0; 
-        
+        close($FILE) or return 0;
+
         if (not $self->execute("virsh net-create $xmlFile")) {
             $self->execute("ifconfig virbr$num down");
             $self->execute("brctl delbr virbr$num");
@@ -405,8 +405,8 @@ sub createNetwork # (scenario)
 #   Overriden method that destroy previously creaated bridges with
 #   libvirt for the network of the given scenario.
 #
-# Parameters: 
-#   
+# Parameters:
+#
 #   scenario   - a <ANSTE::Scenario::Scenario> object
 #
 # Exceptions:
@@ -424,7 +424,7 @@ sub destroyNetwork # (scenario)
     if (not $scenario->isa('ANSTE::Scenario::Scenario')) {
         throw ANSTE::Exceptions::InvalidType('scenario',
                                             'ANSTE::Scenario::Scenario');
-    }                                            
+    }
     my $path = ANSTE::Config->instance()->imagePath();
 
     my %bridges = %{$scenario->bridges()};
@@ -461,8 +461,10 @@ sub _createImageConfig # (image, path) returns config string
         $imageConfig .= "\t\t<interface type='bridge'>\n";
         my $bridge = $iface->bridge();
         my $mac = $iface->hwAddress();
-        $imageConfig .= "\t\t\t<source bridge='virbr$bridge'/>\n"; 
-        $imageConfig .= "\t\t\t<mac address='$mac'/>\n"; 
+        $imageConfig .= "\t\t\t<source bridge='virbr$bridge'/>\n";
+        $imageConfig .= "\t\t\t<mac address='$mac'/>\n";
+        # Gigabit ethernet card to improve performance
+        $imageConfig .= "\t\t\t<model type='e1000'/>\n";
         $imageConfig .= "\t\t</interface>\n";
     }
     $imageConfig .= "\t\t<graphics type='vnc' port='-1' autoport='yes' keymap='es'/>\n";
