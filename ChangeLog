@@ -1,4 +1,6 @@
 0.7
+    + Added <precondition> element to include <test> and <host> only if
+    condition is satisfied
     + Bugfix: use flock for allowing only one instance of anste
     + Added name of the user that executed ANSTE on the HTML report
     + Bugfix: missing HTML report generation time
