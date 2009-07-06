@@ -1,4 +1,4 @@
-# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -65,7 +65,7 @@ sub identifier # (string)
 {
     my ($string) = @_;
 
-    return $string =~ /^[_a-zA-Z][_a-zA-Z0-9]*$/;
+    return $string =~ /^[_a-zA-Z][\-_a-zA-Z0-9]*$/;
 }
 
 # Function: boolean
@@ -195,7 +195,7 @@ sub system # (system)
 #
 # Parameters:
 #
-#   virtualizer - String with the name of 
+#   virtualizer - String with the name of
 #                 the <ANSTE::Virtualizer::Virtualizer> implementation
 #
 # Returns:
@@ -222,7 +222,7 @@ sub virtualizer # (virtualizer)
 #
 # Parameters:
 #
-#   format - String with the prefix of 
+#   format - String with the prefix of
 #            the <ANSTE::Report::Writer> implementation
 #
 # Returns:
@@ -315,7 +315,7 @@ sub ip # (ip)
         return 0;
     }
 
-    my @octets = 
+    my @octets =
         $ip =~ /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
 
     if (@octets != 4) {
@@ -328,7 +328,7 @@ sub ip # (ip)
         }
     }
 
-    return 1; 
+    return 1;
 }
 
 # Function: mac
