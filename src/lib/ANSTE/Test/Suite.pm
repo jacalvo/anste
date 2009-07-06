@@ -48,7 +48,7 @@ sub new # returns new TestSuite object
     $self->{dir} = '';
     $self->{scenario} = '';
     $self->{tests} = [];
-	
+
 	bless($self, $class);
 
 	return $self;
@@ -83,7 +83,7 @@ sub name # returns name string
 #
 sub setName # name string
 {
-	my ($self, $name) = @_;	
+	my ($self, $name) = @_;
 
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
@@ -120,7 +120,7 @@ sub desc # returns desc string
 #
 sub setDesc # desc string
 {
-	my ($self, $desc) = @_;	
+	my ($self, $desc) = @_;
 
     defined $desc or
         throw ANSTE::Exceptions::MissingArgument('desc');
@@ -157,7 +157,7 @@ sub dir # returns dir string
 #
 sub setDir # dir string
 {
-	my ($self, $dir) = @_;	
+	my ($self, $dir) = @_;
 
     defined $dir or
         throw ANSTE::Exceptions::MissingArgument('dir');
@@ -194,7 +194,7 @@ sub scenario # returns scenario string
 #
 sub setScenario # scenario string
 {
-	my ($self, $scenario) = @_;	
+	my ($self, $scenario) = @_;
 
     defined $scenario or
         throw ANSTE::Exceptions::MissingArgument('scenario');
@@ -298,11 +298,13 @@ sub loadFromDir # (dirname)
 	my $scenario = $scenarioNode->getFirstChild()->getNodeValue();
 	$self->setScenario($scenario);
 
-	# Read the <test> elements 
+	# Read the <test> elements
 	foreach my $element ($suite->getElementsByTagName('test', 0)) {
 		my $test = new ANSTE::Test::Test();
 		$test->load($element);
-		$self->addTest($test);
+        if ($test->precondition()) {
+		    $self->addTest($test);
+        }
 	}
 
 	$doc->dispose();

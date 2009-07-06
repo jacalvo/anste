@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Config;
 
 use XML::DOM;
 
@@ -49,6 +50,7 @@ sub new # returns new Test object
     $self->{assert} = 'passed';
     $self->{stop} = 0;
     $self->{selenium} = 0;
+    $self->{precondition} = 1;
 
 	bless($self, $class);
 
@@ -402,7 +404,7 @@ sub selenium # returns boolean
 
 # Method: setSelenium
 #
-#   Specifies that this test is a Selenium one. 
+#   Specifies that this test is a Selenium one.
 #
 sub setSelenium
 {
@@ -435,6 +437,36 @@ sub setStop
     my ($self) = @_;
 
     $self->{stop} = 1;
+}
+
+# Method: precondition
+#
+#   Gets if this test has passed the required precondition
+#
+# Returns:
+#
+#   boolean - true if passed, false if not
+#
+sub precondition # returns boolean
+{
+    my ($self) = @_;
+
+    return $self->{precondition};
+}
+
+# Method: setPrecondition
+#
+#   Sets this test passes the required precondition
+#
+# Parameters:
+#
+#   ok - boolean that indicates precondition passe
+#
+sub setPrecondition
+{
+    my ($self, $ok) = @_;
+
+    $self->{precondition} = $ok;
 }
 
 # Method: load
@@ -512,6 +544,22 @@ sub load # (node)
         my $name = $varNodes->item($i)->getAttribute('name');
         my $value = $varNodes->item($i)->getAttribute('value');
         $self->setVariable($name, $value);
+    }
+
+    # Check if all preconditions are satisfied
+    my $configVars = ANSTE::Config->instance()->variables();
+	my $preconditionNodes = $node->getElementsByTagName('precondition', 0);
+    for (my $i = 0; $i < $preconditionNodes->getLength(); $i++) {
+        my $var = $preconditionNodes->item($i)->getAttribute('var');
+        my $expectedValue = $preconditionNodes->item($i)->getAttribute('eq');
+        my $value = $configVars->{$var};
+        unless (defined $value) {
+            $value = 0;
+        }
+        if ($value ne $expectedValue) {
+            $self->setPrecondition(0);
+            last;
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -24,12 +24,13 @@ use ANSTE::Scenario::Packages;
 use ANSTE::Scenario::Files;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
+use ANSTE::Config;
 
 use XML::DOM;
 
 # Class: Host
 #
-#   Contains the information for a host of a scenario. 
+#   Contains the information for a host of a scenario.
 #
 
 # Constructor: new
@@ -44,7 +45,7 @@ sub new # returns new Host object
 {
 	my $class = shift;
 	my $self = {};
-	
+
 	$self->{name} = '';
 	$self->{desc} = '';
 	$self->{isRouter} = 0;
@@ -55,6 +56,7 @@ sub new # returns new Host object
     $self->{'pre-scripts'} = [];
     $self->{'post-scripts'} = [];
     $self->{scenario} = undef;
+    $self->{precondition} = 1;
 
 	bless($self, $class);
 
@@ -90,7 +92,7 @@ sub name # returns name string
 #
 sub setName # name string
 {
-	my ($self, $name) = @_;	
+	my ($self, $name) = @_;
 
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
@@ -126,7 +128,7 @@ sub desc # returns desc string
 #
 sub setDesc # desc string
 {
-	my ($self, $desc) = @_;	
+	my ($self, $desc) = @_;
 
     defined $desc or
         throw ANSTE::Exceptions::MissingArgument('desc');
@@ -157,7 +159,7 @@ sub isRouter # returns boolean
 #
 #   string - contains the memory size
 #
-sub memory # returns memory string 
+sub memory # returns memory string
 {
 	my ($self) = shift;
 
@@ -170,7 +172,7 @@ sub memory # returns memory string
 #
 # Parameters:
 #
-#   memory - String with the memory size.    
+#   memory - String with the memory size.
 #
 # Exceptions:
 #
@@ -216,7 +218,7 @@ sub baseImage # returns BaseImage object
 #
 sub setBaseImage # (baseImage)
 {
-	my ($self, $baseImage) = @_;	
+	my ($self, $baseImage) = @_;
 
     defined $baseImage or
         throw ANSTE::Exceptions::MissingArgument('baseImage');
@@ -259,7 +261,7 @@ sub network # returns Network object
 #
 sub setNetwork # (network)
 {
-	my ($self, $network) = @_;	
+	my ($self, $network) = @_;
 
     defined $network or
         throw ANSTE::Exceptions::MissingArgument('network');
@@ -388,6 +390,36 @@ sub postScripts # returns list
     return $self->{'post-scripts'};
 }
 
+# Method: precondition
+#
+#   Gets if this test has passed the required precondition
+#
+# Returns:
+#
+#   boolean - true if passed, false if not
+#
+sub precondition # returns boolean
+{
+    my ($self) = @_;
+
+    return $self->{precondition};
+}
+
+# Method: setPrecondition
+#
+#   Sets this test passes the required precondition
+#
+# Parameters:
+#
+#   ok - boolean that indicates precondition passe
+#
+sub setPrecondition
+{
+    my ($self, $ok) = @_;
+
+    $self->{precondition} = $ok;
+}
+
 # Method: scenario
 #
 #   Gets the object with the scenario configuration for the host.
@@ -418,7 +450,7 @@ sub scenario # returns Scenario object
 #
 sub setScenario # (scenario)
 {
-	my ($self, $scenario) = @_;	
+	my ($self, $scenario) = @_;
 
     defined $scenario or
         throw ANSTE::Exceptions::MissingArgument('scenario');
@@ -438,7 +470,7 @@ sub setScenario # (scenario)
 #
 # Parameters:
 #
-#   node - <XML::DOM::Element> object containing the test data.    
+#   node - <XML::DOM::Element> object containing the test data.
 #
 # Exceptions:
 #
@@ -475,7 +507,7 @@ sub load # (node)
     if ($memoryNode) {
     	my $memory = $memoryNode->getFirstChild()->getNodeValue();
 	    $self->setMemory($memory);
-    }        
+    }
 
 	my $baseimageNode = $node->getElementsByTagName('baseimage', 0)->item(0);
 	my $baseimage = $baseimageNode->getFirstChild()->getNodeValue();
@@ -505,6 +537,22 @@ sub load # (node)
 	if($postNode){
         $self->_addScripts('post-scripts', $postNode);
 	}
+
+    # Check if all preconditions are satisfied
+    my $configVars = ANSTE::Config->instance()->variables();
+	my $preconditionNodes = $node->getElementsByTagName('precondition', 0);
+    for (my $i = 0; $i < $preconditionNodes->getLength(); $i++) {
+        my $var = $preconditionNodes->item($i)->getAttribute('var');
+        my $expectedValue = $preconditionNodes->item($i)->getAttribute('eq');
+        my $value = $configVars->{$var};
+        unless (defined $value) {
+            $value = 0;
+        }
+        if ($value ne $expectedValue) {
+            $self->setPrecondition(0);
+            last;
+        }
+    }
 }
 
 sub _addScripts # (list, node)

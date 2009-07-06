@@ -1,4 +1,4 @@
-# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -45,7 +45,7 @@ sub new # returns new Scenario object
 {
 	my ($class) = @_;
 	my $self = {};
-	
+
 	$self->{name} = '';
 	$self->{desc} = '';
     $self->{manualBridging} = 0;
@@ -76,7 +76,7 @@ sub name # returns name string
 
 # Method: setName
 #
-#   Sets the name of the scenario. 
+#   Sets the name of the scenario.
 #
 # Parameters:
 #
@@ -88,7 +88,7 @@ sub name # returns name string
 #
 sub setName # name string
 {
-	my ($self, $name) = @_;	
+	my ($self, $name) = @_;
 
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
@@ -125,7 +125,7 @@ sub desc # returns desc string
 #
 sub setDesc # desc string
 {
-	my ($self, $desc) = @_;	
+	my ($self, $desc) = @_;
 
     defined $desc or
         throw ANSTE::Exceptions::MissingArgument('desc');
@@ -162,7 +162,7 @@ sub manualBridging # returns boolean
 #
 sub setManualBridging # (value)
 {
-	my ($self, $manualBridging) = @_;	
+	my ($self, $manualBridging) = @_;
 
     defined $manualBridging or
         throw ANSTE::Exceptions::MissingArgument('manualBridging');
@@ -199,7 +199,7 @@ sub virtualizer # returns virtualizer package
 #
 sub setVirtualizer # (virtualizer)
 {
-	my ($self, $virtualizer) = @_;	
+	my ($self, $virtualizer) = @_;
 
     defined $virtualizer or
         throw ANSTE::Exceptions::MissingArgument('virtualizer');
@@ -252,7 +252,7 @@ sub setSystem # (system)
 #
 #   ref - list of <ANSTE::Scenario::Host> objects
 #
-sub hosts # returns hosts list 
+sub hosts # returns hosts list
 {
 	my ($self) = @_;
 
@@ -274,7 +274,7 @@ sub hosts # returns hosts list
 #
 sub addHost # (host)
 {
-	my ($self, $host) = @_;	
+	my ($self, $host) = @_;
 
     defined $host or
         throw ANSTE::Exceptions::MissingArgument('host');
@@ -295,7 +295,7 @@ sub addHost # (host)
 #
 # Returns:
 #
-#   hash ref - list of <ANSTE::Scenario::NetworkBridge> objects 
+#   hash ref - list of <ANSTE::Scenario::NetworkBridge> objects
 #
 sub bridges # returns bridges hash reference
 {
@@ -351,7 +351,7 @@ sub addBridge # (network, num?)
 #
 # Returns:
 #
-#   boolean - true if loaded correctly 
+#   boolean - true if loaded correctly
 #
 # Exceptions:
 #
@@ -408,11 +408,13 @@ sub loadFromFile # (filename)
         }
     }
 
-	# Read the <host> elements 
+	# Read the <host> elements
 	foreach my $element ($scenario->getElementsByTagName('host', 0)) {
 		my $host = new ANSTE::Scenario::Host;
 		$host->load($element);
-		$self->addHost($host);
+        if ($host->precondition()) {
+		    $self->addHost($host);
+        }
 	}
 
 	$doc->dispose();
@@ -424,7 +426,7 @@ sub _addScripts # (list, node)
 
 	foreach my $scriptNode ($node->getElementsByTagName('script', 0)) {
         my $script = $scriptNode->getFirstChild()->getNodeValue();
-    	push(@{$self->{$list}}, $script);
+        push(@{$self->{$list}}, $script);
     }
 }
 
