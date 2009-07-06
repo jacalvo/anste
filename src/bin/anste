@@ -152,7 +152,7 @@ foreach my $arg (@ARGV) {
     if ($arg =~ /=/) {
         my ($var, $value) = split(/=/, $arg);
 
-        if ($var and $value) {
+        if ($var and defined($value)) {
             try {
                 $config->setVariable($var, $value);
             } catch ANSTE::Exceptions::InvalidOption with {
