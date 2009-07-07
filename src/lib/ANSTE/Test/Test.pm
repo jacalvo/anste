@@ -510,8 +510,8 @@ sub load # (node)
 	my $desc = $descNode->getFirstChild()->getNodeValue();
 	$self->setDesc($desc);
 
-	my $hostNodes = $node->getElementsByTagName('host', 0)->item(0);
-    for (my $i = 0; $i < $preconditionNodes->getLength(); $i++) {
+	my $hostNodes = $node->getElementsByTagName('host', 0);
+    for (my $i = 0; $i < $hostNodes->getLength(); $i++) {
         my $hostNode = $hostNodes->item($i);
         my $hostPrecondition = 1;
         my $var = $hostNode->getAttribute('var');
