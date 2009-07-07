@@ -18,6 +18,7 @@ package ANSTE::Test::Test;
 use strict;
 use warnings;
 
+use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Config;
 
@@ -38,8 +39,8 @@ use XML::DOM;
 #
 sub new # returns new Test object
 {
-	my ($class) = @_;
-	my $self = {};
+    my ($class) = @_;
+    my $self = {};
 
     $self->{name} = '';
     $self->{desc} = '';
@@ -52,9 +53,9 @@ sub new # returns new Test object
     $self->{selenium} = 0;
     $self->{precondition} = 1;
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: name
@@ -67,9 +68,9 @@ sub new # returns new Test object
 #
 sub name # returns name string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{name};
+    return $self->{name};
 }
 
 # Method: setName
@@ -86,12 +87,12 @@ sub name # returns name string
 #
 sub setName # name string
 {
-	my ($self, $name) = @_;
+    my ($self, $name) = @_;
 
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-	$self->{name} = $name;
+    $self->{name} = $name;
 }
 
 # Method: desc
@@ -104,9 +105,9 @@ sub setName # name string
 #
 sub desc # returns desc string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{desc};
+    return $self->{desc};
 }
 
 # Method: setDesc
@@ -123,12 +124,12 @@ sub desc # returns desc string
 #
 sub setDesc # desc string
 {
-	my ($self, $desc) = @_;
+    my ($self, $desc) = @_;
 
     defined $desc or
         throw ANSTE::Exceptions::MissingArgument('desc');
 
-	$self->{desc} = $desc;
+    $self->{desc} = $desc;
 }
 
 # Method: assert
@@ -141,9 +142,9 @@ sub setDesc # desc string
 #
 sub assert # returns assert string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{assert};
+    return $self->{assert};
 }
 
 # Method: setAssert
@@ -160,12 +161,12 @@ sub assert # returns assert string
 #
 sub setAssert # assert string
 {
-	my ($self, $assert) = @_;
+    my ($self, $assert) = @_;
 
     defined $assert or
         throw ANSTE::Exceptions::MissingArgument('assert');
 
-	$self->{assert} = $assert;
+    $self->{assert} = $assert;
 }
 
 # Method: host
@@ -178,9 +179,9 @@ sub setAssert # assert string
 #
 sub host # returns host string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{host};
+    return $self->{host};
 }
 
 # Method: setHost
@@ -197,12 +198,12 @@ sub host # returns host string
 #
 sub setHost # host string
 {
-	my ($self, $host) = @_;
+    my ($self, $host) = @_;
 
     defined $host or
         throw ANSTE::Exceptions::MissingArgument('host');
 
-	$self->{host} = $host;
+    $self->{host} = $host;
 }
 
 # Method: port
@@ -215,9 +216,9 @@ sub setHost # host string
 #
 sub port # returns port string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{port};
+    return $self->{port};
 }
 
 # Method: setPort
@@ -234,12 +235,12 @@ sub port # returns port string
 #
 sub setPort # port string
 {
-	my ($self, $port) = @_;
+    my ($self, $port) = @_;
 
     defined $port or
         throw ANSTE::Exceptions::MissingArgument('port');
 
-	$self->{port} = $port;
+    $self->{port} = $port;
 }
 
 # Method: dir
@@ -252,9 +253,9 @@ sub setPort # port string
 #
 sub dir # returns dir string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{dir};
+    return $self->{dir};
 }
 
 # Method: setDir
@@ -271,12 +272,12 @@ sub dir # returns dir string
 #
 sub setDir # dir string
 {
-	my ($self, $dir) = @_;
+    my ($self, $dir) = @_;
 
     defined $dir or
         throw ANSTE::Exceptions::MissingArgument('dir');
 
-	$self->{dir} = $dir;
+    $self->{dir} = $dir;
 }
 
 # Method: params
@@ -289,9 +290,9 @@ sub setDir # dir string
 #
 sub params # returns params string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{params};
+    return $self->{params};
 }
 
 # Method: setParams
@@ -308,12 +309,12 @@ sub params # returns params string
 #
 sub setParams # params string
 {
-	my ($self, $params) = @_;
+    my ($self, $params) = @_;
 
     defined $params or
         throw ANSTE::Exceptions::MissingArgument('params');
 
-	$self->{params} = $params;
+    $self->{params} = $params;
 }
 
 # Method: env
@@ -326,7 +327,7 @@ sub setParams # params string
 #
 sub env # returns params string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
     my $env = '';
 
@@ -339,7 +340,7 @@ sub env # returns params string
         $env =~ s/ $//;
     }
 
-	return $env;
+    return $env;
 }
 
 # Method: setVariable
@@ -485,32 +486,33 @@ sub setPrecondition
 #
 sub load # (node)
 {
-	my ($self, $node) = @_;
+    my ($self, $node) = @_;
 
     defined $node or
         throw ANSTE::Exceptions::MissingArgument('node');
 
     if (not $node->isa('XML::DOM::Element')) {
         throw ANSTE::Exceptions::InvalidType('node',
-                                             'XML::DOM::Element');
+                'XML::DOM::Element');
     }
 
     my $configVars = ANSTE::Config->instance()->variables();
 
-	my $type = $node->getAttribute('type');
+    my $type = $node->getAttribute('type');
     if ($type eq 'selenium') {
         $self->setSelenium();
     }
 
-	my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
-	my $name = $nameNode->getFirstChild()->getNodeValue();
-	$self->setName($name);
+    my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
+    my $name = $nameNode->getFirstChild()->getNodeValue();
+    $self->setName($name);
 
-	my $descNode = $node->getElementsByTagName('desc', 0)->item(0);
-	my $desc = $descNode->getFirstChild()->getNodeValue();
-	$self->setDesc($desc);
+    my $descNode = $node->getElementsByTagName('desc', 0)->item(0);
+    my $desc = $descNode->getFirstChild()->getNodeValue();
+    $self->setDesc($desc);
 
-	my $hostNodes = $node->getElementsByTagName('host', 0);
+    my $validHost = 0;
+    my $hostNodes = $node->getElementsByTagName('host', 0);
     for (my $i = 0; $i < $hostNodes->getLength(); $i++) {
         my $hostNode = $hostNodes->item($i);
         my $hostPrecondition = 1;
@@ -524,48 +526,52 @@ sub load # (node)
             $hostPrecondition = $expectedValue eq $value;
         }
         if ($hostPrecondition) {
-	        my $host = $hostNode->getFirstChild()->getNodeValue();
+            my $host = $hostNode->getFirstChild()->getNodeValue();
             $self->setHost($host);
+            $validHost = 1;
             last;
         }
     }
+    unless ($validHost) {
+        throw ANSTE::Exceptions::Error("No valid host found for test $name.");
+    }
 
-	my $portNode = $node->getElementsByTagName('port', 0)->item(0);
+    my $portNode = $node->getElementsByTagName('port', 0)->item(0);
     if ($portNode) {
         my $port = $portNode->getFirstChild()->getNodeValue();
         $self->setPort($port);
     }
 
-	my $dirNode = $node->getElementsByTagName('dir', 0)->item(0);
-	my $dir = $dirNode->getFirstChild()->getNodeValue();
+    my $dirNode = $node->getElementsByTagName('dir', 0)->item(0);
+    my $dir = $dirNode->getFirstChild()->getNodeValue();
     $self->setDir($dir);
 
-	my $assertNode = $node->getElementsByTagName('assert', 0)->item(0);
+    my $assertNode = $node->getElementsByTagName('assert', 0)->item(0);
     if ($assertNode) {
         my $assert = $assertNode->getFirstChild()->getNodeValue();
         $self->setAssert($assert);
     }
 
-	my $stopNode = $node->getElementsByTagName('stop', 0)->item(0);
+    my $stopNode = $node->getElementsByTagName('stop', 0)->item(0);
     if ($stopNode) {
         $self->setStop();
     }
 
-	my $paramsNode = $node->getElementsByTagName('params', 0)->item(0);
+    my $paramsNode = $node->getElementsByTagName('params', 0)->item(0);
     if ($paramsNode) {
         my $params = $paramsNode->getFirstChild()->getNodeValue();
         $self->setParams($params);
     }
 
-	my $varNodes = $node->getElementsByTagName('var', 0);
+    my $varNodes = $node->getElementsByTagName('var', 0);
     for (my $i = 0; $i < $varNodes->getLength(); $i++) {
         my $name = $varNodes->item($i)->getAttribute('name');
         my $value = $varNodes->item($i)->getAttribute('value');
         $self->setVariable($name, $value);
     }
 
-    # Check if all preconditions are satisfied
-	my $preconditionNodes = $node->getElementsByTagName('precondition', 0);
+# Check if all preconditions are satisfied
+    my $preconditionNodes = $node->getElementsByTagName('precondition', 0);
     for (my $i = 0; $i < $preconditionNodes->getLength(); $i++) {
         my $var = $preconditionNodes->item($i)->getAttribute('var');
         my $expectedValue = $preconditionNodes->item($i)->getAttribute('eq');
