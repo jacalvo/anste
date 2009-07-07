@@ -517,7 +517,7 @@ sub load # (node)
         my $hostNode = $hostNodes->item($i);
         my $hostPrecondition = 1;
         my $var = $hostNode->getAttribute('var');
-        if (defined $var) {
+        if ($var) {
             my $expectedValue = $hostNode->getAttribute('eq');
             my $value = $configVars->{$var};
             unless (defined $value) {
