@@ -1,4 +1,5 @@
 0.7
+    + Added precondition attributes (var and eq) to <host> test elements
     + Added <precondition> element to include <test> and <host> only if
     condition is satisfied
     + Bugfix: use flock for allowing only one instance of anste

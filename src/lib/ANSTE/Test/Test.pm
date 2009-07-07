@@ -495,6 +495,8 @@ sub load # (node)
                                              'XML::DOM::Element');
     }
 
+    my $configVars = ANSTE::Config->instance()->variables();
+
 	my $type = $node->getAttribute('type');
     if ($type eq 'selenium') {
         $self->setSelenium();
@@ -508,9 +510,25 @@ sub load # (node)
 	my $desc = $descNode->getFirstChild()->getNodeValue();
 	$self->setDesc($desc);
 
-	my $hostNode = $node->getElementsByTagName('host', 0)->item(0);
-	my $host = $hostNode->getFirstChild()->getNodeValue();
-    $self->setHost($host);
+	my $hostNodes = $node->getElementsByTagName('host', 0)->item(0);
+    for (my $i = 0; $i < $preconditionNodes->getLength(); $i++) {
+        my $hostNode = $hostNodes->item($i);
+        my $hostPrecondition = 1;
+        my $var = $hostNode->getAttribute('var');
+        if (defined $var) {
+            my $expectedValue = $hostNode->getAttribute('eq');
+            my $value = $configVars->{$var};
+            unless (defined $value) {
+                $value = 0;
+            }
+            $hostPrecondition = $expectedValue eq $value;
+        }
+        if ($hostPrecondition) {
+	        my $host = $hostNode->getFirstChild()->getNodeValue();
+            $self->setHost($host);
+            last;
+        }
+    }
 
 	my $portNode = $node->getElementsByTagName('port', 0)->item(0);
     if ($portNode) {
@@ -547,7 +565,6 @@ sub load # (node)
     }
 
     # Check if all preconditions are satisfied
-    my $configVars = ANSTE::Config->instance()->variables();
 	my $preconditionNodes = $node->getElementsByTagName('precondition', 0);
     for (my $i = 0; $i < $preconditionNodes->getLength(); $i++) {
         my $var = $preconditionNodes->item($i)->getAttribute('var');
