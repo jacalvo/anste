@@ -738,7 +738,7 @@ sub executeSelenium # (%params)
     my $firefoxProfile = ANSTE::Config->instance()->seleniumFirefoxProfile();
     my $profileOption = '';
     if ($firefoxProfile) {
-        $profileOption = "-firefoxProfileTemplate \"$profileOption\"";
+        $profileOption = "-firefoxProfileTemplate \"$firefoxProfile\"";
     }
 
     my $date = `date +%y%m%d%H%M%S`;
