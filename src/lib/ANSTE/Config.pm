@@ -1038,7 +1038,7 @@ sub seleniumRecordAll
 
 # Method: seleniumProtocol
 #
-#   Gets the value for the Selenium record all videos option.
+#   Gets the value for the default Selenium protocol (http or https)
 #
 # Returns:
 #
@@ -1065,7 +1065,7 @@ sub seleniumProtocol
 
 # Method: seleniumFirefoxProfile
 #
-#   Gets the value for the Selenium record all videos option.
+#   Gets the value for the path to custom firefox profile
 #
 # Returns:
 #
