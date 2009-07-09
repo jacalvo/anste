@@ -38,8 +38,6 @@ use Safe;
 use Perl6::Slurp;
 use Error qw(:try);
 
-use constant DEFAULT_SELENIUM_PORT => 1666;
-
 my $SUITE_FILE = 'suite.html';
 my $SUITE_LIST_FILE = 'suites.list';
 
@@ -531,12 +529,15 @@ sub _runSeleniumRC # (hostname, file, log, port?) returns result
 
     my $ip = $self->{hostIP}->{$hostname};
 
-    unless (defined ($port)) {
-        $port = DEFAULT_SELENIUM_PORT;
-    }
-    my $url = "http://$ip:$port";
-
     my $config = ANSTE::Config->instance();
+
+    # FIXME: Implement also overrideable protocol on tests
+    my $protocol = $config->seleniumProtocol();
+
+    my $url = "$protocol://$ip:$port";
+    if (defined ($port)) {
+        $url .= ":$port";
+    }
 
     my $jar = $config->seleniumRCjar();
     my $browser = $config->seleniumBrowser();
@@ -561,7 +562,7 @@ sub _seleniumResult # (logfile)
 
     my $LOG;
     open($LOG, '<', $logfile) or
-        throw ANSTE::Exceptions::Error("Selenium results not found. " . 
+        throw ANSTE::Exceptions::Error("Selenium results not found. " .
                                        "Check if it's working properly.");
     foreach my $line (<$LOG>) {
         if ($line =~ /^<td>passed/) {

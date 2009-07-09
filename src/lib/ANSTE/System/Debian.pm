@@ -1,4 +1,4 @@
-# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -32,20 +32,20 @@ use File::Basename;
 #    with the Debian GNU/Linux system.
 #
 
-# Method: mountImage 
+# Method: mountImage
 #
 #   Overriden method that executes mount with
 #   the given image and mount point as arguments.
 #
-# Parameters: 
-#   
-#   image      - path of the image to mount 
+# Parameters:
+#
+#   image      - path of the image to mount
 #   mountPoint - directory where the image will be mounted
 #
 # Returns:
-#   
+#
 #   boolean    - indicates if the process has been successful
-#               
+#
 sub mountImage # (image, mountPoint)
 {
     my ($self, $image, $mountPoint) = @_;
@@ -82,19 +82,19 @@ sub mountImage # (image, mountPoint)
     $self->execute("mount $partition $mountPoint");
 }
 
-# Method: unmount 
+# Method: unmount
 #
 #   Overriden method that executes umount with
 #   the mount point specified.
 #
-# Parameters: 
-#   
-#   mountPoint - path of the mounted directory 
+# Parameters:
+#
+#   mountPoint - path of the mounted directory
 #
 # Returns:
-#   
+#
 #   boolean    - indicates if the process has been successful
-#               
+#
 sub unmount # (mountPoint)
 {
     my ($self, $mountPoint) = @_;
@@ -109,7 +109,7 @@ sub unmount # (mountPoint)
     $self->execute("losetup -d $loopDev");
 }
 
-# Method: installBasePackages 
+# Method: installBasePackages
 #
 #   Overriden methods that install the required packages
 #   to run anste on the slave host by using apt.
@@ -144,20 +144,20 @@ sub installBasePackages
     return($ret);
 }
 
-# Method: resizeImage 
+# Method: resizeImage
 #
 #   Overriden method that resizes a image file
 #   using resize2fs, checking it first with e2fsck.
 #
 # Parameters:
-#   
+#
 #   image   - image file
 #   size    - new size
 #
 # Returns:
-#   
+#
 #   boolean - indicates if the process has been successful
-#               
+#
 sub resizeImage # (image, size)
 {
     my ($self, $image, $size) = @_;
@@ -167,7 +167,7 @@ sub resizeImage # (image, size)
     defined $size or
         throw ANSTE::Exceptions::MissingArgument('size');
 
-    my ($ret, $tries) = (1, 0); 
+    my ($ret, $tries) = (1, 0);
 
 #FIXME: This doesn't work with kvm, only with xen
 # temporary unimplemented.
@@ -201,7 +201,7 @@ sub updatePackagesCommand # returns string
     return 'apt-get update';
 }
 
-# Method: updateNetworkCommand 
+# Method: updateNetworkCommand
 #
 #   Overriden method that returns the system-specific
 #   command to update the network configuration.
@@ -233,13 +233,13 @@ sub cleanPackagesCommand # returns string
     return 'apt-get clean';
 }
 
-# Method: installPackagesCommand 
+# Method: installPackagesCommand
 #
 #   Overriden method that returns the Debian command
-#   to install the given list of packages 
+#   to install the given list of packages
 #
 # Parameters:
-#   
+#
 #   packages - list of packages
 #
 # Returns:
@@ -257,7 +257,7 @@ sub installPackagesCommand # (packages) returns string
 
 # Method: installVars
 #
-#   Overriden method that returns the environment variables needed 
+#   Overriden method that returns the environment variables needed
 #   for the packages installation process.
 #
 # Returns:
@@ -273,7 +273,7 @@ sub installVars # return strings
     $vars .= "export DEBIAN_FRONTEND=noninteractive\n\n";
     my $forceConfnew = 'Dpkg::Options::=--force-confnew';
     my $forceConfdef = 'Dpkg::Options::=--force-confdef';
-    $vars .= "APT_OPTIONS='-o $forceConfnew -o $forceConfdef';\n\n"; 
+    $vars .= "APT_OPTIONS='-o $forceConfnew -o $forceConfdef';\n\n";
 
     return $vars;
 }
@@ -308,7 +308,7 @@ sub networkConfig # (network) returns string
     $config .= "auto lo\n";
 	$config .= "iface lo inet loopback\n";
     foreach my $iface (@{$network->interfaces()}) {
-    	$config .= "\n";
+        $config .= "\n";
         $config .= $self->_interfaceConfig($iface);
     }
 	$config .= "EOF\n";
@@ -508,7 +508,7 @@ sub storeMasterAddress # (address) returns string
     defined $address or
         throw ANSTE::Exceptions::MissingArgument('address');
 
-    return "echo $address > " . '$MOUNT/var/local/anste.master'; 
+    return "echo $address > " . '$MOUNT/var/local/anste.master';
 }
 
 # Method: copyToMountCommand
@@ -610,7 +610,7 @@ sub firewallDefaultRules # returns string
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub enableRouting # (@iface)
 {
@@ -629,7 +629,7 @@ sub enableRouting # (@iface)
 
 # Method: enableNAT
 #
-#   Overriden method that returns the command that enables NAT 
+#   Overriden method that returns the command that enables NAT
 #   on a given network interface from a given source address.
 #
 # Parameters:
@@ -665,7 +665,7 @@ sub enableNAT # (iface, sourceAddr)
 
 # Method: disableNAT
 #
-#   Overriden method that returns the command that disables NAT on 
+#   Overriden method that returns the command that disables NAT on
 #   a given network interface from a given source address.
 #
 # Parameters:
@@ -735,13 +735,19 @@ sub executeSelenium # (%params)
     my $testFile = $params{testFile};
     my $resultFile = $params{resultFile};
 
+    my $firefoxProfile = ANSTE::Config->instance()->seleniumFirefoxProfile();
+    my $profileOption = '';
+    if ($firefoxProfile) {
+        $profileOption = "-firefoxProfileTemplate \"$profileOption\"";
+    }
+
     my $date = `date +%y%m%d%H%M%S`;
     chomp($date);
     my $LOG =  "/tmp/anste-selenium-$date.log";
 
-    my $cmd = 'java -jar ' . $jar . ' -htmlSuite "' . $browser . '" ' .
-              '"' . $url . '" "' . $testFile . '" "' . $resultFile . '" ' .
-              "-multiWindow > $LOG 2>&1";
+    my $cmd = "java -jar $jar -avoidProxy -htmlSuite \"$browser\"  "
+            . "\"$url\" \"$testFile\" \"$resultFile\" "
+            . "-multiWindow $profileOption > $LOG 2>&1";
 
 
     my $ld_path = '';
@@ -856,7 +862,7 @@ sub _routeCommand # (route)
         $command = "route add default gw $gateway";
     }
     else {
-        $command = 
+        $command =
             "route add -net $dest netmask $netmask gw $gateway dev $iface";
     }
 

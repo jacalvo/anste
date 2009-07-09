@@ -116,6 +116,8 @@ sub check
     $self->seleniumBrowser();
     $self->seleniumVideo();
     $self->seleniumRecordAll();
+    $self->seleniumProtocol();
+    $self->seleniumFirefoxProfile();
     $self->xenUseIdeDevices();
     $self->xenModules();
     $self->xenSize();
@@ -800,7 +802,7 @@ sub masterPort
                                                $masterPort,
                                                $self->{confFile});
     }
-    
+
     return $masterPort;
 }
 
@@ -824,7 +826,7 @@ sub firstAddress
     my $firstAddress =  $self->_getOption('comm', 'first-address');
 
     if (not ANSTE::Validate::ip($firstAddress)) {
-        throw ANSTE::Exceptions::InvalidConfig('first-address', 
+        throw ANSTE::Exceptions::InvalidConfig('first-address',
                                                $firstAddress,
                                                $self->{confFile});
     }
@@ -1032,6 +1034,60 @@ sub seleniumRecordAll
     }
 
     return $all;
+}
+
+# Method: seleniumProtocol
+#
+#   Gets the value for the Selenium record all videos option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub seleniumProtocol
+{
+    my ($self) = @_;
+
+    my $protocol = $self->_getOption('selenium', 'protocol');
+
+    unless (($protocol eq 'http') or ($protocol eq 'https')) {
+        throw ANSTE::Exceptions::InvalidConfig('selenium/protocol',
+                                               $all,
+                                               $self->{confFile});
+    }
+
+    return $protocol;
+}
+
+# Method: seleniumFirefoxProfile
+#
+#   Gets the value for the Selenium record all videos option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub seleniumFirefoxProfile
+{
+    my ($self) = @_;
+
+    my $profile = $self->_getOption('selenium', 'firefox-profile');
+
+    if ($profile and (not ANSTE::Validate::path($profile))) {
+        throw ANSTE::Exceptions::InvalidConfig('selenium/firefox-profile',
+                                               $all,
+                                               $self->{confFile});
+    }
+
+    return $profile;
 }
 
 # Method: step
@@ -1488,6 +1544,8 @@ sub _setDefaults
     $self->{default}->{'selenium'}->{'browser'} = '*firefox';
     $self->{default}->{'selenium'}->{'video'} = 0;
     $self->{default}->{'selenium'}->{'record-all'} = 0;
+    $self->{default}->{'selenium'}->{'protocol'} = 'http';
+    $self->{default}->{'selenium'}->{'firefox-profile'} = '';
 
     $self->{default}->{'test'}->{'step'} = 0;
     $self->{default}->{'test'}->{'non-stop'} = 0;
