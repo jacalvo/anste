@@ -1056,7 +1056,7 @@ sub seleniumProtocol
 
     unless (($protocol eq 'http') or ($protocol eq 'https')) {
         throw ANSTE::Exceptions::InvalidConfig('selenium/protocol',
-                                               $all,
+                                               $protocol,
                                                $self->{confFile});
     }
 
@@ -1083,7 +1083,7 @@ sub seleniumFirefoxProfile
 
     if ($profile and (not ANSTE::Validate::path($profile))) {
         throw ANSTE::Exceptions::InvalidConfig('selenium/firefox-profile',
-                                               $all,
+                                               $profile,
                                                $self->{confFile});
     }
 
