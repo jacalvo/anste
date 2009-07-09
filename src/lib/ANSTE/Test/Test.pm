@@ -243,6 +243,43 @@ sub setPort # port string
     $self->{port} = $port;
 }
 
+# Method: protocol
+#
+#   Gets the protocol (http or https) to be used (selenium only).
+#
+# Returns:
+#
+#   string - contains the protocol
+#
+sub protocol # returns protocol string
+{
+    my ($self) = @_;
+
+    return $self->{protocol};
+}
+
+# Method: setProtocol
+#
+#   Sets the protocol for this test object to the given value.
+#
+# Parameters:
+#
+#   name - String with the protocol (http or https)
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
+sub setProtocol # protocol string
+{
+    my ($self, $protocol) = @_;
+
+    defined $protocol or
+        throw ANSTE::Exceptions::MissingArgument('protocol');
+
+    $self->{protocol} = $protocol;
+}
+
 # Method: dir
 #
 #   Gets the directory of the test scripts.
@@ -540,6 +577,15 @@ sub load # (node)
     if ($portNode) {
         my $port = $portNode->getFirstChild()->getNodeValue();
         $self->setPort($port);
+    }
+
+    my $protocolNode = $node->getElementsByTagName('protocol', 0)->item(0);
+    if ($protocolNode) {
+        my $protocol = $protocolNode->getFirstChild()->getNodeValue();
+        unless (($protocol eq 'http') or ($protocol eq 'https')) {
+            throw ANSTE::Exceptions::Error("Invalid protocol for test $name.");
+        }
+        $self->setProtocol($protocol);
     }
 
     my $dirNode = $node->getElementsByTagName('dir', 0)->item(0);

@@ -389,7 +389,12 @@ sub _runTest # (test)
 
         $logfile = "$logPath/$suiteDir/$name.html";
         my $port = $test->port();
-        $ret = $self->_runSeleniumRC($hostname, $suiteFile, $logfile, $port);
+        my $protocol = $test->protocol();
+        $ret = $self->_runSeleniumRC(hostname => $hostname,
+                                     suiteFile => $suiteFile,
+                                     logfile => $logfile,
+                                     port => $port,
+                                     protocl => $protocol);
 
         if ($config->seleniumVideo()) {
             print "Ending video recording for test $name... " if $verbose;
@@ -521,9 +526,31 @@ sub _runScript # (hostname, script, log?, env?, params?)
     return $ret;
 }
 
-sub _runSeleniumRC # (hostname, file, log, port?) returns result
+# Method: _runSeleniumRC
+#
+#   Executes Selenium remote control
+#
+# Parameters:
+#
+#   hostname - hostname
+#   file     - suite file
+#   log      - log file
+#   port     - *optional* port value
+#   protocol - *optional* protocol (http/https)
+#
+# Returns:
+#
+#   boolean - test result
+#
+sub _runSeleniumRC
 {
-    my ($self, $hostname, $file, $log, $port) = @_;
+    my ($self, %args) = @_;
+
+    my $hostname = $args{hostname};
+    my $file = $args{file};
+    my $log = $args{log};
+    my $port = $args{port};
+    my $protocol = $args{protocol};
 
     my $system = $self->{system};
 
@@ -531,8 +558,9 @@ sub _runSeleniumRC # (hostname, file, log, port?) returns result
 
     my $config = ANSTE::Config->instance();
 
-    # FIXME: Implement also overrideable protocol on tests
-    my $protocol = $config->seleniumProtocol();
+    unless ($protocol) {
+        $protocol = $config->seleniumProtocol();
+    }
 
     my $url = "$protocol://$ip";
     if (defined ($port)) {
