@@ -35,7 +35,7 @@ use Config::Tiny;
 
 use constant CONFIG_FILE => 'anste.conf';
 
-my @CONFIG_PATHS = ('data/conf', '/etc/anste', '/usr/local/etc/anste');
+my @CONFIG_PATHS = ('conf', 'data/conf', '/etc/anste', '/usr/local/etc/anste');
 my @DATA_PATHS = ('data', '/usr/share/anste', '/usr/local/share/anste');
 
 my $singleton;
