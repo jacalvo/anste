@@ -534,7 +534,7 @@ sub _runSeleniumRC # (hostname, file, log, port?) returns result
     # FIXME: Implement also overrideable protocol on tests
     my $protocol = $config->seleniumProtocol();
 
-    my $url = "$protocol://$ip:$port";
+    my $url = "$protocol://$ip";
     if (defined ($port)) {
         $url .= ":$port";
     }
