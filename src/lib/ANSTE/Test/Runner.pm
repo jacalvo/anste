@@ -391,8 +391,8 @@ sub _runTest # (test)
         my $port = $test->port();
         my $protocol = $test->protocol();
         $ret = $self->_runSeleniumRC(hostname => $hostname,
-                                     suiteFile => $suiteFile,
-                                     logfile => $logfile,
+                                     file => $suiteFile,
+                                     log => $logfile,
                                      port => $port,
                                      protocl => $protocol);
 
