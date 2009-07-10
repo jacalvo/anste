@@ -18,6 +18,7 @@ package ANSTE::Config;
 use strict;
 use warnings;
 
+use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::InvalidConfig;
 use ANSTE::Exceptions::InvalidOption;
 use ANSTE::Exceptions::NotFound;
@@ -54,14 +55,20 @@ sub instance
     unless (defined $singleton) {
         my $self = {};
 
+        my $configFound = 0;
         foreach my $path (@CONFIG_PATHS) {
             my $file = "$path/" . CONFIG_FILE;
             if (-r $file) {
                 $self->{config} = Config::Tiny->read($file);
                 $self->{confPath} = $path;
                 $self->{confFile} = $file;
+                $configFound = 1;
                 last;
             }
+        }
+
+        unless ($configFound) {
+            throw ANSTE::Exceptions::Error('Unable to find anste.conf');
         }
 
         foreach my $path (@DATA_PATHS) {
