@@ -1,4 +1,5 @@
 0.7
+    + Added user-extensions and single-window settings for Selenium
     + Now -wait-fail option gives the opportunity of retry a test
     + Added new protocol and firefox-profile settings for Selenium
     + Added precondition attributes (var and eq) to <host> test elements

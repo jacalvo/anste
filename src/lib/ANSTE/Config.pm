@@ -126,6 +126,7 @@ sub check
     $self->seleniumProtocol();
     $self->seleniumFirefoxProfile();
     $self->seleniumSingleWindow();
+    $self->seleniumUserExtensions();
     $self->xenUseIdeDevices();
     $self->xenModules();
     $self->xenSize();
