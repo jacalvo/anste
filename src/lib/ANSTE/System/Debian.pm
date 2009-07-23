@@ -745,9 +745,18 @@ sub executeSelenium # (%params)
     chomp($date);
     my $LOG =  "/tmp/anste-selenium-$date.log";
 
+    my $singleWindow = ANSTE::Config->instance()->seleniumSingleWindow();
+    my $windowLayout = '-multiWindow';
+    if ($singleWindow) {
+        $windowLayout = "-singleWindow";
+    }
+
+    my $userExtensions = ANSTE::Config->instance()->seleniumUserExtensions();
+
     my $cmd = "java -jar $jar -avoidProxy -htmlSuite \"$browser\"  "
             . "\"$url\" \"$testFile\" \"$resultFile\" "
-            . "-multiWindow $profileOption > $LOG 2>&1";
+            . "-userExtensions $userExtensions "
+            . "$windowLayout $profileOption > $LOG 2>&1";
 
 
     my $ld_path = '';

@@ -125,6 +125,7 @@ sub check
     $self->seleniumRecordAll();
     $self->seleniumProtocol();
     $self->seleniumFirefoxProfile();
+    $self->seleniumSingleWindow();
     $self->xenUseIdeDevices();
     $self->xenModules();
     $self->xenSize();
@@ -1097,6 +1098,61 @@ sub seleniumFirefoxProfile
     return $profile;
 }
 
+# Method: seleniumSingleWindow
+#
+#   Selenium runs the browser in only a window, incompatible with frames 
+#
+# Returns:
+#
+#   value - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub seleniumSingleWindow
+{
+    my ($self) = @_;
+
+    my $singleWindow = $self->_getOption('selenium', 'single-window');
+
+    if (not ANSTE::Validate::boolean($singleWindow)) {
+        throw ANSTE::Exceptions::InvalidConfig('selenium/single-window',
+                                               $singleWindow,
+                                               $self->{confFile});
+    }
+
+    return $singleWindow;
+}
+
+# Method: seleniumUserExtensions
+#
+#   Gets the value for the path to user extensions for Selenium
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub seleniumUserExtensions
+{
+    my ($self) = @_;
+
+    my $userExtensions = $self->_getOption('selenium', 'user-extensions');
+
+    if ($userExtensions and 
+        (not ANSTE::Validate::fileReadable($userExtensions))) {
+        throw ANSTE::Exceptions::InvalidConfig('selenium/user-extensions',
+                                               $userExtensions,
+                                               $self->{confFile});
+    }
+
+    return $userExtensions;
+}
+
 # Method: step
 #
 #   Sets the value for step-by-step testing mode.
@@ -1498,6 +1554,9 @@ sub _setDefaults
     $self->{default}->{'selenium'}->{'record-all'} = 0;
     $self->{default}->{'selenium'}->{'protocol'} = 'http';
     $self->{default}->{'selenium'}->{'firefox-profile'} = '';
+    $self->{default}->{'selenium'}->{'single-window'} = 0;
+    $self->{default}->{'selenium'}->{'user-extensions'} = 
+        "$data/scripts/user-extensions.js";
 
     $self->{default}->{'test'}->{'step'} = 0;
 
