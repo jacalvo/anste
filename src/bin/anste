@@ -54,7 +54,6 @@ my $waitFail = 0;
 my $help = 0;
 my $quiet = 0;
 my $step = 0;
-my $nonStop = 0;
 my $reuse = 0;
 my $break = '';
 
@@ -73,7 +72,6 @@ GetOptions('create' => \$create,
            'reuse' => \$reuse,
            'step' => \$step,
            'break=s' => \$break,
-           'non-stop' => \$nonStop,
            'help' => \$help) or pod2usage(2);
 
 pod2usage(1) if $help;
@@ -117,9 +115,6 @@ if ($break) {
     foreach my $breakpoint (@breakpoints) {
         $config->setBreakpoint($breakpoint);
     }
-}
-if ($nonStop) {
-    $config->setNonStop(1);
 }
 
 # Check the config file for missing or malformed options
@@ -383,7 +378,6 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -wait-fail         wait after a test fails
    -step              run tests step by step, waiting after each one
    -break <t1,t2,...> set breakpoints after the given test names
-   -non-stop          run all test without waiting, ignoring <stop/>'s
    -quiet             do not show output of commands
    -reuse             reuse the created image if exists (with -create)
                       reuse a deployed scenario (with -test)

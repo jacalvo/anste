@@ -49,7 +49,6 @@ sub new # returns new Test object
     $self->{env} = '';
     $self->{variables} = {};
     $self->{assert} = 'passed';
-    $self->{stop} = 0;
     $self->{selenium} = 0;
     $self->{precondition} = 1;
 
@@ -451,32 +450,6 @@ sub setSelenium
     $self->{selenium} = 1;
 }
 
-# Method: stop
-#
-#   Gets if this test must stop after its execution.
-#
-# Returns:
-#
-#   boolean - true if must stop, false if not
-#
-sub stop # returns boolean
-{
-    my ($self) = @_;
-
-    return $self->{stop};
-}
-
-# Method: setStop
-#
-#   Sets that this test must stop after its execution.
-#
-sub setStop
-{
-    my ($self) = @_;
-
-    $self->{stop} = 1;
-}
-
 # Method: precondition
 #
 #   Gets if this test has passed the required precondition
@@ -596,11 +569,6 @@ sub load # (node)
     if ($assertNode) {
         my $assert = $assertNode->getFirstChild()->getNodeValue();
         $self->setAssert($assert);
-    }
-
-    my $stopNode = $node->getElementsByTagName('stop', 0)->item(0);
-    if ($stopNode) {
-        $self->setStop();
     }
 
     my $paramsNode = $node->getElementsByTagName('params', 0)->item(0);

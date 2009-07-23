@@ -253,21 +253,8 @@ sub _runTests
     $report->add($suiteResult);
 
     foreach my $test (@{$suite->tests()}) {
-        my $testName = $test->name();
-        print "Running test: $testName\n";
-        my ($testResult, $ret);
-        try {
-            $testResult = $self->_runTest($test);
-            $ret = $testResult->value();
-        } catch ANSTE::Exceptions::NotFound with {
-            my $ex = shift;
-            my $what = $ex->what();
-            my $value = $ex->value();
-            print STDERR "Error running test $testName.\n";
-            print STDERR "Reason: $what $value not found.\n";
-            $ret = -1;
-        };
-        print "Result: $ret\n\n";
+        my $testResult = $self->_runOneTest($test);
+        my $ret;
 
         # Adds the test report
         if ($testResult) {
@@ -278,20 +265,62 @@ sub _runTests
             my $logPath = $config->logPath();
             $writer->write("$logPath/" . $writer->filename());
             $report->setTime($self->_time());
+            $ret = $testResult->value();
+        } else {
+            $ret = -1;
         }
 
-        # Wait user input if there is a breakpoint in the test
-        # and not in non-stop mode, or wait always if we are
-        # in step by step mode.
-        if (($test->stop() && !$config->nonStop) ||
-            ($config->breakpoint($testName)) ||
-            ($config->waitFail() && $ret != 0) || $config->step()) {
-            print "Stop requested after this test. " .
-                  "Press any key to continue.\n";
+        # Wait user input if the user has set a breakpoint, or
+        # if there was an error and we are in wait on fail mode,
+        # or always if we are in step by step mode.
+
+        my $msg;
+        my $stop;
+
+        if ($config->breakpoint($test->name())) {
+            $stop = 1;
+            $msg = "Breakpoint requested after this test.";
+        }
+        if ($config->waitFail() && $ret != 0) {
+            $stop = 1;
+            $msg = "Test failed and wait on failure was requested.";
+        }
+        if ($config->step()) {
+            $stop = 1;
+            $msg = "Step by step execution.";
+        }
+        if ($stop == 1) {
+            print "$msg " .
+                "Press 'r' to run the test again or 'c' to continue.\n";
             my $key;
             read(STDIN, $key, 1);
+            if ($key eq 'r') {
+                $self->_runOneTest($test);
+            }
         }
     }
+}
+
+sub _runOneTest # (test)
+{
+    my ($self, $test) = @_;
+
+    my $testName = $test->name();
+    print "Running test: $testName\n";
+    my ($testResult, $ret);
+    try {
+        $testResult = $self->_runTest($test);
+        $ret = $testResult->value();
+    } catch ANSTE::Exceptions::NotFound with {
+        my $ex = shift;
+        my $what = $ex->what();
+        my $value = $ex->value();
+        print STDERR "Error running test $testName.\n";
+        print STDERR "Reason: $what $value not found.\n";
+        $ret = -1;
+    };
+    print "Result: $ret\n\n";
+    return $testResult;
 }
 
 sub _runTest # (test)
