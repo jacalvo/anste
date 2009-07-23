@@ -275,7 +275,7 @@ sub _runTests
         # or always if we are in step by step mode.
 
         my $msg;
-        my $stop;
+        my $stop = 0;
 
         if ($config->breakpoint($test->name())) {
             $stop = 1;
@@ -289,7 +289,7 @@ sub _runTests
             $stop = 1;
             $msg = "Step by step execution.";
         }
-        if ($stop == 1) {
+        if ($stop) {
             while(1) {
                 print "$msg " .
                     "Press 'r' to run the test again or 'c' to continue.\n";
