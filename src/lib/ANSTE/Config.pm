@@ -55,19 +55,30 @@ sub instance
     unless (defined $singleton) {
         my $self = {};
 
-        my $configFound = 0;
         foreach my $path (@CONFIG_PATHS) {
             my $file = "$path/" . CONFIG_FILE;
             if (-r $file) {
-                $self->{config} = Config::Tiny->read($file);
-                $self->{confPath} = $path;
-                $self->{confFile} = $file;
-                $configFound = 1;
-                last;
+                if (defined $self->{config}) {
+                    my $stackedConfig = Config::Tiny->read($file);
+
+                    foreach my $section (keys %{$stackedConfig}) {
+                        foreach my $key (keys %{$stackedConfig->{$section}}) {
+                            my $value = $stackedConfig->{$section}->{$key};
+                            my $oldValue = $self->{config}->{$section}->{$key};
+                            unless (defined $oldValue) {
+                                $self->{config}->{$section}->{$key} = $value; 
+                            }
+                        }
+                    }
+                } else {
+                    $self->{config} = Config::Tiny->read($file);
+                    $self->{confPath} = $path;
+                    $self->{confFile} = $file;
+                }
             }
         }
 
-        unless ($configFound) {
+        unless (defined $self->{config}) {
             throw ANSTE::Exceptions::Error('Unable to find anste.conf');
         }
 
