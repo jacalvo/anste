@@ -25,6 +25,8 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
 
+use Perl6::Junction qw(any);
+
 # Class: HostImageSetup
 #
 #   Writes the setup script for a host image (a copy of a base image)
@@ -177,8 +179,10 @@ sub _writeNetworkConfig # (file)
         my $cmd = $system->enableRouting(@ifaces);
         print $file "$cmd\n";
     }
-    unless ($host->type() eq 'none') {
-        my $cmd = $system->setupTypeScript($host->type());
+    my $type = $host->type();
+    if ($type eq any('dhcp-router', 'pppoe-router')) {
+        print $file "# Execute setup for type $type\n";
+        my $cmd = $system->setupTypeScript($type);
         print $file "$cmd\n";
     }
 }
