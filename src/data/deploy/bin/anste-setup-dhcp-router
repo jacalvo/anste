@@ -9,6 +9,8 @@ sed -i "s/^INTERFACES=.*/INTERFACES=\"$IFACE\"" /etc/default/dhcp3-server
 
 CONF=/etc/dhcp3/dhcpd.conf
 
+echo "authoritative;" > $CONF
+
 echo "subnet $NET.0 netmask $MASK {" >> $CONF
 echo "range $NET.100 $NET.200;" >> $CONF
 echo "option domain-name \"example.com\";" >> $CONF
