@@ -5,7 +5,7 @@ IFACE="eth1"
 NET="192.168.2"
 MASK="255.255.255.0"
 
-sed -i "s/^INTERFACES=.*/INTERFACES=\"$IFACE\"" /etc/default/dhcp3-server
+sed -i "s/^INTERFACES=.*/INTERFACES=\"$IFACE\"/" /etc/default/dhcp3-server
 
 CONF=/etc/dhcp3/dhcpd.conf
 
@@ -16,7 +16,7 @@ echo "range $NET.100 $NET.200;" >> $CONF
 echo "option domain-name \"example.com\";" >> $CONF
 echo "option routers $NET.1;" >> $CONF
 echo "option broadcast-address $NET.255;" >> $CONF
-echo "default-lease-time 1800;" > $CONF
+echo "default-lease-time 1800;" >> $CONF
 echo "max-lease-time 7200;" >> $CONF
 echo "}" >> $CONF
 
