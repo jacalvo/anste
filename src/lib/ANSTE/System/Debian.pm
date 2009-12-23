@@ -278,7 +278,7 @@ sub installPackagesCommandType # (type) returns string
     if ($type eq 'dhcp-router') {
         push (@packages, 'dhcp3-server');
     } elsif ($type eq 'pppoe-router') {
-        push @packages, 'pppoe');
+        push (@packages, 'pppoe');
     }
 
     return $self->installPackagesCommand(@packages);
