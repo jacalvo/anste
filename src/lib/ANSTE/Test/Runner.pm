@@ -389,7 +389,7 @@ sub _runTest # (test)
         }
         my $video;
         if ($config->seleniumVideo()) {
-            $video = "$logPath/$suiteDir/video/$name.ogg";
+            $video = "$logPath/$suiteDir/video/$name.ogv";
             print "Starting video recording for test $name...\n" if $verbose;
             $system->startVideoRecording($video);
         }
@@ -443,7 +443,7 @@ sub _runTest # (test)
                 unlink($video);
             }
             else {
-                $testResult->setVideo("$suiteDir/video/$name.ogg");
+                $testResult->setVideo("$suiteDir/video/$name.ogv");
             }
         }
         # Store end time
