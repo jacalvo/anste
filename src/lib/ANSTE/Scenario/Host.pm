@@ -514,9 +514,8 @@ sub load # (node)
 	my $desc = $descNode->getFirstChild()->getNodeValue();
 	$self->setDesc($desc);
 
-    my $typeNode = $node->getAttribute('type');
-    if ($typeNode) {
-        my $type = $typeNode->getFirstChild()->getNodeValue();
+    my $type = $node->getAttribute('type');
+    if ($type) {
         if ($type eq any ('router', 'pppoe-router', 'dhcp-router')) {
             $self->{type} = $type;
         } else {
