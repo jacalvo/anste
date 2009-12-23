@@ -182,7 +182,9 @@ sub _writeNetworkConfig # (file)
     my $type = $host->type();
     if ($type eq any('dhcp-router', 'pppoe-router')) {
         print $file "# Execute setup for type $type\n";
-        my $cmd = $system->setupTypeScript($type);
+        my $cmd = $system->installPackagesCommandType($type);
+        print $file "$cmd\n";
+        $cmd = $system->setupTypeScript($type);
         print $file "$cmd\n";
     }
 }

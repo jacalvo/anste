@@ -246,6 +246,29 @@ sub installPackagesCommand # (packages) returns string
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: installPackagesCommandType
+#
+#   Override this method to return the Debian command
+#   to install the given list of packages for a
+#   specific type of host.
+#
+# Parameters:
+#
+#   type - host type
+#
+# Returns:
+#
+#   string - command string
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented>
+#
+sub installPackagesCommandType # (type) returns string
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 # Method: installVars
 #
 #   Override this method to return the environment variables needed

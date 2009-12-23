@@ -255,6 +255,35 @@ sub installPackagesCommand # (packages) returns string
     return 'apt-get install -y --force-yes $APT_OPTIONS ' . $packages;
 }
 
+# Method: installPackagesCommandType
+#
+#   Overriden method that returns the Debian command
+#   to install the given list of packages for
+#   a specific type of host
+#
+# Parameters:
+#
+#   type - host type
+#
+# Returns:
+#
+#   string - command string
+#
+sub installPackagesCommandType # (type) returns string
+{
+    my ($self, $type) = @_;
+
+    my @packages;
+
+    if ($type eq 'dhcp-router') {
+        push (@packages, 'dhcp3-server');
+    } elsif ($type eq 'pppoe-router') {
+        push @packages, 'pppoe');
+    }
+
+    return $self->installPackagesCommand(@packages);
+}
+
 # Method: installVars
 #
 #   Overriden method that returns the environment variables needed

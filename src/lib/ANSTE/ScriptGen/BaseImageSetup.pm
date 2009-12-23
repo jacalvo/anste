@@ -105,7 +105,7 @@ sub writeScript # (file)
 	my @packages = @{$self->{image}->packages()->list()};
     if (@packages) {
         $self->_writePreInstall($file);
-    	$self->_writePackageInstall($file, @packages);
+        $self->_writePackageInstall($file, @packages);
         $self->_writePostInstall($file);
     }
     $self->_writeFirewallRules($file);
