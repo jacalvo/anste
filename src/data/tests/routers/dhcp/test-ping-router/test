@@ -1,0 +1,7 @@
+#!/bin/bash
+
+ip route ls table main
+
+ROUTER=`ip route ls table main | grep default | cut -d' ' -f3`
+
+ping -c3 $ROUTER
