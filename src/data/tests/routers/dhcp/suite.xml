@@ -2,7 +2,7 @@
     <name>DHCP Router Test Suite</name>
     <desc>Checks that a client can access internet through a DHCP router</desc>
 
-    <scenario>router.xml</scenario>
+    <scenario>dhcp-router.xml</scenario>
 
     <test>
         <name>TestDHCP</name>
