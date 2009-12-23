@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario>
+    <name>DHCP router test</name>
+    <desc>Scenario for basic testing of the DHCP router</desc>
+
+    <host type="dhcp-router">
+        <name>dhcp-router</name>
+        <desc>Host that acts like a DHCP router</desc>
+        <baseimage>hardy-mini</baseimage>
+        <memory>128</memory>
+        <network>
+            <interface type="static">
+                <name>eth1</name>
+                <address>192.168.2.1</address>
+                <netmask>255.255.255.0</netmask>
+            </interface>
+        </network>
+    </host>
+
+    <host>
+        <name>test-client</name>
+        <desc>Client that connects to the router</desc>
+        <baseimage>hardy-mini</baseimage>
+        <memory>64</memory>
+        <network>
+            <interface type="dhcp">
+                <name>eth1</name>
+            </interface>
+        </network>
+    </host>
+</scenario>

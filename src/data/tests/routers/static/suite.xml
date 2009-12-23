@@ -1,0 +1,38 @@
+<suite>
+    <name>Simple Router Test Suite</name>
+    <desc>Checks that a client can access internet through a router</desc>
+
+    <scenario>router.xml</scenario>
+
+    <test>
+        <name>TestConnectionRouter</name>
+        <desc>Checks if we can ping the router</desc>
+
+        <host>test-client</host>
+        <dir>test-ping-router</dir>
+    </test>
+
+    <test>
+        <name>TestPingExternalIP</name>
+        <desc>Checks if we can ping an IP on the internet</desc>
+
+        <host>test-client</host>
+        <dir>test-ping-ip</dir>
+    </test>
+
+    <test>
+        <name>TestResolveHost</name>
+        <desc>Checks if we can resolve a host</desc>
+
+        <host>test-client</host>
+        <dir>test-resolve</dir>
+    </test>
+
+    <test>
+        <name>TestWWW</name>
+        <desc>Test if we can get a webpage</desc>
+
+        <host>test-client</host>
+        <dir>test-wget</dir>
+    </test>
+</suite>

@@ -1,7 +1,7 @@
 <suite>
     <name>suiteName</name>
     <desc>suiteDesc</desc>
-    
+
     <scenario>test.xml</scenario>
 
     <test>
