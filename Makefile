@@ -3,7 +3,7 @@ DATADIR = $(PREFIX)/share/anste
 LIBDIR = $(PREFIX)/lib
 SBINDIR = $(PREFIX)/sbin
 BINDIR = $(PREFIX)/bin
-VERSION = `cat VERSION`
+VERSION = `head -1 ChangeLog`
 EXPORT = anste-$(VERSION)
 
 ifeq ($(PREFIX),/usr/local)

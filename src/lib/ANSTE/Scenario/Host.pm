@@ -27,6 +27,7 @@ use ANSTE::Exceptions::InvalidType;
 use ANSTE::Config;
 
 use XML::DOM;
+use Perl6::Junction qw(any);
 
 # Class: Host
 #
@@ -48,7 +49,7 @@ sub new # returns new Host object
 
 	$self->{name} = '';
 	$self->{desc} = '';
-	$self->{isRouter} = 0;
+	$self->{type} = 'none';
     $self->{baseImage} = new ANSTE::Scenario::BaseImage;
     $self->{network} = new ANSTE::Scenario::Network;
     $self->{packages} = new ANSTE::Scenario::Packages;
@@ -146,9 +147,25 @@ sub setDesc # desc string
 #
 sub isRouter # returns boolean
 {
-    my ($self) = shift;
+    my ($self) = @_;
 
-    return $self->{isRouter};
+    return $self->{type} =~ /router/;
+}
+
+# Method: type
+#
+#   Gets the type of the host.
+#   Current types: none, router, dhcp-router, pppoe-router
+#
+# Returns:
+#
+#   string - type of the host
+#
+sub type # returns string
+{
+    my ($self) = @_;
+
+    return $self->{type};
 }
 
 # Method: memory
@@ -161,7 +178,7 @@ sub isRouter # returns boolean
 #
 sub memory # returns memory string
 {
-	my ($self) = shift;
+	my ($self) = @_;
 
 	return $self->{memory};
 }
@@ -497,15 +514,20 @@ sub load # (node)
 	my $desc = $descNode->getFirstChild()->getNodeValue();
 	$self->setDesc($desc);
 
-    my $type = $node->getAttribute('type');
-
-    if ($type eq 'router') {
-        $self->{isRouter} = 1;
+    my $typeNode = $node->getAttribute('type');
+    if ($typeNode) {
+        my $type = $typeNode->getFirstChild()->getNodeValue();
+        if ($type eq any ('router', 'pppoe-router', 'dhcp-router')) {
+            $self->{type} = $type;
+        } else {
+            my $error = "Type $type not supported in host $name";
+            throw ANSTE::Exceptions::Error($error);
+        }
     }
 
 	my $memoryNode = $node->getElementsByTagName('memory', 0)->item(0);
     if ($memoryNode) {
-    	my $memory = $memoryNode->getFirstChild()->getNodeValue();
+        my $memory = $memoryNode->getFirstChild()->getNodeValue();
 	    $self->setMemory($memory);
     }
 
@@ -561,7 +583,7 @@ sub _addScripts # (list, node)
 
 	foreach my $scriptNode ($node->getElementsByTagName('script', 0)) {
         my $script = $scriptNode->getFirstChild()->getNodeValue();
-    	push(@{$self->{$list}}, $script);
+        push(@{$self->{$list}}, $script);
     }
 }
 

@@ -577,10 +577,6 @@ sub createMountDirCommand # (path) returns string
 #
 #   string - contains the commands
 #
-# Exceptions:
-#
-#
-#
 sub firewallDefaultRules # returns string
 {
     my ($self) = @_;
@@ -608,23 +604,37 @@ sub firewallDefaultRules # returns string
 #
 #   string - contains the command
 #
-# Exceptions:
-#
-#   throws <ANSTE::Exceptions::NotImplemented>
-#
 sub enableRouting # (@iface)
 {
     my ($self, @ifaces) = @_;
 
     my $command = "echo 1 > /proc/sys/net/ipv4/ip_forward\n";
-#    $command .= "echo 0 > /proc/sys/net/ipv4/conf/all/arp_filter\n";
-#    $command .= "echo 0 > /proc/sys/net/ipv4/conf/all/rp_filter\n";
     $command .= "unset MODPROBE_OPTIONS\n";
     foreach my $iface (@ifaces) {
         $command .= "iptables -t nat -A POSTROUTING -o $iface -j MASQUERADE\n";
     }
 
     return $command;
+}
+
+# Method: setupTypeScript
+#
+#   Overriden method that returns the command that runs the script
+#   to setup the specified type of host.
+#
+# Parameters:
+#
+#   type - String with the type of the host.
+#
+# Returns:
+#
+#   string - contains the command
+#
+sub setupTypeScript # (type)
+{
+    my ($self, $type) = @_;
+
+    return "/usr/local/bin/anste-setup-$type";
 }
 
 # Method: enableNAT

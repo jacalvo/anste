@@ -1,4 +1,4 @@
-# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -30,7 +30,7 @@ use ANSTE::Exceptions::MissingArgument;
 #
 
 # Constructor: new
-#   
+#
 #   Constructor for System class and his derivated classes.
 #
 # Returns:
@@ -41,14 +41,14 @@ sub new
 {
 	my ($class) = @_;
 	my $self = {};
-	
+
 	bless($self, $class);
 
 	return $self;
 }
 
 # Method: execute
-#   
+#
 #   Executes a command
 #
 # Parameters:
@@ -83,87 +83,87 @@ sub execute # (command)
     return $ret == 0;
 }
 
-# Method: mountImage 
+# Method: mountImage
 #
-#   Override this method to execute the command that 
+#   Override this method to execute the command that
 #   mounts a given image on a given mount point.
 #
-# Parameters: 
-#   
-#   image      - path of the image to mount 
+# Parameters:
+#
+#   image      - path of the image to mount
 #   mountPoint - directory where the image will be mounted
 #
 # Returns:
-#   
+#
 #   boolean - indicates if the process has been successful
-#               
+#
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub mountImage # (image, mountPoint)
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
 
-# Method: unmount 
+# Method: unmount
 #
 #   Override this method to execute the system command
 #   that unmounts a directory.
 #
-# Parameters: 
-#   
-#   mountPoint - path of the mounted directory 
+# Parameters:
+#
+#   mountPoint - path of the mounted directory
 #
 # Returns:
-#   
+#
 #   boolean - indicates if the process has been successful
-#               
+#
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub unmount # (mountPoint)
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
 
-# Method: installBasePackages 
+# Method: installBasePackages
 #
 #   Override this method with the system-specific
 #   installation steps that allow the execution
 #   of ansted and anste-slave on the virtualized hosts.
 #
 # Returns:
-#   
+#
 #   boolean - indicates if the process has been successful
-#               
+#
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub installBasePackages
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
 
-# Method: resizeImage 
+# Method: resizeImage
 #
 #   Override this method with the system-specific
 #   commands to resize a image file.
 #
 # Parameters:
-#   
+#
 #   image   - image file
 #   size    - new size
 #
 # Returns:
-#   
+#
 #   boolean - indicates if the process has been successful
-#               
+#
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub resizeImage # (image, size)
 {
@@ -181,7 +181,7 @@ sub resizeImage # (image, size)
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub updatePackagesCommand # returns string
 {
@@ -199,7 +199,7 @@ sub updatePackagesCommand # returns string
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub updateNetworkCommand # returns string
 {
@@ -217,20 +217,20 @@ sub updateNetworkCommand # returns string
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub cleanPackagesCommand # returns string
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
 
-# Method: installPackagesCommand 
+# Method: installPackagesCommand
 #
 #   Override this method to return the Debian command
-#   to install the given list of packages. 
+#   to install the given list of packages.
 #
 # Parameters:
-#   
+#
 #   packages - list of packages
 #
 # Returns:
@@ -239,7 +239,7 @@ sub cleanPackagesCommand # returns string
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub installPackagesCommand # (packages) returns string
 {
@@ -248,7 +248,7 @@ sub installPackagesCommand # (packages) returns string
 
 # Method: installVars
 #
-#   Override this method to return the environment variables needed 
+#   Override this method to return the environment variables needed
 #   for the packages installation process.
 #
 # Returns:
@@ -257,7 +257,7 @@ sub installPackagesCommand # (packages) returns string
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub installVars # return strings
 {
@@ -280,7 +280,7 @@ sub installVars # return strings
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub networkConfig # (network) returns string
 {
@@ -302,7 +302,7 @@ sub networkConfig # (network) returns string
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub hostsConfig # (network) returns string
 {
@@ -324,7 +324,7 @@ sub hostsConfig # (network) returns string
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub hostnameConfig # (hostname) returns string
 {
@@ -346,7 +346,7 @@ sub hostnameConfig # (hostname) returns string
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub hostConfig # (hostname) returns string
 {
@@ -368,7 +368,7 @@ sub hostConfig # (hostname) returns string
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub storeMasterAddress # (address) returns string
 {
@@ -391,7 +391,7 @@ sub storeMasterAddress # (address) returns string
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub copyToMountCommand # (orig, dest) returns string
 {
@@ -413,7 +413,7 @@ sub copyToMountCommand # (orig, dest) returns string
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub createMountDirCommand # (path) returns string
 {
@@ -431,7 +431,7 @@ sub createMountDirCommand # (path) returns string
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub firewallDefaultRules # returns string
 {
@@ -453,16 +453,38 @@ sub firewallDefaultRules # returns string
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub enableRouting # (iface)
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: setupTypeScript
+#
+#   Override this method to return the command that runs the script
+#   to setup the specified type of host.
+#
+# Parameters:
+#
+#   type - String with the type of the host.
+#
+# Returns:
+#
+#   string - contains the command
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented>
+#
+sub setupTypeScript # (type)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 # Method: enableNAT
 #
-#   Override this method to return the command that enables NAT 
+#   Override this method to return the command that enables NAT
 #   on a given network interface from a given source address.
 #
 # Parameters:
@@ -476,7 +498,7 @@ sub enableRouting # (iface)
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub enableNAT # (iface, sourceAddr)
 {
@@ -485,7 +507,7 @@ sub enableNAT # (iface, sourceAddr)
 
 # Method: disableNAT
 #
-#   Override this method to return the command that disables NAT 
+#   Override this method to return the command that disables NAT
 #   on a given network interface from a given source address.
 #
 # Parameters:
@@ -499,7 +521,7 @@ sub enableNAT # (iface, sourceAddr)
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub disableNAT # (iface, sourceAddr)
 {
@@ -524,7 +546,7 @@ sub disableNAT # (iface, sourceAddr)
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub executeSelenium # (%params)
 {
@@ -547,7 +569,7 @@ sub executeSelenium # (%params)
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub startVideoRecording # (filename)
 {
@@ -565,7 +587,7 @@ sub startVideoRecording # (filename)
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub stopVideoRecording
 {
