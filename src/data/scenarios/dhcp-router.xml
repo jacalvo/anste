@@ -3,6 +3,11 @@
     <name>DHCP router test</name>
     <desc>Scenario for basic testing of the DHCP router</desc>
 
+    <manual-bridging/>
+    <bridges>
+        <bridge id="2">192.168.2.254</bridge>
+    </bridges>
+
     <host type="dhcp-router">
         <name>dhcp-router</name>
         <desc>Host that acts like a DHCP router</desc>
@@ -11,6 +16,7 @@
         <network>
             <interface type="static">
                 <name>eth1</name>
+                <bridge>2</bridge>
                 <address>192.168.2.1</address>
                 <netmask>255.255.255.0</netmask>
             </interface>
@@ -25,6 +31,7 @@
         <network>
             <interface type="dhcp">
                 <name>eth1</name>
+                <bridge>2</bridge>
             </interface>
         </network>
     </host>
