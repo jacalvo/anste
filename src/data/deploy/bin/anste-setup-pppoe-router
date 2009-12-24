@@ -1,2 +1,38 @@
 #!/bin/bash
 
+IFACE=eth1
+
+PROVIDER=anste
+PPP_USER=ppp_user
+PPP_PASS=ppp_pass
+
+MAX=5
+
+BASE=10.9.1.70
+PLA=10.9.1.0/8
+MYIP=192.168.2.201
+
+cat <<EOF > /etc/ppp/options
+debug
+name $PROVIDER
+proxyarp
+ms-dns 192.168.2.1
+auth
+require-chap
+default-mru
+default-asyncmap
+lcp-echo-interval 60
+lcp-echo-failure 5
+noipdefault
+noipx
+nodefaultroute
+noktune
+netmask 255.255.255.0
+logfile /var/log/pppd.log
+EOF
+
+echo "\"$PPP_USER\" $PROVIDER \"$PPP_PASS\" *" >> /etc/ppp/chap-secrets
+
+touch /etc/ppp/pppoe-server-options
+
+pppoe-server pty -T 60 -I $IFACE -L $MYIP -N $MAX -C $PROV -S $PROV -R $PLA

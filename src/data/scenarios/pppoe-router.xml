@@ -31,6 +31,7 @@
             </interface>
         </network>
         <packages>
+            <package>ppp</package>
             <package>host</package>
             <package>wget</package>
         </packages>
