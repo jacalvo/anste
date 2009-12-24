@@ -168,7 +168,7 @@ sub setTypeDHCP
 #
 #   Sets the interface type to unset.
 #
-sub setTypeDHCP
+sub setTypeUnset
 {
 	my ($self) = @_;
 
