@@ -876,11 +876,13 @@ sub _interfaceConfig # (iface)
 
     my $config = '';
 
+    my $type = $iface->type();
     my $name = $iface->name();
+
 	$config .= "auto $name\n";
-	if ($iface->type() == ANSTE::Scenario::NetworkInterface->IFACE_TYPE_DHCP) {
+	if ($type == ANSTE::Scenario::NetworkInterface->IFACE_TYPE_DHCP) {
         $config .= "iface $name inet dhcp\n";
-	} else {
+	} elsif ($type == ANSTE::Scenario::NetworkInterface->IFACE_TYPE_STATIC) {
 		my $address = $iface->address();
 		my $netmask = $iface->netmask();
 		my $gateway = $iface->gateway();

@@ -1,4 +1,4 @@
-# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -21,6 +21,7 @@ use warnings;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidData;
+use ANSTE::Exceptions::Error;
 use ANSTE::Validate;
 
 use threads::shared;
@@ -37,18 +38,25 @@ our $lockAddress : shared;
 #
 
 # Constant: IFACE_TYPE_STATIC
-#   
+#
 #   Constant for the network interface type that indicates static
 #   configuration.
 #
 use constant IFACE_TYPE_STATIC => 0;
 
 # Constant: IFACE_TYPE_DHCP
-#   
+#
 #   Constant for the network interface type that indicates dynamic
 #   configuration.
 #
 use constant IFACE_TYPE_DHCP => 1;
+
+# Constant: IFACE_TYPE_UNSET
+#
+#   Constant for the network interface type that indicates a
+#   interface without configuration.
+#
+use constant IFACE_TYPE_UNSET => 2;
 
 # Constructor: new
 #
@@ -62,7 +70,7 @@ sub new # returns new NetworkInterface object
 {
 	my ($class) = @_;
 	my $self = {};
-	
+
 	$self->{type} = IFACE_TYPE_STATIC;
 	$self->{name} = '';
 	$self->{address} = '';
@@ -109,10 +117,10 @@ sub name # returns interface name string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setName # (name) 
+sub setName # (name)
 {
-	my ($self, $name) = @_;	
-    
+	my ($self, $name) = @_;
+
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
@@ -125,7 +133,7 @@ sub setName # (name)
 #
 # Returns:
 #
-#   constant - IFACE_TYPE_STATIC or IFACE_TYPE_DHCP
+#   constant - IFACE_TYPE_STATIC or IFACE_TYPE_DHCP or IFACE_TYPE_UNSET
 #
 sub type # returns interface type
 {
@@ -154,6 +162,17 @@ sub setTypeDHCP
 	my ($self) = @_;
 
 	$self->{type} = IFACE_TYPE_DHCP;
+}
+
+# Method: setTypeUnset
+#
+#   Sets the interface type to unset.
+#
+sub setTypeDHCP
+{
+	my ($self) = @_;
+
+	$self->{type} = IFACE_TYPE_UNSET;
 }
 
 # Method: address
@@ -186,7 +205,7 @@ sub address # returns address string
 #
 sub setAddress # address string
 {
-	my ($self, $address) = @_;	
+	my ($self, $address) = @_;
 
     defined $address or
         throw ANSTE::Exceptions::MissingArgument('address');
@@ -228,7 +247,7 @@ sub hwAddress # returns address string
 #
 sub setHwAddress # hardware address string
 {
-	my ($self, $hwAddress) = @_;	
+	my ($self, $hwAddress) = @_;
 
     defined $hwAddress or
         throw ANSTE::Exceptions::MissingArgument('hwAddress');
@@ -271,7 +290,7 @@ sub netmask # returns netmask string
 #
 sub setNetmask # netmask string
 {
-	my ($self, $netmask) = @_;	
+	my ($self, $netmask) = @_;
 
     defined $netmask or
         throw ANSTE::Exceptions::MissingArgument('netmask');
@@ -313,7 +332,7 @@ sub gateway # returns gateway string
 #
 sub setGateway # gateway string
 {
-	my ($self, $gateway) = @_;	
+	my ($self, $gateway) = @_;
 
     defined $gateway or
         throw ANSTE::Exceptions::MissingArgument('gateway');
@@ -365,7 +384,7 @@ sub external # returns external string
 #
 sub setExternal # external string
 {
-	my ($self, $external) = @_;	
+	my ($self, $external) = @_;
 
     defined $external or
         throw ANSTE::Exceptions::MissingArgument('external');
@@ -400,10 +419,10 @@ sub bridge # returns interface bridge string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setBridge # (bridge) 
+sub setBridge # (bridge)
 {
-	my ($self, $bridge) = @_;	
-    
+	my ($self, $bridge) = @_;
+
     defined $bridge or
         throw ANSTE::Exceptions::MissingArgument('bridge');
 
@@ -417,7 +436,7 @@ sub setBridge # (bridge)
 #
 # Parameters:
 #
-#   node - <XML::DOM::Element> object containing the test data.    
+#   node - <XML::DOM::Element> object containing the test data.
 #
 # Exceptions:
 #
@@ -455,10 +474,14 @@ sub load # (node)
 		my $externalNode = $node->getElementsByTagName('external', 0)->item(0);
         if ($externalNode) {
             $self->setExternal(1);
-        }            
+        }
 	} elsif ($type eq 'dhcp') {
 		$self->setTypeDHCP();
-	}
+	} elsif ($type eq 'unset') {
+        $self->setTypeUnset();
+    } else {
+        throw ANSTE::Exceptions::Error("Invalid type for interface $name");
+    }
     my $hwAddress;
     # MAC address may be specified on both dhcp and static interfaces
 	my $hwAddrNode = $node->getElementsByTagName('hw-addr', 0)->item(0);
@@ -471,6 +494,10 @@ sub load # (node)
     if ($bridgeNode) {
         my $bridge = $bridgeNode->getFirstChild()->getNodeValue();
         $self->setBridge($bridge);
+    } else {
+        unless ($type eq 'static') {
+            throw ANSTE::Exceptions::Error("Auto-bridging cannot be done with non-static interface $name. You need to specify a bridge manually.");
+        }
     }
 }
 

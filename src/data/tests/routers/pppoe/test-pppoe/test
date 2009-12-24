@@ -24,6 +24,8 @@ default-asyncmap
 plugin rp-pppoe.so $IFACE
 EOF
 
+ifconfig $IFACE up
+
 pon anste-dsl-provider
 
 for i in `seq 1 10`
