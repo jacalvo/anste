@@ -26,6 +26,9 @@ EOF
 
 ifconfig $IFACE up
 
+# Delete default anste route if it exists
+route del default gw 10.6.7.1
+
 pon anste-dsl-provider
 
 for i in `seq 1 10`
