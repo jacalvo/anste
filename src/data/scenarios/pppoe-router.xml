@@ -30,5 +30,9 @@
                 <gateway>192.168.2.1</gateway>
             </interface>
         </network>
+        <packages>
+            <package>host</package>
+            <package>wget</package>
+        </packages>
     </host>
 </scenario>

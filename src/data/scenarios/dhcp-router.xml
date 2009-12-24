@@ -34,5 +34,9 @@
                 <bridge>2</bridge>
             </interface>
         </network>
+        <packages>
+            <package>host</package>
+            <package>wget</package>
+        </packages>
     </host>
 </scenario>
