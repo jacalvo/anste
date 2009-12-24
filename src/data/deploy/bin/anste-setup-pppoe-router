@@ -16,7 +16,7 @@ cat <<EOF > /etc/ppp/options
 debug
 name $PROVIDER
 proxyarp
-ms-dns 192.168.2.1
+ms-dns 195.235.113.3
 auth
 require-chap
 default-mru
