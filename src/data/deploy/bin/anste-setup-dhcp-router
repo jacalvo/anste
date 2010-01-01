@@ -2,8 +2,9 @@
 
 IFACE="eth1"
 
-NET="192.168.2"
-MASK="255.255.255.0"
+# FIXME: only works for netmask 255.255.255.0
+NET=`ifconfig $IFACE | grep "inet addr:" | cut -d: -f2 | cut -d. -f-3`
+MASK=`ifconfig $IFACE | grep "Mask:" | cut -d -f4`
 
 sed -i "s/^INTERFACES=.*/INTERFACES=\"$IFACE\"/" /etc/default/dhcp3-server
 

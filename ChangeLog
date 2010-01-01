@@ -1,3 +1,5 @@
+HEAD
+    + Autodetect network range in dhcp router configuration
 0.7
     + Added new router types with dhcp and pppoe
     + Added user-extensions and single-window settings for Selenium
