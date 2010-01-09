@@ -8,9 +8,12 @@ PPP_PASS=ppp_pass
 
 MAX=5
 
-BASE=10.9.1.70
-PLA=10.9.1.0/8
-MYIP=192.168.2.201
+RANDOM=$$
+RAND_NET=`expr $RANDOM % 200 + 10`
+
+BASE="10.9.$RAND_NET.70"
+PLA="10.9.$RAND_NET.0/8"
+MYIP="192.168.$RAND_NET.201"
 
 cat <<EOF > /etc/ppp/options
 debug
