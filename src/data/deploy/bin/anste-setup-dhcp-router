@@ -16,6 +16,7 @@ echo "subnet $NET.0 netmask $MASK {" >> $CONF
 echo "range $NET.100 $NET.200;" >> $CONF
 echo "option domain-name \"example.com\";" >> $CONF
 echo "option routers $NET.1;" >> $CONF
+echo "option domain-name-servers 195.235.113.3, 195.235.96.90;" >> $CONF
 echo "option broadcast-address $NET.255;" >> $CONF
 echo "default-lease-time 1800;" >> $CONF
 echo "max-lease-time 7200;" >> $CONF
