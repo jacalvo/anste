@@ -3,9 +3,10 @@
     <memory>{$memory * 1024}</memory>
     <vcpu>1</vcpu>
     <os>
-        <type arch="i686">hvm</type>
+        <type arch='i686' machine='pc-0.12'>hvm</type>
+        <boot dev='hd'/>
     </os>
-    <clock sync="localtime"/>
+    <clock sync='localtime'/>
     <on_poweroff>destroy</on_poweroff>
     <on_reboot>restart</on_reboot>
     <on_crash>restart</on_crash>
@@ -13,13 +14,12 @@
         <emulator>/usr/bin/kvm</emulator>
         <disk type='file' device='disk'>
             {
-                my $image = "$path/disk0.img";
-                $OUT .= "<source file='$image'/>";
+                my $image = '$path/disk0.img';
+                $OUT .= '<source file='$image'/>';
             }
             <target dev='hda' bus='ide'/>
         </disk>
 {$ifaces}
         <graphics type='vnc' port='-1' autoport='yes' keymap='es'/>
     </devices>
-</domain>    
-
+</domain>

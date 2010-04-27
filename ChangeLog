@@ -1,4 +1,5 @@
 HEAD
+    + Added support for lucid's ubuntu-vm-builder
     + Autodetect network range in dhcp router configuration
     + Set random network in pppoe router configuration
     + Set domain name servers in dhcp server configuration
