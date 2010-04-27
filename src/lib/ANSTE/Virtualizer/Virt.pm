@@ -495,7 +495,6 @@ sub _createNetworkConfig # (net, bridge) returns config string
 
     my $networkConfig = "<network>\n";
     $networkConfig .= "\t<name>bridge$bridge</name>\n";
-    $networkConfig .= "\t<uuid></uuid>\n";
     $networkConfig .= "\t<bridge name=\"virbr$bridge\" />\n";
     if ($forward) {
         $networkConfig .= "\t<forward/>\n";
