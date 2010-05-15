@@ -3,6 +3,7 @@ HEAD
     + Autodetect network range in dhcp router configuration
     + Set random network in pppoe router configuration
     + Set domain name servers in dhcp server configuration
+    + Use netcat instead of hping for connectivity diagnosis
 0.7
     + Added new router types with dhcp and pppoe
     + Added user-extensions and single-window settings for Selenium

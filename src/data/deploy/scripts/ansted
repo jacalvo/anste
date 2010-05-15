@@ -8,7 +8,7 @@ function notify_ready
     do
         HOST=`cat /var/local/anste.master | cut -f1 -d:`
         PORT=`cat /var/local/anste.master | cut -f2 -d:`
-        hping2 -c 1 -p $PORT $HOST &> /dev/null
+        echo | nc $HOST $PORT &> /dev/null
         if [ $? ]
         then
             break 
