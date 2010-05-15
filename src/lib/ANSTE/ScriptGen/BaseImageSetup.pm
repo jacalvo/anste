@@ -134,6 +134,10 @@ sub _writePackageInstall # (file, @packages)
     my $command = $system->installPackagesCommand('openssh-server');
     print $file "$command\n\n";
 
+    print $file "# Install acpi-support\n";
+    $command = $system->installPackagesCommand('acpi-support');
+    print $file "$command\n\n";
+
     if (@packages > 0) {
         print $file "# Install packages\n";
         $command = $system->installPackagesCommand(@packages);

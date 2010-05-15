@@ -447,6 +447,7 @@ sub _createImageConfig # (image, path) returns config string
     $imageConfig .= "\t<memory>$memory</memory>\n";
     $imageConfig .= "\t<vcpu>1</vcpu>\n";
     $imageConfig .= "\t<os><type arch='i686'>hvm</type></os>\n";
+    $imageConfig .= "\t<features><acpi/></features>\n";
     $imageConfig .= "\t<clock sync='localtime'/>\n";
     $imageConfig .= "\t<on_poweroff>destroy</on_poweroff>\n";
     $imageConfig .= "\t<on_reboot>restart</on_reboot>\n";
@@ -497,7 +498,7 @@ sub _createNetworkConfig # (net, bridge) returns config string
     $networkConfig .= "\t<name>bridge$bridge</name>\n";
     $networkConfig .= "\t<bridge name=\"virbr$bridge\" />\n";
     if ($forward) {
-        $networkConfig .= "\t<forward/>\n";
+        $networkConfig .= "\t<forward mode=\"nat\" />\n";
     }
     $networkConfig .= "\t<ip address=\"$address\" netmask=\"$netmask\" />\n";
     $networkConfig .= "</network>\n";
