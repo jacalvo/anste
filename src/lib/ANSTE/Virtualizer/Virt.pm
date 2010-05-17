@@ -139,7 +139,7 @@ sub createBaseImage # (%params)
     $self->execute("$imgcommand convert $dir/*.qcow2 -O raw $dir/disk0.img");
 
     # Delete qcow2 image
-    unlink("$dir/*.qcow2");
+    system("rm $dir/*.qcow2");
 }
 
 # Method: shutdownImage
