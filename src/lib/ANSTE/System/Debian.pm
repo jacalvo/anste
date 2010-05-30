@@ -126,6 +126,7 @@ sub installBasePackages
     my @PACKAGES = ('libsoap-lite-perl',
                     'liberror-perl',
                     'iptables',
+                    'hping3',
                     'netcat',
                     'tcpdump');
 
