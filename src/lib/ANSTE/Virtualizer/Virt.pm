@@ -139,7 +139,8 @@ sub createBaseImage # (%params)
     $self->execute("$imgcommand convert $dir/*.qcow2 -O raw $dir/disk0.img");
 
     # Delete qcow2 image
-    system("rm $dir/*.qcow2");
+    # FIXME: Disabled this deletion to make it work on lucid
+    #system("rm $dir/*.qcow2");
 }
 
 # Method: shutdownImage
@@ -517,7 +518,9 @@ sub _networkForBaseImage # (ip) returns network object
 
     my $network = new ANSTE::Scenario::Network();
     my $iface = new ANSTE::Scenario::NetworkInterface();
-    $iface->setName('eth0');
+    my $name = $config->commIface();
+
+    $iface->setName($name);
     $iface->setTypeStatic();
     $iface->setAddress($ip);
     $iface->setNetmask($netmask);

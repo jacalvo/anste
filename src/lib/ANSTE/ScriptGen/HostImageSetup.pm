@@ -170,7 +170,7 @@ sub _writeNetworkConfig # (file)
 
     if ($host->isRouter()) {
         print $file "# Enable routing\n";
-        my @ifaces = ('eth0');
+        my @ifaces = (ANSTE::Config->instance()->commIface());
         foreach my $iface (@{$host->network()->interfaces()}) {
             if ($iface->external()) {
                 push(@ifaces, $iface->name());

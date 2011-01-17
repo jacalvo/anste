@@ -425,13 +425,13 @@ sub initialNetworkConfig # (iface, network) returns string
     my $config = '';
 
     # HACK: To avoid problems with udev and mac addresses
-    $config .= "rm -f \$MOUNT/etc/udev/rules.d/75-persistent-net-generator.rules\n";
+    $config .= "rm -f \$MOUNT/lib/udev/rules.d/75-persistent-net-generator.rules\n";
     $config .= "cat << EOF > \$MOUNT/etc/udev/rules.d/70-persistent-net.rules\n";
     foreach my $if (@{$network->interfaces()}) {
-        my $mac = $if->hwAddress();
+        my $mac = lc $if->hwAddress();
         my $name = $if->name();
-        $config .= 'ACTION=="add", SUBSYSTEM=="net", ';
-        $config .= "SYSFS{address}==\"$mac\", NAME=\"$name\"\n";
+        $config .= 'SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ';
+        $config .= "ATTR{address}==\"$mac\", ATTR{dev_id}==\"0x0\", ATTR{type}==\"1\", KERNEL==\"eth*\", NAME=\"$name\"\n";
     }
 	$config .= "EOF\n\n";
 

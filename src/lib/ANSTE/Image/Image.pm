@@ -1,4 +1,4 @@
-# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es> 
+# Copyright (C) 2007 José Antonio Calvo Fernández <jacalvo@warp.es>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -52,16 +52,16 @@ sub new # returns new Image object
 	my $self = $class->SUPER::new();
 
     if (exists $params{name}) {
-    	$self->{name} = $params{name};
+        $self->{name} = $params{name};
     }
     if (exists $params{ip}) {
 	    $self->{ip} = $params{ip};
     }
     if (exists $params{memory}) {
-    	$self->{memory} = $params{memory}; 
+        $self->{memory} = $params{memory};
     }
     if (exists $params{swap}) {
-    	$self->{swap} = $params{swap}; 
+        $self->{swap} = $params{swap};
     }
 
     $self->{network} = undef;
@@ -139,7 +139,7 @@ sub network # returns Network object
 #
 sub setNetwork # (network)
 {
-	my ($self, $network) = @_;	
+	my ($self, $network) = @_;
 
     defined $network or
         throw ANSTE::Exceptions::MissingArgument('network');
@@ -160,18 +160,21 @@ sub setNetwork # (network)
 #
 #   ref - <ANSTE::Scenario::NetworkInterface> object.
 #
-sub commInterface 
+sub commInterface
 {
     my ($self) = @_;
-   
+
     my $ip = $self->{ip};
 
-    my $iface = new ANSTE::Scenario::NetworkInterface();
+    my $config = ANSTE::Config->instance();
 
-    $iface->setName('eth0');
+    my $iface = new ANSTE::Scenario::NetworkInterface();
+    my $name = $config->commIface();
+
+    $iface->setName($name);
     $iface->setAddress($ip);
     $iface->setNetmask('255.255.255.0');
-    my $gateway = ANSTE::Config->instance()->gateway();
+    my $gateway = $config->gateway();
     $iface->setGateway($gateway);
 
     return $iface;

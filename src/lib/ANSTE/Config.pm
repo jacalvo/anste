@@ -66,7 +66,7 @@ sub instance
                             my $value = $stackedConfig->{$section}->{$key};
                             my $oldValue = $self->{config}->{$section}->{$key};
                             unless (defined $oldValue) {
-                                $self->{config}->{$section}->{$key} = $value; 
+                                $self->{config}->{$section}->{$key} = $value;
                             }
                         }
                     }
@@ -826,6 +826,33 @@ sub masterPort
     return $masterPort;
 }
 
+# Method: commIface
+#
+#   Gets the value for the name of the internal communication interface.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub commIface
+{
+    my ($self) = @_;
+
+    my $iface =  $self->_getOption('comm', 'iface');
+
+    if (not ANSTE::Validate::identifier($iface)) {
+        throw ANSTE::Exceptions::InvalidConfig('iface',
+                                               $iface,
+                                               $self->{confFile});
+    }
+
+    return $iface;
+}
+
 # Method: firstAddress
 #
 #   Gets the value for the starting IP address option for the virtual
@@ -1112,7 +1139,7 @@ sub seleniumFirefoxProfile
 
 # Method: seleniumSingleWindow
 #
-#   Selenium runs the browser in only a window, incompatible with frames 
+#   Selenium runs the browser in only a window, incompatible with frames
 #
 # Returns:
 #
@@ -1155,7 +1182,7 @@ sub seleniumUserExtensions
 
     my $userExtensions = $self->_getOption('selenium', 'user-extensions');
 
-    if ($userExtensions and 
+    if ($userExtensions and
         (not ANSTE::Validate::fileReadable($userExtensions))) {
         throw ANSTE::Exceptions::InvalidConfig('selenium/user-extensions',
                                                $userExtensions,
@@ -1556,6 +1583,8 @@ sub _setDefaults
     $self->{default}->{'master'}->{'port'} = '8001';
 
     $self->{default}->{'comm'}->{'gateway'} = '10.6.7.1';
+    $self->{default}->{'comm'}->{'iface'} = 'anste0';
+    # TODO: Do not set this as default and force to conf it manually
     $self->{default}->{'comm'}->{'nat-iface'} = 'eth1';
     $self->{default}->{'comm'}->{'first-address'} = '10.6.7.10';
 
@@ -1567,7 +1596,7 @@ sub _setDefaults
     $self->{default}->{'selenium'}->{'protocol'} = 'http';
     $self->{default}->{'selenium'}->{'firefox-profile'} = '';
     $self->{default}->{'selenium'}->{'single-window'} = 0;
-    $self->{default}->{'selenium'}->{'user-extensions'} = 
+    $self->{default}->{'selenium'}->{'user-extensions'} =
         "$data/scripts/user-extensions.js";
 
     $self->{default}->{'test'}->{'step'} = 0;
@@ -1590,7 +1619,7 @@ sub _setDefaults
     $self->{default}->{'virt-options'}->{'memory'} = '512';
 
     # Default values for variables, overridable by commandline option
-    $self->{variables} = {dist => 'hardy'};
+    $self->{variables} = {dist => 'lucid'};
 
     # Breakpoints
     $self->{breakpoints} = {};
