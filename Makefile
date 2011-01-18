@@ -19,7 +19,8 @@ distclean:
 	rm -f *.deb
 
 export: distclean
-	svn export . $(EXPORT)
+	git clone . $(EXPORT)
+	rm -rf $(EXPORT)/.git
 	find $(EXPORT)/src/lib -name 't' -print | xargs rm -rf
 
 dist: export
