@@ -382,7 +382,7 @@ sub _runTest # (test)
     # TODO: separate this in two functions runSeleniumTest and runShellTest ??
 
     # Run the test itself either it's a selenium one or a normal one
-    if ($test->selenium()) {
+    if ($test->type() eq 'selenium') {
         my $suiteFile = "$path/$SUITE_FILE";
         if (not -r $suiteFile) {
             throw ANSTE::Exceptions::NotFound('Suite file', $suiteFile);
@@ -450,8 +450,8 @@ sub _runTest # (test)
         my $endTime = $self->_time();
         $testResult->setEndTime($endTime);
         $testResult->setLog("$suiteDir/$name.html");
-    }
-    else {
+    } elsif ($test->type() eq 'reboot') {
+    } else {
         if (not -r "$path/test") {
             throw ANSTE::Exceptions::NotFound('Test script',
                                               "$suiteDir/$testDir/test");
@@ -516,7 +516,6 @@ sub _runTest # (test)
         $ret = ($ret != 0) ? 0 : 1;
     }
     $testResult->setValue($ret);
-
 
     return $testResult;
 }

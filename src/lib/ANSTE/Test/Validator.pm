@@ -93,7 +93,7 @@ sub validateSuite # (suite)
             throw ANSTE::Exceptions::NotFound('Test', $path);
         }
 
-        if ($test->selenium()) {
+        if ($test->type() eq 'selenium') {
             my $suiteFile = "$path/$SUITE_FILE";
             if (not -r $suiteFile) {
                 throw ANSTE::Exceptions::NotFound('Suite file', $suiteFile);
@@ -108,6 +108,7 @@ sub validateSuite # (suite)
                     throw ANSTE::Exceptions::NotFound('Selenium file', $file);
                 }
             }
+        } elsif ($test->type() eq 'reboot') {
         } else {
             if (not -r "$path/test") {
                 throw ANSTE::Exceptions::NotFound('Test script',

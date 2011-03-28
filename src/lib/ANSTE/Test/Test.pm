@@ -49,7 +49,7 @@ sub new # returns new Test object
     $self->{env} = '';
     $self->{variables} = {};
     $self->{assert} = 'passed';
-    $self->{selenium} = 0;
+    $self->{type} = 'default';
     $self->{precondition} = 1;
 
     bless($self, $class);
@@ -424,30 +424,33 @@ sub variables
     return $self->{variables};
 }
 
-# Method: selenium
+# Method: type
 #
-#   Gets if this is a selenium test.
+#   Gets the type of the test
 #
 # Returns:
 #
-#   boolean - true if it's a selenium test, false if not
+#   string - the type of the test
 #
-sub selenium # returns boolean
+sub type
 {
     my ($self) = @_;
 
-    return $self->{selenium};
+    return $self->{type};
 }
 
-# Method: setSelenium
+# Method: setType
 #
-#   Specifies that this test is a Selenium one.
+#   Specifies the type of this test
 #
-sub setSelenium
+sub setType
 {
-    my ($self) = @_;
+    my ($self, $type) = @_;
 
-    $self->{selenium} = 1;
+    defined $type or
+        throw ANSTE::Exceptions::MissingArgument('type');
+
+    $self->{type} = $type;
 }
 
 # Method: precondition
@@ -509,9 +512,7 @@ sub load # (node)
     my $configVars = ANSTE::Config->instance()->variables();
 
     my $type = $node->getAttribute('type');
-    if ($type eq 'selenium') {
-        $self->setSelenium();
-    }
+    $self->setType($type);
 
     my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
     my $name = $nameNode->getFirstChild()->getNodeValue();
