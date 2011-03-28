@@ -446,10 +446,7 @@ sub type
 sub setType
 {
     my ($self, $type) = @_;
-
-    defined $type or
-        throw ANSTE::Exceptions::MissingArgument('type');
-
+    defined $type or $type = 'default';
     $self->{type} = $type;
 }
 

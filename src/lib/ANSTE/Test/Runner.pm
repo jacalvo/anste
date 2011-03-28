@@ -28,6 +28,7 @@ use ANSTE::Comm::HostWaiter;
 use ANSTE::Report::Report;
 use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::InvalidData;
 use ANSTE::Exceptions::InvalidFile;
 use ANSTE::Exceptions::NotFound;
 
@@ -451,7 +452,7 @@ sub _runTest # (test)
         $testResult->setEndTime($endTime);
         $testResult->setLog("$suiteDir/$name.html");
     } elsif ($test->type() eq 'reboot') {
-    } else {
+    } elsif ($test->type() eq 'default') {
         if (not -r "$path/test") {
             throw ANSTE::Exceptions::NotFound('Test script',
                                               "$suiteDir/$testDir/test");
@@ -502,6 +503,8 @@ sub _runTest # (test)
 
         $testResult->setLog("$suiteDir/$name.txt");
         $testResult->setScript("$suiteDir/script/$name.txt");
+    } else {
+        throw ANSTE::Exceptions::InvalidData('type', $test->type());
     }
 
     # Run post-test script if exists
