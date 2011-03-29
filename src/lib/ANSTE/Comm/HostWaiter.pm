@@ -49,12 +49,12 @@ my $returnValue : shared;
 #
 #   ref - the class unique instance of type <ANSTE::Comm::HostWaiter>.
 #
-sub instance 
+sub instance
 {
     my $class = shift;
     unless (defined $singleton) {
         my $self = {};
-        
+
         $singleton = bless($self, $class);
     }
 
@@ -63,17 +63,18 @@ sub instance
 
 # Method: hostReady
 #
-#   Called to acknowledge that a given host is ready.
+#   Called to acknowledge that a given host is ready or not.
 #
 # Parameters:
 #
-#   host - String with the hostname of the ready host   
+#   host - String with the hostname of the ready host
 #
 sub hostReady # (host)
 {
-    my ($self, $host) = @_; 
+    my ($self, $host, $ready) = @_;
+    defined $ready or $ready = 1;
     lock($lockReady);
-    $ready{$host} = 1;
+    $ready{$host} = $ready;
     cond_broadcast($lockReady);
 }
 
@@ -89,7 +90,7 @@ sub hostReady # (host)
 #
 sub executionFinished # (host, retValue)
 {
-    my ($self, $host, $retValue) = @_; 
+    my ($self, $host, $retValue) = @_;
 
     lock($lockExecuted);
     $executed{$host} = 1;

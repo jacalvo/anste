@@ -28,7 +28,6 @@ use ANSTE::Comm::HostWaiter;
 use ANSTE::Report::Report;
 use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
-use ANSTE::Exceptions::InvalidData;
 use ANSTE::Exceptions::InvalidFile;
 use ANSTE::Exceptions::NotFound;
 
@@ -452,7 +451,8 @@ sub _runTest # (test)
         $testResult->setEndTime($endTime);
         $testResult->setLog("$suiteDir/$name.html");
     } elsif ($test->type() eq 'reboot') {
-    } elsif ($test->type() eq 'default') {
+        $ret = $self->_reboot($hostname);
+    } else {
         if (not -r "$path/test") {
             throw ANSTE::Exceptions::NotFound('Test script',
                                               "$suiteDir/$testDir/test");
@@ -503,8 +503,6 @@ sub _runTest # (test)
 
         $testResult->setLog("$suiteDir/$name.txt");
         $testResult->setScript("$suiteDir/script/$name.txt");
-    } else {
-        throw ANSTE::Exceptions::InvalidData('type', $test->type());
     }
 
     # Run post-test script if exists
@@ -532,6 +530,24 @@ sub _time
     my $str = sprintf("%02d-%02d-%02d %02d:%02d:%02d",
                       $mday, $mon, $year % 100, $hour, $min, $sec);
     return $str;
+}
+
+sub _reboot # (hostname, log?)
+{
+    my ($self, $hostname, $log) = @_;
+
+    my $client = new ANSTE::Comm::MasterClient();
+    my $port = ANSTE::Config->instance()->anstedPort();
+    my $ip = $self->{hostIP}->{$hostname};
+    $client->connect("http://$ip:$port");
+
+    my $waiter = ANSTE::Comm::HostWaiter->instance();
+
+    $client->reboot();
+    $waiter->hostReady($hostname, 0);
+    $waiter->waitForReady($hostname);
+
+    return 0;
 }
 
 sub _runScript # (hostname, script, log?, env?, params?)

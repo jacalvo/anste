@@ -51,7 +51,7 @@ sub put	# (file, content)
     my $name = fileparse($file);
 
     my $FILE;
-    if (open($FILE, '>', "$DIR/$name")) { 
+    if (open($FILE, '>', "$DIR/$name")) {
     	print $FILE $content;
     	close $FILE or die "Can't close: $!";
     	return 'OK';
@@ -62,7 +62,7 @@ sub put	# (file, content)
 
 # Method: get
 #
-#   Handles a file get command, reading and returning the contents of the 
+#   Handles a file get command, reading and returning the contents of the
 #   file from disk.
 #
 # Parameters:
@@ -77,7 +77,7 @@ sub get	# (file)
 {
     my ($self, $file) = @_;
 
-    my $name = fileparse($file); 
+    my $name = fileparse($file);
 
     my $FILE;
     if (open($FILE, '<', "$DIR/$name")) {
@@ -124,14 +124,14 @@ sub exec # (file, log?, env?, params?)
         die "Can't fork: $!";
     }
     elsif ($pid == 0){
-        my $name = fileparse($file); 
+        my $name = fileparse($file);
         chmod 700, "$DIR/$name";
         my $command = "$DIR/$name";
         my $ret;
         if (defined $log) {
             my $log = fileparse($log);
             my $logfile = "$DIR/$log";
-            $ret = $self->_executeSavingLog($command, $logfile, 
+            $ret = $self->_executeSavingLog($command, $logfile,
                                             $env, $params);
         }
         else {
@@ -162,12 +162,27 @@ sub del	# (file)
 {
     my ($self, $file) = @_;
 
-    my $name = fileparse($file); 
+    my $name = fileparse($file);
 
     if(unlink "$DIR/$name") {
-    	return 'OK';
+        return 'OK';
     } else {
 	    return 'ERR';
+    }
+}
+
+# Method: reboot
+#
+#   Handles a reboot request, rebooting the machine
+#
+sub reboot
+{
+    my ($self) = @_;
+
+    if (system('/sbin/reboot') == 0) {
+        return 'OK';
+    } else {
+        return 'ERR';
     }
 }
 

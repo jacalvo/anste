@@ -22,7 +22,6 @@ use ANSTE::Config;
 use ANSTE::Test::Suite;
 use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
-use ANSTE::Exceptions::InvalidData;
 use ANSTE::Exceptions::InvalidFile;
 use ANSTE::Exceptions::NotFound;
 
@@ -110,13 +109,11 @@ sub validateSuite # (suite)
                 }
             }
         } elsif ($test->type() eq 'reboot') {
-        } elsif ($test->type() eq 'default') {
+        } else {
             if (not -r "$path/test") {
                 throw ANSTE::Exceptions::NotFound('Test script',
                                                   "$suiteDir/$testDir/test");
             }
-        } else {
-            throw ANSTE::Exceptions::InvalidData('type', $test->type());
         }
     }
 }

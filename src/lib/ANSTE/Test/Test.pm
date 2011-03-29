@@ -49,7 +49,7 @@ sub new # returns new Test object
     $self->{env} = '';
     $self->{variables} = {};
     $self->{assert} = 'passed';
-    $self->{type} = 'default';
+    $self->{type} = '';
     $self->{precondition} = 1;
 
     bless($self, $class);
@@ -446,7 +446,6 @@ sub type
 sub setType
 {
     my ($self, $type) = @_;
-    defined $type or $type = 'default';
     $self->{type} = $type;
 }
 
@@ -509,7 +508,9 @@ sub load # (node)
     my $configVars = ANSTE::Config->instance()->variables();
 
     my $type = $node->getAttribute('type');
-    $self->setType($type);
+    if ($type) {
+        $self->setType($type);
+    }
 
     my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
     my $name = $nameNode->getFirstChild()->getNodeValue();

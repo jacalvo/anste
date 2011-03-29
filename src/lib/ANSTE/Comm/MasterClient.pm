@@ -22,13 +22,13 @@ use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
 
-use SOAP::Lite; # +trace => 'debug'; 
+use SOAP::Lite; # +trace => 'debug';
 use MIME::Base64;
 
 use constant URI => 'urn:ANSTE::Comm::SlaveServer';
 
 # Class: MasterClient
-# 
+#
 #   Client that runs on the master host and send commands
 #   to the slave hosts.
 #
@@ -66,7 +66,7 @@ sub new
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub connect	# (url) 
+sub connect	# (url)
 {
     my ($self, $url) = @_;
 
@@ -75,7 +75,7 @@ sub connect	# (url)
 
     $self->{soap} = new SOAP::Lite(uri => URI,
                                    proxy => $url,
-                                   endpoint => $url); 
+                                   endpoint => $url);
 }
 
 # Method: connected
@@ -167,7 +167,7 @@ sub get	# (file)
     my $soap = $self->{soap};
     my $config = ANSTE::Config->instance();
 
-    # Sends the request 
+    # Sends the request
     my $response = $soap->get(SOAP::Data->name('name' => $file));
     if ($response->fault) {
     	die "SOAP request failed: $!";
@@ -258,7 +258,25 @@ sub del	# (file)
 
     my $response = $soap->del(SOAP::Data->name('name' => $file));
     if ($response->fault) {
-    	die "SOAP request failed: $!";
+        die "SOAP request failed: $!";
+    }
+    my $result = $response->result;
+    return($result eq 'OK');
+}
+
+# Method: reboot
+#
+#   Sends a reboot request to the server
+#
+sub reboot
+{
+    my ($self) = @_;
+
+    my $soap = $self->{soap};
+    my $response = $soap->reboot();
+
+    if ($response->fault) {
+        die "SOAP request failed: $!";
     }
     my $result = $response->result;
     return($result eq 'OK');
