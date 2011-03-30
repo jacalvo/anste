@@ -89,11 +89,11 @@ sub validateSuite # (suite)
 
         my $path = $config->testFile("$suiteDir/$testDir");
 
-        if (not -x $path) {
-            throw ANSTE::Exceptions::NotFound('Test', $path);
-        }
-
         if ($test->type() eq 'selenium') {
+            if (not -x $path) {
+                throw ANSTE::Exceptions::NotFound('Test', $path);
+            }
+
             my $suiteFile = "$path/$SUITE_FILE";
             if (not -r $suiteFile) {
                 throw ANSTE::Exceptions::NotFound('Suite file', $suiteFile);

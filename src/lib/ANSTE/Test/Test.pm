@@ -561,8 +561,10 @@ sub load # (node)
     }
 
     my $dirNode = $node->getElementsByTagName('dir', 0)->item(0);
-    my $dir = $dirNode->getFirstChild()->getNodeValue();
-    $self->setDir($dir);
+    if ($dirNode) {
+        my $dir = $dirNode->getFirstChild()->getNodeValue();
+        $self->setDir($dir);
+    }
 
     my $assertNode = $node->getElementsByTagName('assert', 0)->item(0);
     if ($assertNode) {

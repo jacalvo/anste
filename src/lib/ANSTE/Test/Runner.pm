@@ -344,10 +344,6 @@ sub _runTest # (test)
 
     my $path = $config->testFile("$suiteDir/$testDir");
 
-    if (not -x $path) {
-        throw ANSTE::Exceptions::NotFound('Test', $path);
-    }
-
     my $logPath = $config->logPath();
 
     # Create directories
@@ -383,6 +379,10 @@ sub _runTest # (test)
 
     # Run the test itself either it's a selenium one or a normal one
     if ($test->type() eq 'selenium') {
+        if (not -x $path) {
+            throw ANSTE::Exceptions::NotFound('Test', $path);
+        }
+
         my $suiteFile = "$path/$SUITE_FILE";
         if (not -r $suiteFile) {
             throw ANSTE::Exceptions::NotFound('Suite file', $suiteFile);
