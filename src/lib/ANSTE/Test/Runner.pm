@@ -452,6 +452,12 @@ sub _runTest # (test)
         $testResult->setLog("$suiteDir/$name.html");
     } elsif ($test->type() eq 'reboot') {
         $ret = $self->_reboot($hostname);
+
+        # Store end time
+        my $endTime = $self->_time();
+        $testResult->setEndTime($endTime);
+
+        $testResult->setLog("$suiteDir/$name.html");
     } else {
         if (not -r "$path/test") {
             throw ANSTE::Exceptions::NotFound('Test script',
