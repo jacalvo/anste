@@ -35,7 +35,7 @@ use File::Temp qw(tempfile tempdir);
 
 # Class: Commands
 #
-#   Set of commands for manipulating a image. 
+#   Set of commands for manipulating a image.
 #
 
 # Constructor: new
@@ -78,7 +78,7 @@ sub new # (image) returns new Commands object
 
     $self->{system} = "ANSTE::System::$system"->new();
     $self->{virtualizer} = "ANSTE::Virtualizer::$virtualizer"->new();
-	
+
 	bless($self, $class);
 
 	return $self;
@@ -99,10 +99,10 @@ sub ip
 
     my $image = $self->{image};
 
-    my $ip = $image->isa('ANSTE::Image::Image') ? 
-             $image->ip() : 
+    my $ip = $image->isa('ANSTE::Image::Image') ?
+             $image->ip() :
              ANSTE::Config->instance()->firstAddress();
-    
+
     return $ip;
 }
 
@@ -148,7 +148,7 @@ sub mount
 
     my $name = $self->{image}->name();
 
-    $self->{mountPoint} = tempdir(CLEANUP => 1) 
+    $self->{mountPoint} = tempdir(CLEANUP => 1)
         or die "Can't create temp directory: $!";
 
     my $mountPoint = $self->{mountPoint};
@@ -193,7 +193,7 @@ sub copyBaseFiles
 #
 #   integer - return value of the pre-install script
 #
-sub copyHostFiles 
+sub copyHostFiles
 {
     my ($self) = @_;
 
@@ -224,10 +224,10 @@ sub installBasePackages
         die "Can't fork: $!";
     }
     elsif ($pid == 0) { # child
-        chdir('/');
         chroot($mountPoint) or die "Can't chroot: $!";
+        chdir('/');
         $ENV{HOSTNAME} = $self->{image}->name();
-        
+
         my $system = $self->{system};
 
         my $ret = -1;
@@ -235,12 +235,12 @@ sub installBasePackages
         try {
             $ret = $system->installBasePackages();
         } catch Error with {
-            my $err = shift; 
+            my $err = shift;
             my $msg = $err->stringify();
             print "ERROR: $msg\n";
-        } finally {            
+        } finally {
             exit($ret);
-        };            
+        };
     }
     else { # parent
         waitpid($pid, 0);
@@ -263,13 +263,13 @@ sub installBasePackages
 #
 #   TODO: change dies to throw exception
 #
-sub prepareSystem 
+sub prepareSystem
 {
     my ($self) = @_;
 
     my $image = $self->{image};
     my $hostname = $image->name();
-    
+
     my $client = new ANSTE::Comm::MasterClient;
 
     my $config = ANSTE::Config->instance();
@@ -287,12 +287,12 @@ sub prepareSystem
     my $gen = new ANSTE::ScriptGen::BaseImageSetup($image);
 
     my $FILE;
-    open($FILE, '>', $setupScript) 
+    open($FILE, '>', $setupScript)
         or die "Can't create $setupScript: $!";
 
     $gen->writeScript($FILE);
 
-    close($FILE) 
+    close($FILE)
         or die "Can't close file $setupScript: $!";
 
     $self->_executeSetup($client, $setupScript);
@@ -328,12 +328,12 @@ sub prepareSystem
 sub umount
 {
     my ($self) = @_;
-    
+
     my $mountPoint = $self->{mountPoint};
     my $system = $self->{system};
 
     my $ret = $system->unmount($mountPoint);
-    
+
     rmdir($mountPoint) or die "Can't remove mount directory: $!";
 
     return($ret);
@@ -369,9 +369,9 @@ sub deleteImage
 sub deleteMountPoint
 {
     my ($self) = @_;
-    
+
     my $mountPoint = $self->{mountPoint};
-    
+
     rmdir($mountPoint);
 }
 
@@ -384,7 +384,7 @@ sub shutdown
     my ($self) = @_;
 
     my $image = $self->{image}->name();
-    my $virtualizer = $self->{virtualizer}; 
+    my $virtualizer = $self->{virtualizer};
     my $system = $self->{system};
 
     print "[$image] Shutting down...\n";
@@ -395,7 +395,7 @@ sub shutdown
     # (only if not is a BaseImage)
     if ($self->{image}->isa('ANSTE::Image::Image')) {
         $self->_disableNAT();
-    }        
+    }
 }
 
 # Method: destroy
@@ -407,7 +407,7 @@ sub destroy
     my ($self) = @_;
 
     my $image = $self->{image}->name();
-    my $virtualizer = $self->{virtualizer}; 
+    my $virtualizer = $self->{virtualizer};
     my $system = $self->{system};
 
     $virtualizer->destroyImage($image);
@@ -437,7 +437,7 @@ sub resize # (size)
         throw ANSTE::Exceptions::MissingArgument('size');
 
     my $system = $self->{system};
-    my $virtualizer = $self->{virtualizer}; 
+    my $virtualizer = $self->{virtualizer};
     my $image = $self->{image}->name();
 
     # Read images path from the config
@@ -543,7 +543,7 @@ sub transferFiles # (list)
 
     foreach my $file (@{$list}) {
         my $filePath = $config->listsFile($file);
-		$client->put($filePath) or 
+		$client->put($filePath) or
             print "[$image:$filePath] Transfer failed.\n";
     }
 }
@@ -583,7 +583,7 @@ sub _copyFiles # (gen)
     close($fh) or die "Can't close temporary file: $!";
     # Gives execution perm to the script
     chmod(700, $filename) or die "Can't chmod $filename: $!";
-    
+
     # Executes the installation script passing the mount point
     # of the image as argument
     my $ret = $system->execute("$filename $mountPoint");
@@ -605,7 +605,7 @@ sub _executeSetup # (client, script)
     $client->put($script) or print "[$image] Upload failed.\n";
     $client->exec($script) or print "[$image] Execution failed.\n";
     my $ret = $waiter->waitForExecution($image);
-    print "[$image] Execution finished. Return value = $ret.\n" 
+    print "[$image] Execution finished. Return value = $ret.\n"
         if $config->verbose();
 
     return ($ret);

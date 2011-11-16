@@ -392,8 +392,8 @@ sub createNetwork # (scenario)
         close($FILE) or return 0;
 
         if (not $self->execute("virsh net-create $xmlFile")) {
-            $self->execute("ifconfig virbr$num down");
-            $self->execute("brctl delbr virbr$num");
+            $self->execute("ifconfig virbr${num}-nic down");
+            $self->execute("brctl delbr virbr${num}-nic");
             $self->execute("virsh net-create $xmlFile") or return 0;
         }
     }
@@ -463,7 +463,7 @@ sub _createImageConfig # (image, path) returns config string
         $imageConfig .= "\t\t<interface type='bridge'>\n";
         my $bridge = $iface->bridge();
         my $mac = $iface->hwAddress();
-        $imageConfig .= "\t\t\t<source bridge='virbr$bridge'/>\n";
+        $imageConfig .= "\t\t\t<source bridge='virbr${bridge}-nic'/>\n";
         $imageConfig .= "\t\t\t<mac address='$mac'/>\n";
         # Gigabit ethernet card to improve performance
         $imageConfig .= "\t\t\t<model type='e1000'/>\n";
@@ -497,7 +497,7 @@ sub _createNetworkConfig # (net, bridge) returns config string
 
     my $networkConfig = "<network>\n";
     $networkConfig .= "\t<name>bridge$bridge</name>\n";
-    $networkConfig .= "\t<bridge name=\"virbr$bridge\" />\n";
+    $networkConfig .= "\t<bridge name=\"virbr${bridge}-nic\" />\n";
     if ($forward) {
         $networkConfig .= "\t<forward mode=\"nat\" />\n";
     }

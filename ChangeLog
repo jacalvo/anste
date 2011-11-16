@@ -1,4 +1,5 @@
-HEAD
+0.8
+    + Support for Ubuntu 11.10 as host system
     + Allow to change name of the communication interface (default: anste0)
     + Added support for lucid's ubuntu-vm-builder
     + Autodetect network range in dhcp router configuration
