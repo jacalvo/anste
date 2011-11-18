@@ -36,7 +36,7 @@ use File::Basename;
 #
 #   filename - In this case is not a file but a directory.
 #
-sub write # (file) 
+sub write # (file)
 {
     my ($self, $dir) = @_;
 
@@ -66,7 +66,7 @@ sub writeSuiteHeader # (name, desc)
 
     print $file "<testsuite name=\"$name\">\n";
     print $file "<desc>$desc</desc>\n";
-}    
+}
 
 # Method: writeSuiteEnd
 #
@@ -79,7 +79,7 @@ sub writeSuiteEnd
     my $file = $self->{file};
 
     print $file "</testsuite>\n";
-}    
+}
 
 sub _writeSuiteFile # (suite, file)
 {
@@ -136,26 +136,26 @@ sub writeTestResult # (%params)
 
     my $filehandle = $self->{file};
 
-    print $filehandle "<testcase classname=\"$name\">\n";
+    print $filehandle "<testcase name=\"$name\">\n";
 
 #    if ($desc) {
 #        print $filehandle "<desc>$desc</desc>\n";
-#    }        
+#    }
 
     if ($result != 0) {
         print $filehandle "<failure/>\n";
-    }        
+    }
 
 #    if ($file) {
 #        print $filehandle "<log>$file</log>\n";
-#    }        
+#    }
 
 #    if ($video) {
 #        print $filehandle "<video>$video</video>\n";
 #    }
 
     print $filehandle "</testcase>\n";
-}    
+}
 
 # Method: filename
 #
@@ -170,6 +170,6 @@ sub filename
     my ($self) = @_;
 
     return '';
-}    
+}
 
 1;

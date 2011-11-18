@@ -1,3 +1,5 @@
+HEAD
+    + JUnit format compatible with jenkins (use name instead of classname)
 0.8
     + Support for Ubuntu 11.10 as host system
     + Allow to change name of the communication interface (default: anste0)
