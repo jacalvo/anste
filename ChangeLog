@@ -1,4 +1,5 @@
 HEAD
+    + Delete qcow2 images after convert to raw
     + JUnit format compatible with jenkins (use name instead of classname)
 0.8
     + Support for Ubuntu 11.10 as host system

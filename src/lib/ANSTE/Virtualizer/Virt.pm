@@ -139,8 +139,7 @@ sub createBaseImage # (%params)
     $self->execute("$imgcommand convert $dir/*.qcow2 -O raw $dir/disk0.img");
 
     # Delete qcow2 image
-    # FIXME: Disabled this deletion to make it work on lucid
-    #system("rm $dir/*.qcow2");
+    $self->execute("rm $dir/*.qcow2");
 }
 
 # Method: shutdownImage
