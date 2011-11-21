@@ -39,7 +39,7 @@ use ANSTE::Exceptions::InvalidType;
 #   in the scenario.
 #
 # Parameters:
-# 
+#
 #   scenario - <ANSTE::Scenario::Scenario> object.
 #
 # Returns:
@@ -48,8 +48,8 @@ use ANSTE::Exceptions::InvalidType;
 #
 sub new # (scenario) returns new ScenarioDeployer object
 {
-	my ($class, $scenario) = @_;
-	my $self = {};
+    my ($class, $scenario) = @_;
+    my $self = {};
 
     defined $scenario or
         throw ANSTE::Exceptions::MissingArgument('scenario');
@@ -64,8 +64,8 @@ sub new # (scenario) returns new ScenarioDeployer object
     eval "use ANSTE::Virtualizer::$virtualizer";
     die "Can't load package $virtualizer: $@" if $@;
     $self->{virtualizer} = "ANSTE::Virtualizer::$virtualizer"->new();
-	
-	$self->{scenario} = $scenario;
+
+    $self->{scenario} = $scenario;
 
     # Create host deployers
     $self->{deployers} = [];
@@ -73,7 +73,7 @@ sub new # (scenario) returns new ScenarioDeployer object
     my $firstAddress = $config->firstAddress();
 
     # Separate the last number of the ip in order to increment it.
-    my ($base, $number) = 
+    my ($base, $number) =
         $firstAddress =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3})\.(\d{1,3})$/;
 
     # Add the bridge for the comunications interface
@@ -89,7 +89,7 @@ sub new # (scenario) returns new ScenarioDeployer object
         # Add the bridges needed for each host if no manual bridging option is set
         unless ($scenario->manualBridging()) {
             foreach my $iface (@{$host->network()->interfaces()}) {
-                my ($net, $unused) = 
+                my ($net, $unused) =
                     $iface->address() =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3})\.(\d{1,3})$/;
                 if ($net) {
                     my $bridge = $scenario->addBridge($net);
@@ -99,9 +99,9 @@ sub new # (scenario) returns new ScenarioDeployer object
         }
     }
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: deploy
@@ -114,7 +114,7 @@ sub new # (scenario) returns new ScenarioDeployer object
 #
 #   hash - Contains the IP address of each deployed host indexed by hostname.
 #
-sub deploy # returns hash ref with the ip of each host 
+sub deploy # returns hash ref with the ip of each host
 {
     my ($self) = @_;
 
@@ -147,6 +147,9 @@ sub deploy # returns hash ref with the ip of each host
         }
 
         $hostIP->{$hostname} = $deployer->ip();
+
+        # Avoid problems in KVM trying to create two VMs at the same time
+        sleep 1;
     }
 
     if (not $reuse) {
@@ -157,7 +160,7 @@ sub deploy # returns hash ref with the ip of each host
         }
     }
 
-    return $hostIP; 
+    return $hostIP;
 }
 
 # Method: shutdown
@@ -188,11 +191,11 @@ sub destroy
     my ($self) = @_;
 
     my $deployers = $self->{deployers};
-   
+
     foreach my $deployer (@{$deployers}) {
         $deployer->destroy();
         $deployer->deleteImage();
-    }        
+    }
     $self->{virtualizer}->destroyNetwork($self->{scenario});
 }
 

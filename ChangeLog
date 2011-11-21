@@ -1,4 +1,5 @@
 HEAD
+    + Launch deployment threads with delay to avoid KVM concurrency problems
     + Added critical attribute to tests to make the entire suite fail
     + Delete qcow2 images after convert to raw
     + JUnit format compatible with jenkins (use name instead of classname)
