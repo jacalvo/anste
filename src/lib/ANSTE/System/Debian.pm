@@ -774,7 +774,9 @@ sub executeSelenium # (%params)
     my $testFile = $params{testFile};
     my $resultFile = $params{resultFile};
 
-    my $firefoxProfile = ANSTE::Config->instance()->seleniumFirefoxProfile();
+    my $config = ANSTE::Config->instance();
+
+    my $firefoxProfile = $config->seleniumFirefoxProfile();
     my $profileOption = '';
     if ($firefoxProfile) {
         $profileOption = "-firefoxProfileTemplate \"$firefoxProfile\"";
@@ -784,13 +786,13 @@ sub executeSelenium # (%params)
     chomp($date);
     my $LOG =  "/tmp/anste-selenium-$date.log";
 
-    my $singleWindow = ANSTE::Config->instance()->seleniumSingleWindow();
+    my $singleWindow = $config->seleniumSingleWindow();
     my $windowLayout = '-multiWindow';
     if ($singleWindow) {
         $windowLayout = "-singleWindow";
     }
 
-    my $userExtensions = ANSTE::Config->instance()->seleniumUserExtensions();
+    my $userExtensions = $config->seleniumUserExtensions();
 
     my $cmd = "java -jar $jar -avoidProxy -htmlSuite \"$browser\"  "
             . "\"$url\" \"$testFile\" \"$resultFile\" "
@@ -805,6 +807,7 @@ sub executeSelenium # (%params)
         $ld_path = "LD_LIBRARY_PATH=$browserPath ";
     }
 
+    print STDERR "Selenium command: $cmd\n" if ($config->verbose());
     return $self->execute($ld_path . $cmd);
 }
 
