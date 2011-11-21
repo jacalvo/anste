@@ -50,6 +50,7 @@ sub new # returns new Test object
     $self->{variables} = {};
     $self->{assert} = 'passed';
     $self->{type} = '';
+    $self->{critical} = 0;
     $self->{precondition} = 1;
 
     bless($self, $class);
@@ -449,6 +450,31 @@ sub setType
     $self->{type} = $type;
 }
 
+# Method: critical
+#
+#   Gets if the test is critical and should interrupt the process
+#
+# Returns:
+#
+#   boolean - true if the test is critical, false if not
+#
+sub critical
+{
+    my ($self) = @_;
+
+    return $self->{critical};
+}
+
+# Method: setCritical
+#
+#   Specifies if the test is critical and should interrupt the process
+#
+sub setCritical
+{
+    my ($self, $critical) = @_;
+    $self->{critical} = $critical;
+}
+
 # Method: precondition
 #
 #   Gets if this test has passed the required precondition
@@ -510,6 +536,10 @@ sub load # (node)
     my $type = $node->getAttribute('type');
     if ($type) {
         $self->setType($type);
+    }
+    my $critical = $node->getAttribute('critical');
+    if ($critical) {
+        $self->setCritical(1);
     }
 
     my $nameNode = $node->getElementsByTagName('name', 0)->item(0);

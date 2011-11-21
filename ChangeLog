@@ -1,4 +1,5 @@
 HEAD
+    + Added critical attribute to tests to make the entire suite fail
     + Delete qcow2 images after convert to raw
     + JUnit format compatible with jenkins (use name instead of classname)
 0.8

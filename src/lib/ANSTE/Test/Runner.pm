@@ -270,6 +270,9 @@ sub _runTests
             $ret = -1;
         }
 
+        # Stop executing tests if a critical one fails
+        last if ($test->critical() and ($ret ne 0));
+
         # Wait user input if the user has set a breakpoint, or
         # if there was an error and we are in wait on fail mode,
         # or always if we are in step by step mode.
