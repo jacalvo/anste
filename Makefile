@@ -19,7 +19,7 @@ distclean:
 	rm -f *.deb
 
 export: distclean
-	git clone . $(EXPORT)
+	git checkout-index -a --prefix=$(EXPORT)/
 	rm -rf $(EXPORT)/.git
 	find $(EXPORT)/src/lib -name 't' -print | xargs rm -rf
 
