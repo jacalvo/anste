@@ -167,7 +167,7 @@ sub startDeployThread
 sub waitForFinish
 {
     my ($self) = @_;
-    
+
     $self->{thread}->join();
 }
 
@@ -246,14 +246,15 @@ sub _deploy
     };
 
     # Critical section here to prevent mount errors with loop device busy
-    { 
+    # or KVM crashes when trying to create two machines at the same time
+    {
         lock($lockMount);
         print "[$hostname] Updating hostname on the new image...\n";
         try {
             my $ok = $self->_updateHostname();
             if (not $ok) {
                 print "[$hostname] Error copying host files.\n";
-                return;                
+                return;
             }
         } catch Error with {
             my $err = shift;
@@ -261,10 +262,10 @@ sub _deploy
             print "[$hostname] ERROR: $msg\n";
             return;
         };
-    };
 
-    print "[$hostname] Creating virtual machine ($ip)...\n"; 
-    $cmd->createVirtualMachine();
+        print "[$hostname] Creating virtual machine ($ip)...\n";
+        $cmd->createVirtualMachine();
+    };
 
     try {
 
@@ -305,7 +306,7 @@ sub _deploy
         if (@{$post}) {
             print "[$hostname] Executing post scripts...\n";
             $cmd->executeScripts($post);
-        }        
+        }
     } catch ANSTE::Exceptions::Error with {
         my $ex = shift;
         my $msg = $ex->message();
@@ -326,7 +327,7 @@ sub _copyBaseImage
     my $host = $self->{host};
 
     my $baseimage = $host->baseImage();
-    my $newimage = $self->{image}; 
+    my $newimage = $self->{image};
 
     $virtualizer->createImageCopy($baseimage, $newimage);
 }
@@ -336,7 +337,7 @@ sub _updateHostname # returns boolean
     my ($self) = @_;
 
     my $cmd = $self->{cmd};
-    
+
     my $ok = 0;
 
     try {
@@ -359,16 +360,16 @@ sub _updateHostname # returns boolean
 sub _generateSetupScript # (script)
 {
     my ($self, $script) = @_;
-    
+
     my $host = $self->{host};
     my $hostname = $host->name();
 
     my $generator = new ANSTE::ScriptGen::HostImageSetup($host);
     my $FILE;
-    open($FILE, '>', $script) 
+    open($FILE, '>', $script)
         or throw ANSTE::Exceptions::Error("Can't open file $script: $!");
     $generator->writeScript($FILE);
-    close($FILE) 
+    close($FILE)
         or throw ANSTE::Exceptions::Error("Can't close file $script: $!");
 }
 
@@ -382,7 +383,7 @@ sub _executeSetupScript # (host, script)
     my $waiter = ANSTE::Comm::HostWaiter->instance();
     my $config = ANSTE::Config->instance();
 
-    my $PORT = $config->anstedPort(); 
+    my $PORT = $config->anstedPort();
     $client->connect("http://$host:$PORT");
 
     my $verbose = $config->verbose();

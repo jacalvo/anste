@@ -147,9 +147,6 @@ sub deploy # returns hash ref with the ip of each host
         }
 
         $hostIP->{$hostname} = $deployer->ip();
-
-        # Avoid problems in KVM trying to create two VMs at the same time
-        sleep 1;
     }
 
     if (not $reuse) {
