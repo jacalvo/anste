@@ -166,6 +166,7 @@ sub runSuite # (suite)
     my $scenario = $self->_loadScenario($scenarioFile, $suiteName);
 
     my $config = ANSTE::Config->instance();
+    $config->setCurrentScenario($scenarioFile);
     my $reuse = $config->reuse();
 
     my $sceName = $scenario->name();

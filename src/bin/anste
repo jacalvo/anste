@@ -165,6 +165,8 @@ foreach my $arg (@ARGV) {
     }
 }
 
+$SIG{TERM} = \&term_handler;
+
 foreach my $file (@files) {
     if ($create) {
         create($file);
@@ -186,11 +188,22 @@ foreach my $file (@files) {
     }
 }
 
-flock ($lockFile, LOCK_UN);
-close ($lockFile);
-exit 0;
+unlock_and_exit();
 
 ############## Function declarations ##########################
+
+sub unlock_and_exit
+{
+    flock ($lockFile, LOCK_UN);
+    close ($lockFile);
+    exit 0;
+}
+
+sub term_handler
+{
+    destroy($config->currentScenario());
+    unlock_and_exit();
+}
 
 sub create # (file)
 {
@@ -264,6 +277,7 @@ sub deploy # (file)
     my $scenario = new ANSTE::Scenario::Scenario();
     try {
         $scenario->loadFromFile($file);
+        $config->setCurrentScenario($file);
     } catch ANSTE::Exceptions::InvalidFile with {
         my $ex = shift;
         my $filename = $ex->file();

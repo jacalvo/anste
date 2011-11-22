@@ -1523,6 +1523,20 @@ sub breakpoint # (name)
     return $self->{breakpoints}->{$name};
 }
 
+sub currentScenario
+{
+    my ($self) = @_;
+
+    return $self->{currentScenario};
+}
+
+sub setCurrentScenario
+{
+    my ($self, $file) = @_;
+
+    $self->{currentScenario} = $file;
+}
+
 sub _filePath # (file)
 {
     my ($self, $file) = @_;
