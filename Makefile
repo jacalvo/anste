@@ -3,8 +3,8 @@ DATADIR = $(PREFIX)/share/anste
 LIBDIR = $(PREFIX)/lib
 SBINDIR = $(PREFIX)/sbin
 BINDIR = $(PREFIX)/bin
-VERSION = `head -1 ChangeLog`
-EXPORT = anste-$(VERSION)
+VERSION = $(shell head -1 ChangeLog)
+EXPORT = ../anste-$(VERSION)
 
 ifeq ($(PREFIX),/usr/local)
 	LIBPERL = $(PREFIX)/lib/site_perl
@@ -13,14 +13,15 @@ else
 endif
 
 distclean:
-	rm -rf $(EXPORT)
-	rm -f anste-$(VERSION).tar.gz
-	rm -f anste_$(VERSION)*
-	rm -f *.deb
+	@rm -f anste-$(VERSION).tar.gz
+	@rm -f anste-$(VERSION)
+	@rm -f anste_$(VERSION)*
+	@rm -f anste_*.deb
 
 export: distclean
-	git checkout-index -a --prefix=$(EXPORT)/
-	rm -rf $(EXPORT)/.git
+	rm -rf $(EXPORT)/
+	mkdir -p $(EXPORT)/
+	cp -r * $(EXPORT)/
 	find $(EXPORT)/src/lib -name 't' -print | xargs rm -rf
 
 dist: export
@@ -28,7 +29,8 @@ dist: export
 	tar cvvzf anste-$(VERSION).tar.gz $(EXPORT)
 
 deb: dist
-	cd anste-$(VERSION) && dpkg-buildpackage -rfakeroot -uc -us
+	cd $(EXPORT) && dpkg-buildpackage -rfakeroot -uc -us
+	mv ../anste_*.deb .
 
 install-anste:
 	install -d $(DESTDIR)$(SBINDIR)
