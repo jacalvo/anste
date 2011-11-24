@@ -376,7 +376,7 @@ sub _runTest # (test)
     if (-r "$path/pre") {
         my $script = "$newPath/$name.pre";
         system("cp $path/pre $script");
-        $self->_runScript($hostname, $script);
+        $self->_runScriptOnHost($hostname, $script);
     }
 
     # TODO: separate this in two functions runSeleniumTest and runShellTest ??
@@ -496,8 +496,14 @@ sub _runTest # (test)
         print $SCRIPT $scriptContent;
         close ($SCRIPT);
 
-        $ret = $self->_runScript($hostname, "$newPath/$name", $logfile,
-                                 $env, $params);
+        if ($test->type() eq 'host') {
+            $ret = $self->{system}->runTest("$newPath/$name",
+                                             $logfile, $env, $params);
+        } else {
+            $ret = $self->_runScriptOnHost($hostname, "$newPath/$name",
+                                     $logfile, $env, $params);
+        }
+
         # Store end time
         my $endTime = $self->_time();
         $testResult->setEndTime($endTime);
@@ -520,7 +526,7 @@ sub _runTest # (test)
     if (-r "$path/post") {
         my $script = "$newPath/$name.post";
         system("cp $path/post $script");
-        $self->_runScript($hostname, $script);
+        $self->_runScriptOnHost($hostname, $script);
     }
 
     # Invert the result of the test when checking for fail
@@ -564,7 +570,7 @@ sub _reboot # (hostname, log?)
     return $ret;
 }
 
-sub _runScript # (hostname, script, log?, env?, params?)
+sub _runScriptOnHost # (hostname, script, log?, env?, params?)
 {
     my ($self, $hostname, $script, $log, $env, $params) = @_;
 

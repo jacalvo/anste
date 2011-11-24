@@ -83,6 +83,24 @@ sub execute # (command)
     return $ret == 0;
 }
 
+sub runTest # (command, logfile, env, params)
+{
+    my ($self, $command, $log, $env, $params) = @_;
+
+    defined $command or
+        throw ANSTE::Exceptions::MissingArgument('command');
+
+    # TODO: pass environment variables
+    my $ret = system("$command $params > $log 2>&1");
+
+    # Checks if the command can't be executed or broken pipe signal
+    if ($ret == -1) {
+        throw ANSTE::Exceptions::Error("Can't execute $command");
+    }
+
+    return $?;
+}
+
 # Method: mountImage
 #
 #   Override this method to execute the command that

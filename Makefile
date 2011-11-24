@@ -50,6 +50,7 @@ install-anste:
 	cp -a src/data/templates/* $(DESTDIR)$(DATADIR)/templates
 	install -d $(DESTDIR)$(DATADIR)/tests
 	cp -a src/data/tests/sample $(DESTDIR)$(DATADIR)/tests
+	cp -a src/data/tests/websample $(DESTDIR)$(DATADIR)/tests
 	cp -a src/data/tests/routers $(DESTDIR)$(DATADIR)/tests
 	install -d $(DESTDIR)$(DATADIR)/common
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE

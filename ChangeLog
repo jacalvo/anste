@@ -1,4 +1,5 @@
 HEAD
+    + New 'host' type value allows to run tests in the host machine
     + Shutdown scenario if SIGTERM is received
     + Print selenium command for debug purposes in verbose mode
     + Lock virtual machine creation to avoid KVM concurrency problems

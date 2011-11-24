@@ -571,7 +571,7 @@ sub load # (node)
             last;
         }
     }
-    unless ($validHost) {
+    unless ($validHost or ($type eq 'host')) {
         throw ANSTE::Exceptions::Error("No valid host found for test $name.");
     }
 
@@ -615,7 +615,7 @@ sub load # (node)
         $self->setVariable($name, $value);
     }
 
-# Check if all preconditions are satisfied
+    # Check if all preconditions are satisfied
     my $preconditionNodes = $node->getElementsByTagName('precondition', 0);
     for (my $i = 0; $i < $preconditionNodes->getLength(); $i++) {
         my $var = $preconditionNodes->item($i)->getAttribute('var');
