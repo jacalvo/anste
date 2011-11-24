@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario>
+    <name>Empty scenario</name>
+    <desc>Useful for running host-only test</desc>
+</scenario>
