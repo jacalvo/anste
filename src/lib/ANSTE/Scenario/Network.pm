@@ -38,15 +38,15 @@ use ANSTE::Exceptions::InvalidType;
 #
 sub new # returns new Network object
 {
-	my ($class) = @_;
-	my $self = {};
-	
+    my ($class) = @_;
+    my $self = {};
+
     $self->{interfaces} = [];
     $self->{routes} = [];
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: interfaces
@@ -55,7 +55,7 @@ sub new # returns new Network object
 #
 # Returns:
 #
-#   ref - list of <ANSTE::Scenario::NetworkInterface> objects 
+#   ref - list of <ANSTE::Scenario::NetworkInterface> objects
 #
 sub interfaces # returns interfaces list reference
 {
@@ -85,7 +85,7 @@ sub addInterface # (interface)
         throw ANSTE::Exceptions::MissingArgument('interface');
 
     if (not $interface->isa('ANSTE::Scenario::NetworkInterface')) {
-        throw ANSTE::Exceptions::InvalidType('interface', 
+        throw ANSTE::Exceptions::InvalidType('interface',
              'ANSTE::Scenario::NetworkInterface');
     }
 
@@ -128,7 +128,7 @@ sub addRoute # (route)
         throw ANSTE::Exceptions::MissingArgument('route');
 
     if (not $route->isa('ANSTE::Scenario::NetworkRoute')) {
-        throw ANSTE::Exceptions::InvalidType('route', 
+        throw ANSTE::Exceptions::InvalidType('route',
              'ANSTE::Scenario::NetworkRoute');
     }
 
@@ -142,7 +142,7 @@ sub addRoute # (route)
 #
 # Parameters:
 #
-#   node - <XML::DOM::Element> object containing the test data.    
+#   node - <XML::DOM::Element> object containing the test data.
 #
 # Exceptions:
 #
@@ -151,7 +151,7 @@ sub addRoute # (route)
 #
 sub load # (node)
 {
-	my ($self, $node) = @_;
+    my ($self, $node) = @_;
 
     defined $node or
         throw ANSTE::Exceptions::MissingArgument('node');
@@ -172,6 +172,27 @@ sub load # (node)
         $route->load($element);
         $self->addRoute($route);
     }
+}
+
+sub loadYAML
+{
+    my ($self, $network) = @_;
+
+    defined $network or
+        throw ANSTE::Exceptions::MissingArgument('network');
+
+    foreach my $iface (@{$network->{interfaces}}) {
+        my $interface = new ANSTE::Scenario::NetworkInterface();
+        $interface->loadYAML($iface);
+        $self->addInterface($interface);
+    }
+
+#FIXME
+#    foreach my $element ($node->getElementsByTagName('route', 0)) {
+#        my $route = new ANSTE::Scenario::NetworkRoute();
+#        $route->load($element);
+#        $self->addRoute($route);
+#    }
 }
 
 1;

@@ -44,12 +44,12 @@ use Perl6::Junction qw(any);
 #
 sub new # returns new Host object
 {
-	my $class = shift;
-	my $self = {};
+    my $class = shift;
+    my $self = {};
 
-	$self->{name} = '';
-	$self->{desc} = '';
-	$self->{type} = 'none';
+    $self->{name} = '';
+    $self->{desc} = '';
+    $self->{type} = 'none';
     $self->{baseImage} = new ANSTE::Scenario::BaseImage;
     $self->{network} = new ANSTE::Scenario::Network;
     $self->{packages} = new ANSTE::Scenario::Packages;
@@ -59,9 +59,9 @@ sub new # returns new Host object
     $self->{scenario} = undef;
     $self->{precondition} = 1;
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: name
@@ -74,9 +74,9 @@ sub new # returns new Host object
 #
 sub name # returns name string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{name};
+    return $self->{name};
 }
 
 # Method: setName
@@ -93,12 +93,12 @@ sub name # returns name string
 #
 sub setName # name string
 {
-	my ($self, $name) = @_;
+    my ($self, $name) = @_;
 
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-	$self->{name} = $name;
+    $self->{name} = $name;
 }
 
 # Method: desc
@@ -111,8 +111,8 @@ sub setName # name string
 #
 sub desc # returns desc string
 {
-	my ($self) = @_;
-	return $self->{desc};
+    my ($self) = @_;
+    return $self->{desc};
 }
 
 # Method: setDesc
@@ -129,12 +129,12 @@ sub desc # returns desc string
 #
 sub setDesc # desc string
 {
-	my ($self, $desc) = @_;
+    my ($self, $desc) = @_;
 
     defined $desc or
         throw ANSTE::Exceptions::MissingArgument('desc');
 
-	$self->{desc} = $desc;
+    $self->{desc} = $desc;
 }
 
 # Method: isRouter
@@ -178,9 +178,9 @@ sub type # returns string
 #
 sub memory # returns memory string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{memory};
+    return $self->{memory};
 }
 
 # Method: setMemory
@@ -197,12 +197,12 @@ sub memory # returns memory string
 #
 sub setMemory # (memory)
 {
-	my ($self, $memory) = @_;
+    my ($self, $memory) = @_;
 
     defined $memory or
         throw ANSTE::Exceptions::MissingArgument('memory');
 
-	$self->{memory} = $memory;
+    $self->{memory} = $memory;
 }
 
 # Method: baseImage
@@ -215,9 +215,9 @@ sub setMemory # (memory)
 #
 sub baseImage # returns BaseImage object
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{baseImage};
+    return $self->{baseImage};
 }
 
 # Method: setBaseImage
@@ -235,7 +235,7 @@ sub baseImage # returns BaseImage object
 #
 sub setBaseImage # (baseImage)
 {
-	my ($self, $baseImage) = @_;
+    my ($self, $baseImage) = @_;
 
     defined $baseImage or
         throw ANSTE::Exceptions::MissingArgument('baseImage');
@@ -245,7 +245,7 @@ sub setBaseImage # (baseImage)
                                              'ANSTE::Scenario::BaseImage');
     }
 
-	$self->{baseImage} = $baseImage;
+    $self->{baseImage} = $baseImage;
 }
 
 # Method: network
@@ -258,9 +258,9 @@ sub setBaseImage # (baseImage)
 #
 sub network # returns Network object
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{network};
+    return $self->{network};
 }
 
 # Method: setNetwork
@@ -278,7 +278,7 @@ sub network # returns Network object
 #
 sub setNetwork # (network)
 {
-	my ($self, $network) = @_;
+    my ($self, $network) = @_;
 
     defined $network or
         throw ANSTE::Exceptions::MissingArgument('network');
@@ -288,7 +288,7 @@ sub setNetwork # (network)
                                              'ANSTE::Scenario::Network');
     }
 
-	$self->{network} = $network;
+    $self->{network} = $network;
 }
 
 # Method: packages
@@ -301,9 +301,9 @@ sub setNetwork # (network)
 #
 sub packages # returns Packages object
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{packages};
+    return $self->{packages};
 }
 
 # Method: setPackages
@@ -321,7 +321,7 @@ sub packages # returns Packages object
 #
 sub setPackages # (packages)
 {
-	my ($self, $packages) = @_;
+    my ($self, $packages) = @_;
 
     defined $packages or
         throw ANSTE::Exceptions::MissingArgument('packages');
@@ -331,7 +331,7 @@ sub setPackages # (packages)
                                              'ANSTE::Scenario::Packages');
     }
 
-	$self->{packages} = $packages;
+    $self->{packages} = $packages;
 }
 
 # Method: files
@@ -344,9 +344,9 @@ sub setPackages # (packages)
 #
 sub files # returns Files object
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{files};
+    return $self->{files};
 }
 
 # Method: setFiles
@@ -447,9 +447,9 @@ sub setPrecondition
 #
 sub scenario # returns Scenario object
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{scenario};
+    return $self->{scenario};
 }
 
 # Method: setScenario
@@ -467,7 +467,7 @@ sub scenario # returns Scenario object
 #
 sub setScenario # (scenario)
 {
-	my ($self, $scenario) = @_;
+    my ($self, $scenario) = @_;
 
     defined $scenario or
         throw ANSTE::Exceptions::MissingArgument('scenario');
@@ -477,10 +477,10 @@ sub setScenario # (scenario)
                                              'ANSTE::Scenario::Scenario');
     }
 
-	$self->{scenario} = $scenario;
+    $self->{scenario} = $scenario;
 }
 
-# Method: load
+# Method: loadXML
 #
 #   Loads the information contained in the given XML node representing
 #   the host configuration into this object.
@@ -494,9 +494,9 @@ sub setScenario # (scenario)
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
 #
-sub load # (node)
+sub loadXML # (node)
 {
-	my ($self, $node) = @_;
+    my ($self, $node) = @_;
 
     defined $node or
         throw ANSTE::Exceptions::MissingArgument('node');
@@ -506,13 +506,13 @@ sub load # (node)
                                              'XML::DOM::Element');
     }
 
-	my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
-	my $name = $nameNode->getFirstChild()->getNodeValue();
-	$self->setName($name);
+    my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
+    my $name = $nameNode->getFirstChild()->getNodeValue();
+    $self->setName($name);
 
-	my $descNode = $node->getElementsByTagName('desc', 0)->item(0);
-	my $desc = $descNode->getFirstChild()->getNodeValue();
-	$self->setDesc($desc);
+    my $descNode = $node->getElementsByTagName('desc', 0)->item(0);
+    my $desc = $descNode->getFirstChild()->getNodeValue();
+    $self->setDesc($desc);
 
     my $type = $node->getAttribute('type');
     if ($type) {
@@ -524,44 +524,44 @@ sub load # (node)
         }
     }
 
-	my $memoryNode = $node->getElementsByTagName('memory', 0)->item(0);
+    my $memoryNode = $node->getElementsByTagName('memory', 0)->item(0);
     if ($memoryNode) {
         my $memory = $memoryNode->getFirstChild()->getNodeValue();
-	    $self->setMemory($memory);
+        $self->setMemory($memory);
     }
 
-	my $baseimageNode = $node->getElementsByTagName('baseimage', 0)->item(0);
-	my $baseimage = $baseimageNode->getFirstChild()->getNodeValue();
-	$self->baseImage()->loadFromFile("$baseimage.xml");
+    my $baseimageNode = $node->getElementsByTagName('baseimage', 0)->item(0);
+    my $baseimage = $baseimageNode->getFirstChild()->getNodeValue();
+    $self->baseImage()->loadFromFile("$baseimage.xml");
 
-	my $networkNode = $node->getElementsByTagName('network', 0)->item(0);
-	if($networkNode){
-		$self->network()->load($networkNode);
-	}
+    my $networkNode = $node->getElementsByTagName('network', 0)->item(0);
+    if($networkNode){
+        $self->network()->load($networkNode);
+    }
 
-	my $packagesNode = $node->getElementsByTagName('packages', 0)->item(0);
-	if($packagesNode){
-		$self->packages()->load($packagesNode);
-	}
+    my $packagesNode = $node->getElementsByTagName('packages', 0)->item(0);
+    if($packagesNode){
+        $self->packages()->load($packagesNode);
+    }
 
-	my $filesNode = $node->getElementsByTagName('files', 0)->item(0);
-	if($filesNode){
-		$self->files()->load($filesNode);
-	}
+    my $filesNode = $node->getElementsByTagName('files', 0)->item(0);
+    if($filesNode){
+        $self->files()->load($filesNode);
+    }
 
-	my $preNode = $node->getElementsByTagName('pre-install', 0)->item(0);
-	if($preNode){
+    my $preNode = $node->getElementsByTagName('pre-install', 0)->item(0);
+    if($preNode){
         $self->_addScripts('pre-scripts', $preNode);
-	}
+    }
 
-	my $postNode = $node->getElementsByTagName('post-install', 0)->item(0);
-	if($postNode){
+    my $postNode = $node->getElementsByTagName('post-install', 0)->item(0);
+    if($postNode){
         $self->_addScripts('post-scripts', $postNode);
-	}
+    }
 
     # Check if all preconditions are satisfied
     my $configVars = ANSTE::Config->instance()->variables();
-	my $preconditionNodes = $node->getElementsByTagName('precondition', 0);
+    my $preconditionNodes = $node->getElementsByTagName('precondition', 0);
     for (my $i = 0; $i < $preconditionNodes->getLength(); $i++) {
         my $var = $preconditionNodes->item($i)->getAttribute('var');
         my $expectedValue = $preconditionNodes->item($i)->getAttribute('eq');
@@ -576,12 +576,95 @@ sub load # (node)
     }
 }
 
+sub loadYAML
+{
+    my ($self, $host) = @_;
+
+    defined $host or
+        throw ANSTE::Exceptions::MissingArgument('host');
+
+    my $name = $host->{name};
+    $self->setName($name);
+
+    my $desc = $host->{desc};
+    $self->setDesc($desc);
+
+    my $type = $host->{type};
+    if ($type) {
+        if ($type eq any ('router', 'pppoe-router', 'dhcp-router')) {
+            $self->{type} = $type;
+        } else {
+            my $error = "Type $type not supported in host $name";
+            throw ANSTE::Exceptions::Error($error);
+        }
+    }
+
+    my $memory = $host->{memory};
+    if ($memory) {
+        $self->setMemory($memory);
+    }
+
+    my $baseimage = $host->{baseimage};
+    $self->baseImage()->loadFromFile("$baseimage.xml");
+
+    my $network = $host->{network};
+    if ($network) {
+        $self->network()->loadYAML($network);
+    }
+
+    my $packages = $host->{packages};
+    if ($packages) {
+        $self->packages()->loadYAML($packages);
+    }
+
+    # FIXME
+    #my $filesNode = $node->getElementsByTagName('files', 0)->item(0);
+    #if($filesNode){
+    #   $self->files()->load($filesNode);
+    #}
+
+    my $preInstall = $host->{'pre-install'};
+    if ($preInstall) {
+        $self->_addScriptsYAML('pre-scripts', $preInstall);
+    }
+    my $postInstall = $host->{'post-install'};
+    if ($postInstall) {
+        $self->_addScriptsYAML('post-scripts', $postInstall);
+    }
+
+    # FIXME
+    # Check if all preconditions are satisfied
+#    my $configVars = ANSTE::Config->instance()->variables();
+#   my $preconditionNodes = $node->getElementsByTagName('precondition', 0);
+#    for (my $i = 0; $i < $preconditionNodes->getLength(); $i++) {
+#        my $var = $preconditionNodes->item($i)->getAttribute('var');
+#        my $expectedValue = $preconditionNodes->item($i)->getAttribute('eq');
+#        my $value = $configVars->{$var};
+#        unless (defined $value) {
+#            $value = 0;
+#        }
+#        if ($value ne $expectedValue) {
+#            $self->setPrecondition(0);
+#            last;
+#        }
+#    }
+}
+
 sub _addScripts # (list, node)
 {
     my ($self, $list, $node) = @_;
 
-	foreach my $scriptNode ($node->getElementsByTagName('script', 0)) {
+    foreach my $scriptNode ($node->getElementsByTagName('script', 0)) {
         my $script = $scriptNode->getFirstChild()->getNodeValue();
+        push(@{$self->{$list}}, $script);
+    }
+}
+
+sub _addScriptsYAML
+{
+    my ($self, $list, $scripts) = @_;
+
+    foreach my $script (@{$scripts}) {
         push(@{$self->{$list}}, $script);
     }
 }

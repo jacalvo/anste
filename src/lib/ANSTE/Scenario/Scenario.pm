@@ -26,6 +26,7 @@ use ANSTE::Exceptions::InvalidFile;
 use Text::Template;
 use Safe;
 use XML::DOM;
+use YAML::XS;
 
 
 # Class: Scenario
@@ -43,20 +44,20 @@ use XML::DOM;
 #
 sub new # returns new Scenario object
 {
-	my ($class) = @_;
-	my $self = {};
+    my ($class) = @_;
+    my $self = {};
 
-	$self->{name} = '';
-	$self->{desc} = '';
+    $self->{name} = '';
+    $self->{desc} = '';
     $self->{manualBridging} = 0;
-	$self->{virtualizer} = '';
-	$self->{system} = '';
-	$self->{hosts} = [];
+    $self->{virtualizer} = '';
+    $self->{system} = '';
+    $self->{hosts} = [];
     $self->{bridges} = {};
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: name
@@ -69,9 +70,9 @@ sub new # returns new Scenario object
 #
 sub name # returns name string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{name};
+    return $self->{name};
 }
 
 # Method: setName
@@ -88,12 +89,12 @@ sub name # returns name string
 #
 sub setName # name string
 {
-	my ($self, $name) = @_;
+    my ($self, $name) = @_;
 
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-	$self->{name} = $name;
+    $self->{name} = $name;
 }
 
 # Method: desc
@@ -106,9 +107,9 @@ sub setName # name string
 #
 sub desc # returns desc string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{desc};
+    return $self->{desc};
 }
 
 # Method: setDesc
@@ -125,12 +126,12 @@ sub desc # returns desc string
 #
 sub setDesc # desc string
 {
-	my ($self, $desc) = @_;
+    my ($self, $desc) = @_;
 
     defined $desc or
         throw ANSTE::Exceptions::MissingArgument('desc');
 
-	$self->{desc} = $desc;
+    $self->{desc} = $desc;
 }
 
 # Method: manualBridging
@@ -143,9 +144,9 @@ sub setDesc # desc string
 #
 sub manualBridging # returns boolean
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{manualBridging};
+    return $self->{manualBridging};
 }
 
 # Method: setManualBridging
@@ -162,12 +163,12 @@ sub manualBridging # returns boolean
 #
 sub setManualBridging # (value)
 {
-	my ($self, $manualBridging) = @_;
+    my ($self, $manualBridging) = @_;
 
     defined $manualBridging or
         throw ANSTE::Exceptions::MissingArgument('manualBridging');
 
-	$self->{manualBridging} = $manualBridging;
+    $self->{manualBridging} = $manualBridging;
 }
 
 # Method: virtualizer
@@ -180,9 +181,9 @@ sub setManualBridging # (value)
 #
 sub virtualizer # returns virtualizer package
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{virtualizer};
+    return $self->{virtualizer};
 }
 
 # Method: setVirtualizer
@@ -199,12 +200,12 @@ sub virtualizer # returns virtualizer package
 #
 sub setVirtualizer # (virtualizer)
 {
-	my ($self, $virtualizer) = @_;
+    my ($self, $virtualizer) = @_;
 
     defined $virtualizer or
         throw ANSTE::Exceptions::MissingArgument('virtualizer');
 
-	$self->{virtualizer} = $virtualizer;
+    $self->{virtualizer} = $virtualizer;
 }
 
 # Method: system
@@ -217,9 +218,9 @@ sub setVirtualizer # (virtualizer)
 #
 sub system # returns system package
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{system};
+    return $self->{system};
 }
 
 # Method: setSystem
@@ -236,12 +237,12 @@ sub system # returns system package
 #
 sub setSystem # (system)
 {
-	my ($self, $system) = @_;
+    my ($self, $system) = @_;
 
     defined $system or
         throw ANSTE::Exceptions::MissingArgument('system');
 
-	$self->{system} = $system;
+    $self->{system} = $system;
 }
 
 # Method: hosts
@@ -254,9 +255,9 @@ sub setSystem # (system)
 #
 sub hosts # returns hosts list
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{hosts};
+    return $self->{hosts};
 }
 
 # Method: addHost
@@ -274,7 +275,7 @@ sub hosts # returns hosts list
 #
 sub addHost # (host)
 {
-	my ($self, $host) = @_;
+    my ($self, $host) = @_;
 
     defined $host or
         throw ANSTE::Exceptions::MissingArgument('host');
@@ -286,7 +287,7 @@ sub addHost # (host)
 
     $host->setScenario($self);
 
-	push(@{$self->{hosts}}, $host);
+    push(@{$self->{hosts}}, $host);
 }
 
 # Method: bridges
@@ -360,7 +361,7 @@ sub addBridge # (network, num?)
 #
 sub loadFromFile # (filename)
 {
-	my ($self, $filename) = @_;
+    my ($self, $filename) = @_;
 
     defined $filename or
         throw ANSTE::Exceptions::MissingArgument('filename');
@@ -377,25 +378,40 @@ sub loadFromFile # (filename)
     my $text = $template->fill_in(HASH => $variables, SAFE => new Safe)
         or die "Couldn't fill in the template: $Text::Template::ERROR";
 
-	my $parser = new XML::DOM::Parser;
-    my $doc;
-    eval {
-        $doc = $parser->parse($text);
-    };
-    if ($@) {
-        throw ANSTE::Exceptions::Error("Error parsing $filename: $@");
+    if ($filename =~ /\.xml$/) {
+        my $parser = new XML::DOM::Parser;
+        my $doc;
+        eval {
+            $doc = $parser->parse($text);
+        };
+        if ($@) {
+            throw ANSTE::Exceptions::Error("Error parsing $file: $@");
+        }
+
+        my $scenario = $doc->getDocumentElement();
+        $self->_loadXML($scenario);
+
+        $doc->dispose();
+    } elsif ($filename =~ /\.yaml$/) {
+        my ($scenario) = YAML::XS::LoadFile($file);
+        $self->_loadYAML($scenario);
+    } else {
+        throw ANSTE::Exceptions::Error("Invalid file type ($file), only .xml or .yaml files are supported");
     }
+}
 
-	my $scenario = $doc->getDocumentElement();
+sub _loadXML
+{
+    my ($self, $scenario) = @_;
 
-	# Read name and description of the scenario
-	my $nameNode = $scenario->getElementsByTagName('name', 0)->item(0);
-	my $name = $nameNode->getFirstChild()->getNodeValue();
-	$self->setName($name);
-	my $descNode = $scenario->getElementsByTagName('desc', 0)->item(0);
-	my $desc = $descNode->getFirstChild()->getNodeValue();
-	$self->setDesc($desc);
-	my $manualBridgingNode = $scenario->getElementsByTagName('manual-bridging', 0)->item(0);
+    # Read name and description of the scenario
+    my $nameNode = $scenario->getElementsByTagName('name', 0)->item(0);
+    my $name = $nameNode->getFirstChild()->getNodeValue();
+    $self->setName($name);
+    my $descNode = $scenario->getElementsByTagName('desc', 0)->item(0);
+    my $desc = $descNode->getFirstChild()->getNodeValue();
+    $self->setDesc($desc);
+    my $manualBridgingNode = $scenario->getElementsByTagName('manual-bridging', 0)->item(0);
     if ($manualBridgingNode) {
         $self->setManualBridging(1);
 
@@ -408,23 +424,54 @@ sub loadFromFile # (filename)
         }
     }
 
-	# Read the <host> elements
-	foreach my $element ($scenario->getElementsByTagName('host', 0)) {
-		my $host = new ANSTE::Scenario::Host;
-		$host->load($element);
+    # Read the <host> elements
+    foreach my $element ($scenario->getElementsByTagName('host', 0)) {
+        my $host = new ANSTE::Scenario::Host;
+        $host->loadXML($element);
         if ($host->precondition()) {
-		    $self->addHost($host);
+            $self->addHost($host);
         }
-	}
+    }
+}
 
-	$doc->dispose();
+sub _loadYAML
+{
+    my ($self, $scenario) = @_;
+
+    # Read name and description of the scenario
+    my $name = $scenario->{name};
+    $self->setName($name);
+    my $desc = $scenario->{desc};
+    $self->setDesc($desc);
+
+    if ($scenario->{'manual-bridging'}) {
+        $self->setManualBridging(1);
+
+        # Read <bridges> block
+        my $bridges = $scenario->{'bridges'};
+        foreach my $bridge (@{$bridges}) {
+            my $id = $bridge->{'id'};
+            # FIXME
+            #my $net = $bridgeNode->getFirstChild()->getNodeValue();
+            #$self->{bridges}->{$net} = $id;
+        }
+    }
+
+    # Read the <host> elements
+    foreach my $element (@{$scenario->{hosts}}) {
+        my $host = new ANSTE::Scenario::Host;
+        $host->loadYAML($element);
+        if ($host->precondition()) {
+            $self->addHost($host);
+        }
+    }
 }
 
 sub _addScripts # (list, node)
 {
     my ($self, $list, $node) = @_;
 
-	foreach my $scriptNode ($node->getElementsByTagName('script', 0)) {
+    foreach my $scriptNode ($node->getElementsByTagName('script', 0)) {
         my $script = $scriptNode->getFirstChild()->getNodeValue();
         push(@{$self->{$list}}, $script);
     }

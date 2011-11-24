@@ -68,14 +68,14 @@ use constant IFACE_TYPE_UNSET => 2;
 #
 sub new # returns new NetworkInterface object
 {
-	my ($class) = @_;
-	my $self = {};
+    my ($class) = @_;
+    my $self = {};
 
-	$self->{type} = IFACE_TYPE_STATIC;
-	$self->{name} = '';
-	$self->{address} = '';
-	$self->{netmask} = '';
-	$self->{gateway} = '';
+    $self->{type} = IFACE_TYPE_STATIC;
+    $self->{name} = '';
+    $self->{address} = '';
+    $self->{netmask} = '';
+    $self->{gateway} = '';
     $self->{external} = 0;
     $self->{bridge} = 1;
     # Autoassing mac address
@@ -85,9 +85,9 @@ sub new # returns new NetworkInterface object
         $MAC_ADDR_COUNTER--;
     }
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: name
@@ -100,9 +100,9 @@ sub new # returns new NetworkInterface object
 #
 sub name # returns interface name string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{name};
+    return $self->{name};
 }
 
 # Method: setName
@@ -119,12 +119,12 @@ sub name # returns interface name string
 #
 sub setName # (name)
 {
-	my ($self, $name) = @_;
+    my ($self, $name) = @_;
 
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-	$self->{name} = $name;
+    $self->{name} = $name;
 }
 
 # Method: type
@@ -137,9 +137,9 @@ sub setName # (name)
 #
 sub type # returns interface type
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{type};
+    return $self->{type};
 }
 
 # Method: setTypeStatic
@@ -148,9 +148,9 @@ sub type # returns interface type
 #
 sub setTypeStatic
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	$self->{type} = IFACE_TYPE_STATIC;
+    $self->{type} = IFACE_TYPE_STATIC;
 }
 
 # Method: setTypeDHCP
@@ -159,9 +159,9 @@ sub setTypeStatic
 #
 sub setTypeDHCP
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	$self->{type} = IFACE_TYPE_DHCP;
+    $self->{type} = IFACE_TYPE_DHCP;
 }
 
 # Method: setTypeUnset
@@ -170,9 +170,9 @@ sub setTypeDHCP
 #
 sub setTypeUnset
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	$self->{type} = IFACE_TYPE_UNSET;
+    $self->{type} = IFACE_TYPE_UNSET;
 }
 
 # Method: address
@@ -185,9 +185,9 @@ sub setTypeUnset
 #
 sub address # returns address string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{address};
+    return $self->{address};
 }
 
 # Method: setAddress
@@ -205,7 +205,7 @@ sub address # returns address string
 #
 sub setAddress # address string
 {
-	my ($self, $address) = @_;
+    my ($self, $address) = @_;
 
     defined $address or
         throw ANSTE::Exceptions::MissingArgument('address');
@@ -214,7 +214,7 @@ sub setAddress # address string
         throw ANSTE::Exceptions::InvalidData('address', $address);
     }
 
-	$self->{address} = $address;
+    $self->{address} = $address;
 }
 
 # Method: hwAddress
@@ -227,9 +227,9 @@ sub setAddress # address string
 #
 sub hwAddress # returns address string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{hwAddress};
+    return $self->{hwAddress};
 }
 
 # Method: setHwAddress
@@ -247,7 +247,7 @@ sub hwAddress # returns address string
 #
 sub setHwAddress # hardware address string
 {
-	my ($self, $hwAddress) = @_;
+    my ($self, $hwAddress) = @_;
 
     defined $hwAddress or
         throw ANSTE::Exceptions::MissingArgument('hwAddress');
@@ -256,7 +256,7 @@ sub setHwAddress # hardware address string
         throw ANSTE::Exceptions::InvalidData('hwAddress', $hwAddress);
     }
 
-	$self->{hwAddress} = $hwAddress;
+    $self->{hwAddress} = $hwAddress;
 }
 
 
@@ -270,9 +270,9 @@ sub setHwAddress # hardware address string
 #
 sub netmask # returns netmask string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{netmask};
+    return $self->{netmask};
 }
 
 # Method: setNetmask
@@ -290,7 +290,7 @@ sub netmask # returns netmask string
 #
 sub setNetmask # netmask string
 {
-	my ($self, $netmask) = @_;
+    my ($self, $netmask) = @_;
 
     defined $netmask or
         throw ANSTE::Exceptions::MissingArgument('netmask');
@@ -299,7 +299,7 @@ sub setNetmask # netmask string
         throw ANSTE::Exceptions::InvalidData('netmask', $netmask);
     }
 
-	$self->{netmask} = $netmask;
+    $self->{netmask} = $netmask;
 }
 
 # Method: gateway
@@ -312,9 +312,9 @@ sub setNetmask # netmask string
 #
 sub gateway # returns gateway string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{gateway};
+    return $self->{gateway};
 }
 
 # Method: setGateway
@@ -332,7 +332,7 @@ sub gateway # returns gateway string
 #
 sub setGateway # gateway string
 {
-	my ($self, $gateway) = @_;
+    my ($self, $gateway) = @_;
 
     defined $gateway or
         throw ANSTE::Exceptions::MissingArgument('gateway');
@@ -341,7 +341,7 @@ sub setGateway # gateway string
         throw ANSTE::Exceptions::InvalidData('gateway', $gateway);
     }
 
-	$self->{gateway} = $gateway;
+    $self->{gateway} = $gateway;
 }
 
 # Method: removeGateway
@@ -365,9 +365,9 @@ sub removeGateway
 #
 sub external # returns external string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{external};
+    return $self->{external};
 }
 
 # Method: setExternal
@@ -384,12 +384,12 @@ sub external # returns external string
 #
 sub setExternal # external string
 {
-	my ($self, $external) = @_;
+    my ($self, $external) = @_;
 
     defined $external or
         throw ANSTE::Exceptions::MissingArgument('external');
 
-	$self->{external} = $external;
+    $self->{external} = $external;
 }
 
 # Method: bridge
@@ -402,9 +402,9 @@ sub setExternal # external string
 #
 sub bridge # returns interface bridge string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{bridge};
+    return $self->{bridge};
 }
 
 # Method: setBridge
@@ -421,12 +421,12 @@ sub bridge # returns interface bridge string
 #
 sub setBridge # (bridge)
 {
-	my ($self, $bridge) = @_;
+    my ($self, $bridge) = @_;
 
     defined $bridge or
         throw ANSTE::Exceptions::MissingArgument('bridge');
 
-	$self->{bridge} = $bridge;
+    $self->{bridge} = $bridge;
 }
 
 # Method: load
@@ -445,7 +445,7 @@ sub setBridge # (bridge)
 #
 sub load # (node)
 {
-	my ($self, $node) = @_;
+    my ($self, $node) = @_;
 
     defined $node or
         throw ANSTE::Exceptions::MissingArgument('node');
@@ -454,40 +454,40 @@ sub load # (node)
         throw ANSTE::Exceptions::InvalidType('node', 'XML::DOM::Element');
     }
 
-	my $type = $node->getAttribute('type');
+    my $type = $node->getAttribute('type');
     my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
     my $name = $nameNode->getFirstChild()->getNodeValue();
     $self->setName($name);
-	if ($type eq 'static') {
-		$self->setTypeStatic();
-		my $addressNode = $node->getElementsByTagName('address', 0)->item(0);
-		my $address = $addressNode->getFirstChild()->getNodeValue();
-		$self->setAddress($address);
-		my $netmaskNode = $node->getElementsByTagName('netmask', 0)->item(0);
-		my $netmask = $netmaskNode->getFirstChild()->getNodeValue();
-		$self->setNetmask($netmask);
-		my $gatewayNode = $node->getElementsByTagName('gateway', 0)->item(0);
+    if ($type eq 'static') {
+        $self->setTypeStatic();
+        my $addressNode = $node->getElementsByTagName('address', 0)->item(0);
+        my $address = $addressNode->getFirstChild()->getNodeValue();
+        $self->setAddress($address);
+        my $netmaskNode = $node->getElementsByTagName('netmask', 0)->item(0);
+        my $netmask = $netmaskNode->getFirstChild()->getNodeValue();
+        $self->setNetmask($netmask);
+        my $gatewayNode = $node->getElementsByTagName('gateway', 0)->item(0);
         if ($gatewayNode) {
-    		my $gateway = $gatewayNode->getFirstChild()->getNodeValue();
+            my $gateway = $gatewayNode->getFirstChild()->getNodeValue();
             $self->setGateway($gateway);
         }
-		my $externalNode = $node->getElementsByTagName('external', 0)->item(0);
+        my $externalNode = $node->getElementsByTagName('external', 0)->item(0);
         if ($externalNode) {
             $self->setExternal(1);
         }
-	} elsif ($type eq 'dhcp') {
-		$self->setTypeDHCP();
-	} elsif ($type eq 'unset') {
+    } elsif ($type eq 'dhcp') {
+        $self->setTypeDHCP();
+    } elsif ($type eq 'unset') {
         $self->setTypeUnset();
     } else {
         throw ANSTE::Exceptions::Error("Invalid type for interface $name");
     }
     my $hwAddress;
     # MAC address may be specified on both dhcp and static interfaces
-	my $hwAddrNode = $node->getElementsByTagName('hw-addr', 0)->item(0);
+    my $hwAddrNode = $node->getElementsByTagName('hw-addr', 0)->item(0);
     if ($hwAddrNode) {
         $hwAddress = $hwAddrNode->getFirstChild()->getNodeValue();
-	    $self->setHwAddress($hwAddress);
+        $self->setHwAddress($hwAddress);
     }
 
     my $bridgeNode = $node->getElementsByTagName('bridge', 0)->item(0);
@@ -499,6 +499,56 @@ sub load # (node)
             throw ANSTE::Exceptions::Error("Auto-bridging cannot be done with non-static interface $name. You need to specify a bridge manually.");
         }
     }
+}
+
+sub loadYAML
+{
+    my ($self, $iface) = @_;
+
+    defined $iface or
+        throw ANSTE::Exceptions::MissingArgument('iface');
+
+    my $type = $iface->{type};
+    my $name = $iface->{name};
+    $self->setName($name);
+    if ($type eq 'static') {
+        $self->setTypeStatic();
+        my $address = $iface->{address};
+        $self->setAddress($address);
+        my $netmask = $iface->{netmask};
+        $self->setNetmask($netmask);
+        my $gateway = $iface->{gateway};
+        if ($gateway) {
+            $self->setGateway($gateway);
+        }
+        my $external = $iface->{external};
+        if ($external) {
+            $self->setExternal(1);
+        }
+    } elsif ($type eq 'dhcp') {
+        $self->setTypeDHCP();
+    } elsif ($type eq 'unset') {
+        $self->setTypeUnset();
+    } else {
+        throw ANSTE::Exceptions::Error("Invalid type for interface $name");
+    }
+    my $hwAddress;
+    # MAC address may be specified on both dhcp and static interfaces
+    my $hwAddr = $iface->{'hw-addr'};
+    if ($hwAddr) {
+        $self->setHwAddress($hwAddress);
+    }
+
+#FIXME
+#    my $bridgeNode = $node->getElementsByTagName('bridge', 0)->item(0);
+#    if ($bridgeNode) {
+#        my $bridge = $bridgeNode->getFirstChild()->getNodeValue();
+#        $self->setBridge($bridge);
+#    } else {
+#        unless ($type eq 'static') {
+#            throw ANSTE::Exceptions::Error("Auto-bridging cannot be done with non-static interface $name. You need to specify a bridge manually.");
+#        }
+#    }
 }
 
 1;

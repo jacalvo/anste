@@ -38,14 +38,14 @@ use XML::DOM;
 #
 sub new # returns new Packages object
 {
-	my $class = shift;
-	my $self = {};
-	
-	$self->{list} = [];
+    my $class = shift;
+    my $self = {};
 
-	bless($self, $class);
+    $self->{list} = [];
 
-	return $self;
+    bless($self, $class);
+
+    return $self;
 }
 
 # Method: list
@@ -56,11 +56,11 @@ sub new # returns new Packages object
 #
 #   ref - list of packages
 #
-sub list # returns the package list 
+sub list # returns the package list
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{list};
+    return $self->{list};
 }
 
 # Method: add
@@ -77,13 +77,13 @@ sub list # returns the package list
 #
 sub add # (packages)
 {
-	my ($self, @packages) = @_;	
+    my ($self, @packages) = @_;
 
     if (not @packages) {
         throw ANSTE::Exceptions::MissingArgument('packages');
     }
 
-	push(@{$self->{list}}, @packages);
+    push(@{$self->{list}}, @packages);
 }
 
 # Method: load
@@ -93,7 +93,7 @@ sub add # (packages)
 #
 # Parameters:
 #
-#   node - <XML::DOM::Element> object containing the test data.    
+#   node - <XML::DOM::Element> object containing the test data.
 #
 # Exceptions:
 #
@@ -102,8 +102,8 @@ sub add # (packages)
 #
 sub load # (node)
 {
-	my ($self, $node) = @_;
-    
+    my ($self, $node) = @_;
+
     defined $node or
         throw ANSTE::Exceptions::MissingArgument('node');
 
@@ -113,21 +113,45 @@ sub load # (node)
     }
 
 
-	foreach my $profile ($node->getElementsByTagName('profile', 0)) {
-		my $name = $profile->getFirstChild()->getNodeValue();
+    foreach my $profile ($node->getElementsByTagName('profile', 0)) {
+        my $name = $profile->getFirstChild()->getNodeValue();
         my $file = ANSTE::Config->instance()->profileFile($name);
         my $FILE;
-		open($FILE, '<', $file) or die "Error loading $file";
-		my @names;
-		chomp(@names = <$FILE>);
-		close $FILE or die "Can't close $file";
-		$self->add(@names);
-	}
+        open($FILE, '<', $file) or die "Error loading $file";
+        my @names;
+        chomp(@names = <$FILE>);
+        close $FILE or die "Can't close $file";
+        $self->add(@names);
+    }
 
-	foreach my $package ($node->getElementsByTagName('package', 0)) {
-		my $name = $package->getFirstChild()->getNodeValue();
-		$self->add($name);
-	}
+    foreach my $package ($node->getElementsByTagName('package', 0)) {
+        my $name = $package->getFirstChild()->getNodeValue();
+        $self->add($name);
+    }
+}
+
+sub loadYAML
+{
+    my ($self, $packages) = @_;
+
+    defined $packages or
+        throw ANSTE::Exceptions::MissingArgument('packages');
+
+    # FIXME
+#   foreach my $profile ($node->getElementsByTagName('profile', 0)) {
+#       my $name = $profile->getFirstChild()->getNodeValue();
+#        my $file = ANSTE::Config->instance()->profileFile($name);
+#        my $FILE;
+#       open($FILE, '<', $file) or die "Error loading $file";
+#       my @names;
+#       chomp(@names = <$FILE>);
+#       close $FILE or die "Can't close $file";
+#       $self->add(@names);
+#   }
+
+    foreach my $package (@{$packages}) {
+        $self->add($package);
+    }
 }
 
 1;
