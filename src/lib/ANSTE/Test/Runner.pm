@@ -499,9 +499,11 @@ sub _runTest # (test)
         if ($test->type() eq 'host') {
             $ret = $self->{system}->runTest("$newPath/$name",
                                              $logfile, $env, $params);
+        } elsif ($test->type() eq 'web') {
+            $ret = $self->_runWebTest($test, "$newPath/$name", $logfile);
         } else {
             $ret = $self->_runScriptOnHost($hostname, "$newPath/$name",
-                                     $logfile, $env, $params);
+                                           $logfile, $env, $params);
         }
 
         # Store end time
@@ -598,6 +600,33 @@ sub _runScriptOnHost # (hostname, script, log?, env?, params?)
     }
 
     return $ret;
+}
+
+sub _runWebTest
+{
+    my ($self, $test, $script, $logfile) = @_;
+
+    my $hostname = $test->host();
+    my $port = $test->port();
+    my $protocol = $test->protocol();
+
+    my $ip = $self->{hostIP}->{$hostname};
+
+    my $config = ANSTE::Config->instance();
+    unless ($protocol) {
+        $protocol = $config->seleniumProtocol();
+    }
+
+    my $url = "$protocol://$ip";
+    if (defined ($port)) {
+        $url .= ":$port";
+    }
+
+    $test->setVariable('BASE_URL', $url);
+    my $env = $test->env();
+    my $params = $test->params();
+
+    return $self->{system}->runTest($script, $logfile, $env, $params);
 }
 
 # Method: _runSeleniumRC

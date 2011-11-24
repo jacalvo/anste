@@ -1,4 +1,6 @@
 HEAD
+    + New 'web' test type similar to 'host' but receiving BASE_URL
+      as environment variable, useful for selenium scripts
     + New 'host' type value allows to run tests in the host machine
     + Shutdown scenario if SIGTERM is received
     + Print selenium command for debug purposes in verbose mode
