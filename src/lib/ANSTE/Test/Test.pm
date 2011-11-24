@@ -604,6 +604,9 @@ sub load # (node)
 
     my $paramsNode = $node->getElementsByTagName('params', 0)->item(0);
     if ($paramsNode) {
+        if ($type eq 'web') {
+            throw ANSTE::Exceptions::Error("Wrong <params> element in $name. Web tests can't receive params, just variables.");
+        }
         my $params = $paramsNode->getFirstChild()->getNodeValue();
         $self->setParams($params);
     }

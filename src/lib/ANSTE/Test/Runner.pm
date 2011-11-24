@@ -624,9 +624,8 @@ sub _runWebTest
 
     $test->setVariable('BASE_URL', $url);
     my $env = $test->env();
-    my $params = $test->params();
 
-    return $self->{system}->runTest($script, $logfile, $env, $params);
+    return $self->{system}->runTest($script, $logfile, $env, '');
 }
 
 # Method: _runSeleniumRC
