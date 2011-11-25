@@ -519,7 +519,7 @@ sub setPrecondition
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
 #
-sub load # (node)
+sub loadXML
 {
     my ($self, $node) = @_;
 
@@ -632,6 +632,112 @@ sub load # (node)
             last;
         }
     }
+}
+
+sub loadYAML
+{
+    my ($self, $test) = @_;
+
+    defined $test or
+        throw ANSTE::Exceptions::MissingArgument('test');
+
+    my $configVars = ANSTE::Config->instance()->variables();
+
+    my $type = $test->{type};
+    if ($type) {
+        $self->setType($type);
+    }
+    my $critical = $test->{critical};
+    if ($critical) {
+        $self->setCritical(1);
+    }
+
+    my $name = $test->{name};
+    $self->setName($name);
+    my $desc = $test->{desc};
+    $self->setDesc($desc);
+
+    # FIXME: preconditions not yet supported (they will have a new syntax)
+    my $host = $test->{host};
+    $self->setHost($host);
+    my $validHost = defined ($host);
+#    my $validHost = 0;
+#    my $hostNodes = $node->getElementsByTagName('host', 0);
+#    for (my $i = 0; $i < $hostNodes->getLength(); $i++) {
+#        my $hostNode = $hostNodes->item($i);
+#        my $hostPrecondition = 1;
+#        my $var = $hostNode->getAttribute('var');
+#        if ($var) {
+#            my $expectedValue = $hostNode->getAttribute('eq');
+#            my $value = $configVars->{$var};
+#            unless (defined $value) {
+#                $value = 0;
+#            }
+#            $hostPrecondition = $expectedValue eq $value;
+#        }
+#        if ($hostPrecondition) {
+#            my $host = $hostNode->getFirstChild()->getNodeValue();
+#            $self->setHost($host);
+#            $validHost = 1;
+#            last;
+#        }
+#    }
+    unless ($validHost or ($type eq 'host')) {
+        throw ANSTE::Exceptions::Error("No valid host found for test $name.");
+    }
+
+    my $port = $test->{port};
+    if ($port) {
+        $self->setPort($port);
+    }
+
+    my $protocol = $test->{protocol};
+    if ($protocol) {
+        unless (($protocol eq 'http') or ($protocol eq 'https')) {
+            throw ANSTE::Exceptions::Error("Invalid protocol for test $name.");
+        }
+        $self->setProtocol($protocol);
+    }
+
+    my $dir = $test->{dir};
+    if ($dir) {
+        $self->setDir($dir);
+    }
+
+    my $assert = $test->{assert};
+    if ($assert) {
+        $self->setAssert($assert);
+    }
+
+    my $params = $test->{params};
+    if ($params) {
+        if ($type eq 'web') {
+            throw ANSTE::Exceptions::Error("Wrong <params> element in $name. Web tests can't receive params, just variables.");
+        }
+        $self->setParams($params);
+    }
+
+    my $vars = $test->{vars};
+    foreach my $name (keys %{$vars}) {
+        my $value = $vars->{$name};
+        $self->setVariable($name, $value);
+    }
+
+    #FIXME
+    # Check if all preconditions are satisfied
+#    my $preconditionNodes = $node->getElementsByTagName('precondition', 0);
+#    for (my $i = 0; $i < $preconditionNodes->getLength(); $i++) {
+#        my $var = $preconditionNodes->item($i)->getAttribute('var');
+#        my $expectedValue = $preconditionNodes->item($i)->getAttribute('eq');
+#        my $value = $configVars->{$var};
+#        unless (defined $value) {
+#            $value = 0;
+#        }
+#        if ($value ne $expectedValue) {
+#            $self->setPrecondition(0);
+#            last;
+#        }
+#    }
 }
 
 1;

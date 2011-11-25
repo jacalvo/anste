@@ -40,8 +40,8 @@ use XML::DOM;
 #
 sub new # returns new TestSuite object
 {
-	my ($class, $dir) = @_;
-	my $self = {};
+    my ($class, $dir) = @_;
+    my $self = {};
 
     $self->{name} = '';
     $self->{desc} = '';
@@ -49,9 +49,9 @@ sub new # returns new TestSuite object
     $self->{scenario} = '';
     $self->{tests} = [];
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: name
@@ -64,9 +64,9 @@ sub new # returns new TestSuite object
 #
 sub name # returns name string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{name};
+    return $self->{name};
 }
 
 # Method: setName
@@ -83,12 +83,12 @@ sub name # returns name string
 #
 sub setName # name string
 {
-	my ($self, $name) = @_;
+    my ($self, $name) = @_;
 
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-	$self->{name} = $name;
+    $self->{name} = $name;
 }
 
 # Method: desc
@@ -101,9 +101,9 @@ sub setName # name string
 #
 sub desc # returns desc string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{desc};
+    return $self->{desc};
 }
 
 # Method: setDesc
@@ -120,12 +120,12 @@ sub desc # returns desc string
 #
 sub setDesc # desc string
 {
-	my ($self, $desc) = @_;
+    my ($self, $desc) = @_;
 
     defined $desc or
         throw ANSTE::Exceptions::MissingArgument('desc');
 
-	$self->{desc} = $desc;
+    $self->{desc} = $desc;
 }
 
 # Method: dir
@@ -138,9 +138,9 @@ sub setDesc # desc string
 #
 sub dir # returns dir string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{dir};
+    return $self->{dir};
 }
 
 # Method: setDir
@@ -157,12 +157,12 @@ sub dir # returns dir string
 #
 sub setDir # dir string
 {
-	my ($self, $dir) = @_;
+    my ($self, $dir) = @_;
 
     defined $dir or
         throw ANSTE::Exceptions::MissingArgument('dir');
 
-	$self->{dir} = $dir;
+    $self->{dir} = $dir;
 }
 
 # Method: scenario
@@ -175,9 +175,9 @@ sub setDir # dir string
 #
 sub scenario # returns scenario string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{scenario};
+    return $self->{scenario};
 }
 
 # Method: setScenario
@@ -194,12 +194,12 @@ sub scenario # returns scenario string
 #
 sub setScenario # scenario string
 {
-	my ($self, $scenario) = @_;
+    my ($self, $scenario) = @_;
 
     defined $scenario or
         throw ANSTE::Exceptions::MissingArgument('scenario');
 
-	$self->{scenario} = $scenario;
+    $self->{scenario} = $scenario;
 }
 
 # Method: tests
@@ -255,59 +255,96 @@ sub addTest # (test)
 #
 sub loadFromDir # (dirname)
 {
-	my ($self, $dirname) = @_;
+    my ($self, $dirname) = @_;
 
     defined $dirname or
         throw ANSTE::Exceptions::MissingArgument('dirname');
 
     $self->setDir($dirname);
 
-    my $file = ANSTE::Config->instance()->testFile("$dirname/suite.xml");
-
+    my $config = ANSTE::Config->instance();
+    my $file = $config->testFile("$dirname/suite.xml");
     if (not -r $file) {
-        throw ANSTE::Exceptions::InvalidFile('dirname', $file);
+        $file = $config->testFile("$dirname/suite.yaml");
+        if (not -r $file) {
+            throw ANSTE::Exceptions::InvalidFile('dirname', $file);
+        }
     }
 
     my $template = new Text::Template(SOURCE => $file)
         or die "Couldn't construct template: $Text::Template::ERROR";
-    my $variables = ANSTE::Config->instance()->variables();
+    my $variables = $config->variables();
     my $text = $template->fill_in(HASH => $variables, SAFE => new Safe)
         or die "Couldn't fill in the template: $Text::Template::ERROR";
 
-	my $parser = new XML::DOM::Parser;
-    my $doc;
-    eval {
-        $doc = $parser->parse($text);
-    };
-    if ($@) {
-        throw ANSTE::Exceptions::Error("Error parsing $file: $@");
+    if ($file =~ /\.xml$/) {
+        my $parser = new XML::DOM::Parser;
+        my $doc;
+        eval {
+            $doc = $parser->parse($text);
+        };
+        if ($@) {
+            throw ANSTE::Exceptions::Error("Error parsing $file: $@");
+        }
+
+        my $suite = $doc->getDocumentElement();
+        $self->_loadXML($suite);
+        $doc->dispose();
+    } elsif ($file =~ /\.yaml$/) {
+        my ($suite) = YAML::XS::Load($text);
+        $self->_loadYAML($suite);
     }
+}
 
-	my $suite = $doc->getDocumentElement();
+sub _loadXML
+{
+    my ($self, $suite) = @_;
 
-	# Read name and description of the suite
-	my $nameNode = $suite->getElementsByTagName('name', 0)->item(0);
-	my $name = $nameNode->getFirstChild()->getNodeValue();
-	$self->setName($name);
-	my $descNode = $suite->getElementsByTagName('desc', 0)->item(0);
-	my $desc = $descNode->getFirstChild()->getNodeValue();
-	$self->setDesc($desc);
+    # Read name and description of the suite
+    my $nameNode = $suite->getElementsByTagName('name', 0)->item(0);
+    my $name = $nameNode->getFirstChild()->getNodeValue();
+    $self->setName($name);
+    my $descNode = $suite->getElementsByTagName('desc', 0)->item(0);
+    my $desc = $descNode->getFirstChild()->getNodeValue();
+    $self->setDesc($desc);
 
     # Read the scenario filename
-	my $scenarioNode = $suite->getElementsByTagName('scenario', 0)->item(0);
-	my $scenario = $scenarioNode->getFirstChild()->getNodeValue();
-	$self->setScenario($scenario);
+    my $scenarioNode = $suite->getElementsByTagName('scenario', 0)->item(0);
+    my $scenario = $scenarioNode->getFirstChild()->getNodeValue();
+    $self->setScenario($scenario);
 
-	# Read the <test> elements
-	foreach my $element ($suite->getElementsByTagName('test', 0)) {
-		my $test = new ANSTE::Test::Test();
-		$test->load($element);
+    # Read the <test> elements
+    foreach my $element ($suite->getElementsByTagName('test', 0)) {
+        my $test = new ANSTE::Test::Test();
+        $test->loadXML($element);
         if ($test->precondition()) {
-		    $self->addTest($test);
+            $self->addTest($test);
         }
-	}
+    }
+}
 
-	$doc->dispose();
+sub _loadYAML
+{
+    my ($self, $suite) = @_;
+
+    # Read name and description of the suite
+    my $name = $suite->{name};
+    $self->setName($name);
+    my $desc = $suite->{desc};
+    $self->setDesc($desc);
+
+    # Read the scenario filename
+    my $scenario = $suite->{scenario};
+    $self->setScenario($scenario);
+
+    # Read the <test> elements
+    foreach my $element (@{$suite->{tests}}) {
+        my $test = new ANSTE::Test::Test();
+        $test->loadYAML($element);
+        if ($test->precondition()) {
+            $self->addTest($test);
+        }
+    }
 }
 
 1;

@@ -393,7 +393,7 @@ sub loadFromFile # (filename)
 
         $doc->dispose();
     } elsif ($filename =~ /\.yaml$/) {
-        my ($scenario) = YAML::XS::LoadFile($file);
+        my ($scenario) = YAML::XS::Load($text);
         $self->_loadYAML($scenario);
     } else {
         throw ANSTE::Exceptions::Error("Invalid file type ($file), only .xml or .yaml files are supported");
