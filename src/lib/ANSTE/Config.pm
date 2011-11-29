@@ -116,7 +116,6 @@ sub check
 
     $self->system();
     $self->virtualizer();
-    $self->format();
     $self->verbose();
     $self->wait();
     $self->waitFail();
@@ -195,30 +194,23 @@ sub setUserPath # (path)
     $self->{userPath} = $path;
 }
 
-# Method: format
+# Method: formats
 #
-#   Gets the value for the format option.
+#   Gets the list of values for the format option.
 #
 # Returns:
 #
-#   string - Value for the option.
+#   arrayref - Values for the option.
 #
 # Exceptions:
 #
 #   <ANSTE::Exceptions::NotFound> - throw if format is not found
 #
-sub format
+sub formats
 {
     my ($self) = @_;
 
-    my $format = $self->{format};
-
-    if (not ANSTE::Validate::format($format)) {
-        throw ANSTE::Exceptions::NotFound('Format',
-                                          $format);
-    }
-
-    return $format;
+    return $self->{format};
 }
 
 # Method: setFormat
@@ -241,11 +233,14 @@ sub setFormat # (format)
     defined $format or
         throw ANSTE::Exceptions::MissingArgument('format');
 
-    if (not ANSTE::Validate::format($format)) {
-        throw ANSTE::Exceptions::InvalidOption('format', $format);
+    my @formats = split (',', $format);
+    foreach my $f (@formats) {
+        if (not ANSTE::Validate::format($f)) {
+            throw ANSTE::Exceptions::InvalidOption('format', $f);
+        }
     }
 
-    $self->{format} = $format;
+    $self->{format} = \@formats;
 }
 
 # Method: system
@@ -1579,7 +1574,7 @@ sub _setDefaults
     my ($self) = @_;
 
     my $data = $self->{dataPath};
-    $self->{format} = 'HTML';
+    $self->{format} = [ 'HTML' ];
 
     $self->{default}->{'global'}->{'system'} = 'Debian';
     $self->{default}->{'global'}->{'virtualizer'} = 'Virt';

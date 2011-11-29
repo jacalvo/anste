@@ -57,8 +57,8 @@ my $SUITE_LIST_FILE = 'suites.list';
 #
 sub new # returns new Runner object
 {
-	my ($class) = @_;
-	my $self = {};
+    my ($class) = @_;
+    my $self = {};
 
     my $config = ANSTE::Config->instance();
 
@@ -70,17 +70,19 @@ sub new # returns new Runner object
     die "Can't load package $system: $@" if $@;
 
     $self->{system} = "ANSTE::System::$system"->new();
+    $self->{writers} = [];
 
-    my $format = $config->format();
-    my $writerPackage = "ANSTE::Report::$format" . 'Writer';
-    eval "use $writerPackage";
-    die "Can't load package $writerPackage: $@" if $@;
+    foreach my $format (@{$config->formats()}) {
+        my $writerPackage = "ANSTE::Report::$format" . 'Writer';
+        eval "use $writerPackage";
+        die "Can't load package $writerPackage: $@" if $@;
 
-    $self->{writer} = $writerPackage->new($self->{report});
+        push (@{$self->{writers}}, $writerPackage->new($self->{report}));
+    }
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: runDir
@@ -99,8 +101,8 @@ sub runDir # (suites)
 {
     my ($self, $suites) = @_;
 
-	defined $suites or
-		throw ANSTE::Exceptions::MissingArgument('suites');
+    defined $suites or
+        throw ANSTE::Exceptions::MissingArgument('suites');
 
     my $dir = ANSTE::Config->instance()->testFile($suites);
 
@@ -263,9 +265,10 @@ sub _runTests
             $suiteResult->add($testResult);
 
             # Write test reports
-            my $writer = $self->{writer};
             my $logPath = $config->logPath();
-            $writer->write("$logPath/" . $writer->filename());
+            foreach my $writer (@{$self->{writers}}) {
+                $writer->write("$logPath/" . $writer->filename());
+            }
             $report->setTime($self->_time());
             $ret = $testResult->value();
         } else {

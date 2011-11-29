@@ -1,4 +1,5 @@
 HEAD
+    + Added support for multiple formatters when writing test results
     + Allow to specify scenarios and tests in YAML in addition to XML
     + New 'web' test type similar to 'host' but receiving BASE_URL
       as environment variable, useful for selenium scripts
