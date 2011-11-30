@@ -476,8 +476,9 @@ sub _runTest # (test)
         $logfile = "$logPath/$suiteDir/$name.txt";
         my $scriptfile = "$logPath/$suiteDir/script/$name.txt";
 
-        # Copy to temp directory and rename it to test name
-        system("cp $path/test $newPath/$name");
+        # Copy to temp directory dereferencing links and rename to test name
+        system("cp -rL $path/* $newPath/");
+        system("mv $newPath/test $newPath/$name");
 
         my $env = $test->env();
         my $params = $test->params();

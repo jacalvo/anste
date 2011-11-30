@@ -1,4 +1,5 @@
 HEAD
+    + Copy additional files for web tests to allow use of packages in scripts
     + Added support for multiple formatters when writing test results
     + Allow to specify scenarios and tests in YAML in addition to XML
     + New 'web' test type similar to 'host' but receiving BASE_URL
