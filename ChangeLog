@@ -1,4 +1,5 @@
 HEAD
+    + New anste-clean command to destroy all network and machines
     + Copy additional files for web tests to allow use of packages in scripts
     + Added support for multiple formatters when writing test results
     + Allow to specify scenarios and tests in YAML in addition to XML

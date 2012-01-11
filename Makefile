@@ -35,6 +35,7 @@ deb: dist
 install-anste:
 	install -d $(DESTDIR)$(SBINDIR)
 	install -m755 src/bin/anste $(DESTDIR)$(SBINDIR)
+	install -m755 src/bin/anste-clean $(DESTDIR)$(SBINDIR)
 	install -d $(DESTDIR)$(DATADIR)
 	install -d src/data/images $(DESTDIR)$(DATADIR)/images
 	install -m644 src/data/images/* $(DESTDIR)$(DATADIR)/images

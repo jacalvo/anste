@@ -1,0 +1,17 @@
+#!/bin/bash
+
+VMS=$(virsh list 2>/dev/null | tail -n +3 | awk '{ print $2 }')
+
+for vm in $VMS
+do
+    echo Destroying machine $vm...
+    virsh destroy $vm
+done
+
+BRIDGES=$(virsh net-list 2>/dev/null | tail -n +3 | awk '{ print $1 }')
+
+for br in $BRIDGES
+do
+    echo Destroying network $br...
+    virsh net-destroy $br
+done

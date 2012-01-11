@@ -44,6 +44,7 @@ my $create = '';
 my $remove = '';
 my $deploy = '';
 my $shutdown = '';
+my $clean = '';
 my $test = '';
 my $out = '';
 my $path = '';
@@ -72,6 +73,7 @@ GetOptions('create' => \$create,
            'reuse' => \$reuse,
            'step' => \$step,
            'break=s' => \$break,
+           'clean' => \$clean,
            'help' => \$help) or pod2usage(2);
 
 pod2usage(1) if $help;
@@ -129,6 +131,9 @@ unless (flock ($lockFile, LOCK_EX | LOCK_NB)) {
     exit(1);
 }
 
+if ($clean) {
+    exec('anste-clean');
+}
 
 unless ($shutdown or $remove) {
     # Check virtual machines already running
@@ -170,17 +175,13 @@ $SIG{TERM} = \&term_handler;
 foreach my $file (@files) {
     if ($create) {
         create($file);
-    }
-    elsif ($remove) {
+    } elsif ($remove) {
         remove($file);
-    }
-    elsif ($deploy) {
+    } elsif ($deploy) {
         deploy($file);
-    }
-    elsif ($shutdown) {
+    } elsif ($shutdown) {
         destroy($file);
-    }
-    elsif ($test) {
+    } elsif ($test) {
         if ($format) {
             $config->setFormat($format);
         }
@@ -383,6 +384,7 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -remove            delete a base image
    -deploy            deploy a scenario
    -shutdown          finish and delete all the images of a scenario
+   -clean             destroy any deployed machine or network
    -test              test a suite
    -path <dir>        where to find the data (CWD if not specified)
    -out  <dir>        report output directory
