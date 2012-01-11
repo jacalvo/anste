@@ -16,4 +16,5 @@ do
     virsh net-destroy $br
 done
 
+pkill -9 -f selenium
 pkill -9 anste
