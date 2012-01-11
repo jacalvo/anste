@@ -78,8 +78,12 @@ GetOptions('create' => \$create,
 
 pod2usage(1) if $help;
 
-if (none($create, $remove, $deploy, $shutdown, $test) == 1) {
+if (none($create, $remove, $deploy, $shutdown, $test, $clean) == 1) {
     pod2usage("$0: No action specified.");
+}
+
+if ($clean) {
+    exec('anste-clean');
 }
 
 pod2usage("$0: No files given.") if @ARGV == 0;
@@ -129,10 +133,6 @@ unless (flock ($lockFile, LOCK_EX | LOCK_NB)) {
     print STDERR 'Could not get the lock for ' . LOCK_FILE . ": $!\n";
     print STDERR "Maybe another instance of ANSTE is already running\n";
     exit(1);
-}
-
-if ($clean) {
-    exec('anste-clean');
 }
 
 unless ($shutdown or $remove) {
