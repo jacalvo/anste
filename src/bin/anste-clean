@@ -15,3 +15,5 @@ do
     echo Destroying network $br...
     virsh net-destroy $br
 done
+
+pkill -9 anste
