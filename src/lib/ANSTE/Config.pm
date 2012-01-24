@@ -1627,8 +1627,12 @@ sub _setDefaults
     $self->{default}->{'virt-options'}->{'size'} = '2200';
     $self->{default}->{'virt-options'}->{'memory'} = '512';
 
+    my $dist = $self->{config}->{'global'}->{'dist'};
+    unless ($dist) {
+        $dist = 'lucid';
+    }
     # Default values for variables, overridable by commandline option
-    $self->{variables} = {dist => 'lucid'};
+    $self->{variables} = {dist => $dist};
 
     # Breakpoints
     $self->{breakpoints} = {};
