@@ -146,7 +146,11 @@ sub deploy # returns hash ref with the ip of each host
             $deployer->startDeployThread();
         }
 
-        $hostIP->{$hostname} = $deployer->ip();
+        my $ip = $deployer->ip();
+        if (not $ip) {
+            throw ANSTE::Exceptions::Error("Canot get IP for host $hostname");
+        }
+        $hostIP->{$hostname} = $ip;
     }
 
     if (not $reuse) {
