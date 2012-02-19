@@ -237,14 +237,21 @@ sub _deploy
     $commIface->removeGateway() unless $host->isRouter();
     unshift(@{$host->network()->interfaces()}, $commIface);
 
+    my $error = 0;
     print "[$hostname] Creating a copy of the base image...\n";
+    
     try {
         $self->_copyBaseImage() or die "Can't copy base image";
     } catch ANSTE::Exceptions::NotFound with {
         print "[$hostname] Base image not found, can't continue.";
-        return(-1);
+	$error = 1;
+#        return(-1);
     };
 
+    if ($error) {
+	return undef;
+    }
+    
     # Critical section here to prevent mount errors with loop device busy
     # or KVM crashes when trying to create two machines at the same time
     {
@@ -254,14 +261,18 @@ sub _deploy
             my $ok = $self->_updateHostname();
             if (not $ok) {
                 print "[$hostname] Error copying host files.\n";
-                return;
+                $error = 1;
             }
         } catch Error with {
             my $err = shift;
             my $msg = $err->stringify();
             print "[$hostname] ERROR: $msg\n";
-            return;
+            $error = 1;
         };
+
+	if ($error) {
+	    return undef;
+	}
 
         print "[$hostname] Creating virtual machine ($ip)...\n";
         $cmd->createVirtualMachine();
