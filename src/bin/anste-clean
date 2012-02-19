@@ -18,3 +18,5 @@ done
 
 pkill -9 -f selenium
 pkill -9 anste
+# killing dnsmasq otherwise we could get the error: 'dnsmasq: failed to bind listening socket for X.X.X.X: Address already in use'
+pkill -9 dnsmasq
