@@ -615,7 +615,7 @@ sub _runWebTest
     my $port = $test->port();
     my $protocol = $test->protocol();
 
-    if (not exists $self->{hostIP}->{$hostname} {
+    if (not exists $self->{hostIP}->{$hostname}) {
        throw ANSTE::Exceptions::Error("Inexistent hostname $hostname");
     }
 
