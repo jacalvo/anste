@@ -299,11 +299,11 @@ sub _runTests
         }
         if ($stop) {
             while(1) {
-                print "$msg\n" .
-                    "Enter 'r' to run the test again or any other to continue: ";
-                my $line = <STDIN>;
-                chomp($line);
-                if ($line =~ m:r$:) {
+                print "$msg " .
+                    "Press 'r' to run the test again or 'c' to continue.\n";
+                my $key;
+                read(STDIN, $key, 1);
+                if ($key eq 'r') {
                     my $testResult = $self->_runOneTest($test);
                     if ($testResult and ($testResult->value() == 0)) {
                         last;
@@ -615,8 +615,16 @@ sub _runWebTest
     my $port = $test->port();
     my $protocol = $test->protocol();
 
-    my $ip = $self->{hostIP}->{$hostname};
+    if (not exists $self->{hostIP}->{$hostname} {
+       throw ANSTE::Exceptions::Error("Inexistent hostname $hostname");
+    }
 
+    my $ip = $self->{hostIP}->{$hostname};
+    if (not $ip) {
+       throw ANSTE::Exceptions::Error("Hostname $hostname has not IP! " .
+                                       Dumper( $self->{hostIP}->{$hostname}));
+    }
+    
     my $config = ANSTE::Config->instance();
     unless ($protocol) {
         $protocol = $config->seleniumProtocol();
