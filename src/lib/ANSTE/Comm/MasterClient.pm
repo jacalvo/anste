@@ -67,7 +67,7 @@ sub new
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub connect	# (url)
+sub connect
 {
     my ($self, $url) = @_;
 
@@ -87,7 +87,7 @@ sub connect	# (url)
 #
 #   boolean - true if the client have a valid connection with the server
 #
-sub connected # returns boolean
+sub connected
 {
     my ($self) = @_;
 
@@ -111,7 +111,7 @@ sub connected # returns boolean
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #   <ANSTE::Exceptions::InvalidFile> - throw if file does not exist
 #
-sub put	# (file) returns boolean
+sub put
 {
     my ($self, $file) = @_;
 
@@ -170,7 +170,7 @@ sub put	# (file) returns boolean
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub get	# (file)
+sub get
 {
     my ($self, $file) = @_;
 
@@ -183,17 +183,17 @@ sub get	# (file)
     # Sends the request
     my $response = $soap->get(SOAP::Data->name('name' => $file));
     if ($response->fault) {
-    	die "SOAP request failed: $!";
+        die "SOAP request failed: $!";
     }
     my $content = $response->result;
     if ($content eq 'ERR'){
         return 0;
     } else {
-    	# Writes the file
+        # Writes the file
         my $FILE;
-    	open($FILE, ">", $file) or die "Can't open(): $!";
-    	print $FILE decode_base64($content);
-    	close $FILE;
+        open($FILE, ">", $file) or die "Can't open(): $!";
+        print $FILE decode_base64($content);
+        close $FILE;
         return 1;
     }
 }
@@ -238,7 +238,7 @@ sub exec # (command, log, env, params)
     }
     my $response = $soap->exec(@args);
     if ($response->fault) {
-    	die "SOAP request failed: $!";
+        die "SOAP request failed: $!";
     }
     my $result = $response->result;
     return($result eq 'OK');
@@ -260,7 +260,7 @@ sub exec # (command, log, env, params)
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub del	# (file)
+sub del
 {
     my ($self, $file) = @_;
 
