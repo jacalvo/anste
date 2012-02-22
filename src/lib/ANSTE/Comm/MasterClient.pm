@@ -24,6 +24,7 @@ use ANSTE::Exceptions::InvalidFile;
 
 use SOAP::Lite; # +trace => 'debug';
 use MIME::Base64;
+use Error qw(:try);
 
 use constant URI => 'urn:ANSTE::Comm::SlaveServer';
 
@@ -131,11 +132,23 @@ sub put	# (file) returns boolean
     read($FILE, $content, $size);
     close($FILE);
 
-    my $response = $soap->put(SOAP::Data->name('name' => $file),
-		                      SOAP::Data->type('base64')->name('content' =>
-                                                                   $content));
+    my $response;
+    my $nTries = 3;
+    while ((not $response) and $nTries) {
+        try {
+            $response = $soap->put(SOAP::Data->name('name' => $file),
+                                   SOAP::Data->type('base64')->name('content' =>
+                                                                        $content));
+        } otherwise {
+            my ($ex) = @_;
+            $nTries -= 1;
+            print "SOAP Error: $ex. Tries left $nTries\n";
+            sleep 5 if $nTries;
+        };
+    }
+
     if ($response->fault) {
-    	die "SOAP request failed: $!";
+        die "SOAP request failed: $!";
     }
     my $result = $response->result;
     return($result eq 'OK');
