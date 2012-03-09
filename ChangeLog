@@ -1,4 +1,5 @@
 HEAD
+    + More logs when verbosity is on: test commands and threads wait
     + Bugfix: dist value in anste.conf is no longer ignored
     + Using readline when running stopping during tests and treat better
       the given input

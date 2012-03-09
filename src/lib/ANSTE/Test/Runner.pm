@@ -343,14 +343,21 @@ sub _runTest # (test)
     my ($self, $test) = @_;
 
     my $system = $self->{system};
+    my $name = $test->name();
     my $hostname = $test->host();
 
     my $config = ANSTE::Config->instance();
+    my $verbose = $config->verbose();
 
     my $suiteDir = $self->{suite}->dir();
     my $testDir = $test->dir();
 
     my $path = $config->testFile("$suiteDir/$testDir");
+    if (not $path) {
+        throw ANSTE::Exceptions::NotFound(
+            "In test '$name', directory '$testDir'"
+           )
+    }
 
     my $logPath = $config->logPath();
 
@@ -360,14 +367,10 @@ sub _runTest # (test)
     mkdir "$logPath/$suiteDir/video" if $config->seleniumVideo();
     mkdir "$logPath/$suiteDir/script";
 
-    my $name = $test->name();
-
     my ($logfile, $ret);
 
     my $testResult = new ANSTE::Report::TestResult();
     $testResult->setTest($test);
-
-    my $verbose = $config->verbose();
 
     # Store start time
     $testResult->setStartTime($self->_time());
@@ -590,6 +593,11 @@ sub _runScriptOnHost # (hostname, script, log?, env?, params?)
 
     $client->put($script);
     if (defined $log) {
+        my $config = ANSTE::Config->instance();
+        my $verbose = $config->verbose();
+        if ($verbose) {
+            print "Executing $env $script $params > $log\n";
+        }
         $client->exec($script, $log, $env, $params);
     }
     else {
@@ -624,7 +632,7 @@ sub _runWebTest
        throw ANSTE::Exceptions::Error("Hostname $hostname has not IP! " .
                                        Dumper( $self->{hostIP}->{$hostname}));
     }
-    
+
     my $config = ANSTE::Config->instance();
     unless ($protocol) {
         $protocol = $config->seleniumProtocol();

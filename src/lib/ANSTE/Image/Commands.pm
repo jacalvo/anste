@@ -514,6 +514,13 @@ sub executeScripts # (list)
     my $ip = $self->ip();
     $client->connect("http://$ip:$port");
 
+    my $config = ANSTE::Config->instance();
+    if ($config->verbose()) {
+        print "Scripts to be executed: ";
+        print join ',',@{$list};
+        print "\n";
+    }
+
     foreach my $script (@{$list}) {
         my $file = $config->scriptFile($script);
         $self->_executeSetup($client, $file);

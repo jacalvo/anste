@@ -90,7 +90,12 @@ sub runTest # (command, logfile, env, params)
     defined $command or
         throw ANSTE::Exceptions::MissingArgument('command');
 
-    my $ret = system("$env $command $params > $log 2>&1");
+    my $config = ANSTE::Config->instance();
+    my $verbose = $config->verbose();
+
+    my $cmd = "$env $command $params > $log 2>&1";
+    print "Running test: $cmd\n" if $verbose;
+    my $ret = system($cmd);
 
     # Checks if the command can't be executed or broken pipe signal
     if ($ret == -1) {
