@@ -514,7 +514,6 @@ sub executeScripts # (list)
     my $ip = $self->ip();
     $client->connect("http://$ip:$port");
 
-    my $config = ANSTE::Config->instance();
     if ($config->verbose()) {
         print "Scripts to be executed: ";
         print join ',',@{$list};
