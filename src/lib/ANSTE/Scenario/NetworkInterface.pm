@@ -83,6 +83,10 @@ sub new # returns new NetworkInterface object
         lock($lockAddress);
         $self->{hwAddress} = AUTOASSIGNED_MAC_ADDR_START . $MAC_ADDR_COUNTER;
         $MAC_ADDR_COUNTER--;
+        if ($MAC_ADDR_COUNTER < 0) {
+            $MAC_ADDR_COUNTER = 99;
+        }
+
     }
 
     bless($self, $class);
