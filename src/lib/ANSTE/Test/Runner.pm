@@ -298,18 +298,22 @@ sub _runTests
             $msg = "Step by step execution.";
         }
         if ($stop) {
+            my $showMsg = 1;
             while(1) {
                 print "$msg " .
-                    "Press 'r' to run the test again or 'c' to continue.\n";
+                    "Press 'r' to run the test again or 'c' to continue.\n" if $showMsg;
                 my $key;
                 read(STDIN, $key, 1);
                 if ($key eq 'r') {
+                    $showMsg = 1;
                     my $testResult = $self->_runOneTest($test);
                     if ($testResult and ($testResult->value() == 0)) {
                         last;
                     }
-                } else {
+                } elsif ($key eq 'c') {
                     last;
+                } else {
+                    $showMsg = 0;
                 }
             }
         }

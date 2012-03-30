@@ -57,6 +57,7 @@ my $quiet = 0;
 my $step = 0;
 my $reuse = 0;
 my $break = '';
+my $distribution;
 
 GetOptions('create' => \$create,
            'remove' => \$remove,
@@ -74,6 +75,7 @@ GetOptions('create' => \$create,
            'step' => \$step,
            'break=s' => \$break,
            'clean' => \$clean,
+           'distribution=s' => \$distribution,
            'help' => \$help) or pod2usage(2);
 
 pod2usage(1) if $help;
@@ -115,6 +117,9 @@ if ($reuse) {
 }
 if ($step) {
     $config->setStep(1);
+}
+if ($distribution) {
+    $config->setDistribution($distribution);
 }
 if ($break) {
     my @breakpoints = split (/,/, $break);
