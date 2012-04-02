@@ -298,7 +298,7 @@ sub _runTests
             $msg = "Step by step execution.";
         }
         if ($stop) {
-            while(1) {
+            while (1) {
                 print "$msg " .
                     "Press 'r' to run the test again or 'c' to continue.\n";
                 my $key;
@@ -308,7 +308,7 @@ sub _runTests
                     if ($testResult and ($testResult->value() == 0)) {
                         last;
                     }
-                } else {
+                } if ($key eq 'c') {
                     last;
                 }
             }
