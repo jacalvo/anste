@@ -1532,22 +1532,6 @@ sub setCurrentScenario
     $self->{currentScenario} = $file;
 }
 
-sub setDistribution
-{
-    my ($self, $distribution) = @_;
-    my @dists = qw(lucid precise);
-    my $validDist = grep { $distribution eq $_ } @dists;
-    if (not $validDist) {
-        throw ANSTE::Exceptions::InvalidOption('global/dist',
-                                               $distribution);
-    }
-
-    $self->{config}->{'global'}->{'dist'} = $distribution;
-    # reset template variable for distribution
-    $self->{variables}->{dist} = $distribution;
-}
-
-
 sub _filePath # (file)
 {
     my ($self, $file) = @_;
@@ -1584,9 +1568,6 @@ sub _getOption # (section, option)
     # If not in config, return default value.
     return $self->{default}->{$section}->{$option};
 }
-
-
-
 
 sub _setDefaults
 {
