@@ -1,0 +1,64 @@
+#!/usr/bin/perl
+
+# Copyright (C) 2012 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License, version 2, as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+use warnings;
+use strict;
+
+use ANSTE::Config;
+use Error qw(:try);
+
+my $config = ANSTE::Config->instance();
+my $hosts;
+try {
+    $hosts = $config->readHosts();
+} otherwise {
+    print "Cannot read hosts file, probably there is no scenario deployed.\n";
+    exit (1);
+};
+
+my ($host) = @ARGV;
+unless ($host) {
+    print "Usage: $0 <host>\n\n";
+    print "Connect by SSH to any deployed host of the scenario by its name.\n";
+    printCurrentHosts();
+    exit (1);
+}
+
+if (exists $hosts->{$host}) {
+    # TODO: allow to customize user/password via anste.conf/commandline
+    ssh($hosts->{$host}, 'ubuntu', 'ubuntu');
+} else {
+    print "Host '$host' not found in the current scenario.\n";
+    printCurrentHosts();
+}
+
+sub ssh
+{
+    my ($ip, $user, $pass) = @_;
+
+    my $opts = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null';
+    system ("sshpass -p $pass ssh $opts $user\@$ip");
+}
+
+sub printCurrentHosts
+{
+    print "\n";
+    print "Current hosts list:\n";
+    print "-------------------\n";
+    print join ("\n", keys %{$hosts});
+    print "\n\n";
+}

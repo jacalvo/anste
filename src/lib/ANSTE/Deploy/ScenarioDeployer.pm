@@ -122,9 +122,10 @@ sub deploy # returns hash ref with the ip of each host
 
     my $hostIP = {};
 
-    my $reuse = ANSTE::Config->instance()->reuse();
+    my $config = ANSTE::Config->instance();
+    my $reuse = $config->reuse();
 
-    if (ANSTE::Config->instance->autoCreateImages() and not $reuse) {
+    if ($config->autoCreateImages() and not $reuse) {
         $self->_createMissingBaseImages();
     }
 
@@ -161,6 +162,9 @@ sub deploy # returns hash ref with the ip of each host
         }
     }
 
+    # Save hosts file for anste-connect
+    $config->writeHosts($hostIP);
+
     return $hostIP;
 }
 
@@ -180,6 +184,8 @@ sub shutdown
         $deployer->deleteImage();
     }
     $self->{virtualizer}->destroyNetwork($self->{scenario});
+
+    unlink (ANSTE::Config->instance()->hostsFile());
 }
 
 # Method: destroy
@@ -198,6 +204,8 @@ sub destroy
         $deployer->deleteImage();
     }
     $self->{virtualizer}->destroyNetwork($self->{scenario});
+
+    unlink (ANSTE::Config->instance()->hostsFile());
 }
 
 sub _createMissingBaseImages
