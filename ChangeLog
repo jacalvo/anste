@@ -1,4 +1,5 @@
 HEAD
+    + anste -clean not longer kills itself
     + Added --distribution command line option
     + Avoid negative MAC address error
     + More logs when verbosity is on: test commands and threads wait
