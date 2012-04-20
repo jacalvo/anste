@@ -1,4 +1,5 @@
 HEAD
+    + Added localdomain hostnames to /etc/hosts
     + anste -clean not longer kills itself
     + Added --distribution command line option
     + Avoid negative MAC address error

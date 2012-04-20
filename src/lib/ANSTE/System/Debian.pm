@@ -378,7 +378,7 @@ sub hostsConfig # (%hosts) returns string
 
     my $config = "echo '\n# ANSTE hosts' >> /etc/hosts\n";
     while (my ($host, $address) = each(%hosts)) {
-        $config .= "echo '$address $host' >> /etc/hosts\n";
+        $config .= "echo '$address $host.localdomain $host' >> /etc/hosts\n";
     }
 
     return $config;
