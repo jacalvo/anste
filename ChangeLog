@@ -1,4 +1,5 @@
 HEAD
+    + Description attribute in tests is now optional
     + Improved behavior of test retry/continue prompt
     + New anste-connect tool to easily SSH into deployed hosts
     + Avoid negative MAC address error

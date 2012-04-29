@@ -547,7 +547,11 @@ sub loadXML
     $self->setName($name);
 
     my $descNode = $node->getElementsByTagName('desc', 0)->item(0);
-    my $desc = $descNode->getFirstChild()->getNodeValue();
+    my $nodeDesc= $descNode->getFirstChild();
+    my $desc='';
+    if (defined $nodeDesc) {
+        $desc = $nodeDesc->getNodeValue();
+    } 
     $self->setDesc($desc);
 
     my $validHost = 0;
@@ -655,7 +659,12 @@ sub loadYAML
     my $name = $test->{name};
     $self->setName($name);
     my $desc = $test->{desc};
-    $self->setDesc($desc);
+    if ($desc) {
+        $self->setDesc($desc);
+    } else {
+        $self->setDesc('');
+    }
+
 
     # FIXME: preconditions not yet supported (they will have a new syntax)
     my $host = $test->{host};
