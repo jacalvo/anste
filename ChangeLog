@@ -1,4 +1,5 @@
 HEAD
+    + suites.list files can now contain comments and blank lines
     + Improved behavior of test retry/continue prompt
     + New anste-connect tool to easily SSH into deployed hosts
     + Avoid negative MAC address error

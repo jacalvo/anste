@@ -118,6 +118,14 @@ sub runDir # (suites)
     close($SUITES_FH);
 
     foreach my $subdir (@dirs) {
+        # remove comments and ignore blank lines
+        $subdir =~ s/#.*$//;
+        $subdir =~ s/^\s+//;
+        $subdir =~ s/\s+$//;
+        if (not $subdir) {
+            next;
+        }
+
         my $path = "$dir/$subdir";
         # If the dir contains more suites, descend on it
         if (-r "$path/$SUITE_LIST_FILE") {
@@ -129,6 +137,8 @@ sub runDir # (suites)
             my $suiteDir = "$suites/$subdir";
             $suite->loadFromDir($suiteDir);
             $self->runSuite($suite);
+        } else {
+            throw ANSTE::Exceptions::Error("There isn't any test in $subdir (from $dir/$SUITE_LIST_FILE)");
         }
     }
 }
