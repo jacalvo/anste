@@ -390,8 +390,8 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -out  <dir>        report output directory
    -video             save video recording of selenium tests
    -format <fmt>      select the output format for the reports
-   -wait              wait before shutting down after testing complete
-   -wait-fail         wait after a test fails
+   -wait              wait before shutting down once the test is completed
+   -wait-fail         wait if a test fails
    -step              run tests step by step, waiting after each one
    -break <t1,t2,...> set breakpoints after the given test names
    -quiet             do not show output of commands
