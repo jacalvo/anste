@@ -1,5 +1,6 @@
 HEAD
     + Added retries to the mount image section when deploying an scenario
+0.9
     + Improved behavior of test retry/continue prompt
     + New anste-connect tool to easily SSH into deployed hosts
     + Avoid negative MAC address error
