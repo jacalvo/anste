@@ -1,0 +1,3 @@
+Now Anste depend on the modue Attempt of CPAN
+http://search.cpan.org/~markf/Attempt-1.01/lib/Attempt.pm
+Add this module to the package in order not to have to install it manually

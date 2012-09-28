@@ -33,6 +33,7 @@ use ANSTE::Exceptions::InvalidType;
 use threads;
 use threads::shared;
 use Error qw(:try);
+use Attempt;
 
 my $lockMount : shared;
 
@@ -239,7 +240,7 @@ sub _deploy
 
     my $error = 0;
     print "[$hostname] Creating a copy of the base image...\n";
-    
+
     try {
         $self->_copyBaseImage() or die "Can't copy base image";
     } catch ANSTE::Exceptions::NotFound with {
@@ -251,7 +252,7 @@ sub _deploy
     if ($error) {
 	return undef;
     }
-    
+
     # Critical section here to prevent mount errors with loop device busy
     # or KVM crashes when trying to create two machines at the same time
     {
@@ -351,12 +352,14 @@ sub _updateHostname # returns boolean
 
     my $ok = 0;
 
-    try {
-        $cmd->mount() or die "Can't mount image: $!";
-    } catch Error with {
-        $cmd->deleteMountPoint();
-        die "Can't mount image.";
-    };
+    attempt {
+        try {
+            $cmd->mount() or die "Can't mount image: $!";
+        } catch Error with {
+            $cmd->deleteMountPoint();
+            die "Can't mount image.";
+        };
+    } tries => 5, delay => 5;
 
     try {
         $cmd->copyHostFiles() or die "Can't copy files: $!";
