@@ -333,15 +333,15 @@ sub networkConfig # (network) returns string
         throw ANSTE::Exceptions::MissingArgument('network');
 
     my $config = '';
-	$config .= "cat << EOF > /etc/network/interfaces\n";
+    $config .= "cat << EOF > /etc/network/interfaces\n";
     $config .= "auto lo\n";
-	$config .= "iface lo inet loopback\n";
+    $config .= "iface lo inet loopback\n";
     foreach my $iface (@{$network->interfaces()}) {
         $config .= "\n";
         $config .= $self->_interfaceConfig($iface);
     }
-	$config .= "EOF\n";
-	$config .= "\n";
+    $config .= "EOF\n";
+    $config .= "\n";
 
     foreach my $route (@{$network->routes()}) {
         $config .= $self->_routeCommand($route);
@@ -433,13 +433,16 @@ sub initialNetworkConfig # (iface, network) returns string
         $config .= 'SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ';
         $config .= "ATTR{address}==\"$mac\", ATTR{dev_id}==\"0x0\", ATTR{type}==\"1\", KERNEL==\"eth*\", NAME=\"$name\"\n";
     }
-	$config .= "EOF\n\n";
+    $config .= "EOF\n\n";
 
-	$config .= "cat << EOF > \$MOUNT/etc/network/interfaces\n";
+    my $nameserver = '8.8.8.8'; # FIXME: unhardcode this
+    $config .= "echo 'nameserver $nameserver' > /etc/resolv.conf\n";
+
+    $config .= "cat << EOF > \$MOUNT/etc/network/interfaces\n";
     $config .= "auto lo\n";
-	$config .= "iface lo inet loopback\n\n";
+    $config .= "iface lo inet loopback\n\n";
     $config .= $self->_interfaceConfig($iface);
-	$config .= "EOF";
+    $config .= "EOF";
 
     return $config;
 }
@@ -882,20 +885,20 @@ sub _interfaceConfig # (iface)
     my $type = $iface->type();
     my $name = $iface->name();
 
-	$config .= "auto $name\n";
-	if ($type == ANSTE::Scenario::NetworkInterface->IFACE_TYPE_DHCP) {
+    $config .= "auto $name\n";
+    if ($type == ANSTE::Scenario::NetworkInterface->IFACE_TYPE_DHCP) {
         $config .= "iface $name inet dhcp\n";
-	} elsif ($type == ANSTE::Scenario::NetworkInterface->IFACE_TYPE_STATIC) {
-		my $address = $iface->address();
-		my $netmask = $iface->netmask();
-		my $gateway = $iface->gateway();
-		$config .= "iface $name inet static\n";
-		$config .= "address $address\n";
-		$config .= "netmask $netmask\n";
-		if ($gateway) {
+    } elsif ($type == ANSTE::Scenario::NetworkInterface->IFACE_TYPE_STATIC) {
+        my $address = $iface->address();
+        my $netmask = $iface->netmask();
+        my $gateway = $iface->gateway();
+        $config .= "iface $name inet static\n";
+        $config .= "address $address\n";
+        $config .= "netmask $netmask\n";
+        if ($gateway) {
             $config .= "gateway $gateway\n";
         }
-	}
+    }
 
     return $config;
 }
