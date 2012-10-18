@@ -1,4 +1,5 @@
 HEAD
+    + Fixed support in yaml for the bridges and manual-bridging directives
     + Properly write /etc/resolv.conf file in the setup script
     + Properly write /etc/resolv.conf file
     + Added retries to the mount image section when deploying an scenario

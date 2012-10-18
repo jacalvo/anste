@@ -451,9 +451,8 @@ sub _loadYAML
         my $bridges = $scenario->{'bridges'};
         foreach my $bridge (@{$bridges}) {
             my $id = $bridge->{'id'};
-            # FIXME
-            #my $net = $bridgeNode->getFirstChild()->getNodeValue();
-            #$self->{bridges}->{$net} = $id;
+            my $net = $bridge->{'address'};
+            $self->{bridges}->{$net} = $id;
         }
     }
 
