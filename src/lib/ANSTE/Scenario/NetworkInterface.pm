@@ -536,11 +536,10 @@ sub loadYAML
     } else {
         throw ANSTE::Exceptions::Error("Invalid type for interface $name");
     }
-    my $hwAddress;
     # MAC address may be specified on both dhcp and static interfaces
     my $hwAddr = $iface->{'hw-addr'};
     if ($hwAddr) {
-        $self->setHwAddress($hwAddress);
+        $self->setHwAddress($hwAddr);
     }
 
 #FIXME
