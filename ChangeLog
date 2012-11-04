@@ -5,6 +5,7 @@ HEAD
     + Properly write /etc/resolv.conf file in the setup script
     + Properly write /etc/resolv.conf file
     + Added retries to the mount image section when deploying an scenario
+    + Fixed wrong error handling when base image does not exist
 0.9
     + Improved behavior of test retry/continue prompt
     + New anste-connect tool to easily SSH into deployed hosts

@@ -60,8 +60,8 @@ my $lockMount : shared;
 #
 sub new # (host, ip) returns new HostDeployer object
 {
-	my ($class, $host, $ip) = @_;
-	my $self = {};
+    my ($class, $host, $ip) = @_;
+    my $self = {};
 
     defined $host or
         throw ANSTE::Exceptions::MissingArgument('host');
@@ -100,16 +100,16 @@ sub new # (host, ip) returns new HostDeployer object
 
     my $cmd = new ANSTE::Image::Commands($image);
 
-	$self->{host} = $host;
+    $self->{host} = $host;
     $self->{image} = $image;
     $self->{cmd} = $cmd;
     $self->{ip} = $ip;
 
     my $foo = $host->network()->interfaces()->[0]->address();
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: host
@@ -236,7 +236,7 @@ sub _deploy
     # This gateway is not needed anymore
     # and may conflict with the real one.
     $commIface->removeGateway() unless $host->isRouter();
-    unshift(@{$host->network()->interfaces()}, $commIface);
+    unshift (@{$host->network()->interfaces()}, $commIface);
 
     my $error = 0;
     print "[$hostname] Creating a copy of the base image...\n";
@@ -245,12 +245,11 @@ sub _deploy
         $self->_copyBaseImage() or die "Can't copy base image";
     } catch ANSTE::Exceptions::NotFound with {
         print "[$hostname] Base image not found, can't continue.";
-	$error = 1;
-#        return(-1);
+        $error = 1;
     };
 
     if ($error) {
-	return undef;
+        return undef;
     }
 
     # Critical section here to prevent mount errors with loop device busy
@@ -271,9 +270,9 @@ sub _deploy
             $error = 1;
         };
 
-	if ($error) {
-	    return undef;
-	}
+        if ($error) {
+            return undef;
+        }
 
         print "[$hostname] Creating virtual machine ($ip)...\n";
         $cmd->createVirtualMachine();
