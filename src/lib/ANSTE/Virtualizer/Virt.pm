@@ -30,9 +30,6 @@ use File::Temp qw(tempfile);
 use File::Copy;
 use File::Copy::Recursive qw(dircopy);
 
-use constant KVM_CONFIG_TEMPLATE => 'kvm-config.tmpl';
-use constant KVM_NETWORK_CONFIG_TEMPLATE => 'kvm-bridge.tmpl';
-
 # Class: Virt
 #
 #   Implementation of the Virtualizer class that interacts
@@ -441,12 +438,14 @@ sub _createImageConfig # (image, path) returns config string
     my $config = ANSTE::Config->instance();
     my $name = $image->name();
     my $memory = $image->memory() * 1024;
+    my $arch = `arch`;
+    chomp ($arch);
 
     my $imageConfig = "<domain type='kvm'>\n"; # TODO: Unhardcode kvm
     $imageConfig .= "\t<name>$name</name>\n";
     $imageConfig .= "\t<memory>$memory</memory>\n";
     $imageConfig .= "\t<vcpu>1</vcpu>\n";
-    $imageConfig .= "\t<os><type arch='i686'>hvm</type></os>\n";
+    $imageConfig .= "\t<os><type arch='$arch'>hvm</type></os>\n";
     $imageConfig .= "\t<features><acpi/></features>\n";
     $imageConfig .= "\t<clock sync='localtime'/>\n";
     $imageConfig .= "\t<on_poweroff>destroy</on_poweroff>\n";

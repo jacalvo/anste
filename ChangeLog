@@ -1,4 +1,5 @@
 HEAD
+    + Added support for 64bit machines
     + Fixed support in yaml for the hw-addr directive that was broken
     + Fixed support in yaml for the bridges and manual-bridging directives
     + Properly write /etc/resolv.conf file in the setup script
