@@ -30,7 +30,7 @@ use ANSTE::Exceptions::MissingArgument;
 #
 
 # Constructor: new
-#   
+#
 #   Constructor for Virtualizer class and his derivated classes.
 #
 # Returns:
@@ -41,14 +41,14 @@ sub new # returns new Virtualizer object
 {
 	my ($class) = @_;
 	my $self = {};
-	
+
 	bless($self, $class);
 
 	return $self;
 }
 
 # Method: execute
-#   
+#
 #   Executes a command
 #
 # Parameters:
@@ -72,75 +72,76 @@ sub execute # (command)
     return system($command) == 0;
 }
 
-# Method: createBaseImage 
+# Method: createBaseImage
 #
 #   Override this method to execute the command of a
 #   specific virtualizer to create a base image.
 #
-# Parameters: 
-#   
+# Parameters:
+#
 #   name   - name of the image type to be created
 #   ip     - ip address that will be assigned to the image
 #   memory - *optional* size of the RAM memory to be used
 #   swap   - *optional* size of the swap partition to be used
+#   arch   - *optional* architecture to be used
 #   method - installation method to be used (depends of the virtualizer)
 #   source - source of the installation data (depends of the virtualizer)
 #   dist    - distribution to be installed (depends of the virtualizer)
 #   command - command to be used for the installation (depends of the virtualizer)
 #
 # Returns:
-#   
+#
 #   boolean -   indicates if the process has been successful
-#               
+#
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub createBaseImage # (%params)
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
 
-# Method: shutdownImage 
+# Method: shutdownImage
 #
 #   Override this method to execute the command
 #   of the corresponding virtualizer program
-#   to shutdown a given image being virtualized. 
+#   to shutdown a given image being virtualized.
 #
 # Parameters:
 #
-#   image - name of the image to shutdown 
+#   image - name of the image to shutdown
 #
 # Returns:
-#   
+#
 #   boolean - indicates if the process has been successful
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub shutdownImage # (image)
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
 
-# Method: destroyImage 
+# Method: destroyImage
 #
-#   Override this method to execute the command of the corresponding 
-#   virtualizer program to force the immediate shutdown of a given image 
-#   being virtualized. 
+#   Override this method to execute the command of the corresponding
+#   virtualizer program to force the immediate shutdown of a given image
+#   being virtualized.
 #
 # Parameters:
 #
 #   image - name of the image to destroy
 #
 # Returns:
-#   
+#
 #   boolean - indicates if the process has been successful
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub destroyImage # (image)
 {
@@ -157,12 +158,12 @@ sub destroyImage # (image)
 #   name - name of the virtual machine
 #
 # Returns:
-#   
+#
 #   boolean - indicates if the process has been successful
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub createVM # (name)
 {
@@ -181,12 +182,12 @@ sub createVM # (name)
 #   name - name of the image
 #
 # Returns:
-#   
+#
 #   boolean - indicates if the process has been successful
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub imageFile # (path, name)
 {
@@ -202,16 +203,16 @@ sub imageFile # (path, name)
 #
 #   baseimage - an <ANSTE::Deploy::BaseImage> object with the configuration
 #               of the base image
-#   newimage  - an <ANSTE::Deploy::Image> object with the configuration 
+#   newimage  - an <ANSTE::Deploy::Image> object with the configuration
 #               of the new image
 #
 # Returns:
-#   
+#
 #   boolean   - indicates if the process has been successful
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub createImageCopy # (baseimage, newimage)
 {
@@ -219,22 +220,22 @@ sub createImageCopy # (baseimage, newimage)
 }
 
 
-# Method: deleteImage 
+# Method: deleteImage
 #
 #   Override this method to delete an image using
 #   the specific virtualizer program.
 #
-# Parameters: 
-#   
+# Parameters:
+#
 #   image   - name of the image to be deleted
 #
 # Returns:
-#   
+#
 #   boolean -   indicates if the process has been successful
-#               
+#
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub deleteImage # (image)
 {
@@ -247,13 +248,13 @@ sub deleteImage # (image)
 #   to set up the network for a scenario, on your
 #   specific virtualizer.
 #
-# Parameters: 
-#   
+# Parameters:
+#
 #   network   - a <ANSTE::Scenario::Network> object
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub createNetwork # (network)
 {
@@ -266,13 +267,13 @@ sub createNetwork # (network)
 #   to destroy the network of a scenario, on your
 #   specific virtualizer.
 #
-# Parameters: 
-#   
+# Parameters:
+#
 #   network   - a <ANSTE::Scenario::Network> object
 #
 # Exceptions:
 #
-#   throws <ANSTE::Exceptions::NotImplemented> 
+#   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub destroyNetwork # (network)
 {

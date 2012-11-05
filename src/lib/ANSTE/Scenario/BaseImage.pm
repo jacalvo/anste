@@ -44,24 +44,24 @@ use XML::DOM;
 #
 sub new # returns new BaseImage object
 {
-	my $class = shift;
-	my $self = {};
+    my $class = shift;
+    my $self = {};
 
-	$self->{name} = '';
-	$self->{desc} = '';
-	$self->{memory} = '';
-	$self->{size} = '';
-	$self->{swap} = '';
-	$self->{installMethod} = '';
-	$self->{installSource} = '';
-	$self->{packages} = new ANSTE::Scenario::Packages();
+    $self->{name} = '';
+    $self->{desc} = '';
+    $self->{memory} = '';
+    $self->{size} = '';
+    $self->{swap} = '';
+    $self->{installMethod} = '';
+    $self->{installSource} = '';
+    $self->{packages} = new ANSTE::Scenario::Packages();
     $self->{files} = new ANSTE::Scenario::Files();
     $self->{'pre-scripts'} = [];
     $self->{'post-scripts'} = [];
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: name
@@ -74,9 +74,9 @@ sub new # returns new BaseImage object
 #
 sub name # returns name string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{name};
+    return $self->{name};
 }
 
 # Method: setName
@@ -93,12 +93,12 @@ sub name # returns name string
 #
 sub setName # name string
 {
-	my ($self, $name) = @_;
+    my ($self, $name) = @_;
 
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-	$self->{name} = $name;
+    $self->{name} = $name;
 }
 
 # Method: desc
@@ -111,9 +111,9 @@ sub setName # name string
 #
 sub desc # returns desc string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{desc};
+    return $self->{desc};
 }
 
 # Method: setDesc
@@ -130,12 +130,12 @@ sub desc # returns desc string
 #
 sub setDesc # desc string
 {
-	my ($self, $desc) = @_;
+    my ($self, $desc) = @_;
 
     defined $desc or
         throw ANSTE::Exceptions::MissingArgument('desc');
 
-	$self->{desc} = $desc;
+    $self->{desc} = $desc;
 }
 
 # Method: memory
@@ -148,9 +148,9 @@ sub setDesc # desc string
 #
 sub memory # returns memory string
 {
-	my ($self) = shift;
+    my ($self) = shift;
 
-	return $self->{memory};
+    return $self->{memory};
 }
 
 # Method: setMemory
@@ -167,12 +167,12 @@ sub memory # returns memory string
 #
 sub setMemory # (memory)
 {
-	my ($self, $memory) = @_;
+    my ($self, $memory) = @_;
 
     defined $memory or
         throw ANSTE::Exceptions::MissingArgument('memory');
 
-	$self->{memory} = $memory;
+    $self->{memory} = $memory;
 }
 
 # Method: size
@@ -185,9 +185,9 @@ sub setMemory # (memory)
 #
 sub size # returns size string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{size};
+    return $self->{size};
 }
 
 # Method: setSize
@@ -205,12 +205,50 @@ sub size # returns size string
 #
 sub setSize # size string
 {
-	my ($self, $size) = @_;
+    my ($self, $size) = @_;
 
     defined $size or
         throw ANSTE::Exceptions::MissingArgument('size');
 
-	$self->{size} = $size;
+    $self->{size} = $size;
+}
+
+# Method: arch
+#
+#   Gets the arch of the image.
+#
+# Returns:
+#
+#   string - contains the arch of the image
+#
+sub arch # returns arch string
+{
+    my ($self) = @_;
+
+    return $self->{arch};
+}
+
+# Method: setArch
+#
+#
+#   Sets the arch of the image.
+#
+# Parameters:
+#
+#   arch - String with the arch of the image.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setArch # arch string
+{
+    my ($self, $arch) = @_;
+
+    defined $arch or
+        throw ANSTE::Exceptions::MissingArgument('arch');
+
+    $self->{arch} = $arch;
 }
 
 # Method: swap
@@ -223,9 +261,9 @@ sub setSize # size string
 #
 sub swap # returns size string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{swap};
+    return $self->{swap};
 }
 
 # Method: setSwap
@@ -243,12 +281,12 @@ sub swap # returns size string
 #
 sub setSwap # returns string
 {
-	my ($self, $size) = @_;
+    my ($self, $size) = @_;
 
     defined $size or
         throw ANSTE::Exceptions::MissingArgument('size');
 
-	$self->{swap} = $size;
+    $self->{swap} = $size;
 }
 
 # Method: installMethod
@@ -261,9 +299,9 @@ sub setSwap # returns string
 #
 sub installMethod # returns string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{installMethod};
+    return $self->{installMethod};
 }
 
 # Method: setInstallMethod
@@ -281,12 +319,12 @@ sub installMethod # returns string
 #
 sub setInstallMethod # installMethod string
 {
-	my ($self, $installMethod) = @_;
+    my ($self, $installMethod) = @_;
 
     defined $installMethod or
         throw ANSTE::Exceptions::MissingArgument('installMethod');
 
-	$self->{installMethod} = $installMethod;
+    $self->{installMethod} = $installMethod;
 }
 
 # Source: installSource
@@ -299,9 +337,9 @@ sub setInstallMethod # installMethod string
 #
 sub installSource # returns string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{installSource};
+    return $self->{installSource};
 }
 
 # Source: setInstallSource
@@ -319,12 +357,12 @@ sub installSource # returns string
 #
 sub setInstallSource # installSource string
 {
-	my ($self, $installSource) = @_;
+    my ($self, $installSource) = @_;
 
     defined $installSource or
         throw ANSTE::Exceptions::MissingArgument('installSource');
 
-	$self->{installSource} = $installSource;
+    $self->{installSource} = $installSource;
 }
 
 # Dist: installDist
@@ -337,9 +375,9 @@ sub setInstallSource # installSource string
 #
 sub installDist # returns string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{installDist};
+    return $self->{installDist};
 }
 
 # Dist: setInstallDist
@@ -356,12 +394,12 @@ sub installDist # returns string
 #
 sub setInstallDist # installDist string
 {
-	my ($self, $installDist) = @_;
+    my ($self, $installDist) = @_;
 
     defined $installDist or
         throw ANSTE::Exceptions::MissingArgument('installDist');
 
-	$self->{installDist} = $installDist;
+    $self->{installDist} = $installDist;
 }
 
 # Command: installCommand
@@ -374,9 +412,9 @@ sub setInstallDist # installDist string
 #
 sub installCommand # returns string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{installCommand};
+    return $self->{installCommand};
 }
 
 # Command: setInstallCommand
@@ -393,12 +431,12 @@ sub installCommand # returns string
 #
 sub setInstallCommand # installCommand string
 {
-	my ($self, $installCommand) = @_;
+    my ($self, $installCommand) = @_;
 
     defined $installCommand or
         throw ANSTE::Exceptions::MissingArgument('installCommand');
 
-	$self->{installCommand} = $installCommand;
+    $self->{installCommand} = $installCommand;
 }
 
 # Method: packages
@@ -411,9 +449,9 @@ sub setInstallCommand # installCommand string
 #
 sub packages # returns Packages object
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{packages};
+    return $self->{packages};
 }
 
 # Method: setPackages
@@ -431,7 +469,7 @@ sub packages # returns Packages object
 #
 sub setPackages # (packages)
 {
-	my ($self, $packages) = @_;
+    my ($self, $packages) = @_;
 
     defined $packages or
         throw ANSTE::Exceptions::MissingArgument('packages');
@@ -441,7 +479,7 @@ sub setPackages # (packages)
                                              'ANSTE::Scenario::Packages');
     }
 
-	$self->{packages} = $packages;
+    $self->{packages} = $packages;
 }
 
 # Method: files
@@ -454,9 +492,9 @@ sub setPackages # (packages)
 #
 sub files # returns Files object
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{files};
+    return $self->{files};
 }
 
 # Method: setFiles
@@ -536,7 +574,7 @@ sub postScripts # returns list ref
 #
 sub loadFromFile # (filename)
 {
-	my ($self, $filename) = @_;
+    my ($self, $filename) = @_;
 
     defined $filename or
         throw ANSTE::Exceptions::MissingArgument('filename');
@@ -553,8 +591,8 @@ sub loadFromFile # (filename)
     my $text = $template->fill_in(HASH => $variables, SAFE => new Safe)
         or die "Couldn't fill in the template: $Text::Template::ERROR";
 
-	my $parser = new XML::DOM::Parser;
-	my $doc;
+    my $parser = new XML::DOM::Parser;
+    my $doc;
     eval {
         $doc = $parser->parse($text);
     };
@@ -562,70 +600,74 @@ sub loadFromFile # (filename)
         throw ANSTE::Exceptions::Error("Error parsing $filename: $@");
     }
 
-	my $image = $doc->getDocumentElement();
+    my $image = $doc->getDocumentElement();
 
-	my $nameNode = $image->getElementsByTagName('name', 0)->item(0);
-	my $name = $nameNode->getFirstChild()->getNodeValue();
-	$self->setName($name);
+    my $nameNode = $image->getElementsByTagName('name', 0)->item(0);
+    my $name = $nameNode->getFirstChild()->getNodeValue();
+    $self->setName($name);
 
-	my $descNode = $image->getElementsByTagName('desc', 0)->item(0);
-	my $desc = $descNode->getFirstChild()->getNodeValue();
-	$self->setDesc($desc);
+    my $descNode = $image->getElementsByTagName('desc', 0)->item(0);
+    my $desc = $descNode->getFirstChild()->getNodeValue();
+    $self->setDesc($desc);
 
-	my $installNode = $image->getElementsByTagName('install', 0)->item(0);
+    my $installNode = $image->getElementsByTagName('install', 0)->item(0);
     my $method = $installNode->getAttribute('method');
     $self->setInstallMethod($method);
     my $distNode = $installNode->getElementsByTagName('dist', 0)->item(0);
     if ($distNode) {
         my $dist = $distNode->getFirstChild()->getNodeValue();
-	    $self->setInstallDist($dist);
+        $self->setInstallDist($dist);
     }
     my $commandNode = $installNode->getElementsByTagName('command', 0)->item(0);
     if ($commandNode) {
         my $command = $commandNode->getFirstChild()->getNodeValue();
-	    $self->setInstallCommand($command);
+        $self->setInstallCommand($command);
     }
     my $sourceNode = $installNode->getElementsByTagName('source', 0)->item(0);
     if ($sourceNode) {
         my $source = $sourceNode->getFirstChild()->getNodeValue();
-	    $self->setInstallSource($source);
+        $self->setInstallSource($source);
     }
 
-	my $memoryNode = $image->getElementsByTagName('memory', 0)->item(0);
+    my $memoryNode = $image->getElementsByTagName('memory', 0)->item(0);
     if ($memoryNode) {
         my $memory = $memoryNode->getFirstChild()->getNodeValue();
-	    $self->setMemory($memory);
+        $self->setMemory($memory);
     }
 
-	my $sizeNode = $image->getElementsByTagName('size', 0)->item(0);
-	my $size = $sizeNode->getFirstChild()->getNodeValue();
-	$self->setSize($size);
+    my $sizeNode = $image->getElementsByTagName('size', 0)->item(0);
+    my $size = $sizeNode->getFirstChild()->getNodeValue();
+    $self->setSize($size);
 
-	my $swapNode = $image->getElementsByTagName('swap', 0)->item(0);
+    my $archNode = $image->getElementsByTagName('arch', 0)->item(0);
+    my $arch = $archNode->getFirstChild()->getNodeValue();
+    $self->setArch($arch);
+
+    my $swapNode = $image->getElementsByTagName('swap', 0)->item(0);
     if ($swapNode) {
         my $swap = $swapNode->getFirstChild()->getNodeValue();
-	    $self->setSwap($swap);
+        $self->setSwap($swap);
     }
 
-	my $packagesNode = $image->getElementsByTagName('packages', 0)->item(0);
-	if ($packagesNode) {
-		$self->packages()->load($packagesNode);
-	}
+    my $packagesNode = $image->getElementsByTagName('packages', 0)->item(0);
+    if ($packagesNode) {
+        $self->packages()->load($packagesNode);
+    }
 
-	my $filesNode = $image->getElementsByTagName('files', 0)->item(0);
-	if($filesNode){
-		$self->files()->load($filesNode);
-	}
+    my $filesNode = $image->getElementsByTagName('files', 0)->item(0);
+    if($filesNode){
+        $self->files()->load($filesNode);
+    }
 
-	my $preNode = $image->getElementsByTagName('pre-install', 0)->item(0);
-	if ($preNode) {
+    my $preNode = $image->getElementsByTagName('pre-install', 0)->item(0);
+    if ($preNode) {
         $self->_addScripts('pre-scripts', $preNode);
-	}
+    }
 
-	my $postNode = $image->getElementsByTagName('post-install', 0)->item(0);
-	if ($postNode) {
+    my $postNode = $image->getElementsByTagName('post-install', 0)->item(0);
+    if ($postNode) {
         $self->_addScripts('post-scripts', $postNode);
-	}
+    }
 
     $doc->dispose();
     return(1);
@@ -635,7 +677,7 @@ sub _addScripts # (list, node)
 {
     my ($self, $list, $node) = @_;
 
-	foreach my $scriptNode ($node->getElementsByTagName('script', 0)) {
+    foreach my $scriptNode ($node->getElementsByTagName('script', 0)) {
         my $script = $scriptNode->getFirstChild()->getNodeValue();
         push(@{$self->{$list}}, $script);
     }

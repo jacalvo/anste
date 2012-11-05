@@ -124,6 +124,7 @@ sub create
     my $dist = $image->installDist();
     my $command = $image->installCommand();
     my $size = $image->size();
+    my $arch = $image->arch();
 
     my $virtualizer = $self->{virtualizer};
 
@@ -135,6 +136,7 @@ sub create
                                   source => $source,
                                   dist => $dist,
                                   size => $size,
+                                  arch => $arch,
                                   command => $command);
 }
 

@@ -48,6 +48,7 @@ use File::Copy::Recursive qw(dircopy);
 #   memory  - *optional* size of the RAM memory to be used
 #   size    - *optional* size of the root partition
 #   swap    - *optional* size of the swap partition to be used
+#   arch    - *optional* architecture to be used
 #   dist    - distribution to be installed (for debootstrap method)
 #   command - command to be used for the installation (for debootstrap method)
 #
@@ -75,6 +76,7 @@ sub createBaseImage # (%params)
     my $swap = $params{swap};
     my $dist = $params{dist};
     my $size = $params{size};
+    my $arch = $params{arch};
 
     my $config = ANSTE::Config->instance();
 
@@ -101,6 +103,10 @@ sub createBaseImage # (%params)
                   " --ip $ip --mirror $mirror --mem $memory" .
                   " --mask $netmask --gw $gateway --rootsize $size" .
                   " --components main,universe --domain $name";
+
+    if ($arch) {
+        $command .= " --arch $arch";
+    }
 
     # FIXME: We don't use swap at the moment to speed up the process
     $command .= " --swapsize 8";
