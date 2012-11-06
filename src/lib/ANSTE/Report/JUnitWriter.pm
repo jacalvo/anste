@@ -171,6 +171,13 @@ sub readLogFileToString # (%params)
     }
     close FILE;
 
+    #Escaping the character to used them in xml
+    $log =~ s/&/&amp;/g;
+    $log =~ s/</&lt;/g;
+    $log =~ s/>/&gt;/g;
+    $log =~ s/'/&apos;/g;
+    $log =~ s/"/&quot;/g;
+
     return $log;
 }
 
