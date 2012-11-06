@@ -435,7 +435,7 @@ sub initialNetworkConfig # (iface, network) returns string
     }
     $config .= "EOF\n\n";
 
-    my $nameserver = '8.8.8.8'; # FIXME: unhardcode this
+    my $nameserver = ANSTE::Config->instance()->nameserverHost();
     $config .= "echo 'nameserver $nameserver' > /etc/resolv.conf\n";
 
     $config .= "cat << EOF > \$MOUNT/etc/network/interfaces\n";

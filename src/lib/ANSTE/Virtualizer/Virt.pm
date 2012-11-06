@@ -103,7 +103,7 @@ sub createBaseImage # (%params)
     my $command = "ubuntu-vm-builder $vm $dist --dest $dir --hostname $name" .
                   " --ip $ip --mirror $mirror --mem $memory" .
                   " --mask $netmask --gw $gateway --rootsize $size" .
-                  " --components main,universe --domain $name";
+                  " --components main,universe --removepkg=cron --domain $name";
 
     # FIXME: We don't use swap at the moment to speed up the process
     $command .= " --swapsize 8";

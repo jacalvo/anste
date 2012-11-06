@@ -528,7 +528,7 @@ sub _runTest # (test)
         print $LOG "\nTest finished at $endTime.\n";
         close($LOG);
 
-        $testResult->setLog("$suiteDir/$name.txt");
+        $testResult->setLog("$logfile");
         $testResult->setScript("$suiteDir/script/$name.txt");
     }
 

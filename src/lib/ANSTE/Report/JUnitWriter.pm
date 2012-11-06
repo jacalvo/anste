@@ -104,7 +104,7 @@ sub _writeSuiteFile # (suite, file)
         $self->writeTestResult(name => $name,
                 desc => $desc,
                 value => $test->value(),
-                log => basename($test->log()),
+                log => $test->log(),
                 video => $video);
     }
     $self->writeSuiteEnd();
@@ -143,18 +143,35 @@ sub writeTestResult # (%params)
 #    }
 
     if ($result != 0) {
-        print $filehandle "<failure/>\n";
+        print $filehandle "<failure ";
+        if ($file) {
+            my $log= $self->readLogFileToString(file => $file);
+            print $filehandle "message=\"$log\"";
+        }
+        print $filehandle "/>\n";
     }
 
-#    if ($file) {
-#        print $filehandle "<log>$file</log>\n";
-#    }
 
 #    if ($video) {
 #        print $filehandle "<video>$video</video>\n";
 #    }
 
     print $filehandle "</testcase>\n";
+}
+
+sub readLogFileToString # (%params)
+{
+    my ($self, %params) = @_;
+    my $file = $params{file};
+
+    my $log="";
+    open FILE, $file or die "Couldn't open file: $!";
+    while (<FILE>){
+        $log .= $_;
+    }
+    close FILE;
+
+    return $log;
 }
 
 # Method: filename
