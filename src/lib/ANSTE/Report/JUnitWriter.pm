@@ -143,12 +143,12 @@ sub writeTestResult # (%params)
 #    }
 
     if ($result != 0) {
-        print $filehandle "<failure ";
+        print $filehandle "<failure message=\"Error in Anste Tests\">\n";
         if ($file) {
             my $log= $self->readLogFileToString(file => $file);
-            print $filehandle "message=\"$log\"";
+            print $filehandle "$log";
         }
-        print $filehandle "/>\n";
+        print $filehandle "</failure>\n";
     }
 
 

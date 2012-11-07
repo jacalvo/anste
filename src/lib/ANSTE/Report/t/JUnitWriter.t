@@ -56,11 +56,12 @@ $writer->_writeSuiteFile($suiteResult,$file_name);
 file_ok($file_name, "<testsuite name=\"Test1\">
 <desc></desc>
 <testcase name=\"probando\">
-<failure message=\"&quot;probando&quot;
+<failure message=\"Error in Anste Tests\">
+&quot;probando&quot;
 &lt;
 &gt;
 &apos;
 &amp;
-\"/>
+</failure>
 </testcase>
 </testsuite>\n", "Xml one contents");
