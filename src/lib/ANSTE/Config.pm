@@ -130,6 +130,7 @@ sub check
     $self->firstAddress();
     $self->gateway();
     $self->natIface();
+    $self->nameserverHost();
     $self->autoCreateImages();
     $self->seleniumRCjar();
     $self->seleniumBrowser();
@@ -923,6 +924,22 @@ sub natIface
     return $iface;
 }
 
+sub nameserverHost
+{
+    my ($self) = @_;
+
+    my $nameserver =  $self->_getOption('comm', 'nameserver-host');
+
+    if (not ANSTE::Validate::ip($nameserver)) {
+        throw ANSTE::Exceptions::InvalidConfig('nameserver-host',
+                                               $nameserver,
+                                               $self->{confFile});
+    }
+
+    return $nameserver;
+}
+
+
 # Method: autoCreateImages
 #
 #   Gets the value for the auto-create-images option.
@@ -1598,6 +1615,7 @@ sub _setDefaults
     # TODO: Do not set this as default and force to conf it manually
     $self->{default}->{'comm'}->{'nat-iface'} = 'eth1';
     $self->{default}->{'comm'}->{'first-address'} = '10.6.7.10';
+    $self->{default}->{'comm'}->{'nameserver-host'} = '8.8.8.8';
 
     $self->{default}->{'deploy'}->{'auto-create-images'} = 0;
 

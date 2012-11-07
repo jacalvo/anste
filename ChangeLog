@@ -1,6 +1,8 @@
 HEAD
     + Allow to specify architecture of base images
     + Added support for 64bit machines
+    + Added in the config file the nameserver used in the setup script
+    + Added support to the message directive in xml output report
     + Fixed support in yaml for the hw-addr directive that was broken
     + Fixed support in yaml for the bridges and manual-bridging directives
     + Properly write /etc/resolv.conf file in the setup script

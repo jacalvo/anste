@@ -104,7 +104,7 @@ sub _writeSuiteFile # (suite, file)
         $self->writeTestResult(name => $name,
                 desc => $desc,
                 value => $test->value(),
-                log => basename($test->log()),
+                log => $test->log(),
                 video => $video);
     }
     $self->writeSuiteEnd();
@@ -143,18 +143,42 @@ sub writeTestResult # (%params)
 #    }
 
     if ($result != 0) {
-        print $filehandle "<failure/>\n";
+        print $filehandle "<failure message=\"Error in Anste Tests\">\n";
+        if ($file) {
+            my $log= $self->readLogFileToString(file => $file);
+            print $filehandle "$log";
+        }
+        print $filehandle "</failure>\n";
     }
 
-#    if ($file) {
-#        print $filehandle "<log>$file</log>\n";
-#    }
 
 #    if ($video) {
 #        print $filehandle "<video>$video</video>\n";
 #    }
 
     print $filehandle "</testcase>\n";
+}
+
+sub readLogFileToString # (%params)
+{
+    my ($self, %params) = @_;
+    my $file = $params{file};
+
+    my $log="";
+    open FILE, $file or die "Couldn't open file: $!";
+    while (<FILE>){
+        $log .= $_;
+    }
+    close FILE;
+
+    #Escaping the character to used them in xml
+    $log =~ s/&/&amp;/g;
+    $log =~ s/</&lt;/g;
+    $log =~ s/>/&gt;/g;
+    $log =~ s/'/&apos;/g;
+    $log =~ s/"/&quot;/g;
+
+    return $log;
 }
 
 # Method: filename

@@ -102,7 +102,7 @@ sub createBaseImage # (%params)
     my $command = "ubuntu-vm-builder $vm $dist --dest $dir --hostname $name" .
                   " --ip $ip --mirror $mirror --mem $memory" .
                   " --mask $netmask --gw $gateway --rootsize $size" .
-                  " --components main,universe --domain $name";
+                  " --components main,universe --removepkg=cron --domain $name";
 
     if ($arch) {
         $command .= " --arch $arch";
