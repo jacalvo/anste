@@ -33,7 +33,7 @@ isa_ok($testResult, 'ANSTE::Report::TestResult');
 
 $testResult->setTest($test);
 $testResult->setValue("256");
-$testResult->setLog("log.txt");
+$testResult->setLog("Test/log.txt");
 
 my $suite = ANSTE::Test::Suite->new();
 isa_ok( $suite, 'ANSTE::Test::Suite' );
