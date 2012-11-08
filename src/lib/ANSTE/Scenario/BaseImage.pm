@@ -640,8 +640,10 @@ sub loadFromFile # (filename)
     $self->setSize($size);
 
     my $archNode = $image->getElementsByTagName('arch', 0)->item(0);
-    my $arch = $archNode->getFirstChild()->getNodeValue();
-    $self->setArch($arch);
+    if ($archNode) {
+        my $arch = $archNode->getFirstChild()->getNodeValue();
+        $self->setArch($arch);
+    }
 
     my $swapNode = $image->getElementsByTagName('swap', 0)->item(0);
     if ($swapNode) {
