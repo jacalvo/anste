@@ -9,6 +9,7 @@ HEAD
     + Properly write /etc/resolv.conf file
     + Added retries to the mount image section when deploying an scenario
     + Fixed wrong error handling when base image does not exist
+    + suites.list files can now contain comments and blank lines
     + anste-clean not longer kills itself
 0.9
     + Improved behavior of test retry/continue prompt
