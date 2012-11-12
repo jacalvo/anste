@@ -17,6 +17,13 @@ do
 done
 
 pkill -9 -f selenium
-pkill -9 anste
+
+# kill ANSTE instances
+ANSTE_PIDS=$(pgrep  anste | grep -v $$ | awk '{ print $1 }')
+for PID in $ANSTE_PIDS
+do
+    kill -9 $PID
+done
+
 # killing dnsmasq otherwise we could get the error: 'dnsmasq: failed to bind listening socket for X.X.X.X: Address already in use'
 pkill -9 dnsmasq
