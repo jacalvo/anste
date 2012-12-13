@@ -38,8 +38,7 @@ use File::Copy::Recursive qw(dircopy);
 
 # Method: createBaseImage
 #
-#   Overriden method that creates a new base image using the xen-create-image
-#   utility from xen-tools.
+#   Overriden method that creates a new base image
 #
 # Parameters:
 #
@@ -51,11 +50,6 @@ use File::Copy::Recursive qw(dircopy);
 #   arch    - *optional* architecture to be used
 #   dist    - distribution to be installed (for debootstrap method)
 #   command - command to be used for the installation (for debootstrap method)
-#
-# Returns:
-#
-#   boolean - Always returns true due to xen-create-image is broken and
-#             returns it although the creation process fails.
 #
 # Exceptions:
 #
@@ -315,7 +309,7 @@ sub createImageCopy # (baseimage, newimage)
     # Creates the configuration file for the new image
     my $config = $self->_createImageConfig($newimage, "$path/$newname");
 
-    # Writes the xen configuration file
+    # Writes the configuration file
     my $FILE;
     my $configFile = "$path/$newname/domain.xml";
     open($FILE, '>', $configFile) or return 0;

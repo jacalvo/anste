@@ -141,14 +141,6 @@ sub check
     $self->seleniumFirefoxProfile();
     $self->seleniumSingleWindow();
     $self->seleniumUserExtensions();
-    $self->xenUseIdeDevices();
-    $self->xenModules();
-    $self->xenSize();
-    $self->xenMemory();
-    $self->xenFS();
-    $self->xenImage();
-    $self->xenKernel();
-    $self->xenInitrd();
     $self->virtSize();
     $self->virtMemory();
 
@@ -1261,153 +1253,6 @@ sub setStep # (value)
     $self->{override}->{'test'}->{'step'} = $value;
 }
 
-# Method: xenUseIdeDevices
-#
-#
-#   Gets the value of the Xen's use-ide-devices option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-sub xenUseIdeDevices
-{
-    my ($self) = @_;
-
-    return $self->_getOption('xen-options', 'use-ide-devices');
-}
-
-# Method: xenModules
-#
-#
-#   Gets the value of the Xen's modules option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-sub xenModules
-{
-    my ($self) = @_;
-
-    my $modules = $self->_getOption('xen-options', 'modules');
-
-    if ($modules and not ANSTE::Validate::path($modules)) {
-        throw ANSTE::Exceptions::InvalidConfig('xen-options/modules',
-                                               $modules,
-                                               $self->{confFile});
-    }
-
-    return $modules;
-}
-
-# Method: xenSize
-#
-#
-#   Gets the value of the Xen's size option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-sub xenSize
-{
-    my ($self) = @_;
-
-    return $self->_getOption('xen-options', 'size');
-}
-
-# Method: xenMemory
-#
-#   Gets the value of the Xen's memory option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-sub xenMemory
-{
-    my ($self) = @_;
-
-    return $self->_getOption('xen-options', 'memory');
-}
-
-# Method: xenFS
-#
-#   Gets the value of the Xen's fs option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-sub xenFS
-{
-    my ($self) = @_;
-
-    return $self->_getOption('xen-options', 'fs');
-}
-
-# Method: xenImage
-#
-#   Gets the value of the Xen's image option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-sub xenImage
-{
-    my ($self) = @_;
-
-    return $self->_getOption('xen-options', 'image');
-}
-
-# Method: xenKernel
-#
-#   Gets the value of the Xen's kernel option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-sub xenKernel
-{
-    my ($self) = @_;
-
-    my $kernel = $self->_getOption('xen-options', 'kernel');
-
-    if (not ANSTE::Validate::fileReadable($kernel)) {
-        throw ANSTE::Exceptions::InvalidConfig('xen-options/kernel',
-                                               $kernel,
-                                               $self->{confFile});
-    }
-
-    return $kernel;
-}
-
-# Method: xenInitrd
-#
-#   Gets the value of the Xen's initrd option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-sub xenInitrd
-{
-    my ($self) = @_;
-
-    my $initrd = $self->_getOption('xen-options', 'initrd');
-
-    if (not ANSTE::Validate::fileReadable($initrd)) {
-        throw ANSTE::Exceptions::InvalidConfig('xen-options/initrd',
-                                               $initrd,
-                                               $self->{confFile});
-    }
-
-    return $initrd;
-}
-
 # Method: mirror
 #
 #   Gets the value of the mirror to use when generating the images.
@@ -1602,7 +1447,7 @@ sub _setDefaults
     $self->{default}->{'global'}->{'wait-fail'} = 0;
     $self->{default}->{'global'}->{'reuse'} = 0;
 
-    $self->{default}->{'paths'}->{'images'} = '/home/xen/domains';
+    $self->{default}->{'paths'}->{'images'} = '/tmp/images';
     $self->{default}->{'paths'}->{'deploy'} = "$data/deploy";
     $self->{default}->{'paths'}->{'templates'} = "$data/templates";
 
@@ -1629,20 +1474,6 @@ sub _setDefaults
         "$data/scripts/user-extensions.js";
 
     $self->{default}->{'test'}->{'step'} = 0;
-
-    $self->{default}->{'xen-options'}->{'dir'} = '/home/xen';
-    $self->{default}->{'xen-options'}->{'use-ide-devices'} = 0;
-    $self->{default}->{'xen-options'}->{'modules'} = '';
-    $self->{default}->{'xen-options'}->{'size'} = '2Gb';
-    $self->{default}->{'xen-options'}->{'memory'} = '512Mb';
-    $self->{default}->{'xen-options'}->{'fs'} = 'ext3';
-    $self->{default}->{'xen-options'}->{'image'} = 'full';
-    my $version = `uname -r`;
-    chomp($version);
-    $self->{default}->{'xen-options'}->{'kernel'} = "/boot/vmlinuz-$version";
-    $self->{default}->{'xen-options'}->{'initrd'} = "/boot/initrd.img-$version";
-    $self->{default}->{'xen-options'}->{'mirror'} =
-        'http://ftp.debian.org/debian';
 
     $self->{default}->{'virt-options'}->{'size'} = '2200';
     $self->{default}->{'virt-options'}->{'memory'} = '512';
