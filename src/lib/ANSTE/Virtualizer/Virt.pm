@@ -95,8 +95,7 @@ sub createBaseImage # (%params)
         die "Directory $dir already exists";
     }
 
-    # TODO: change this to generic $config->mirror() ?
-    my $mirror = $config->xenMirror();
+    my $mirror = $config->mirror();
 
     my $vm = 'kvm'; # TODO: Unhardcode this when supporting other virtualizers
     my $command = "ubuntu-vm-builder $vm $dist --dest $dir --hostname $name" .

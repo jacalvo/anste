@@ -132,6 +132,7 @@ sub check
     $self->natIface();
     $self->nameserverHost();
     $self->autoCreateImages();
+    $self->mirror();
     $self->seleniumRCjar();
     $self->seleniumBrowser();
     $self->seleniumVideo();
@@ -148,7 +149,6 @@ sub check
     $self->xenImage();
     $self->xenKernel();
     $self->xenInitrd();
-    $self->xenMirror();
     $self->virtSize();
     $self->virtMemory();
 
@@ -1408,19 +1408,19 @@ sub xenInitrd
     return $initrd;
 }
 
-# Method: xenMirror
+# Method: mirror
 #
-#   Gets the value of the Xen's mirror option.
+#   Gets the value of the mirror to use when generating the images.
 #
 # Returns:
 #
 #   string - Value for the option.
 #
-sub xenMirror
+sub mirror
 {
     my ($self) = @_;
 
-    return $self->_getOption('xen-options', 'mirror');
+    return $self->_getOption('global', 'mirror');
 }
 
 # Method: virtSize
