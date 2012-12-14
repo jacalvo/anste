@@ -125,6 +125,7 @@ sub create
     my $command = $image->installCommand();
     my $size = $image->size();
     my $arch = $image->arch();
+    my $mirror = $image->mirror();
 
     my $virtualizer = $self->{virtualizer};
 
@@ -137,7 +138,8 @@ sub create
                                   dist => $dist,
                                   size => $size,
                                   arch => $arch,
-                                  command => $command);
+                                  command => $command,
+                                  mirror => $mirror);
 }
 
 # Method: mount

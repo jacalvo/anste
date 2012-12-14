@@ -50,6 +50,7 @@ use File::Copy::Recursive qw(dircopy);
 #   arch    - *optional* architecture to be used
 #   dist    - distribution to be installed (for debootstrap method)
 #   command - command to be used for the installation (for debootstrap method)
+#   mirror  - mirror to be used for the installation
 #
 # Exceptions:
 #
@@ -71,6 +72,7 @@ sub createBaseImage # (%params)
     my $dist = $params{dist};
     my $size = $params{size};
     my $arch = $params{arch};
+    my $mirror = $params{mirror};
 
     my $config = ANSTE::Config->instance();
 
@@ -89,7 +91,9 @@ sub createBaseImage # (%params)
         die "Directory $dir already exists";
     }
 
-    my $mirror = $config->mirror();
+    if (not $mirror) {
+        $mirror = $config->vmBuilderMirror();
+    }
 
     my $vm = 'kvm'; # TODO: Unhardcode this when supporting other virtualizers
     my $command = "ubuntu-vm-builder $vm $dist --dest $dir --hostname $name" .

@@ -138,6 +138,13 @@ sub _writePackageInstall # (file, @packages)
     $command = $system->installPackagesCommand('acpi-support');
     print $file "$command\n\n";
 
+    print $file "# Install apt-transport-https\n";
+    $command = $system->installPackagesCommand('apt-transport-https');
+    print $file "$command\n\n";
+
+    $command = $system->updatePackagesCommand();
+    print $file "$command\n\n";
+
     if (@packages > 0) {
         print $file "# Install packages\n";
         $command = $system->installPackagesCommand(@packages);

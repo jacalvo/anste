@@ -58,6 +58,7 @@ sub new # returns new BaseImage object
     $self->{files} = new ANSTE::Scenario::Files();
     $self->{'pre-scripts'} = [];
     $self->{'post-scripts'} = [];
+    $self->{mirror} = '';
 
     bless($self, $class);
 
@@ -367,7 +368,7 @@ sub setInstallSource # installSource string
 
 # Dist: installDist
 #
-#   Sets the distribution to be installed.
+#   Returns the distribution to be installed.
 #
 # Returns:
 #
@@ -555,6 +556,43 @@ sub postScripts # returns list ref
     return $self->{'post-scripts'};
 }
 
+# Method: mirror
+#
+#   Returns the mirror to be used generating the image.
+#
+# Returns:
+#
+#   string - contains the mirror to use
+#
+sub mirror # returns string
+{
+    my ($self) = @_;
+
+    return $self->{mirror};
+}
+
+# Method: setMirror
+#
+#   Sets the mirror of the image.
+#
+# Parameters:
+#
+#   name - String with the mirror of the image.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setMirror # name string
+{
+    my ($self, $mirror) = @_;
+
+    defined $mirror or
+        throw ANSTE::Exceptions::MissingArgument('mirror');
+
+    $self->{mirror} = $mirror;
+}
+
 # Method: loadFromFile
 #
 #   Loads the base image data from a XML file.
@@ -669,6 +707,12 @@ sub loadFromFile # (filename)
     my $postNode = $image->getElementsByTagName('post-install', 0)->item(0);
     if ($postNode) {
         $self->_addScripts('post-scripts', $postNode);
+    }
+
+    my $mirrorNode = $image->getElementsByTagName('mirror', 0)->item(0);
+    if ($mirrorNode) {
+        my $mirror = $mirrorNode->getFirstChild()->getNodeValue();
+        $self->setMirror($mirror);
     }
 
     $doc->dispose();

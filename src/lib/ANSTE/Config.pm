@@ -132,7 +132,7 @@ sub check
     $self->natIface();
     $self->nameserverHost();
     $self->autoCreateImages();
-    $self->mirror();
+    $self->vmBuilderMirror();
     $self->seleniumRCjar();
     $self->seleniumBrowser();
     $self->seleniumVideo();
@@ -1253,19 +1253,19 @@ sub setStep # (value)
     $self->{override}->{'test'}->{'step'} = $value;
 }
 
-# Method: mirror
+# Method: vmBuilderMirror
 #
-#   Gets the value of the mirror to use when generating the images.
+#   Gets the value of the mirror to use when generating the images with vm-builder.
 #
 # Returns:
 #
 #   string - Value for the option.
 #
-sub mirror
+sub vmBuilderMirror
 {
     my ($self) = @_;
 
-    return $self->_getOption('global', 'mirror');
+    return $self->_getOption('vm-builder-options', 'mirror');
 }
 
 # Method: virtSize

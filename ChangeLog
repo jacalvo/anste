@@ -1,4 +1,6 @@
 HEAD
+    + Adding support to set the mirror from the image xml definition
+    + Moving the mirror option to a new section
     + Deleted suppot for Xen and moved the mirror option to global section
     + Allow to specify architecture of base images
     + Added support for 64bit machines
