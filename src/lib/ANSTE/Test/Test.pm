@@ -729,7 +729,11 @@ sub loadYAML
     my $vars = $test->{vars};
     foreach my $name (keys %{$vars}) {
         my $value = $vars->{$name};
-        $self->setVariable($name, $value);
+        if ($value) {
+            $self->setVariable($name, $value);
+        } else {
+            $self->setVariable($name, "");
+        }
     }
 
     #FIXME
