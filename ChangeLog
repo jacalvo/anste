@@ -1,4 +1,5 @@
 HEAD
+    + Changed the script that configured a host to be a dhcp-router
     + Allowing empty variables in the scenarios tests
     + Adding support to set the mirror from the image xml definition
     + Moving the mirror option to a new section

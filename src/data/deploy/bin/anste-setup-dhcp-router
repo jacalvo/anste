@@ -6,9 +6,9 @@ IFACE="eth1"
 NET=`ifconfig $IFACE | grep "inet addr:" | cut -d: -f2 | cut -d. -f-3`
 MASK=`ifconfig $IFACE | grep "Mask:" | cut -d: -f4`
 
-sed -i "s/^INTERFACES=.*/INTERFACES=\"$IFACE\"/" /etc/default/dhcp3-server
+sed -i "s/^INTERFACES=.*/INTERFACES=\"$IFACE\"/" /etc/default/isc-dhcp-server
 
-CONF=/etc/dhcp3/dhcpd.conf
+CONF=/etc/dhcp/dhcpd.conf
 
 echo "authoritative;" > $CONF
 
@@ -23,4 +23,4 @@ echo "max-lease-time 7200;" >> $CONF
 echo "}" >> $CONF
 
 
-/etc/init.d/dhcp3-server restart
+/etc/init.d/isc-dhcp-server restart
