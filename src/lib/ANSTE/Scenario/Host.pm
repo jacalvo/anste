@@ -617,11 +617,10 @@ sub loadYAML
         $self->packages()->loadYAML($packages);
     }
 
-    # FIXME
-    #my $filesNode = $node->getElementsByTagName('files', 0)->item(0);
-    #if($filesNode){
-    #   $self->files()->load($filesNode);
-    #}
+    my $files = $host->{files};
+    if($files){
+       $self->files()->loadYAML($files);
+    }
 
     my $preInstall = $host->{'pre-install'};
     if ($preInstall) {

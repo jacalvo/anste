@@ -40,7 +40,7 @@ sub new # returns new Files object
 {
 	my $class = shift;
 	my $self = {};
-	
+
 	$self->{list} = [];
 
 	bless($self, $class);
@@ -56,7 +56,7 @@ sub new # returns new Files object
 #
 #   ref - list of files
 #
-sub list # returns the files list 
+sub list # returns the files list
 {
 	my ($self) = @_;
 
@@ -77,7 +77,7 @@ sub list # returns the files list
 #
 sub add # (files)
 {
-    my ($self, @files) = @_;	
+    my ($self, @files) = @_;
 
     if (not @files) {
         throw ANSTE::Exceptions::MissingArgument('files');
@@ -93,7 +93,7 @@ sub add # (files)
 #
 # Parameters:
 #
-#   node - <XML::DOM::Element> object containing the test data.    
+#   node - <XML::DOM::Element> object containing the test data.
 #
 # Exceptions:
 #
@@ -103,7 +103,7 @@ sub add # (files)
 sub load # (node)
 {
     my ($self, $node) = @_;
-    
+
     defined $node or
         throw ANSTE::Exceptions::MissingArgument('node');
 
@@ -127,6 +127,21 @@ sub load # (node)
 		my $name = $file->getFirstChild()->getNodeValue();
 		$self->add($name);
 	}
+}
+
+sub loadYAML
+{
+    my ($self, $files) = @_;
+
+    defined $files or
+        throw ANSTE::Exceptions::MissingArgument('files');
+
+    # FIXME
+    # Add support for list of filelists check above example of xml
+
+    foreach my $file (@{$files}) {
+        $self->add($file);
+    }
 }
 
 1;
