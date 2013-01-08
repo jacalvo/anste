@@ -31,8 +31,8 @@ ok(!ANSTE::Validate::path('/tmp/DOESNTEXISTS/'), 'incorrect path');
 ok(ANSTE::Validate::system('Debian'), 'correct system');
 ok(!ANSTE::Validate::system('NOEXISTSDebian'), 'incorrect system');
 
-ok(ANSTE::Validate::virtualizer('Xen'), 'correct virtualizer');
-ok(!ANSTE::Validate::virtualizer('NOEXISTSXen'), 'incorrect virtualizer');
+ok(ANSTE::Validate::virtualizer('Virt'), 'correct virtualizer');
+ok(!ANSTE::Validate::virtualizer('NOEXISTSVirt'), 'incorrect virtualizer');
 
 ok(ANSTE::Validate::port(65535), 'correct port');
 ok(!ANSTE::Validate::port(-1), 'incorrect port');
