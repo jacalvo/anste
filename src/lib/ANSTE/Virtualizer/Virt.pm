@@ -97,7 +97,7 @@ sub createBaseImage # (%params)
 
     my $vm = 'kvm'; # TODO: Unhardcode this when supporting other virtualizers
     my $command = "ubuntu-vm-builder $vm $dist --dest $dir --hostname $name" .
-                  " --ip $ip --mirror $mirror --mem $memory" .
+                  " --ip $ip --mirror $mirror --mem $memory --kernel-flavour generic --addpkg linux-generic" .
                   " --mask $netmask --gw $gateway --rootsize $size" .
                   " --components main,universe --removepkg=cron --domain $name";
 

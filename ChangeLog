@@ -1,4 +1,6 @@
 HEAD
+    + Changing the kernel flavour from virtual to generic to allow
+      nested virtualization
     + Change default images path to /var/tmp/anste-images
     + Fixed support for files in the scenarios defined in yaml
     + Changed the script that configured a host to be a dhcp-router
