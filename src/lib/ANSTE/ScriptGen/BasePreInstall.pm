@@ -123,12 +123,12 @@ sub writeScript # (file)
     print $file "$command\n";
 
     # To allow passwordless logins with anste-connect
-    print $file "sed -i 's/(ALL) ALL/(ALL) NOPASSWD:ALL/g' \$MOUNT/etc/sudoers\n"
-    print $file "echo 'sudo su -' >> \$MOUNT/home/ubuntu/.bashrc\n"
+    print $file "sed -i 's/(ALL) ALL/(ALL) NOPASSWD:ALL/g' \$MOUNT/etc/sudoers\n";
+    print $file "echo 'sudo su -' >> \$MOUNT/home/ubuntu/.bashrc\n";
 
     # It seems that sometimes notification to master fails at startup,
     # so we do a last try at the end.
-    print $file "echo '/usr/local/bin/anste-slave ready\n' > \$MOUNT/etc/rc.local\n"
+    print $file "echo '/usr/local/bin/anste-slave ready\n' > \$MOUNT/etc/rc.local\n";
 }
 
 sub _writeCopyFiles # (file)
