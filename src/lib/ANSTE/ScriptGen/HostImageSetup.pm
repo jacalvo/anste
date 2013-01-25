@@ -124,7 +124,7 @@ sub _addTemporaryNameServer # (file)
     my ($self, $file) = @_;
 
     my $system = $self->{system};
-    my $nameserver = '8.8.8.8'; # FIXME: unhardcode this
+    my $nameserver = ANSTE::Config->instance()->nameserver();
     print $file "# Add temporary nameServer\n";
     my $command = "echo 'nameserver $nameserver' > /etc/resolv.conf\n";
     print $file "$command\n\n";

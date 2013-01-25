@@ -1,4 +1,5 @@
 HEAD
+    + Unhardcode the nameserver used in the setup of the hosts
     + Passwordless and direct root login with anste-connect
     + Changing the kernel flavour from virtual to generic to allow
       nested virtualization
