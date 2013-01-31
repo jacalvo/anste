@@ -3,6 +3,12 @@
     <name>Scenario Name</name>
     <desc>Description of the scenario</desc>
 
+    <manual-bridging/>
+    <bridges>
+        <bridge id="2">192.168.6.254</bridge>
+    </bridges>
+
+
     <host>
         <name>hostname1</name>
         <desc>Describes the role of the host in the test</desc>
@@ -19,6 +25,7 @@
                 <address>192.168.6.2</address>
                 <netmask>255.255.255.0</netmask>
                 <gateway>192.168.6.1</gateway>
+                <bridge>2</bridge>
             </interface>
         </network>
         <packages>
@@ -33,6 +40,7 @@
         <network>
             <interface type="dhcp">
                 <name>eth0</name>
+                <bridge>2</bridge>
             </interface>
         </network>
         <packages>
@@ -49,6 +57,7 @@
         <network>
             <interface type="dhcp">
                 <name>eth0</name>
+                <bridge>2</bridge>
             </interface>
         </network>
     </host>

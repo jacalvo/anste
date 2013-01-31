@@ -19,7 +19,7 @@ use warnings;
 use ANSTE::Test::Suite;
 use ANSTE::Config;
 
-use Test::More tests => 10; 
+use Test::More tests => 10;
 
 use constant SUITE => 'test';
 
