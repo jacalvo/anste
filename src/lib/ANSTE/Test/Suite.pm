@@ -24,6 +24,7 @@ use ANSTE::Exceptions::MissingArgument;
 use Text::Template;
 use Safe;
 use XML::DOM;
+use YAML::XS;
 
 # Class: Suite
 #

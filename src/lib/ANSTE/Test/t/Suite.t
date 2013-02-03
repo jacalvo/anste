@@ -19,9 +19,10 @@ use warnings;
 use ANSTE::Test::Suite;
 use ANSTE::Config;
 
-use Test::More tests => 10;
+use Test::More tests => 20;
 
 use constant SUITE => 'test';
+use constant SUITE_YAML => 'test-yaml';
 
 sub testTest # (test)
 {
@@ -53,3 +54,7 @@ sub test # (suite)
 my $suite = new ANSTE::Test::Suite();
 $suite->loadFromDir(SUITE);
 test($suite);
+
+my $suiteYaml = new ANSTE::Test::Suite();
+$suiteYaml->loadFromDir(SUITE_YAML);
+test($suiteYaml);

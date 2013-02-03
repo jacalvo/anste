@@ -1,0 +1,13 @@
+name: suiteName
+desc: suiteDesc
+scenario: test.xml
+tests:
+    - name: testName
+      desc: testDesc
+      host: testHost
+      dir: testDir
+
+    - name: testName
+      desc: testDesc
+      host: testHost
+      dir: testDir
