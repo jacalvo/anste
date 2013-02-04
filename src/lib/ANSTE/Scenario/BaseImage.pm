@@ -28,6 +28,7 @@ use ANSTE::Exceptions::InvalidFile;
 use Text::Template;
 use Safe;
 use XML::DOM;
+use YAML::XS;
 
 # Class: BaseImage
 #
@@ -629,16 +630,30 @@ sub loadFromFile # (filename)
     my $text = $template->fill_in(HASH => $variables, SAFE => new Safe)
         or die "Couldn't fill in the template: $Text::Template::ERROR";
 
-    my $parser = new XML::DOM::Parser;
-    my $doc;
-    eval {
-        $doc = $parser->parse($text);
-    };
-    if ($@) {
-        throw ANSTE::Exceptions::Error("Error parsing $filename: $@");
-    }
+    if ($filename =~ /\.xml$/) {
+        my $parser = new XML::DOM::Parser;
+        my $doc;
+        eval {
+            $doc = $parser->parse($text);
+        };
+        if ($@) {
+            throw ANSTE::Exceptions::Error("Error parsing $filename: $@");
+        }
 
-    my $image = $doc->getDocumentElement();
+        my $image = $doc->getDocumentElement();
+        $self->_loadFromXml($image);
+        $doc->dispose();
+    } elsif ($filename =~ /\.yaml$/) {
+        my ($image) = YAML::XS::Load($text);
+        $self->_loadFromYAML($image);
+    } else {
+        throw ANSTE::Exceptions::Error("Invalid file type ($file), only .xml or .yaml files are supported");
+    }
+}
+
+sub _loadFromXml # (image)
+{
+    my ($self, $image) = @_;
 
     my $nameNode = $image->getElementsByTagName('name', 0)->item(0);
     my $name = $nameNode->getFirstChild()->getNodeValue();
@@ -715,7 +730,6 @@ sub loadFromFile # (filename)
         $self->setMirror($mirror);
     }
 
-    $doc->dispose();
     return(1);
 }
 
@@ -725,6 +739,72 @@ sub _addScripts # (list, node)
 
     foreach my $scriptNode ($node->getElementsByTagName('script', 0)) {
         my $script = $scriptNode->getFirstChild()->getNodeValue();
+        push(@{$self->{$list}}, $script);
+    }
+}
+# TODO: Support arch swap and files
+sub _loadFromYAML # (image)
+{
+    my ($self, $image) = @_;
+
+    # Read name and description of the image
+    my $name = $image->{name};
+    $self->setName($name);
+    my $desc = $image->{desc};
+    $self->setDesc($desc);
+
+    my $memory= $image->{memory};
+    if ($memory) {
+        $self->setMemory($memory);
+    }
+
+    my $size = $image->{size};
+    $self->setSize($size);
+
+    my $install = $image->{install};
+    my $installMethod = $install->{method};
+    $self->setInstallMethod($installMethod);
+
+    my $installSource = $install->{source};
+    if  ($installSource) {
+        $self->setInstallSource($installSource);
+    }
+    my $installDist = $install->{dist};
+    if  ($installDist) {
+        $self->setInstallDist($installDist);
+    }
+    my $installCommand = $install->{command};
+    if  ($installCommand) {
+        $self->setInstallCommand($installCommand);
+    }
+
+    my $packages = $image->{packages};
+    if ($packages) {
+        $self->packages()->loadYAML($packages);
+    }
+
+    my $preInstallScripts = $image->{'pre-install'};
+    if ($preInstallScripts) {
+        $self->_addScriptsFromYAML('pre-scripts', $preInstallScripts);
+    }
+
+    my $postInstallScripts = $image->{'post-install'};
+    if ($postInstallScripts) {
+        $self->_addScriptsFromYAML('post-scripts', $postInstallScripts);
+    }
+
+    my $mirror = $image->{mirror};
+    if ($mirror) {
+        $self->setMirror($mirror);
+    }
+
+}
+
+sub _addScriptsFromYAML # (list, node)
+{
+    my ($self, $list, $node) = @_;
+
+    foreach my $script (@{$node}) {
         push(@{$self->{$list}}, $script);
     }
 }

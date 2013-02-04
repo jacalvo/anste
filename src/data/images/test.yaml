@@ -1,0 +1,20 @@
+name: imageName
+desc: imageDesc
+memory: imageMemory
+size: imageSize
+mirror: imageMirror
+install:
+    method: copy
+    source: /tmp
+packages:
+    profile:
+        - test-profile
+    package:
+        - postfix
+pre-install:
+    - script1
+    - script2
+post-install:
+    - script1
+    - script2
+    - script3

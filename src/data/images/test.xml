@@ -11,6 +11,8 @@
         <source>/tmp</source>
     </install>
 
+    <mirror>imageMirror</mirror>
+
     <packages>
         <package>postfix</package>
         <profile>test-profile</profile>

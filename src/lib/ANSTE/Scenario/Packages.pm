@@ -137,19 +137,18 @@ sub loadYAML
     defined $packages or
         throw ANSTE::Exceptions::MissingArgument('packages');
 
-    # FIXME
-#   foreach my $profile ($node->getElementsByTagName('profile', 0)) {
-#       my $name = $profile->getFirstChild()->getNodeValue();
-#        my $file = ANSTE::Config->instance()->profileFile($name);
-#        my $FILE;
-#       open($FILE, '<', $file) or die "Error loading $file";
-#       my @names;
-#       chomp(@names = <$FILE>);
-#       close $FILE or die "Can't close $file";
-#       $self->add(@names);
-#   }
+   foreach my $profile (@{$packages->{profile}}) {
+        my $name = $profile;
+        my $file = ANSTE::Config->instance()->profileFile($name);
+        my $FILE;
+        open($FILE, '<', $file) or die "Error loading $file";
+        my @names;
+        chomp(@names = <$FILE>);
+        close $FILE or die "Can't close $file";
+        $self->add(@names);
+   }
 
-    foreach my $package (@{$packages}) {
+    foreach my $package (@{$packages->{package}}) {
         $self->add($package);
     }
 }
