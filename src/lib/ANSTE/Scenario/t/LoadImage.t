@@ -19,7 +19,7 @@ use warnings;
 use ANSTE::Scenario::BaseImage;
 use ANSTE::Config;
 
-use Test::More tests => 38;
+use Test::More tests => 48;
 
 sub testImage # (image)
 {
@@ -33,6 +33,10 @@ sub testImage # (image)
     is($memory, 'imageMemory', 'image memory = imageMemory');
 	my $size = $image->size();
     is($size, 'imageSize', 'image size = imageSize');
+	my $arch = $image->arch();
+    is($arch, 'imageArch', 'image arch = imageArch');
+	my $swap = $image->swap();
+    is($swap, 'imageSwap', 'image swap = imageSwap');
 
 	my $installMethod = $image->installMethod();
     is($installMethod, 'copy', 'image installMethod = copy');
@@ -54,6 +58,10 @@ sub testImage # (image)
 	my $mirror = $image->mirror();
     is($mirror, 'imageMirror', 'image mirror = imageMirror');
 
+	my $files = $image->files();
+    is(scalar @{$files->list()}, 2, 'size files = 2');
+    _checkFiles($files);
+
 }
 
 sub _checkScripts # (scriptsToCheck)
@@ -73,6 +81,13 @@ sub _checkPackages # (packagesToCheck)
     is(${$packagesToCheck->list()}[1], 'package2', 'package 2 = package2');
     is(${$packagesToCheck->list()}[2], 'package3', 'package 3 = package3');
     is(${$packagesToCheck->list()}[3], 'postfix', 'package 4 = postfix');
+}
+
+sub _checkFiles# (filesToCheck)
+{
+    my ($filesToCheck) = @_;
+    is(${$filesToCheck->list()}[0], 'file1', 'file 1 = file1');
+    is(${$filesToCheck->list()}[1], 'file2', 'file 2 = file2');
 }
 
 my $image = new ANSTE::Scenario::BaseImage();

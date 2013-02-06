@@ -4,8 +4,10 @@
     <desc>imageDesc</desc>
 
     <memory>imageMemory</memory>
+    <swap>imageSwap</swap>
 
     <size>imageSize</size>
+    <arch>imageArch</arch>
 
     <install method="copy">
         <source>/tmp</source>
@@ -28,4 +30,10 @@
         <script>script2</script>
         <script>script3</script>
     </post-install>
+
+    <files>
+        <file>file1</file>
+        <file>file2</file>
+    </files>
+
 </image>

@@ -761,6 +761,16 @@ sub _loadFromYAML # (image)
     my $size = $image->{size};
     $self->setSize($size);
 
+    my $arch= $image->{arch};
+    if ($arch) {
+        $self->setArch($arch);
+    }
+
+    my $swap= $image->{swap};
+    if ($swap) {
+        $self->setSwap($swap);
+    }
+
     my $install = $image->{install};
     my $installMethod = $install->{method};
     $self->setInstallMethod($installMethod);
@@ -796,6 +806,11 @@ sub _loadFromYAML # (image)
     my $mirror = $image->{mirror};
     if ($mirror) {
         $self->setMirror($mirror);
+    }
+
+    my $files = $image->{files};
+    if ($files) {
+        $self->files()->loadYAML($files);
     }
 
 }

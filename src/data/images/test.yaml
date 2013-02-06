@@ -1,6 +1,8 @@
 name: imageName
 desc: imageDesc
 memory: imageMemory
+swap: imageSwap
+arch: imageArch
 size: imageSize
 mirror: imageMirror
 install:
@@ -18,3 +20,6 @@ post-install:
     - script1
     - script2
     - script3
+files:
+    - file1
+    - file2
