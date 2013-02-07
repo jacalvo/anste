@@ -23,3 +23,6 @@ post-install:
 files:
     - file1
     - file2
+post-tests:
+    - script1
+    - script2

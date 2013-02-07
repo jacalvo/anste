@@ -59,6 +59,7 @@ sub new # returns new BaseImage object
     $self->{files} = new ANSTE::Scenario::Files();
     $self->{'pre-scripts'} = [];
     $self->{'post-scripts'} = [];
+    $self->{'post-tests-scripts'} = [];
     $self->{mirror} = '';
 
     bless($self, $class);
@@ -594,6 +595,21 @@ sub setMirror # name string
     $self->{mirror} = $mirror;
 }
 
+# Method: postTestsScripts
+#
+#   Gets the list of scripts that have to be executed after the tests run.
+#
+# Returns:
+#
+#   ref - reference to the list of script names
+#
+sub postTestsScripts # returns list ref
+{
+    my ($self) = @_;
+
+    return $self->{'post-tests-scripts'};
+}
+
 # Method: loadFromFile
 #
 #   Loads the base image data from a XML file.
@@ -724,6 +740,11 @@ sub _loadFromXml # (image)
         $self->_addScripts('post-scripts', $postNode);
     }
 
+    my $postTestsNode = $image->getElementsByTagName('post-tests', 0)->item(0);
+    if ($postTestsNode) {
+        $self->_addScripts('post-tests-scripts', $postTestsNode);
+    }
+
     my $mirrorNode = $image->getElementsByTagName('mirror', 0)->item(0);
     if ($mirrorNode) {
         my $mirror = $mirrorNode->getFirstChild()->getNodeValue();
@@ -801,6 +822,11 @@ sub _loadFromYAML # (image)
     my $postInstallScripts = $image->{'post-install'};
     if ($postInstallScripts) {
         $self->_addScriptsFromYAML('post-scripts', $postInstallScripts);
+    }
+
+    my $postScriptsScripts = $image->{'post-tests'};
+    if ($postScriptsScripts) {
+        $self->_addScriptsFromYAML('post-tests-scripts', $postScriptsScripts);
     }
 
     my $mirror = $image->{mirror};

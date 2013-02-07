@@ -36,4 +36,9 @@
         <file>file2</file>
     </files>
 
+    <post-tests>
+        <script>script1</script>
+        <script>script2</script>
+    </post-tests>
+
 </image>
