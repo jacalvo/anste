@@ -23,6 +23,7 @@ use ANSTE::Scenario::Scenario;
 use ANSTE::Deploy::ScenarioDeployer;
 use ANSTE::Test::Suite;
 use ANSTE::Test::Validator;
+use ANSTE::Test::ScenarioLoader;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::HostWaiter;
 use ANSTE::Report::Report;
@@ -236,9 +237,9 @@ sub _loadScenario # (file, suite)
 {
     my ($self, $file, $suite) = @_;
 
-    my $scenario = new ANSTE::Scenario::Scenario();
+    my $scenario;
     try {
-        $scenario->loadFromFile($file);
+        $scenario = ANSTE::Test::ScenarioLoader->loadScenario($file,$suite);
     } catch ANSTE::Exceptions::InvalidFile with {
         my $ex = shift;
         my $filename = $ex->file();
@@ -364,9 +365,12 @@ sub _runTest # (test)
 
     my $path = $config->testFile("$suiteDir/$testDir");
     if (not $path) {
-        throw ANSTE::Exceptions::NotFound(
-            "In test '$name', directory '$testDir'"
-           )
+        $path = $config->scriptFile($testDir);
+        if (not $path) {
+            throw ANSTE::Exceptions::NotFound(
+                "In test '$name', directory '$testDir'"
+            )
+        }
     }
 
     my $logPath = $config->logPath();
