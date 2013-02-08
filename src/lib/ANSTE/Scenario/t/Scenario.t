@@ -19,7 +19,7 @@ use warnings;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Config;
 
-use Test::More qw(no_plan);
+use Test::More tests => 112;
 
 use constant SCENARIO => 'test.xml';
 use constant SCENARIO_YAML => 'test.yaml';
