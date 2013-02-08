@@ -365,12 +365,9 @@ sub _runTest # (test)
 
     my $path = $config->testFile("$suiteDir/$testDir");
     if (not $path) {
-        $path = $config->scriptFile($testDir);
-        if (not $path) {
-            throw ANSTE::Exceptions::NotFound(
-                "In test '$name', directory '$testDir'"
-            )
-        }
+        throw ANSTE::Exceptions::NotFound(
+            "In test '$name', directory '$testDir'"
+        )
     }
 
     my $logPath = $config->logPath();
@@ -486,8 +483,11 @@ sub _runTest # (test)
         $testResult->setLog("$suiteDir/$name.html");
     } else {
         if (not -r "$path/test") {
-            throw ANSTE::Exceptions::NotFound('Test script',
+            $path = $config->scriptFile($testDir);
+            if (not -r "$path/test") {
+                throw ANSTE::Exceptions::NotFound('Test script',
                                               "$suiteDir/$testDir/test");
+            }
         }
 
         $logfile = "$logPath/$suiteDir/$name.txt";
