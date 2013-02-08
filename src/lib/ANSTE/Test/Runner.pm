@@ -23,6 +23,7 @@ use ANSTE::Scenario::Scenario;
 use ANSTE::Deploy::ScenarioDeployer;
 use ANSTE::Test::Suite;
 use ANSTE::Test::Validator;
+use ANSTE::Test::ScenarioLoader;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::HostWaiter;
 use ANSTE::Report::Report;
@@ -176,7 +177,7 @@ sub runSuite # (suite)
 
     my $scenarioFile = $suite->scenario();
 
-    my $scenario = $self->_loadScenario($scenarioFile, $suiteName);
+    my $scenario = $self->_loadScenario($scenarioFile, $suite);
 
     my $config = ANSTE::Config->instance();
     $config->setCurrentScenario($scenarioFile);
@@ -236,13 +237,13 @@ sub _loadScenario # (file, suite)
 {
     my ($self, $file, $suite) = @_;
 
-    my $scenario = new ANSTE::Scenario::Scenario();
+    my $scenario;
     try {
-        $scenario->loadFromFile($file);
+        $scenario = ANSTE::Test::ScenarioLoader->loadScenario($file,$suite);
     } catch ANSTE::Exceptions::InvalidFile with {
         my $ex = shift;
         my $filename = $ex->file();
-        print STDERR "Can't load scenario $file for suite $suite.\n";
+        print STDERR "Can't load scenario $file for suite $suite->name().\n";
         print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
     };
@@ -366,7 +367,7 @@ sub _runTest # (test)
     if (not $path) {
         throw ANSTE::Exceptions::NotFound(
             "In test '$name', directory '$testDir'"
-           )
+        )
     }
 
     my $logPath = $config->logPath();
@@ -482,8 +483,11 @@ sub _runTest # (test)
         $testResult->setLog("$suiteDir/$name.html");
     } else {
         if (not -r "$path/test") {
-            throw ANSTE::Exceptions::NotFound('Test script',
+            $path = $config->scriptFile($testDir);
+            if (not -r "$path/test") {
+                throw ANSTE::Exceptions::NotFound('Test script',
                                               "$suiteDir/$testDir/test");
+            }
         }
 
         $logfile = "$logPath/$suiteDir/$name.txt";

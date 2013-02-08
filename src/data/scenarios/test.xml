@@ -9,13 +9,13 @@
         <baseimage>test</baseimage>
         <network>
             <interface type="static">
-                <name>eth0</name>
+                <name>eth1</name>
                 <address>192.168.0.2</address>
                 <netmask>255.255.255.0</netmask>
                 <gateway>192.168.0.1</gateway>
             </interface>
             <interface type="static">
-                <name>eth1</name>
+                <name>eth2</name>
                 <address>192.168.1.4</address>
                 <netmask>255.255.255.0</netmask>
                 <gateway>192.168.1.1</gateway>
@@ -37,8 +37,11 @@
         <desc>hostDesc</desc>
         <baseimage>test</baseimage>
         <network>
-            <interface type="dhcp">
-                <name>eth0</name>
+            <interface type="static">
+                <name>eth1</name>
+                <address>192.168.1.5</address>
+                <netmask>255.255.255.0</netmask>
+                <gateway>192.168.1.4</gateway>
             </interface>
         </network>
         <packages>

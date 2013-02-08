@@ -19,7 +19,7 @@ use warnings;
 use ANSTE::Scenario::BaseImage;
 use ANSTE::Config;
 
-use Test::More tests => 48;
+use Test::More tests => 54;
 
 sub testImage # (image)
 {
@@ -61,6 +61,10 @@ sub testImage # (image)
 	my $files = $image->files();
     is(scalar @{$files->list()}, 2, 'size files = 2');
     _checkFiles($files);
+
+	my $postTestsScripts = $image->postTestsScripts();
+    is(scalar @{$postTestsScripts}, 2, 'size files = 2');
+    _checkScripts($postTestsScripts);
 
 }
 
