@@ -9,10 +9,8 @@ install:
     method: copy
     source: /tmp
 packages:
-    profile:
-        - test-profile
-    package:
-        - postfix
+    - test-profile
+    - postfix
 pre-install:
     - script1
     - script2

@@ -1,0 +1,35 @@
+name: scenarioName
+desc: scenarioDesc
+hosts:
+     - name: hostName
+       desc: hostDesc
+       baseimage: test
+       network:
+           interfaces:
+             - name: eth1
+               type: static
+               address: 192.168.0.2
+               netmask: 255.255.255.0
+               gateway: 192.168.0.1
+             - name: eth2
+               type: static
+               address: 192.168.1.4
+               netmask: 255.255.255.0
+               gateway: 192.168.1.1
+       packages:
+           - lamp-server
+
+     - name: hostName
+       desc: hostDesc
+       baseimage: test
+       network:
+           interfaces:
+             - name: eth1
+               type: static
+               address: 192.168.1.5
+               netmask: 255.255.255.0
+               gateway: 192.168.1.4
+       packages:
+           - ftp-server
+           - samba-common
+           - samba

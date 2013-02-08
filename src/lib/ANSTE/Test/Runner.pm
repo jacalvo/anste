@@ -177,7 +177,7 @@ sub runSuite # (suite)
 
     my $scenarioFile = $suite->scenario();
 
-    my $scenario = $self->_loadScenario($scenarioFile, $suiteName);
+    my $scenario = $self->_loadScenario($scenarioFile, $suite);
 
     my $config = ANSTE::Config->instance();
     $config->setCurrentScenario($scenarioFile);
@@ -243,7 +243,7 @@ sub _loadScenario # (file, suite)
     } catch ANSTE::Exceptions::InvalidFile with {
         my $ex = shift;
         my $filename = $ex->file();
-        print STDERR "Can't load scenario $file for suite $suite.\n";
+        print STDERR "Can't load scenario $file for suite $suite->name().\n";
         print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
     };
