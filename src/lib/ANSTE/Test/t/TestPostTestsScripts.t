@@ -20,7 +20,7 @@ use ANSTE::Test::Suite;
 use ANSTE::Test::ScenarioLoader;
 use ANSTE::Config;
 
-use Test::More tests => 9;
+use Test::More tests => 11;
 
 use constant SUITE => 'test';
 use constant SUITE_YAML => 'test-yaml';
@@ -31,6 +31,9 @@ sub _checkTests # (tests)
 
     is(@{$tests}[2]->name(), "script1" , 'name = script1');
     is(@{$tests}[3]->name(), "script2" , 'name = script2');
+
+    is(@{$tests}[2]->desc(), "PostTest added from the baseImage of the host hostName" , 'desc = text');
+    is(@{$tests}[3]->desc(), "PostTest added from the baseImage of the host hostName" , 'desc = text');
 
     is(@{$tests}[2]->dir(), "script1" , 'dir = script1');
     is(@{$tests}[3]->dir(), "script2" , 'dir = script2');

@@ -53,6 +53,7 @@ sub _loadPostTestsScriptsAsTests # (suite, scriptsToAdd, hostName)
         my $test = new ANSTE::Test::Test();
 
         $test->setName($script);
+        $test->setDesc("PostTest added from the baseImage of the host $hostName");
         $test->setDir($script);
         $test->setHost($hostName);
 
