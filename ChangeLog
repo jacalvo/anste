@@ -19,13 +19,12 @@ HEAD
     + Fixed support in yaml for the hw-addr directive that was broken
     + Fixed support in yaml for the bridges and manual-bridging directives
     + Properly write /etc/resolv.conf file in the setup script
-    + Properly write /etc/resolv.conf file
     + Added retries to the mount image section when deploying an scenario
     + Fixed wrong error handling when base image does not exist
     + Added localdomain hostnames to /etc/hosts
     + Description attribute in tests is now optional
     + suites.list files can now contain comments and blank lines
-    + anste-clean not longer kills itself
+    + anste-clean no longer kills itself
 0.9
     + Improved behavior of test retry/continue prompt
     + New anste-connect tool to easily SSH into deployed hosts
