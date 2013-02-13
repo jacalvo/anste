@@ -610,6 +610,21 @@ sub postTestsScripts # returns list ref
     return $self->{'post-tests-scripts'};
 }
 
+# Method: isAPreLoadedImage
+#
+#  Check if the image has been created from a pre loaded file
+#
+# Returns:
+#
+#   boolean - True or false depending in the install method
+#
+sub isAPreLoadedImage # returns boolean
+{
+    my ($self) = @_;
+
+    return $self->{installMethod} eq "copy";
+}
+
 # Method: loadFromFile
 #
 #   Loads the base image data from a XML file.

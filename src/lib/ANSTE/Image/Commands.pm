@@ -491,9 +491,11 @@ sub createVirtualMachine
 
     $virtualizer->createVM($name);
 
-    print "[$name] Waiting for the system start...\n";
-    my $waiter = ANSTE::Comm::HostWaiter->instance();
-    $waiter->waitForReady($name);
+    if (not $self->{image}->isAPreLoadedImage()) {
+        print "[$name] Waiting for the system start...\n";
+        my $waiter = ANSTE::Comm::HostWaiter->instance();
+        $waiter->waitForReady($name);
+    }
     print "[$name] System is up.\n";
 }
 

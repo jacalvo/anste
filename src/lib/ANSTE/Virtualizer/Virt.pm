@@ -48,6 +48,8 @@ use File::Copy::Recursive qw(dircopy);
 #   size    - *optional* size of the root partition
 #   swap    - *optional* size of the swap partition to be used
 #   arch    - *optional* architecture to be used
+#   source  - *optional* source of the copy command way of install
+#   method  - install method
 #   dist    - distribution to be installed (for debootstrap method)
 #   command - command to be used for the installation (for debootstrap method)
 #   mirror  - mirror to be used for the installation
@@ -73,6 +75,7 @@ sub createBaseImage # (%params)
     my $size = $params{size};
     my $arch = $params{arch};
     my $mirror = $params{mirror};
+    my $method = $params{method};
 
     my $config = ANSTE::Config->instance();
 
@@ -95,24 +98,39 @@ sub createBaseImage # (%params)
         $mirror = $config->vmBuilderMirror();
     }
 
-    my $vm = 'kvm'; # TODO: Unhardcode this when supporting other virtualizers
-    my $command = "ubuntu-vm-builder $vm $dist --dest $dir --hostname $name" .
-                  " --ip $ip --mirror $mirror --mem $memory --kernel-flavour generic --addpkg linux-generic" .
-                  " --mask $netmask --gw $gateway --rootsize $size" .
-                  " --components main,universe --removepkg=cron --domain $name";
+    if ( $method eq "copy" ) {
 
-    if ($arch) {
-        $command .= " --arch $arch";
+        my $source = $params{source};
+
+        $self->execute("mkdir $dir");
+
+        my $command = "cp $source/*.qcow2 $dir/.";
+
+        $self->execute($command) or
+            die "Error copying the qcow2 format image";
+
+    } else {
+
+        my $vm = 'kvm'; # TODO: Unhardcode this when supporting other virtualizers
+        my $command = "ubuntu-vm-builder $vm $dist --dest $dir --hostname $name" .
+                    " --ip $ip --mirror $mirror --mem $memory --kernel-flavour generic --addpkg linux-generic" .
+                    " --mask $netmask --gw $gateway --rootsize $size" .
+                    " --components main,universe --removepkg=cron --domain $name";
+
+        if ($arch) {
+            $command .= " --arch $arch";
+        }
+
+        # FIXME: We don't use swap at the moment to speed up the process
+        $command .= " --swapsize 8";
+        #if ($swap) {
+        #   $command .= " --swapsize $swap";
+        #}
+
+        $self->execute($command) or
+            die "Error executing ubuntu-vm-builder";
     }
 
-    # FIXME: We don't use swap at the moment to speed up the process
-    $command .= " --swapsize 8";
-    #if ($swap) {
-    #   $command .= " --swapsize $swap";
-    #}
-
-    $self->execute($command) or
-        die "Error executing ubuntu-vm-builder";
 
     # Creates the configuration file for the new image
     my $image = new ANSTE::Image::Image(name => $name,

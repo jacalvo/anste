@@ -278,55 +278,59 @@ sub _deploy
         $cmd->createVirtualMachine();
     };
 
-    try {
+    if ( not $host->baseImage()->isAPreLoadedImage()) {
 
-        # Execute pre-install scripts
-        my $pre = $host->preScripts();
-        if (@{$pre}) {
-            print "[$hostname] Executing pre scripts...\n";
-            $cmd->executeScripts($pre);
-        }
+        try {
 
-        my $setupScript = "$hostname-setup.sh";
-        print "[$hostname] Generating setup script...\n";
-        $self->_generateSetupScript($setupScript);
-        $self->_executeSetupScript($ip, $setupScript);
-
-        # It worths it stays here in order to be able to use pre/post-install
-        # scripts as well. This permits us to move trasferred file,
-        # change their rights and so on.
-        my $list = $host->{files}->list(); # retrieve files list
-        print "[$hostname] Transferring files...";
-        $cmd->transferFiles($list);
-        print "... done\n";
-
-        # NAT with this address is not needed anymore
-        my $iface = $config->natIface();
-        $system->disableNAT($iface, $commIface->address());
-        # Adding the new nat rule
-        my $interfaces = $host->network()->interfaces();
-        foreach my $if (@{$interfaces}) {
-            if ($if->gateway() eq $config->gateway()) {
-                $system->enableNAT($iface, $if->address());
-                last;
+            # Execute pre-install scripts
+            my $pre = $host->preScripts();
+            if (@{$pre}) {
+                print "[$hostname] Executing pre scripts...\n";
+                $cmd->executeScripts($pre);
             }
-        }
 
-        # Execute post-install scripts
-        my $post = $host->postScripts();
-        if (@{$post}) {
-            print "[$hostname] Executing post scripts...\n";
-            $cmd->executeScripts($post);
-        }
-    } catch ANSTE::Exceptions::Error with {
-        my $ex = shift;
-        my $msg = $ex->message();
-        print "[$hostname] ERROR: $msg\n";
-    } catch Error with {
-        my $err = shift;
-        my $msg = $err->stringify();
-        print "[$hostname] ERROR: $msg\n";
-    };
+            my $setupScript = "$hostname-setup.sh";
+            print "[$hostname] Generating setup script...\n";
+            $self->_generateSetupScript($setupScript);
+            $self->_executeSetupScript($ip, $setupScript);
+
+            # It worths it stays here in order to be able to use pre/post-install
+            # scripts as well. This permits us to move trasferred file,
+            # change their rights and so on.
+            my $list = $host->{files}->list(); # retrieve files list
+            print "[$hostname] Transferring files...";
+            $cmd->transferFiles($list);
+            print "... done\n";
+
+            # NAT with this address is not needed anymore
+            my $iface = $config->natIface();
+            $system->disableNAT($iface, $commIface->address());
+            # Adding the new nat rule
+            my $interfaces = $host->network()->interfaces();
+            foreach my $if (@{$interfaces}) {
+                if ($if->gateway() eq $config->gateway()) {
+                    $system->enableNAT($iface, $if->address());
+                    last;
+                }
+            }
+
+            # Execute post-install scripts
+            my $post = $host->postScripts();
+            if (@{$post}) {
+                print "[$hostname] Executing post scripts...\n";
+                $cmd->executeScripts($post);
+            }
+        } catch ANSTE::Exceptions::Error with {
+            my $ex = shift;
+            my $msg = $ex->message();
+            print "[$hostname] ERROR: $msg\n";
+        } catch Error with {
+            my $err = shift;
+            my $msg = $err->stringify();
+            print "[$hostname] ERROR: $msg\n";
+        };
+
+    }
 }
 
 sub _copyBaseImage
