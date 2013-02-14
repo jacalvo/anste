@@ -100,14 +100,22 @@ sub createBaseImage # (%params)
 
     if ( $method eq "copy" ) {
 
+        my $command = "";
         my $source = $params{source};
 
         $self->execute("mkdir $dir");
 
-        my $command = "cp $source/*.qcow2 $dir/.";
+        if ( $source =~ /http/ ) {
+            $command = "wget -O -  $source > $dir/dowloaded.qcow2 ";
 
-        $self->execute($command) or
-            die "Error copying the qcow2 format image";
+            $self->execute($command) or
+                die "Error downloading the preloaded image fron source";
+        } else {
+            $command = "cp $source/*.qcow2 $dir/.";
+
+            $self->execute($command) or
+                die "Error copying the qcow2 format image";
+        }
 
     } else {
 

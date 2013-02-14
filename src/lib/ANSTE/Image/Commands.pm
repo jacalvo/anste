@@ -283,35 +283,37 @@ sub prepareSystem
 
     $self->createVirtualMachine();
 
-    # Execute pre-install scripts
-    print "[$hostname] Executing pre-setup scripts...\n" if $config->verbose();
-    $self->executeScripts($image->preScripts());
+    if ( not $image->isAPreLoadedImage() ) {
+        # Execute pre-install scripts
+        print "[$hostname] Executing pre-setup scripts...\n" if $config->verbose();
+        $self->executeScripts($image->preScripts());
 
-    my $setupScript = '/tmp/install.sh';
-    my $gen = new ANSTE::ScriptGen::BaseImageSetup($image);
+        my $setupScript = '/tmp/install.sh';
+        my $gen = new ANSTE::ScriptGen::BaseImageSetup($image);
 
-    my $FILE;
-    open($FILE, '>', $setupScript)
-        or die "Can't create $setupScript: $!";
+        my $FILE;
+        open($FILE, '>', $setupScript)
+            or die "Can't create $setupScript: $!";
 
-    $gen->writeScript($FILE);
+        $gen->writeScript($FILE);
 
-    close($FILE)
-        or die "Can't close file $setupScript: $!";
+        close($FILE)
+            or die "Can't close file $setupScript: $!";
 
-    $self->_executeSetup($client, $setupScript);
+        $self->_executeSetup($client, $setupScript);
 
-    unlink($setupScript)
-        or die "Can't remove $setupScript: $!";
+        unlink($setupScript)
+            or die "Can't remove $setupScript: $!";
 
-    my $list = $image->{files}->list(); # retrieve files list
-    print "[$hostname] Transferring files...";
-    $self->transferFiles($list);
-    print "... done\n";
+        my $list = $image->{files}->list(); # retrieve files list
+        print "[$hostname] Transferring files...";
+        $self->transferFiles($list);
+        print "... done\n";
 
-    # Execute post-install scripts
-    print "[$hostname] Executing post-setup scripts...\n" if $config->verbose();
-    $self->executeScripts($image->postScripts());
+        # Execute post-install scripts
+        print "[$hostname] Executing post-setup scripts...\n" if $config->verbose();
+        $self->executeScripts($image->postScripts());
+    }
 
     return 1;
 }

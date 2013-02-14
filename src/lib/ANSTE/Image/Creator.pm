@@ -110,15 +110,17 @@ sub createImage
     print "done.\n";
 
     try {
-        print "[$name] Copying base files... ";
-        $cmd->copyBaseFiles()
-            or throw ANSTE::Exceptions::Error('Error copying files.');
-        print "done.\n";
+        if ( not $image->isAPreLoadedImage() ) {
+            print "[$name] Copying base files... ";
+            $cmd->copyBaseFiles()
+                or throw ANSTE::Exceptions::Error('Error copying files.');
+            print "done.\n";
 
-        print "[$name] Installing base packages... ";
-        $cmd->installBasePackages()
-            or throw ANSTE::Exceptions::Error('Error installing packages.');
-        print "done.\n";
+            print "[$name] Installing base packages... ";
+            $cmd->installBasePackages()
+                or throw ANSTE::Exceptions::Error('Error installing packages.');
+            print "done.\n";
+        }
     } finally {
         print "[$name] Umounting image... ";
         $cmd->umount()
