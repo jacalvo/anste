@@ -134,14 +134,7 @@ sub check
     $self->nameserver();
     $self->autoCreateImages();
     $self->vmBuilderMirror();
-    $self->seleniumRCjar();
-    $self->seleniumBrowser();
-    $self->seleniumVideo();
-    $self->seleniumRecordAll();
     $self->seleniumProtocol();
-    $self->seleniumFirefoxProfile();
-    $self->seleniumSingleWindow();
-    $self->seleniumUserExtensions();
     $self->virtSize();
     $self->virtMemory();
 
@@ -975,135 +968,6 @@ sub autoCreateImages
     return $auto;
 }
 
-# Method: seleniumRCjar
-#
-#   Gets the value for the path selenium-rc jar option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::MissingConfig> - throw if option is missing
-#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
-#
-sub seleniumRCjar
-{
-    my ($self) = @_;
-
-    my $jar = $self->_getOption('selenium', 'rc-jar');
-
-    if (defined $jar and not ANSTE::Validate::fileReadable($jar)) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/rc-jar',
-                                               $jar,
-                                               $self->{confFile});
-    }
-
-    return $jar;
-}
-
-# Method: seleniumBrowser
-#
-#   Gets the value for the Selenium browser option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-sub seleniumBrowser
-{
-    my ($self) = @_;
-
-    my $browser = $self->_getOption('selenium', 'browser');
-
-    # TODO: validate browser??
-    #
-    return $browser;
-}
-
-# Method: seleniumVideo
-#
-#   Gets the value for the Selenium video recording option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
-#
-sub seleniumVideo
-{
-    my ($self) = @_;
-
-    my $video = $self->_getOption('selenium', 'video');
-
-    if (not ANSTE::Validate::boolean($video)) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/video',
-                                               $video,
-                                               $self->{confFile});
-    }
-
-    return $video;
-}
-
-# Method: setSeleniumVideo
-#
-#   Sets the value for the Selenium video recording option.
-#
-# Parameters:
-#
-#   value - Value for the option.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
-#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
-#
-sub setSeleniumVideo # (value)
-{
-    my ($self, $value) = @_;
-
-    defined $value or
-        throw ANSTE::Exceptions::MissingArgument('value');
-
-    if (not ANSTE::Validate::boolean($value)) {
-        throw ANSTE::Exceptions::InvalidOption('selenium/video',
-                                               $value);
-    }
-
-    $self->{override}->{'selenium'}->{'video'} = $value;
-}
-
-# Method: seleniumRecordAll
-#
-#   Gets the value for the Selenium record all videos option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
-#
-sub seleniumRecordAll
-{
-    my ($self) = @_;
-
-    my $all = $self->_getOption('selenium', 'record-all');
-
-    if (not ANSTE::Validate::boolean($all)) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/record-all',
-                                               $all,
-                                               $self->{confFile});
-    }
-
-    return $all;
-}
-
 # Method: seleniumProtocol
 #
 #   Gets the value for the default Selenium protocol (http or https)
@@ -1129,88 +993,6 @@ sub seleniumProtocol
     }
 
     return $protocol;
-}
-
-# Method: seleniumFirefoxProfile
-#
-#   Gets the value for the path to custom firefox profile
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
-#
-sub seleniumFirefoxProfile
-{
-    my ($self) = @_;
-
-    my $profile = $self->_getOption('selenium', 'firefox-profile');
-
-    if ($profile and (not ANSTE::Validate::path($profile))) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/firefox-profile',
-                                               $profile,
-                                               $self->{confFile});
-    }
-
-    return $profile;
-}
-
-# Method: seleniumSingleWindow
-#
-#   Selenium runs the browser in only a window, incompatible with frames
-#
-# Returns:
-#
-#   value - Value for the option.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
-#
-sub seleniumSingleWindow
-{
-    my ($self) = @_;
-
-    my $singleWindow = $self->_getOption('selenium', 'single-window');
-
-    if (not ANSTE::Validate::boolean($singleWindow)) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/single-window',
-                                               $singleWindow,
-                                               $self->{confFile});
-    }
-
-    return $singleWindow;
-}
-
-# Method: seleniumUserExtensions
-#
-#   Gets the value for the path to user extensions for Selenium
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
-#
-sub seleniumUserExtensions
-{
-    my ($self) = @_;
-
-    my $userExtensions = $self->_getOption('selenium', 'user-extensions');
-
-    if ($userExtensions and
-        (not ANSTE::Validate::fileReadable($userExtensions))) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/user-extensions',
-                                               $userExtensions,
-                                               $self->{confFile});
-    }
-
-    return $userExtensions;
 }
 
 # Method: step
@@ -1480,14 +1262,7 @@ sub _setDefaults
 
     $self->{default}->{'deploy'}->{'auto-create-images'} = 0;
 
-    $self->{default}->{'selenium'}->{'browser'} = '*firefox';
-    $self->{default}->{'selenium'}->{'video'} = 0;
-    $self->{default}->{'selenium'}->{'record-all'} = 0;
     $self->{default}->{'selenium'}->{'protocol'} = 'http';
-    $self->{default}->{'selenium'}->{'firefox-profile'} = '';
-    $self->{default}->{'selenium'}->{'single-window'} = 0;
-    $self->{default}->{'selenium'}->{'user-extensions'} =
-        "$data/scripts/user-extensions.js";
 
     $self->{default}->{'test'}->{'step'} = 0;
 

@@ -89,26 +89,7 @@ sub validateSuite # (suite)
 
         my $path = $config->testFile("$suiteDir/$testDir");
 
-        if ($test->type() eq 'selenium') {
-            if (not -x $path) {
-                throw ANSTE::Exceptions::NotFound('Test', $path);
-            }
-
-            my $suiteFile = "$path/$SUITE_FILE";
-            if (not -r $suiteFile) {
-                throw ANSTE::Exceptions::NotFound('Suite file', $suiteFile);
-            }
-            # Validate selenium suite files
-            my @lines = slurp "<$suiteFile";
-            my @htmls = map {substr ((split /"/)[1], 2)}
-                            (grep /href=".\/.*.html"/, @lines);
-            foreach my $html (@htmls) {
-                my $file = "$path/$html";
-                if (not -r $file) {
-                    throw ANSTE::Exceptions::NotFound('Selenium file', $file);
-                }
-            }
-        } elsif ($test->type() eq 'reboot') {
+        if ($test->type() eq 'reboot') {
         } else {
             if (not -r "$path/test") {
                 throw ANSTE::Exceptions::NotFound('Test script',

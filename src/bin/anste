@@ -48,7 +48,6 @@ my $clean = '';
 my $test = '';
 my $out = '';
 my $path = '';
-my $video = '';
 my $format = '';
 my $wait = 0;
 my $waitFail = 0;
@@ -65,7 +64,6 @@ GetOptions('create' => \$create,
            'test' => \$test,
            'path=s' => \$path,
            'out=s' => \$out,
-           'video' => \$video,
            'format=s' => \$format,
            'quiet' => \$quiet,
            'wait' => \$wait,
@@ -106,9 +104,6 @@ if ($waitFail) {
 }
 if ($out) {
     $config->setLogPath($out);
-}
-if ($video) {
-    $config->setSeleniumVideo(1);
 }
 if ($reuse) {
     $config->setReuse(1);
@@ -388,7 +383,6 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -test              test a suite
    -path <dir>        where to find the data (CWD if not specified)
    -out  <dir>        report output directory
-   -video             save video recording of selenium tests
    -format <fmt>      select the output format for the reports
    -wait              wait before shutting down once the test is completed
    -wait-fail         wait if a test fails

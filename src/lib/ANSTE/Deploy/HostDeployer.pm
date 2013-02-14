@@ -278,7 +278,7 @@ sub _deploy
         $cmd->createVirtualMachine();
     };
 
-    if ( not $host->baseImage()->isAPreLoadedImage()) {
+    if ( not $host->baseImage()->isAPreLoadedImage() ) {
 
         try {
 
