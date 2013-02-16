@@ -1,4 +1,5 @@
 HEAD
+    + Autoconnect with anste-connect if there is only one deployed host
     + Adding support to post tests scripts defined in the images
     + Added partial support for images definition in YAML
     + Unhardcode the nameserver used in the setup of the hosts

@@ -30,7 +30,13 @@ try {
     exit (1);
 };
 
-my ($host) = @ARGV;
+my $host;
+if (@ARGV) {
+    ($host) = @ARGV;
+} elsif (keys (%{$hosts}) == 1) {
+    ($host) = keys (%{$hosts});
+}
+
 unless ($host) {
     print "Usage: $0 <host>\n\n";
     print "Connect by SSH to any deployed host of the scenario by its name.\n";
