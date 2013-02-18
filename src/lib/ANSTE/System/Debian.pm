@@ -252,7 +252,7 @@ sub installPackagesCommand # (packages) returns string
 
     my $packages = join(' ', @packages);
 
-    return 'apt-get install -y --force-yes $APT_OPTIONS ' . $packages;
+    return 'DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y --force-yes $APT_OPTIONS ' . $packages;
 }
 
 # Method: installPackagesCommandType
