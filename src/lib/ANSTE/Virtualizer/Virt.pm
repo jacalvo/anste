@@ -459,7 +459,7 @@ sub _createImageConfig # (image, path) returns config string
     $imageConfig .= "\t\t<emulator>/usr/bin/kvm</emulator>\n";
     $imageConfig .= "\t\t<disk type='file' device='disk'>\n";
     $imageConfig .= "\t\t\t<source file='$path/disk0.img'/>\n";
-    $imageConfig .= "\t\t\t<target dev='hda' bus='ide'/>\n";
+    $imageConfig .= "\t\t\t<target dev='vda' bus='virtio'/>\n";
     $imageConfig .= "\t\t</disk>\n";
     foreach my $iface (@{$image->network()->interfaces()}) {
         $imageConfig .= "\t\t<interface type='bridge'>\n";

@@ -1,4 +1,5 @@
 HEAD
+    + Use VirtIO instead of emulated IDE disks in libvirt configuration
     + Install packages always non-interactive and do not install recommends
     + Autoconnect with anste-connect if there is only one deployed host
     + Adding support to post tests scripts defined in the images
