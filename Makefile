@@ -1,7 +1,6 @@
 PREFIX = /usr/local
 DATADIR = $(PREFIX)/share/anste
 LIBDIR = $(PREFIX)/lib
-SBINDIR = $(PREFIX)/sbin
 BINDIR = $(PREFIX)/bin
 VERSION = $(shell head -1 ChangeLog)
 EXPORT = ../anste-$(VERSION)
@@ -33,9 +32,9 @@ deb: dist
 	mv ../anste_*.deb .
 
 install-anste:
-	install -d $(DESTDIR)$(SBINDIR)
-	install -m755 src/bin/anste $(DESTDIR)$(SBINDIR)
-	install -m755 src/bin/anste-clean $(DESTDIR)$(SBINDIR)
+	install -d $(DESTDIR)$(BINDIR)
+	install -m755 src/bin/anste $(DESTDIR)$(BINDIR)
+	install -m755 src/bin/anste-clean $(DESTDIR)$(BINDIR)
 	install -d $(DESTDIR)$(BINDIR)
 	install -m755 src/bin/anste-connect $(DESTDIR)$(BINDIR)
 	install -d $(DESTDIR)$(DATADIR)
@@ -82,7 +81,7 @@ ifneq (,$(findstring debian,$(DESTDIR)))
 endif
 
 uninstall-anste:
-	rm -f $(DESTDIR)$(SBINDIR)/anste
+	rm -f $(DESTDIR)$(BINDIR)/anste
 	rm -rf $(DESTDIR)$(DATADIR)/images
 	rm -rf $(DESTDIR)$(DATADIR)/profiles
 	rm -rf $(DESTDIR)$(DATADIR)/scenarios
@@ -106,9 +105,9 @@ uninstall-anste:
 	rm -rf $(DESTDIR)$(DATADIR)/deploy
 
 install-anste-manager:
-	install -d $(DESTDIR)$(SBINDIR)
-	install -m755 src/bin/anste-manager $(DESTDIR)$(SBINDIR)
-	install -m755 src/bin/anste-managerd $(DESTDIR)$(SBINDIR)
+	install -d $(DESTDIR)$(BINDIR)
+	install -m755 src/bin/anste-manager $(DESTDIR)$(BINDIR)
+	install -m755 src/bin/anste-managerd $(DESTDIR)$(BINDIR)
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE/Manager
 	install -m644 src/lib/ANSTE/Manager/JobLauncher.pm \
@@ -131,8 +130,8 @@ install-anste-manager:
 				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
 
 uninstall-anste-manager:
-	rm -f $(DESTDIR)$(SBINDIR)/anste-manager
-	rm -f $(DESTDIR)$(SBINDIR)/anste-managerd
+	rm -f $(DESTDIR)$(BINDIR)/anste-manager
+	rm -f $(DESTDIR)$(BINDIR)/anste-managerd
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/JobLauncher.pm
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/Job.pm
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/JobWaiter.pm

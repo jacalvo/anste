@@ -96,7 +96,7 @@ sub createBaseImage # (%params)
     }
 
     my $vm = 'kvm'; # TODO: Unhardcode this when supporting other virtualizers
-    my $command = "ubuntu-vm-builder $vm $dist --dest $dir --hostname $name" .
+    my $command = "sudo ubuntu-vm-builder $vm $dist --dest $dir --hostname $name" .
                   " --ip $ip --mirror $mirror --mem $memory --kernel-flavour generic --addpkg linux-generic" .
                   " --mask $netmask --gw $gateway --rootsize $size" .
                   " --components main,universe --removepkg=cron --domain $name";
@@ -390,10 +390,10 @@ sub createNetwork # (scenario)
         print $FILE $xml;
         close($FILE) or return 0;
 
-        if (not $self->execute("virsh net-create $xmlFile")) {
-            $self->execute("ifconfig virbr${num}-nic down");
-            $self->execute("brctl delbr virbr${num}-nic");
-            $self->execute("virsh net-create $xmlFile") or return 0;
+        if (not $self->execute("sudo virsh net-create $xmlFile")) {
+            $self->execute("sudo ifconfig virbr${num}-nic down");
+            $self->execute("sudo brctl delbr virbr${num}-nic");
+            $self->execute("sudo virsh net-create $xmlFile") or return 0;
         }
     }
     return 1;
@@ -429,7 +429,7 @@ sub destroyNetwork # (scenario)
 
     my %bridges = %{$scenario->bridges()};
     while (my ($net, $num) = each %bridges) {
-        $self->execute("virsh net-destroy bridge$num");
+        $self->execute("sudo virsh net-destroy bridge$num");
         unlink("$path/bridge$num.xml");
     }
 }

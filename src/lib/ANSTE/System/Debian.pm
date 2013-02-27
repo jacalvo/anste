@@ -64,12 +64,12 @@ sub mountImage # (image, mountPoint)
 
 #   Kvm new way
 #
-    my $loopDev = `losetup -f`;
+    my $loopDev = `sudo losetup -f`;
     chomp($loopDev);
 
-    $self->execute("losetup $loopDev $image");
+    $self->execute("sudo losetup $loopDev $image");
 
-    $self->execute("kpartx -a $loopDev");
+    $self->execute("sudo kpartx -a $loopDev");
     if (not defined $self->{loopDevs}) {
         $self->{loopDevs} = {};
     }
@@ -79,7 +79,7 @@ sub mountImage # (image, mountPoint)
     $mapper =~ s{/dev/}{/dev/mapper/};
     my $partition = $mapper . 'p1';
 
-    $self->execute("mount $partition $mountPoint");
+    $self->execute("sudo mount $partition $mountPoint");
 }
 
 # Method: unmount
@@ -102,11 +102,11 @@ sub unmount # (mountPoint)
     defined $mountPoint or
         throw ANSTE::Exceptions::MissingArgument('mountPoint');
 
-    $self->execute("umount $mountPoint");
+    $self->execute("sudo umount $mountPoint");
 
     my $loopDev = $self->{loopDevs}->{$mountPoint};
-    $self->execute("kpartx -d $loopDev");
-    $self->execute("losetup -d $loopDev");
+    $self->execute("sudo kpartx -d $loopDev");
+    $self->execute("sudo losetup -d $loopDev");
 }
 
 # Method: installBasePackages

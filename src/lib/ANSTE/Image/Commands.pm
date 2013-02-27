@@ -596,7 +596,7 @@ sub _copyFiles # (gen)
 
     # Executes the installation script passing the mount point
     # of the image as argument
-    my $ret = $system->execute("$filename $mountPoint");
+    my $ret = $system->execute("sudo $filename $mountPoint");
 
     unlink($filename) or die "Can't unlink $filename: $!";
 

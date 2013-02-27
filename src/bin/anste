@@ -38,7 +38,7 @@ use Error qw(:try);
 use Perl6::Junction qw(none);
 use Fcntl qw(:flock);
 
-use constant LOCK_FILE => '/var/run/anste.lock';
+use constant LOCK_FILE => '/var/tmp/anste.lock';
 
 my $create = '';
 my $remove = '';
