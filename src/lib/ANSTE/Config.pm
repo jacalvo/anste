@@ -135,6 +135,8 @@ sub check
     $self->autoCreateImages();
     $self->vmBuilderMirror();
     $self->seleniumProtocol();
+    $self->seleniumVideo();
+    $self->seleniumRecordAll();
     $self->virtSize();
     $self->virtMemory();
 
@@ -968,6 +970,88 @@ sub autoCreateImages
     return $auto;
 }
 
+# Method: seleniumVideo
+#
+#   Gets the value for the Selenium video recording option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub seleniumVideo
+{
+    my ($self) = @_;
+
+    my $video = $self->_getOption('selenium', 'video');
+
+    if (not ANSTE::Validate::boolean($video)) {
+        throw ANSTE::Exceptions::InvalidConfig('selenium/video',
+                                               $video,
+                                               $self->{confFile});
+    }
+
+    return $video;
+}
+
+# Method: setSeleniumVideo
+#
+#   Sets the value for the Selenium video recording option.
+#
+# Parameters:
+#
+#   value - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setSeleniumVideo # (value)
+{
+    my ($self, $value) = @_;
+
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not ANSTE::Validate::boolean($value)) {
+        throw ANSTE::Exceptions::InvalidOption('selenium/video',
+                                               $value);
+    }
+
+    $self->{override}->{'selenium'}->{'video'} = $value;
+}
+
+# Method: seleniumRecordAll
+#
+#   Gets the value for the Selenium record all videos option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub seleniumRecordAll
+{
+    my ($self) = @_;
+
+    my $all = $self->_getOption('selenium', 'record-all');
+
+    if (not ANSTE::Validate::boolean($all)) {
+        throw ANSTE::Exceptions::InvalidConfig('selenium/record-all',
+                                               $all,
+                                               $self->{confFile});
+    }
+
+    return $all;
+}
+
 # Method: seleniumProtocol
 #
 #   Gets the value for the default Selenium protocol (http or https)
@@ -1262,6 +1346,8 @@ sub _setDefaults
 
     $self->{default}->{'deploy'}->{'auto-create-images'} = 0;
 
+    $self->{default}->{'selenium'}->{'video'} = 0;
+    $self->{default}->{'selenium'}->{'record-all'} = 0;
     $self->{default}->{'selenium'}->{'protocol'} = 'http';
 
     $self->{default}->{'test'}->{'step'} = 0;

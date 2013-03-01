@@ -1,5 +1,5 @@
 HEAD
-    + Removing the selenium RC support and video recording support
+    + Removing the selenium RC support
     + Adding support to post tests scripts defined in the images
     + Added partial support for images definition in YAML
     + Unhardcode the nameserver used in the setup of the hosts

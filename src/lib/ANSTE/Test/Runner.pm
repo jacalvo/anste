@@ -375,6 +375,7 @@ sub _runTest # (test)
     # Create directories
     use File::Path;
     mkpath "$logPath/$suiteDir";
+    mkdir "$logPath/$suiteDir/video" if $config->seleniumVideo();
     mkdir "$logPath/$suiteDir/script";
 
     my ($logfile, $ret);
@@ -396,6 +397,7 @@ sub _runTest # (test)
         $self->_runScriptOnHost($hostname, $script);
     }
 
+    # Run the test itself either it's a selenium one or a normal one
     if ($test->type() eq 'reboot') {
         $ret = $self->_reboot($hostname);
 
@@ -446,7 +448,30 @@ sub _runTest # (test)
             $ret = $self->{system}->runTest("$newPath/$name",
                                              $logfile, $env, $params);
         } elsif ($test->type() eq 'web') {
+            my $video;
+            if ($config->seleniumVideo()) {
+                $video = "$logPath/$suiteDir/video/$name.ogv";
+                print "Starting video recording for test $name...\n" if $verbose;
+                $system->startVideoRecording($video);
+            }
+
             $ret = $self->_runWebTest($test, "$newPath/$name", $logfile);
+
+            if ($config->seleniumVideo()) {
+                print "Ending video recording for test $name... " if $verbose;
+                $system->stopVideoRecording();
+                print "Done.\n" if $verbose;
+
+                # If test was correct and record all videos option
+                # is not activated, delete the video
+                if (!$config->seleniumRecordAll() && $ret == 0) {
+                    unlink($video);
+                }
+                else {
+                    $testResult->setVideo("$suiteDir/video/$name.ogv");
+                }
+            }
+
         } else {
             $ret = $self->_runScriptOnHost($hostname, "$newPath/$name",
                                            $logfile, $env, $params);
