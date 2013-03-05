@@ -468,7 +468,7 @@ sub _createImageConfig # (image, path) returns config string
         $imageConfig .= "\t\t\t<source bridge='virbr${bridge}-nic'/>\n";
         $imageConfig .= "\t\t\t<mac address='$mac'/>\n";
         # Gigabit ethernet card to improve performance
-        $imageConfig .= "\t\t\t<model type='e1000'/>\n";
+        $imageConfig .= "\t\t\t<model type='virtio'/>\n";
         $imageConfig .= "\t\t</interface>\n";
     }
     $imageConfig .= "\t\t<graphics type='vnc' port='-1' autoport='yes' keymap='es'/>\n";
