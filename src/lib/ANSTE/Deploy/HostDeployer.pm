@@ -97,6 +97,7 @@ sub new # (host, ip) returns new HostDeployer object
                                         swap => $swap,
                                         ip => $ip);
     $image->setNetwork($host->network());
+    $image->setInstallMethod($host->baseImage()->installMethod());
 
     my $cmd = new ANSTE::Image::Commands($image);
 
@@ -256,22 +257,24 @@ sub _deploy
     # or KVM crashes when trying to create two machines at the same time
     {
         lock($lockMount);
-        print "[$hostname] Updating hostname on the new image...\n";
-        try {
-            my $ok = $self->_updateHostname();
-            if (not $ok) {
-                print "[$hostname] Error copying host files.\n";
+        if ( not $host->baseImage()->isAPreLoadedImage() ) {
+            print "[$hostname] Updating hostname on the new image...\n";
+            try {
+                my $ok = $self->_updateHostname();
+                if (not $ok) {
+                    print "[$hostname] Error copying host files.\n";
+                    $error = 1;
+                }
+            } catch Error with {
+                my $err = shift;
+                my $msg = $err->stringify();
+                print "[$hostname] ERROR: $msg\n";
                 $error = 1;
-            }
-        } catch Error with {
-            my $err = shift;
-            my $msg = $err->stringify();
-            print "[$hostname] ERROR: $msg\n";
-            $error = 1;
-        };
+            };
 
-        if ($error) {
-            return undef;
+            if ($error) {
+                return undef;
+            }
         }
 
         print "[$hostname] Creating virtual machine ($ip)...\n";

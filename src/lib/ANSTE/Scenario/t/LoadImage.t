@@ -19,7 +19,7 @@ use warnings;
 use ANSTE::Scenario::BaseImage;
 use ANSTE::Config;
 
-use Test::More tests => 54;
+use Test::More tests => 58;
 
 sub testImage # (image)
 {
@@ -66,6 +66,11 @@ sub testImage # (image)
     is(scalar @{$postTestsScripts}, 2, 'size files = 2');
     _checkScripts($postTestsScripts);
 
+	my $busType = $image->busType();
+    is($busType, 'ide', 'busType = ide');
+
+	my $interfaceType = $image->interfaceType();
+    is($interfaceType, 'e1000', 'interfaceType = e1000');
 }
 
 sub _checkScripts # (scriptsToCheck)

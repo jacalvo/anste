@@ -1,4 +1,5 @@
 HEAD
+    + Adding configurable disk and interface types
     + Removing the selenium RC support
     + Adding support to post tests scripts defined in the images
     + Added partial support for images definition in YAML

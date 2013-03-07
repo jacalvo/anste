@@ -35,6 +35,11 @@ use YAML::XS;
 #   Contains the information to build a system base image.
 #
 
+use constant {
+    DEFAULT_BUS_TYPE => "ide",
+    DEFAULT_INTERFACE_TYPE => "e1000"
+};
+
 # Constructor: new
 #
 #   Constructor for BaseImage class.
@@ -595,6 +600,80 @@ sub setMirror # name string
     $self->{mirror} = $mirror;
 }
 
+# Method: busType
+#
+#   Returns the bus type to be used when creating the VM.
+#
+# Returns:
+#
+#   string - contains the bus type to use
+#
+sub busType # returns string
+{
+    my ($self) = @_;
+
+    return $self->{busType};
+}
+
+# Method: setBusType
+#
+#   Sets the busType of the image.
+#
+# Parameters:
+#
+#   name - String with the bus type to be used.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setBusType # name string
+{
+    my ($self, $busType) = @_;
+
+    defined $busType or
+        throw ANSTE::Exceptions::MissingArgument('busType');
+
+    $self->{busType} = $busType;
+}
+
+# Method: interfaceType
+#
+#   Returns the interface type to be used when creating the VM.
+#
+# Returns:
+#
+#   string - contains the interface type to use
+#
+sub interfaceType # returns string
+{
+    my ($self) = @_;
+
+    return $self->{interfaceType};
+}
+
+# Method: setInterfaceType
+#
+#   Sets the interfaceType of the image.
+#
+# Parameters:
+#
+#   name - String with the interface type to be used.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setInterfaceType # name string
+{
+    my ($self, $interfaceType) = @_;
+
+    defined $interfaceType or
+        throw ANSTE::Exceptions::MissingArgument('interfaceType');
+
+    $self->{interfaceType} = $interfaceType;
+}
+
 # Method: postTestsScripts
 #
 #   Gets the list of scripts that have to be executed after the tests run.
@@ -766,6 +845,26 @@ sub _loadFromXml # (image)
         $self->setMirror($mirror);
     }
 
+    my $busTypeNode = $image->getElementsByTagName('busType', 0)->item(0);
+    if ($busTypeNode) {
+        my $busType = $busTypeNode->getFirstChild()->getNodeValue();
+        $self->setBusType($busType);
+    } else {
+        $self->setBusType(DEFAULT_BUS_TYPE);
+    }
+
+    my $interfaceTypeNode = $image->getElementsByTagName('interfaceType', 0)->item(0);
+    if ($interfaceTypeNode) {
+        my $interfaceType = $interfaceTypeNode->getFirstChild()->getNodeValue();
+        $self->setInterfaceType($interfaceType);
+    } else {
+        $self->setInterfaceType(DEFAULT_INTERFACE_TYPE);
+    }
+}
+
+sub _addScriptsFromYAML # (list, node)
+{
+
     return(1);
 }
 
@@ -854,6 +953,19 @@ sub _loadFromYAML # (image)
         $self->files()->loadYAML($files);
     }
 
+    my $busType = $image->{busType};
+    if ($busType) {
+        $self->setBusType($busType);
+    } else {
+        $self->setBusType(DEFAULT_BUS_TYPE);
+    }
+
+    my $interfaceType = $image->{interfaceType};
+    if ($interfaceType) {
+        $self->setInterfaceType($interfaceType);
+    } else {
+        $self->setInterfaceType(DEFAULT_INTERFACE_TYPE);
+    }
 }
 
 sub _addScriptsFromYAML # (list, node)

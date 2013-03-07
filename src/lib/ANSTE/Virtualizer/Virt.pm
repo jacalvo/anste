@@ -53,6 +53,8 @@ use File::Copy::Recursive qw(dircopy);
 #   dist    - distribution to be installed (for debootstrap method)
 #   command - command to be used for the installation (for debootstrap method)
 #   mirror  - mirror to be used for the installation
+#   busType - bus type to be used in the generation of the VM
+#   interfaceType - interface type to be used in the generation of the VM
 #
 # Exceptions:
 #
@@ -76,6 +78,8 @@ sub createBaseImage # (%params)
     my $arch = $params{arch};
     my $mirror = $params{mirror};
     my $method = $params{method};
+    my $busType = $params{busType};
+    my $interfaceType = $params{interfaceType};
 
     my $config = ANSTE::Config->instance();
 
@@ -146,7 +150,7 @@ sub createBaseImage # (%params)
                                         memory => $memory);
     my $network = $self->_networkForBaseImage($ip);
     $image->setNetwork($network);
-    my $xml = $self->_createImageConfig($image, $dir);
+    my $xml = $self->_createImageConfig($image, $dir, $busType, $interfaceType);
 
     # Writes the qemu configuration file
     my $FILE;
@@ -337,7 +341,9 @@ sub createImageCopy # (baseimage, newimage)
     dircopy("$path/$basename", "$path/$newname");
 
     # Creates the configuration file for the new image
-    my $config = $self->_createImageConfig($newimage, "$path/$newname");
+    my $config = $self->_createImageConfig($newimage, "$path/$newname",
+                                            $baseimage->busType(),
+                                            $baseimage->interfaceType());
 
     # Writes the configuration file
     my $FILE;
@@ -460,9 +466,9 @@ sub destroyNetwork # (scenario)
     }
 }
 
-sub _createImageConfig # (image, path) returns config string
+sub _createImageConfig # (image, path, busType, interfaceType) returns config string
 {
-    my ($self, $image, $path) = @_;
+    my ($self, $image, $path, $busType, $interfaceType) = @_;
 
     my $config = ANSTE::Config->instance();
     my $name = $image->name();
@@ -485,7 +491,7 @@ sub _createImageConfig # (image, path) returns config string
     $imageConfig .= "\t\t<emulator>/usr/bin/kvm</emulator>\n";
     $imageConfig .= "\t\t<disk type='file' device='disk'>\n";
     $imageConfig .= "\t\t\t<source file='$path/disk0.img'/>\n";
-    $imageConfig .= "\t\t\t<target dev='hda' bus='ide'/>\n";
+    $imageConfig .= "\t\t\t<target dev='hda' bus='$busType'/>\n";
     $imageConfig .= "\t\t</disk>\n";
     foreach my $iface (@{$image->network()->interfaces()}) {
         $imageConfig .= "\t\t<interface type='bridge'>\n";
@@ -494,7 +500,7 @@ sub _createImageConfig # (image, path) returns config string
         $imageConfig .= "\t\t\t<source bridge='virbr${bridge}-nic'/>\n";
         $imageConfig .= "\t\t\t<mac address='$mac'/>\n";
         # Gigabit ethernet card to improve performance
-        $imageConfig .= "\t\t\t<model type='e1000'/>\n";
+        $imageConfig .= "\t\t\t<model type='$interfaceType'/>\n";
         $imageConfig .= "\t\t</interface>\n";
     }
     $imageConfig .= "\t\t<graphics type='vnc' port='-1' autoport='yes' keymap='es'/>\n";

@@ -126,6 +126,8 @@ sub create
     my $size = $image->size();
     my $arch = $image->arch();
     my $mirror = $image->mirror();
+    my $interfaceType = $image->interfaceType();
+    my $busType = $image->busType();
 
     my $virtualizer = $self->{virtualizer};
 
@@ -139,7 +141,9 @@ sub create
                                   size => $size,
                                   arch => $arch,
                                   command => $command,
-                                  mirror => $mirror);
+                                  mirror => $mirror,
+                                  busType => $busType,
+                                  interfaceType => $interfaceType);
 }
 
 # Method: mount
