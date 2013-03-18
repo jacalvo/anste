@@ -1,4 +1,5 @@
 HEAD
+    + Do not assign IP address to internal network bridges
     + Use VirtIO for network cards instead of e1000 in libvirt configuration
     + Use VirtIO instead of emulated IDE disks in libvirt configuration
     + Install packages always non-interactive and do not install recommends

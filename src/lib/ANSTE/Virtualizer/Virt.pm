@@ -391,8 +391,8 @@ sub createNetwork # (scenario)
         close($FILE) or return 0;
 
         if (not $self->execute("virsh net-create $xmlFile")) {
-            $self->execute("ifconfig virbr${num}-nic down");
-            $self->execute("brctl delbr virbr${num}-nic");
+            $self->execute("ifconfig virbr${num} down");
+            $self->execute("brctl delbr virbr${num}");
             $self->execute("virsh net-create $xmlFile") or return 0;
         }
     }
@@ -458,6 +458,7 @@ sub _createImageConfig # (image, path) returns config string
     $imageConfig .= "\t<devices>\n";
     $imageConfig .= "\t\t<emulator>/usr/bin/kvm</emulator>\n";
     $imageConfig .= "\t\t<disk type='file' device='disk'>\n";
+    $imageConfig .= "\t\t\t<driver name='qemu' type='raw' cache='none'/>\n";
     $imageConfig .= "\t\t\t<source file='$path/disk0.img'/>\n";
     $imageConfig .= "\t\t\t<target dev='vda' bus='virtio'/>\n";
     $imageConfig .= "\t\t</disk>\n";
@@ -465,7 +466,7 @@ sub _createImageConfig # (image, path) returns config string
         $imageConfig .= "\t\t<interface type='bridge'>\n";
         my $bridge = $iface->bridge();
         my $mac = $iface->hwAddress();
-        $imageConfig .= "\t\t\t<source bridge='virbr${bridge}-nic'/>\n";
+        $imageConfig .= "\t\t\t<source bridge='virbr${bridge}'/>\n";
         $imageConfig .= "\t\t\t<mac address='$mac'/>\n";
         # Gigabit ethernet card to improve performance
         $imageConfig .= "\t\t\t<model type='virtio'/>\n";
@@ -477,6 +478,10 @@ sub _createImageConfig # (image, path) returns config string
 
     return $imageConfig;
 }
+
+# FIXME: unhardcode this?
+my $bridge_mac_prefix = '00:16:3E:5D:C7';
+my $mac_id = 90;
 
 sub _createNetworkConfig # (net, bridge) returns config string
 {
@@ -499,11 +504,15 @@ sub _createNetworkConfig # (net, bridge) returns config string
 
     my $networkConfig = "<network>\n";
     $networkConfig .= "\t<name>bridge$bridge</name>\n";
-    $networkConfig .= "\t<bridge name=\"virbr${bridge}-nic\" />\n";
     if ($forward) {
+        $networkConfig .= "\t<bridge name=\"virbr${bridge}\" />\n";
         $networkConfig .= "\t<forward mode=\"nat\" />\n";
+        $networkConfig .= "\t<ip address=\"$address\" netmask=\"$netmask\" />\n";
+    } else {
+        $networkConfig .= "\t<bridge name=\"virbr${bridge}\" stp=\"on\" delay=\"0\" />\n";
+        $networkConfig .= "\t<mac address=\"$bridge_mac_prefix:$mac_id\" />\n";
+        $mac_id++;
     }
-    $networkConfig .= "\t<ip address=\"$address\" netmask=\"$netmask\" />\n";
     $networkConfig .= "</network>\n";
 
     return $networkConfig;
