@@ -542,16 +542,14 @@ sub loadYAML
         $self->setHwAddress($hwAddr);
     }
 
-#FIXME
-#    my $bridgeNode = $node->getElementsByTagName('bridge', 0)->item(0);
-#    if ($bridgeNode) {
-#        my $bridge = $bridgeNode->getFirstChild()->getNodeValue();
-#        $self->setBridge($bridge);
-#    } else {
-#        unless ($type eq 'static') {
-#            throw ANSTE::Exceptions::Error("Auto-bridging cannot be done with non-static interface $name. You need to specify a bridge manually.");
-#        }
-#    }
+    my $bridge = $iface->{bridge};
+    if (defined ($bridge)) {
+        $self->setBridge($bridge);
+    } else {
+        unless ($type eq 'static') {
+            throw ANSTE::Exceptions::Error("Auto-bridging cannot be done with non-static interface $name. You need to specify a bridge manually.");
+        }
+    }
 }
 
 1;

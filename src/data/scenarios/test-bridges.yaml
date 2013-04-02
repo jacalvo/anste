@@ -1,0 +1,33 @@
+name: test-bridges
+desc: test scenario with manual bridging
+manual-bridging: 1
+hosts:
+     - name: server
+       desc: server with manual bridging
+       baseimage: test
+       network:
+           interfaces:
+             - name: eth1
+               type: static
+               address: 192.168.2.2
+               netmask: 255.255.255.0
+               gateway: 192.168.2.1
+               bridge: 2
+             - name: eth2
+               type: static
+               address: 192.168.3.4
+               netmask: 255.255.255.0
+               gateway: 192.168.3.1
+               bridge: 3
+
+     - name: client
+       desc: client with manual bridging
+       baseimage: test
+       network:
+           interfaces:
+             - name: eth1
+               type: static
+               address: 192.168.3.5
+               netmask: 255.255.255.0
+               gateway: 192.168.3.4
+               bridge: 3
