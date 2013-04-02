@@ -58,6 +58,7 @@ sub new # returns new Host object
     $self->{'post-scripts'} = [];
     $self->{scenario} = undef;
     $self->{precondition} = 1;
+    $self->{bridges} = [];
 
     bless($self, $class);
 
@@ -332,6 +333,13 @@ sub setPackages # (packages)
     }
 
     $self->{packages} = $packages;
+}
+
+sub bridges
+{
+    my ($self) = @_;
+
+    return $self->{network}->bridges();
 }
 
 # Method: files

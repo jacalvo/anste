@@ -298,7 +298,7 @@ sub addHost # (host)
 #
 #   hash ref - list of <ANSTE::Scenario::NetworkBridge> objects
 #
-sub bridges # returns bridges hash reference
+sub bridges
 {
     my ($self) = @_;
 
@@ -415,13 +415,13 @@ sub _loadXML
     if ($manualBridgingNode) {
         $self->setManualBridging(1);
 
-        # Read <bridges> block
-        my $bridgesNode = $scenario->getElementsByTagName('bridges', 0)->item(0);
-        foreach my $bridgeNode ($bridgesNode->getElementsByTagName('bridge', 0)) {
-            my $id = $bridgeNode->getAttribute('id');
-            my $net = $bridgeNode->getFirstChild()->getNodeValue();
-            $self->{bridges}->{$net} = $id;
-        }
+        # FIXME
+        #my $bridgesNode = $scenario->getElementsByTagName('bridges', 0)->item(0);
+        #foreach my $bridgeNode ($bridgesNode->getElementsByTagName('bridge', 0)) {
+        #    my $id = $bridgeNode->getAttribute('id');
+        #    my $net = $bridgeNode->getFirstChild()->getNodeValue();
+        #    $self->{bridges}->{$net} = $id;
+        #}
     }
 
     # Read the <host> elements
@@ -446,22 +446,24 @@ sub _loadYAML
 
     if ($scenario->{'manual-bridging'}) {
         $self->setManualBridging(1);
-
-        # Read <bridges> block
-        my $bridges = $scenario->{'bridges'};
-        foreach my $bridge (@{$bridges}) {
-            my $id = $bridge->{'id'};
-            my $net = $bridge->{'address'};
-            $self->{bridges}->{$net} = $id;
-        }
     }
 
-    # Read the <host> elements
+    my @bridges;
+
+    # Read the host elements
     foreach my $element (@{$scenario->{hosts}}) {
         my $host = new ANSTE::Scenario::Host;
         $host->loadYAML($element);
         if ($host->precondition()) {
             $self->addHost($host);
+            push (@bridges, @{$host->bridges()});
+        }
+    }
+
+    if ($scenario->{'manual-bridging'}) {
+        my $bridges = $scenario->{'bridges'};
+        foreach my $bridgeId (@bridges) {
+            $self->{bridges}->{$bridgeId} = $bridgeId;
         }
     }
 }

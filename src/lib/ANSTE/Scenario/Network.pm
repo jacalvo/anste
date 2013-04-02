@@ -43,6 +43,7 @@ sub new # returns new Network object
 
     $self->{interfaces} = [];
     $self->{routes} = [];
+    $self->{bridges} = [];
 
     bless($self, $class);
 
@@ -89,6 +90,11 @@ sub addInterface # (interface)
              'ANSTE::Scenario::NetworkInterface');
     }
 
+    my $bridge = $interface->bridge();
+    if (defined ($bridge)) {
+        push (@{$self->{bridges}}, $bridge);
+    }
+
     push(@{$self->{interfaces}}, $interface);
 }
 
@@ -133,6 +139,13 @@ sub addRoute # (route)
     }
 
     push(@{$self->{routes}}, $route);
+}
+
+sub bridges
+{
+    my ($self) = @_;
+
+    return $self->{bridges};
 }
 
 # Method: load

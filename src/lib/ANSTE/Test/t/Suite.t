@@ -18,6 +18,7 @@ use warnings;
 
 use ANSTE::Test::Suite;
 use ANSTE::Config;
+use ANSTE::Exceptions::InvalidFile;
 
 use Test::More tests => 20;
 
