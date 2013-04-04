@@ -12,6 +12,9 @@ else
 	LIBPERL = $(PREFIX)/share/perl5
 endif
 
+tests:
+	cd src && prove -r --timer -l -I..
+
 distclean:
 	@rm -f anste-$(VERSION).tar.gz
 	@rm -f anste-$(VERSION)
@@ -28,7 +31,7 @@ dist: export
 	mv $(EXPORT)/src/data/conf $(EXPORT)
 	tar cvvzf anste-$(VERSION).tar.gz $(EXPORT)
 
-deb: dist
+deb: tests dist
 	cd $(EXPORT) && dpkg-buildpackage -rfakeroot -uc -us
 	mv ../anste_*.deb .
 
@@ -163,6 +166,6 @@ install: install-anste install-anste-manager install-anste-job
 
 uninstall: uninstall-anste uninstall-anste-manager uninstall-anste-job
 
-pkg: dist
+pkg: tests dist
 	cd $(EXPORT) &&  dpkg-buildpackage -rfakeroot -uc -us
 
