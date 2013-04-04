@@ -169,7 +169,10 @@ sub waitForFinish
 {
     my ($self) = @_;
 
-    $self->{thread}->join();
+    my $ret = $self->{thread}->join();
+    if  ($ret) {
+        throw ANSTE::Exceptions::Error('Error in the deploy of the scenario');
+    }
 }
 
 # Method: shutdown
