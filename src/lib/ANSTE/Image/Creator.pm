@@ -154,6 +154,7 @@ sub createImage
         my $ex = shift;
         my $msg = $ex->message();
         print "ERROR: $msg\n";
+        $ex->throw();
     } catch Error with {
         my $ex = shift;
         my $msg = $ex->stringify();
