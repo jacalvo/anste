@@ -1,4 +1,6 @@
 HEAD
+    + Stop properly the execution or creation if an error is found in the
+      custom pre/post installation scripts
     + Do not assign IP address to internal network bridges
     + Use VirtIO for network cards instead of e1000 in libvirt configuration
     + Use VirtIO instead of emulated IDE disks in libvirt configuration
