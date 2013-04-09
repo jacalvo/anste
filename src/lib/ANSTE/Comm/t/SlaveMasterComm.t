@@ -26,7 +26,7 @@ use Net::Domain qw(hostname);
 
 use Test::More tests => 5;
 
-use constant PORT => 8001;
+use constant PORT => 18001;
 
 my $HOST = hostname();
 
