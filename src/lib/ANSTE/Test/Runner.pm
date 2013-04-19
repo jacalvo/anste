@@ -497,6 +497,7 @@ sub _runTest # (test)
         # Copy to temp directory dereferencing links and rename to test name
         system("cp -rL $path/* $newPath/");
         system("mv $newPath/test $newPath/$name");
+        system("chmod +x $newPath/$name");
 
         my $env = $test->env();
         my $params = $test->params();
