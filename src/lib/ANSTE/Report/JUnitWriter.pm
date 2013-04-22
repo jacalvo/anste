@@ -138,7 +138,11 @@ sub writeTestResult # (%params)
 
     my $filehandle = $self->{file};
 
-    print $filehandle "<testcase time=\"$time\" name=\"$name\">\n";
+    if (defined $time) {
+        print $filehandle "<testcase time=\"$time\" name=\"$name\">\n";
+    } else {
+        print $filehandle "<testcase name=\"$name\">\n";
+    }
 
 #    if ($desc) {
 #        print $filehandle "<desc>$desc</desc>\n";

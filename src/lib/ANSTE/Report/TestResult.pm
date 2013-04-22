@@ -47,6 +47,7 @@ sub new # returns new TestResult object
     $self->{script} = undef;
     $self->{startTime} = undef;
     $self->{endTime} = undef;
+    $self->{duration} = undef;
 
 	bless($self, $class);
 

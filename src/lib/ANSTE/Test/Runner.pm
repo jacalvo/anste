@@ -386,7 +386,6 @@ sub _runTest # (test)
 
     # Store start time
     $testResult->setStartTime($self->_time());
-    my $initialTime = time();
 
     # Create a temp directory for this test
     my $newPath = tempdir(CLEANUP => 1)
@@ -473,7 +472,6 @@ sub _runTest # (test)
         # Store end time
         my $endTime = $self->_time();
         $testResult->setEndTime($endTime);
-        $testResult->setDuration((time() - $initialTime) / 1000.0);
         $testResult->setLog("$suiteDir/$name.html");
     } elsif ($test->type() eq 'reboot') {
         $ret = $self->_reboot($hostname);
@@ -522,6 +520,8 @@ sub _runTest # (test)
         print $SCRIPT $scriptContent;
         close ($SCRIPT);
 
+        my $initialTime = time();
+
         if ($test->type() eq 'host') {
             $ret = $self->{system}->runTest("$newPath/$name",
                                              $logfile, $env, $params);
@@ -535,6 +535,7 @@ sub _runTest # (test)
         # Store end time
         my $endTime = $self->_time();
         $testResult->setEndTime($endTime);
+        $testResult->setDuration((time() - $initialTime) / 1000.0);
 
         # Editing the log to write the starting and ending times.
         my $contents = slurp "<$logfile";
