@@ -33,6 +33,7 @@ isa_ok($testResult, 'ANSTE::Report::TestResult');
 
 $testResult->setTest($test);
 $testResult->setValue("256");
+$testResult->setDuration(0.09);
 $testResult->setLog("data/files/log.txt");
 
 my $suite = ANSTE::Test::Suite->new();
@@ -55,7 +56,7 @@ $writer->_writeSuiteFile($suiteResult,$file_name);
 
 file_ok($file_name, "<testsuite name=\"Test1\">
 <desc></desc>
-<testcase name=\"probando\">
+<testcase time=\"0.09\" name=\"probando\">
 <failure message=\"Error in Anste Tests\">
 &quot;probando&quot;
 &lt;

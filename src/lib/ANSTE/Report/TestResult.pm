@@ -83,7 +83,7 @@ sub test # returns test string
 #
 sub setTest # test string
 {
-	my ($self, $test) = @_;	
+	my ($self, $test) = @_;
 
     defined $test or
         throw ANSTE::Exceptions::MissingArgument('test');
@@ -130,7 +130,7 @@ sub setValue # (value)
     defined $value or
         throw ANSTE::Exceptions::MissingArgument('value');
 
-    $self->{value} = $value;        
+    $self->{value} = $value;
 }
 
 # Method: log
@@ -167,7 +167,7 @@ sub setLog # (log)
     defined $log or
         throw ANSTE::Exceptions::MissingArgument('log');
 
-    $self->{log} = $log;        
+    $self->{log} = $log;
 }
 
 # Method: script
@@ -204,7 +204,7 @@ sub setScript # (script)
     defined $script or
         throw ANSTE::Exceptions::MissingArgument('script');
 
-    $self->{script} = $script;        
+    $self->{script} = $script;
 }
 
 # Method: video
@@ -241,7 +241,7 @@ sub setVideo # (video)
     defined $video or
         throw ANSTE::Exceptions::MissingArgument('video');
 
-    $self->{video} = $video;        
+    $self->{video} = $video;
 }
 
 # Method: startTime
@@ -278,7 +278,7 @@ sub setStartTime # (startTime)
     defined $startTime or
         throw ANSTE::Exceptions::MissingArgument('startTime');
 
-    $self->{startTime} = $startTime;        
+    $self->{startTime} = $startTime;
 }
 
 # Method: endTime
@@ -315,7 +315,44 @@ sub setEndTime # (endTime)
     defined $endTime or
         throw ANSTE::Exceptions::MissingArgument('endTime');
 
-    $self->{endTime} = $endTime;        
+    $self->{endTime} = $endTime;
+}
+
+# Method: duration
+#
+#   Returns the duration of the test
+#
+# Returns:
+#
+#   float - duration in seconds
+#
+sub duration
+{
+    my ($self) = @_;
+
+    return $self->{duration};
+}
+
+# Method: setDuration
+#
+#   Sets the duration of the test
+#
+# Parameters:
+#
+#   duration - float in seconds.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
+#
+sub setDuration
+{
+    my ($self, $duration) = @_;
+
+    defined $duration or
+        throw ANSTE::Exceptions::MissingArgument('duration');
+
+    $self->{duration} = $duration;
 }
 
 1;

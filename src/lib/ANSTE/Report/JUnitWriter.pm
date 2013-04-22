@@ -105,6 +105,7 @@ sub _writeSuiteFile # (suite, file)
                 desc => $desc,
                 value => $test->value(),
                 log => $test->log(),
+                time => $test->duration(),
                 video => $video);
     }
     $self->writeSuiteEnd();
@@ -133,10 +134,11 @@ sub writeTestResult # (%params)
     my $result = $params{value};
     my $file = $params{log};
     my $video = $params{video};
+    my $time = $params{time};
 
     my $filehandle = $self->{file};
 
-    print $filehandle "<testcase name=\"$name\">\n";
+    print $filehandle "<testcase time=\"$time\" name=\"$name\">\n";
 
 #    if ($desc) {
 #        print $filehandle "<desc>$desc</desc>\n";
