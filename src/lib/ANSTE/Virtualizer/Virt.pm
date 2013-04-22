@@ -481,7 +481,7 @@ sub _createImageConfig # (image, path) returns config string
 
 # FIXME: unhardcode this?
 my $bridge_mac_prefix = '00:1F:3E:5D:C7';
-my $mac_id = 90;
+my $mac_id = 80;
 
 sub _createNetworkConfig # (net, bridge) returns config string
 {
