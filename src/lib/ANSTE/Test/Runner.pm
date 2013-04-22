@@ -535,7 +535,7 @@ sub _runTest # (test)
         # Store end time
         my $endTime = $self->_time();
         $testResult->setEndTime($endTime);
-        $testResult->setDuration((time() - $initialTime) / 1000.0);
+        $testResult->setDuration(time() - $initialTime);
 
         # Editing the log to write the starting and ending times.
         my $contents = slurp "<$logfile";
