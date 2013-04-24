@@ -1,41 +1,18 @@
 Source: anste
 Section: admin
 Priority: optional
-Maintainer: José Antonio Calvo <jacalvo@warp.es>
-Build-Depends: debhelper (>= 5)
+Maintainer: José Antonio Calvo <jacalvo@zentyal.com>
+Build-Depends: debhelper (>= 5), liberror-perl, libxml-dom-perl, libfile-copy-recursive-perl, libsoap-lite-perl, libperl6-slurp-perl, libconfig-tiny-perl, libperl6-junction-perl, libterm-readline-gnu-perl, libmail-rfc822-address-perl, libtext-template-perl, debootstrap, libvirt-bin, libyaml-libyaml-perl, libjson-xs-perl, sshpass, libattempt-perl
 Standards-Version: 3.7.2
 
 Package: anste
 Architecture: all
-Depends: perl (>=5.8.8-7), liberror-perl (>=0.15-8), libxml-dom-perl (>=1.43-4), libfile-copy-recursive-perl (>=0.29-1), libsoap-lite-perl (>=0.69-1), libperl6-slurp-perl (>=0.03-5), kvm, ubuntu-vm-builder, libconfig-tiny-perl (>=2.08-1), libperl6-junction-perl (>= 1.10-1), libterm-readline-gnu-perl (>= 1.16-2), libmail-rfc822-address-perl (>=0.3-2), libtext-template-perl (>= 1.44-1.1), debootstrap (>=1.0.8), libvirt-bin (>= 0.4), libyaml-libyaml-perl, libjson-xs-perl, sshpass
-Recommends: recordmydesktop (>=0.3.5.1-1)
+Depends: perl (>=5.8.8-7), liberror-perl, libxml-dom-perl, libfile-copy-recursive-perl, libsoap-lite-perl, libperl6-slurp-perl, kvm, ubuntu-vm-builder, libconfig-tiny-perl, libperl6-junction-perl, libterm-readline-gnu-perl, libmail-rfc822-address-perl, libtext-template-perl, debootstrap, libvirt-bin, libyaml-libyaml-perl, libjson-xs-perl, sshpass, libattempt-perl, python-selenium (>= 2.28.0)
+Recommends: recordmydesktop
 Description: Advanced Network Service Testing Environment
  ANSTE is a testing environment for advanced network services, mainly intended
  to automatize the integration tests of eBox Platform, furthermore it could be
  used to other similar purposes.
  .
- URL: http://public.warp.es/anste/
+ URL: http://www.anste.org
 
-Package: anste-manager
-Architecture: all
-Depends: perl (>=5.8.8-7), liberror-perl (>=0.15-8), libxml-dom-perl (>=1.43-4), libfile-copy-recursive-perl (>=0.29-1), libsoap-lite-perl (>=0.69-1), libperl6-slurp-perl (>=0.03-5), libconfig-tiny-perl (>=2.08-1), libperl6-junction-perl (>=1.10-1), libterm-readline-gnu-perl (>= 1.16-2), libmail-sender-perl (>=0.8.13-3), libfreezethaw-perl (>=0.43-3), libtext-template-perl (>= 1.44-1.1), libxml-rss-perl (>=1.05-1)
-Description: Advanced Network Service Testing Environment (manager)
- ANSTE is a testing environment for advanced network services, mainly intended
- to automatize the integration tests of eBox Platform, furthermore it could be
- used to other similar purposes.
- .
- This package includes the job queue manager.
- .
- URL: http://public.warp.es/anste/
-
-Package: anste-job
-Architecture: all
-Depends: perl (>=5.8.8-7), liberror-perl (>=0.15-8), libxml-dom-perl (>=1.43-4), libfile-copy-recursive-perl (>=0.29-1), libsoap-lite-perl (>=0.69-1), libperl6-slurp-perl (>=0.03-5), libconfig-tiny-perl (>=2.08-1), libperl6-junction-perl (>= 1.10-1), libterm-readline-gnu-perl (>= 1.16-2), libmail-sender-perl (>=0.8.13-3)
-Description: Advanced Network Service Testing Environment (job sender)
- ANSTE is a testing environment for advanced network services, mainly intended
- to automatize the integration tests of eBox Platform, furthermore it could be
- used to other similar purposes.
- .
- This package includes a client to send jobs to an anste-manager server.
- .
- URL: http://public.warp.es/anste/
