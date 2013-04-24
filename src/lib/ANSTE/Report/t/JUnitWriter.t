@@ -19,7 +19,7 @@ use strict;
 use ANSTE::Report::JUnitWriter;
 use ANSTE::Test::Suite;
 use Test::More tests => 8;
-use Test::Files;
+use File::Slurp;
 
 my $file_name = "/tmp/result.xml";
 
@@ -54,7 +54,8 @@ $suiteResult->setSuite($suite);
 $suiteResult->add($testResult);
 $writer->_writeSuiteFile($suiteResult,$file_name);
 
-file_ok($file_name, "<testsuite name=\"Test1\">
+my $content = read_file($file_name);
+is($content, "<testsuite name=\"Test1\">
 <desc></desc>
 <testcase time=\"0.09\" name=\"probando\">
 <failure message=\"Error in Anste Tests\">
