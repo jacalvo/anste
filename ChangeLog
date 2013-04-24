@@ -1,5 +1,6 @@
 HEAD
     + Fix install instructions using new repository
+0.10
     + Added duration of each executed tests in JUnit report
     + Stop properly the execution or creation if an error is found in the
       custom pre/post installation scripts

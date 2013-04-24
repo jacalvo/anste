@@ -28,7 +28,6 @@ export: distclean
 	find $(EXPORT)/src/lib -name 't' -print | xargs rm -rf
 
 dist: export
-	mv $(EXPORT)/src/data/conf $(EXPORT)
 	tar cvvzf anste-$(VERSION).tar.gz $(EXPORT)
 
 deb: tests dist
