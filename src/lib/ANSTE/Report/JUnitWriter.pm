@@ -64,6 +64,7 @@ sub writeSuiteHeader # (name, desc)
 
     my $file = $self->{file};
 
+    print $file "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
     print $file "<testsuite name=\"$name\">\n";
     print $file "<desc>$desc</desc>\n";
 }
