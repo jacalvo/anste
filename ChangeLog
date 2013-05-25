@@ -1,4 +1,6 @@
 HEAD
+    + files in images can be directories whose content is put in the image
+      target directory
     + Fix install instructions using new repository
     + Added duration of each executed tests in JUnit report
     + Stop properly the execution or creation if an error is found in the

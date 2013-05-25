@@ -56,7 +56,7 @@ sub put	# (file, content)
     	close $FILE or die "Can't close: $!";
     	return 'OK';
     } else {
-	    return 'ERR';
+        return 'ERR';
     }
 }
 
