@@ -1,4 +1,4 @@
-# Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2007-2013 José Antonio Calvo Fernández <jacalvo@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -534,6 +534,10 @@ sub executeScripts # (list)
 #
 #   Transfer the given list of files on the running image.
 #
+#   If the file is a directory, then recursively copy the directory
+#   content but without preserving the directory structure in the
+#   running image.
+#
 # Parameters:
 #
 #   list - Reference to the list of files to be transferred.
@@ -552,9 +556,7 @@ sub transferFiles # (list)
     $client->connect("http://$ip:$port");
 
     foreach my $file (@{$list}) {
-        my $filePath = $config->listsFile($file);
-		$client->put($filePath) or
-            print "[$image:$filePath] Transfer failed.\n";
+        $self->_transferFile($file, $image, $config, $client);
     }
 }
 
@@ -619,6 +621,26 @@ sub _executeSetup # (client, script)
         if $config->verbose();
 
     return ($ret);
+}
+
+# Real transfer of files to the client
+# If the file is a directory, then recursively transfer its content
+sub _transferFile
+{
+    my ($self, $file, $image, $config, $client) = @_;
+
+    my $filePath = $config->listsFile($file);
+    if ( -d $filePath ) {
+        opendir(my $dh, $filePath);
+        while (my $dirContent = readdir($dh)) {
+            next if ($dirContent eq '.' or $dirContent eq '..');
+            $self->_transferFile("$file/$dirContent", $image, $config, $client);
+        }
+        closedir($dh);
+    } else {
+        $client->put($filePath) or
+          print "[$image:$filePath] Transfer failed.\n";
+    }
 }
 
 1;
