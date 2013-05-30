@@ -287,15 +287,13 @@ sub _runTests
             $ret = -1;
         }
 
-        # Stop executing tests if a critical one fails
-        last if ($test->critical() and ($ret ne 0));
-
         # Wait user input if the user has set a breakpoint, or
         # if there was an error and we are in wait on fail mode,
         # or always if we are in step by step mode.
 
         my $msg;
         my $stop = 0;
+        my $critical = 0;
 
         if ($config->breakpoint($test->name())) {
             $stop = 1;
@@ -309,6 +307,17 @@ sub _runTests
             $stop = 1;
             $msg = "Step by step execution.";
         }
+
+        # Stop executing tests if a critical one fails
+        if (($ret != 0) and $test->critical()) {
+            if ($config->waitFail()) {
+                $stop = 1;
+                $msg = "Critical test failed and wait on failure was requested.";
+            }
+
+            $critical = 1;
+        }
+
         if ($stop) {
             while (1) {
                 print "$msg " .
@@ -324,6 +333,10 @@ sub _runTests
                     last;
                 }
             }
+        }
+
+        if ($critical) {
+            last;
         }
     }
 }
