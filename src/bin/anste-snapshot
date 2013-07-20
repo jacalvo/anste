@@ -1,0 +1,105 @@
+#!/usr/bin/perl
+
+# Copyright (C) 2013 Zentyal S.L.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License, version 2, as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+use warnings;
+use strict;
+
+use ANSTE::Config;
+use ANSTE::Scenario::Snapshot;
+use Error qw(:try);
+
+my ($command, $name, $desc) = @ARGV;
+
+unless ($command) {
+    usage();
+}
+
+my $config = ANSTE::Config->instance();
+
+if ($command eq 'list') {
+    list();
+} else {
+    unless ($name) {
+        usage();
+    }
+
+    if ($command eq 'save') {
+        save($name, $desc);
+    } elsif ($command eq 'restore') {
+        restore($name);
+    } elsif ($command eq 'remove') {
+        remove($name);
+    } else {
+        usage();
+    }
+}
+
+sub save
+{
+    my ($name, $desc) = @_;
+
+    unless ($desc) {
+        $desc = localtime();
+    }
+
+    try {
+        ANSTE::Scenario::Snapshot->save($name, $desc);
+        exit (0);
+    } catch ANSTE::Exceptions::NotFound with {
+        print "Cannot read hosts file, probably there is no scenario deployed.\n";
+    } otherwise {
+        my $ex = shift;
+        print "ERROR: $ex\n";
+    };
+
+    exit (1);
+}
+
+sub list
+{
+    foreach my $snapshot (@{ANSTE::Scenario::Snapshot->list()}) {
+        my $name = $snapshot->{name};
+        my $desc = $snapshot->{desc};
+        print "$name\tdesc\n";
+    }
+}
+
+sub remove
+{
+    my ($name) = @_;
+
+    ANSTE::Scenario::Snapshot->remove($name);
+}
+
+sub restore
+{
+    my ($name) = @_;
+
+    ANSTE::Scenario::Snapshot->restore($name);
+}
+
+sub usage
+{
+    print "Usage: $0 <command> [arg]\n\n";
+    print " Available commands:\n";
+    print "   save <name> [desc]  save snapshot of the current scenario with the given name\n";
+    print "   restore <name>      restore a saved snapshot with the given name\n";
+    print "   list                list saved snapshots\n";
+    print "   remove <name>       delete a saved snapshot\n\n";
+    exit (1);
+}
+

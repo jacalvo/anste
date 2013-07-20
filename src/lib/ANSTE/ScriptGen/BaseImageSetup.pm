@@ -23,6 +23,7 @@ use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
+use ANSTE::System::System;
 
 # Class: BaseImageSetup
 #
@@ -61,12 +62,7 @@ sub new # (image) returns new BaseScriptGen object
     }
 
 	$self->{image} = $image;
-    my $system = ANSTE::Config->instance()->system();
-
-    eval "use ANSTE::System::$system";
-    die "Can't load package $system: $@" if $@;
-
-    $self->{system} = "ANSTE::System::$system"->new();
+    $self->{system} = ANSTE::System::System->instance();
 
 	bless($self, $class);
 

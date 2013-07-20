@@ -1,4 +1,6 @@
 HEAD
+    + Added anste-snapshot tool
+    + New instance() method for System and Virtualizer abstract classes
     + Do not destroy scenario when a critical test fails using -wait-fail
     + files in images can be directories whose content is put in the image
       target directory

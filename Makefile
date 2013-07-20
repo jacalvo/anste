@@ -34,10 +34,15 @@ deb: tests dist
 	cd $(EXPORT) && dpkg-buildpackage -rfakeroot -uc -us
 	mv ../anste_*.deb .
 
+installdeb: deb
+	dpkg -i anste_*.deb
+	$(MAKE) distclean
+
 install-anste:
 	install -d $(DESTDIR)$(SBINDIR)
 	install -m755 src/bin/anste $(DESTDIR)$(SBINDIR)
 	install -m755 src/bin/anste-clean $(DESTDIR)$(SBINDIR)
+	install -m755 src/bin/anste-snapshot $(DESTDIR)$(SBINDIR)
 	install -d $(DESTDIR)$(BINDIR)
 	install -m755 src/bin/anste-connect $(DESTDIR)$(BINDIR)
 	install -d $(DESTDIR)$(DATADIR)

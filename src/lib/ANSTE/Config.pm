@@ -593,6 +593,60 @@ sub setLogPath # (logPath)
     $self->{override}->{'paths'}->{'logs'} = $logPath;
 }
 
+# Method: snapshotsPath
+#
+#   Gets the value for the snapshotss' path option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub snapshotsPath
+{
+    my ($self) = @_;
+
+    my $snapshotsPath = $self->_getOption('paths', 'snapshots');
+
+    if (not ANSTE::Validate::directoryWritable($snapshotsPath)) {
+        throw ANSTE::Exceptions::InvalidConfig('paths/snapshots',
+                                               $snapshotsPath,
+                                               $self->{confFile});
+    }
+
+    return $snapshotsPath;
+}
+
+# Method: setSnapshotsPath
+#
+#   Sets the value for the snapshots path option.
+#
+# Parameters:
+#
+#   value - String with the value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setSnapshotsPath
+{
+    my ($self, $snapshotsPath) = @_;
+
+    defined $snapshotsPath or
+        throw ANSTE::Exceptions::MissingArgument('snapshotsPath');
+
+    if (not ANSTE::Validate::directoryWritable($snapshotsPath)) {
+        throw ANSTE::Exceptions::InvalidOption('paths/snapshots', $snapshotsPath);
+    }
+
+    $self->{override}->{'paths'}->{'snapshots'} = $snapshotsPath;
+}
+
 # Method: deployPath
 #
 #   Gets the value for the deploy path option.
@@ -1516,7 +1570,13 @@ sub readHosts
 {
     my ($self) = @_;
 
-    my $hosts = read_file($self->hostsFile());
+    my $file = $self->hostsFile();
+
+    unless (-f $file) {
+        throw ANSTE::Exceptions::NotFound($file);
+    }
+
+    my $hosts = read_file($file);
     return undef unless $hosts;
     return decode_json($hosts);
 }

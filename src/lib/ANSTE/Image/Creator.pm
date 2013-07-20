@@ -25,6 +25,8 @@ use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Scenario::Scenario;
+use ANSTE::Virtualizer::Virtualizer;
+
 
 use Error qw(:try);
 
@@ -58,10 +60,7 @@ sub new # (image) returns new ImageCreator object
                                              'ANSTE::Scenario::BaseImage');
     }
 
-    my $virtualizer = ANSTE::Config->instance()->virtualizer();
-    eval "use ANSTE::Virtualizer::$virtualizer";
-    die "Can't load package $virtualizer: $@" if $@;
-    $self->{virtualizer} = "ANSTE::Virtualizer::$virtualizer"->new();
+    $self->{virtualizer} = ANSTE::Virtualizer::Virtualizer->instance();
 
 	$self->{image} = $image;
 

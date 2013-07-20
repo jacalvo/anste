@@ -542,5 +542,53 @@ sub _networkForBaseImage # (ip) returns network object
     return $network;
 }
 
+# Method: createSnapshot
+#
+#   Creates a VM snapshot using libvirt
+#
+# Parameters:
+#
+#   domain       - virtual machine name
+#   name         - snapshot label
+#   description  - description of the snapshot
+#
+sub createSnapshot
+{
+    my ($self, $domain, $name, $description) = @_;
+
+    $self->execute("virsh snapshot-create-as $domain $name '$description'");
+}
+
+# Method: revertSnapshot
+#
+#   Reverts a VM snapshot using libvirt
+#
+# Parameters:
+#
+#   domain       - virtual machine name
+#   name         - snapshot label
+#
+sub revertSnapshot
+{
+    my ($self, $domain, $name) = @_;
+
+    $self->execute("virsh snapshot-revert $domain $name");
+}
+
+# Method: deleteSnapshot
+#
+#   Deletes a VM snapshot using libvirt
+#
+# Parameters:
+#
+#   domain       - virtual machine name
+#   name         - snapshot label
+#
+sub deleteSnapshot
+{
+    my ($self, $domain, $name) = @_;
+
+    $self->execute("virsh snapshot-delete $domain $name");
+}
 
 1;

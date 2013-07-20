@@ -29,6 +29,8 @@ use ANSTE::Image::Creator;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
+use ANSTE::Virtualizer::Virtualizer;
+use ANSTE::System::System;
 
 use threads;
 use threads::shared;
@@ -74,17 +76,8 @@ sub new # (host, ip) returns new HostDeployer object
     }
 
     my $config = ANSTE::Config->instance();
-    my $system = $config->system();
-    my $virtualizer = $config->virtualizer();
-
-    eval "use ANSTE::System::$system";
-    die "Can't load package $system: $@" if $@;
-
-    eval "use ANSTE::Virtualizer::$virtualizer";
-    die "Can't load package $virtualizer: $@" if $@;
-
-    $self->{system} = "ANSTE::System::$system"->new();
-    $self->{virtualizer} = "ANSTE::Virtualizer::$virtualizer"->new();
+    $self->{system} = ANSTE::System::System->instance();
+    $self->{virtualizer} = ANSTE::Virtualizer::Virtualizer->instance();
 
     my $hostname = $host->name();
     my $memory = $host->memory();

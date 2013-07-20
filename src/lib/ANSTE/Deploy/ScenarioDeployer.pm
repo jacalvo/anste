@@ -24,6 +24,7 @@ use ANSTE::Comm::WaiterServer;
 use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
+use ANSTE::Virtualizer::Virtualizer;
 
 # Class: ScenarioDeployer
 #
@@ -60,10 +61,7 @@ sub new # (scenario) returns new ScenarioDeployer object
     }
     my $config = ANSTE::Config->instance();
 
-    my $virtualizer = $config->virtualizer();
-    eval "use ANSTE::Virtualizer::$virtualizer";
-    die "Can't load package $virtualizer: $@" if $@;
-    $self->{virtualizer} = "ANSTE::Virtualizer::$virtualizer"->new();
+    $self->{virtualizer} = ANSTE::Virtualizer::Virtualizer->instance();
 
     $self->{scenario} = $scenario;
 
