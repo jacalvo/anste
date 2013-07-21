@@ -563,7 +563,7 @@ sub revertSnapshot
 {
     my ($self, $domain, $name) = @_;
 
-    $self->execute("virsh snapshot-revert $domain $name");
+    $self->execute("virsh snapshot-revert $domain $name --force");
 }
 
 # Method: deleteSnapshot
