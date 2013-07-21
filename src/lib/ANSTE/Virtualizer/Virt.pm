@@ -449,7 +449,7 @@ sub _createImageConfig # (image, path) returns config string
     $imageConfig .= "\t<devices>\n";
     $imageConfig .= "\t\t<emulator>/usr/bin/kvm</emulator>\n";
     $imageConfig .= "\t\t<disk type='file' device='disk'>\n";
-    $imageConfig .= "\t\t\t<driver name='qemu' type='qcow2' cache='none'/>\n";
+    $imageConfig .= "\t\t\t<driver name='qemu' type='qcow2' cache='unsafe'/>\n";
     $imageConfig .= "\t\t\t<source file='$path/disk.qcow2'/>\n";
     $imageConfig .= "\t\t\t<target dev='vda' bus='virtio'/>\n";
     $imageConfig .= "\t\t</disk>\n";
