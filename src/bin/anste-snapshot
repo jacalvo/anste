@@ -71,10 +71,12 @@ sub save
 
 sub list
 {
+    print "Name\t\tDescription\n";
+    print "----------------------------------------------------\n";
     foreach my $snapshot (@{ANSTE::Scenario::Snapshot->list()}) {
         my $name = $snapshot->{name};
         my $desc = $snapshot->{desc};
-        print "$name\tdesc\n";
+        print "$name\t\t($desc)\n";
     }
 }
 
