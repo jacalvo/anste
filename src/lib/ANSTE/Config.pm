@@ -1573,7 +1573,7 @@ sub readHosts
     my $file = $self->hostsFile();
 
     unless (-f $file) {
-        throw ANSTE::Exceptions::NotFound($file);
+        throw ANSTE::Exceptions::NotFound('file', $file);
     }
 
     my $hosts = read_file($file);
