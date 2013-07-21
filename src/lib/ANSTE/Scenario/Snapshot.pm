@@ -118,7 +118,7 @@ sub _loadSnapshot
     my $file = "$PATH/$name";
 
     unless (-f $file) {
-        throw ANSTE::Exceptions::NotFound("Snapshot $name does not exist");
+        throw ANSTE::Exceptions::NotFound('snapshot', $name);
     }
 
     return decode_json(read_file($file));
