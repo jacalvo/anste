@@ -1,4 +1,5 @@
 HEAD
+    + Bridges are now named anstebr instead of virbr to avoid conflicts
     + Do not destroy scenario when a critical test fails using -wait-fail
     + files in images can be directories whose content is put in the image
       target directory

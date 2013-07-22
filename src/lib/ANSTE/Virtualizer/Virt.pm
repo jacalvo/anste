@@ -36,6 +36,8 @@ use File::Copy::Recursive qw(dircopy);
 #   with libvirt.
 #
 
+my $BRIDGE_PREFIX = 'anstebr';
+
 # Method: createBaseImage
 #
 #   Overriden method that creates a new base image
@@ -385,14 +387,14 @@ sub createNetwork # (scenario)
         my $xml = $self->_createNetworkConfig($net, $num);
 
         my $FILE;
-        my $xmlFile = "$path/bridge$num.xml";
+        my $xmlFile = "$path/anste-bridge$num.xml";
         open($FILE, '>', $xmlFile) or return 0;
         print $FILE $xml;
         close($FILE) or return 0;
 
         if (not $self->execute("virsh net-create $xmlFile")) {
-            $self->execute("ifconfig virbr${num} down");
-            $self->execute("brctl delbr virbr${num}");
+            $self->execute("ifconfig ${BRIDGE_PREFIX}${num} down");
+            $self->execute("brctl delbr ${BRIDGE_PREFIX}${num}");
             $self->execute("virsh net-create $xmlFile") or return 0;
         }
     }
@@ -429,8 +431,8 @@ sub destroyNetwork # (scenario)
 
     my %bridges = %{$scenario->bridges()};
     while (my ($net, $num) = each %bridges) {
-        $self->execute("virsh net-destroy bridge$num");
-        unlink("$path/bridge$num.xml");
+        $self->execute("virsh net-destroy anste-bridge$num");
+        unlink("$path/anste-bridge$num.xml");
     }
 }
 
@@ -466,7 +468,7 @@ sub _createImageConfig # (image, path) returns config string
         $imageConfig .= "\t\t<interface type='bridge'>\n";
         my $bridge = $iface->bridge();
         my $mac = $iface->hwAddress();
-        $imageConfig .= "\t\t\t<source bridge='virbr${bridge}'/>\n";
+        $imageConfig .= "\t\t\t<source bridge='${BRIDGE_PREFIX}${bridge}'/>\n";
         $imageConfig .= "\t\t\t<mac address='$mac'/>\n";
         # Gigabit ethernet card to improve performance
         $imageConfig .= "\t\t\t<model type='virtio'/>\n";
@@ -503,13 +505,13 @@ sub _createNetworkConfig # (net, bridge) returns config string
     }
 
     my $networkConfig = "<network>\n";
-    $networkConfig .= "\t<name>bridge$bridge</name>\n";
+    $networkConfig .= "\t<name>anste-bridge$bridge</name>\n";
     if ($forward) {
-        $networkConfig .= "\t<bridge name=\"virbr${bridge}\" />\n";
+        $networkConfig .= "\t<bridge name=\"${BRIDGE_PREFIX}${bridge}\" />\n";
         $networkConfig .= "\t<forward mode=\"nat\" />\n";
         $networkConfig .= "\t<ip address=\"$address\" netmask=\"$netmask\" />\n";
     } else {
-        $networkConfig .= "\t<bridge name=\"virbr${bridge}\" stp=\"on\" delay=\"0\" />\n";
+        $networkConfig .= "\t<bridge name=\"${BRIDGE_PREFIX}${bridge}\" stp=\"on\" delay=\"0\" />\n";
         $networkConfig .= "\t<mac address=\"$bridge_mac_prefix:$mac_id\" />\n";
         $mac_id++;
     }

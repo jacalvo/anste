@@ -8,7 +8,7 @@ do
     virsh destroy $vm
 done
 
-BRIDGES=$(virsh net-list 2>/dev/null | tail -n +3 | awk '{ print $1 }')
+BRIDGES=$(virsh net-list 2>/dev/null | grep anste | awk '{ print $1 }')
 
 for br in $BRIDGES
 do
