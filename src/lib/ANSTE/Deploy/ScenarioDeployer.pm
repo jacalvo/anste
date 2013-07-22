@@ -205,7 +205,7 @@ sub destroy
     }
     $self->{virtualizer}->destroyNetwork($self->{scenario});
 
-    unlink (ANSTE::Config->instance()->hostsFile());
+    unlink (ANSTE::Status->instance()->hostsFile());
 }
 
 sub _createMissingBaseImages
