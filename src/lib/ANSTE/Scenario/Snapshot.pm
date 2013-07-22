@@ -19,6 +19,7 @@ use warnings;
 use strict;
 
 use ANSTE::Config;
+use ANSTE::Status;
 use ANSTE::Virtualizer::Virtualizer;
 use ANSTE::Exceptions::NotFound;
 
@@ -33,6 +34,7 @@ use Error qw(:try);
 #
 
 my $config = ANSTE::Config->instance();
+my $status = ANSTE::Status->instance();
 my $PATH = $config->snapshotsPath();
 my $virt = ANSTE::Virtualizer::Virtualizer->instance();
 
@@ -47,7 +49,7 @@ sub save
     system ("mkdir -p $PATH");
 
     my $config = ANSTE::Config->instance();
-    my $hosts = $config->readHosts();
+    my $hosts = $status->readHosts();
 
     foreach my $host (keys %{$hosts}) {
         print "taking snapshot of $host...\n";

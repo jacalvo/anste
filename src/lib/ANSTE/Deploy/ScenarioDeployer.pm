@@ -18,10 +18,11 @@ package ANSTE::Deploy::ScenarioDeployer;
 use strict;
 use warnings;
 
+use ANSTE::Config;
+use ANSTE::Status;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Deploy::HostDeployer;
 use ANSTE::Comm::WaiterServer;
-use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Virtualizer::Virtualizer;
@@ -161,7 +162,8 @@ sub deploy # returns hash ref with the ip of each host
     }
 
     # Save hosts file for anste-connect
-    $config->writeHosts($hostIP);
+    my $status = ANSTE::Status->instance();
+    $status->writeHosts($hostIP);
 
     return $hostIP;
 }

@@ -65,6 +65,7 @@ install-anste:
 	install -d $(DESTDIR)$(DATADIR)/common
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE
 	install -m644 src/lib/ANSTE/Config.pm $(DESTDIR)$(LIBPERL)/ANSTE
+	install -m644 src/lib/ANSTE/Status.pm $(DESTDIR)$(LIBPERL)/ANSTE
 	install -m644 src/lib/ANSTE/Validate.pm $(DESTDIR)$(LIBPERL)/ANSTE
 	cp -a src/lib/ANSTE/Comm $(DESTDIR)$(LIBPERL)/ANSTE
 	cp -a src/lib/ANSTE/Deploy $(DESTDIR)$(LIBPERL)/ANSTE
@@ -149,6 +150,7 @@ uninstall-anste-manager:
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/AdminServer.pm
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/AdminClient.pm
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/Config.pm
+	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/Status.pm
 	-rmdir $(DESTDIR)$(LIBPERL)/ANSTE/Manager
 	-rmdir $(DESTDIR)$(LIBPERL)/ANSTE
 

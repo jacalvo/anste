@@ -176,8 +176,10 @@ sub runSuite # (suite)
     my $scenario = $self->_loadScenario($scenarioFile, $suite);
 
     my $config = ANSTE::Config->instance();
-    $config->setCurrentScenario($scenarioFile);
     my $reuse = $config->reuse();
+
+    my $status = ANSTE::Status->instance();
+    $status->setCurrentScenario($scenarioFile);
 
     my $sceName = $scenario->name();
     print "Deploying scenario '$sceName' for suite '$suiteName'...\n"

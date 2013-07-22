@@ -27,8 +27,6 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Validate;
 
 use Config::Tiny;
-use JSON::XS;
-use File::Slurp;
 
 # Class: Config
 #
@@ -1451,20 +1449,6 @@ sub breakpoint # (name)
     return $self->{breakpoints}->{$name};
 }
 
-sub currentScenario
-{
-    my ($self) = @_;
-
-    return $self->{currentScenario};
-}
-
-sub setCurrentScenario
-{
-    my ($self, $file) = @_;
-
-    $self->{currentScenario} = $file;
-}
-
 sub _filePath # (file)
 {
     my ($self, $file) = @_;
@@ -1557,35 +1541,6 @@ sub _setDefaults
 
     # Breakpoints
     $self->{breakpoints} = {};
-}
-
-sub hostsFile
-{
-    my ($self) = @_;
-
-    return $self->imagePath() . '/deployed_hosts.list';
-}
-
-sub readHosts
-{
-    my ($self) = @_;
-
-    my $file = $self->hostsFile();
-
-    unless (-f $file) {
-        throw ANSTE::Exceptions::NotFound('file', $file);
-    }
-
-    my $hosts = read_file($file);
-    return undef unless $hosts;
-    return decode_json($hosts);
-}
-
-sub writeHosts
-{
-    my ($self, $hosts) = @_;
-
-    write_file($self->hostsFile(), encode_json($hosts));
 }
 
 1;

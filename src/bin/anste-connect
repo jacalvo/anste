@@ -18,13 +18,13 @@
 use warnings;
 use strict;
 
-use ANSTE::Config;
+use ANSTE::Status;
 use Error qw(:try);
 
-my $config = ANSTE::Config->instance();
+my $status = ANSTE::Status->instance();
 my $hosts;
 try {
-    $hosts = $config->readHosts();
+    $hosts = $status->readHosts();
 } otherwise {
     print "Cannot read hosts file, probably there is no scenario deployed.\n";
     exit (1);
