@@ -1,4 +1,6 @@
 HEAD
+    + Removed deprecated anste-manager and anste-job tools, use of a CI tool
+      like Jenkins instead is recommended
     + Moved src/lib/ANSTE to src/ANSTE and data outside of src
     + Changing the cache type of the disk to one that gives faster results
     + Bridges are now named anstebr instead of virbr to avoid conflicts

@@ -34,7 +34,7 @@ deb: tests dist
 	cd $(EXPORT) && dpkg-buildpackage -rfakeroot -uc -us
 	mv ../anste_*.deb .
 
-install-anste:
+install:
 	install -d $(DESTDIR)$(SBINDIR)
 	install -m755 src/bin/anste $(DESTDIR)$(SBINDIR)
 	install -m755 src/bin/anste-clean $(DESTDIR)$(SBINDIR)
@@ -83,7 +83,7 @@ ifneq (,$(findstring debian,$(DESTDIR)))
 		   $(DESTDIR)$(DATADIR)/deploy/modules/ANSTE
 endif
 
-uninstall-anste:
+uninstall:
 	rm -f $(DESTDIR)$(SBINDIR)/anste
 	rm -rf $(DESTDIR)$(DATADIR)/images
 	rm -rf $(DESTDIR)$(DATADIR)/profiles
@@ -106,64 +106,6 @@ uninstall-anste:
 	rm -rf $(DESTDIR)$(LIBPERL)/ANSTE/Virtualizer
 	rm -rf $(DESTDIR)$(LIBPERL)/ANSTE/Exceptions
 	rm -rf $(DESTDIR)$(DATADIR)/deploy
-
-install-anste-manager:
-	install -d $(DESTDIR)$(SBINDIR)
-	install -m755 src/bin/anste-manager $(DESTDIR)$(SBINDIR)
-	install -m755 src/bin/anste-managerd $(DESTDIR)$(SBINDIR)
-	install -d $(DESTDIR)$(LIBPERL)/ANSTE
-	install -d $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/ANSTE/Manager/JobLauncher.pm \
-				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/ANSTE/Manager/Job.pm \
-				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/ANSTE/Manager/JobWaiter.pm \
-				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/ANSTE/Manager/MailNotifier.pm \
-				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/ANSTE/Manager/RSSWriter.pm \
-				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/ANSTE/Manager/Server.pm \
-				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/ANSTE/Manager/AdminServer.pm \
-				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/ANSTE/Manager/AdminClient.pm \
-				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/ANSTE/Manager/Config.pm \
-				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-
-uninstall-anste-manager:
-	rm -f $(DESTDIR)$(SBINDIR)/anste-manager
-	rm -f $(DESTDIR)$(SBINDIR)/anste-managerd
-	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/JobLauncher.pm
-	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/Job.pm
-	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/JobWaiter.pm
-	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/MailNotifier.pm
-	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/RSSWriter.pm
-	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/Server.pm
-	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/AdminServer.pm
-	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/AdminClient.pm
-	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/Config.pm
-	-rmdir $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	-rmdir $(DESTDIR)$(LIBPERL)/ANSTE
-
-install-anste-job:
-	install -d $(DESTDIR)$(BINDIR)
-	install -m755 src/bin/anste-job $(DESTDIR)$(BINDIR)
-	install -d $(DESTDIR)$(LIBPERL)/ANSTE
-	install -d $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/ANSTE/Manager/Client.pm \
-			      $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-
-uninstall-anste-job:
-	rm -f $(DESTDIR)$(BINDIR)/anste-job
-	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Manager/Client.pm
-	-rmdir $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	-rmdir $(DESTDIR)$(LIBPERL)/ANSTE
-
-install: install-anste install-anste-manager install-anste-job
-
-uninstall: uninstall-anste uninstall-anste-manager uninstall-anste-job
 
 pkg: tests dist
 	cd $(EXPORT) &&  dpkg-buildpackage -rfakeroot -uc -us
