@@ -13,7 +13,7 @@ else
 endif
 
 tests:
-	cd src && prove -r --timer -l -I..
+	prove -r --timer -l -I..
 
 distclean:
 	@rm -f anste-$(VERSION).tar.gz
@@ -25,7 +25,7 @@ export: distclean
 	rm -rf $(EXPORT)/
 	mkdir -p $(EXPORT)/
 	cp -r * $(EXPORT)/
-	find $(EXPORT)/src/lib -name 't' -print | xargs rm -rf
+	find $(EXPORT)/src -name 't' -print | xargs rm -rf
 
 dist: export
 	tar cvvzf anste-$(VERSION).tar.gz $(EXPORT)
@@ -59,18 +59,18 @@ install-anste:
 	cp -a src/data/tests/routers $(DESTDIR)$(DATADIR)/tests
 	install -d $(DESTDIR)$(DATADIR)/common
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE
-	install -m644 src/lib/ANSTE/Config.pm $(DESTDIR)$(LIBPERL)/ANSTE
-	install -m644 src/lib/ANSTE/Validate.pm $(DESTDIR)$(LIBPERL)/ANSTE
-	cp -a src/lib/ANSTE/Comm $(DESTDIR)$(LIBPERL)/ANSTE
-	cp -a src/lib/ANSTE/Deploy $(DESTDIR)$(LIBPERL)/ANSTE
-	cp -a src/lib/ANSTE/Image $(DESTDIR)$(LIBPERL)/ANSTE
-	cp -a src/lib/ANSTE/Report $(DESTDIR)$(LIBPERL)/ANSTE
-	cp -a src/lib/ANSTE/Scenario $(DESTDIR)$(LIBPERL)/ANSTE
-	cp -a src/lib/ANSTE/ScriptGen $(DESTDIR)$(LIBPERL)/ANSTE
-	cp -a src/lib/ANSTE/Test $(DESTDIR)$(LIBPERL)/ANSTE
-	cp -a src/lib/ANSTE/System $(DESTDIR)$(LIBPERL)/ANSTE
-	cp -a src/lib/ANSTE/Virtualizer $(DESTDIR)$(LIBPERL)/ANSTE
-	cp -a src/lib/ANSTE/Exceptions $(DESTDIR)$(LIBPERL)/ANSTE
+	install -m644 src/ANSTE/Config.pm $(DESTDIR)$(LIBPERL)/ANSTE
+	install -m644 src/ANSTE/Validate.pm $(DESTDIR)$(LIBPERL)/ANSTE
+	cp -a src/ANSTE/Comm $(DESTDIR)$(LIBPERL)/ANSTE
+	cp -a src/ANSTE/Deploy $(DESTDIR)$(LIBPERL)/ANSTE
+	cp -a src/ANSTE/Image $(DESTDIR)$(LIBPERL)/ANSTE
+	cp -a src/ANSTE/Report $(DESTDIR)$(LIBPERL)/ANSTE
+	cp -a src/ANSTE/Scenario $(DESTDIR)$(LIBPERL)/ANSTE
+	cp -a src/ANSTE/ScriptGen $(DESTDIR)$(LIBPERL)/ANSTE
+	cp -a src/ANSTE/Test $(DESTDIR)$(LIBPERL)/ANSTE
+	cp -a src/ANSTE/System $(DESTDIR)$(LIBPERL)/ANSTE
+	cp -a src/ANSTE/Virtualizer $(DESTDIR)$(LIBPERL)/ANSTE
+	cp -a src/ANSTE/Exceptions $(DESTDIR)$(LIBPERL)/ANSTE
 	install -d $(DESTDIR)$(DATADIR)/deploy
 	install -d $(DESTDIR)$(DATADIR)/deploy/modules
 	install -d $(DESTDIR)$(DATADIR)/deploy/bin
@@ -113,23 +113,23 @@ install-anste-manager:
 	install -m755 src/bin/anste-managerd $(DESTDIR)$(SBINDIR)
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/lib/ANSTE/Manager/JobLauncher.pm \
+	install -m644 src/ANSTE/Manager/JobLauncher.pm \
 				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/lib/ANSTE/Manager/Job.pm \
+	install -m644 src/ANSTE/Manager/Job.pm \
 				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/lib/ANSTE/Manager/JobWaiter.pm \
+	install -m644 src/ANSTE/Manager/JobWaiter.pm \
 				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/lib/ANSTE/Manager/MailNotifier.pm \
+	install -m644 src/ANSTE/Manager/MailNotifier.pm \
 				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/lib/ANSTE/Manager/RSSWriter.pm \
+	install -m644 src/ANSTE/Manager/RSSWriter.pm \
 				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/lib/ANSTE/Manager/Server.pm \
+	install -m644 src/ANSTE/Manager/Server.pm \
 				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/lib/ANSTE/Manager/AdminServer.pm \
+	install -m644 src/ANSTE/Manager/AdminServer.pm \
 				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/lib/ANSTE/Manager/AdminClient.pm \
+	install -m644 src/ANSTE/Manager/AdminClient.pm \
 				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/lib/ANSTE/Manager/Config.pm \
+	install -m644 src/ANSTE/Manager/Config.pm \
 				  $(DESTDIR)$(LIBPERL)/ANSTE/Manager
 
 uninstall-anste-manager:
@@ -152,7 +152,7 @@ install-anste-job:
 	install -m755 src/bin/anste-job $(DESTDIR)$(BINDIR)
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE/Manager
-	install -m644 src/lib/ANSTE/Manager/Client.pm \
+	install -m644 src/ANSTE/Manager/Client.pm \
 			      $(DESTDIR)$(LIBPERL)/ANSTE/Manager
 
 uninstall-anste-job:
