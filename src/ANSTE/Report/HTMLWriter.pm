@@ -36,7 +36,7 @@ use File::Basename;
 #
 #   file - String with the file name.
 #
-sub write # (file) 
+sub write # (file)
 {
     my ($self, $file) = @_;
 
@@ -92,10 +92,14 @@ sub _writeSuiteFile # (suite, file)
         if ($script) {
             $script = 'script/' . basename($script);
         }
+        my  $log = $test->log();
+        if ($log) {
+            $log = basename($log);
+        }
         $self->writeTestResult(name => $name,
                 desc => $desc,
                 value => $test->value(),
-                log => basename($test->log()),
+                log => $log,
                 script => $script,
                 video => $video);
     }
@@ -116,7 +120,7 @@ sub _writeReportHeader
     print $file "<td>Description</td>\n";
     print $file "<td>Result</td>\n";
     print $file "</tr></th>\n";
-}    
+}
 
 sub _writeSuiteLink # (suite)
 {
@@ -129,7 +133,7 @@ sub _writeSuiteLink # (suite)
 
     my $filehandle = $self->{file};
 
-    my $resultStr = $result == 0 ? "<font color='#00FF00'>OK</font>" : 
+    my $resultStr = $result == 0 ? "<font color='#00FF00'>OK</font>" :
                                    "<font color='#FF0000'>ERROR</font>";
     my $linkStr = "<a href=\"$file\">" . $name . "</a>";
 
@@ -137,11 +141,11 @@ sub _writeSuiteLink # (suite)
         $desc = '&nbsp;';
     }
 
-    print $filehandle "<tr>\n" . 
+    print $filehandle "<tr>\n" .
                       "<td>$linkStr</td>\n" .
                       "<td>$desc</td>\n" .
                       "<td>$resultStr</td>\n" .
                       "</tr>\n";
-}    
+}
 
 1;

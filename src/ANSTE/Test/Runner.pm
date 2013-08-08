@@ -492,9 +492,6 @@ sub _runTest # (test)
         # Store end time
         my $endTime = $self->_time();
         $testResult->setEndTime($endTime);
-
-        # TODO: Log something useful
-        $testResult->setLog("$suiteDir/$name.html");
     } else {
         if (not -r "$path/test") {
             $path = $config->scriptFile($testDir);
@@ -606,7 +603,7 @@ sub _reboot # (hostname, log?)
     $waiter->hostReady($hostname, 0);
     $waiter->waitForReady($hostname);
 
-    $client->exec('ebox-wait-start.sh');
+    $client->exec('wait-start-apache.sh');
     my $ret = $waiter->waitForExecution($hostname);
 
     return $ret;

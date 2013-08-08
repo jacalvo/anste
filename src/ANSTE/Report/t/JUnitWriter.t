@@ -52,6 +52,15 @@ isa_ok( $suiteResult, 'ANSTE::Report::SuiteResult' );
 
 $suiteResult->setSuite($suite);
 $suiteResult->add($testResult);
+
+my $testEmptyLog = ANSTE::Test::Test->new();
+$testEmptyLog->setName("probando2");
+$testResult = ANSTE::Report::TestResult->new();
+$testResult->setTest($testEmptyLog);
+$testResult->setValue("256");
+$testResult->setDuration(0.02);
+$suiteResult->add($testResult);
+
 $writer->_writeSuiteFile($suiteResult,$file_name);
 
 my $content = read_file($file_name);
@@ -65,6 +74,10 @@ is($content, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 &gt;
 &apos;
 &amp;
+</failure>
+</testcase>
+<testcase time=\"0.02\" name=\"probando2\">
+<failure message=\"Error in Anste Tests\">
 </failure>
 </testcase>
 </testsuite>\n", "Xml one contents");

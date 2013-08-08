@@ -1,4 +1,5 @@
 HEAD
+    + Fixed error in the reboot type of test with the JunitWriter
     + Removed deprecated anste-manager and anste-job tools, use of a CI tool
       like Jenkins instead is recommended
     + Moved src/lib/ANSTE to src/ANSTE and data outside of src
