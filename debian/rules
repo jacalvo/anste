@@ -2,7 +2,7 @@
 # Sample debian/rules that uses cdbs.  Originaly written by Robert Millan.
 # This file is public domain.
 
-DEB_MAKE_INSTALL_TARGET = install DESTDIR=$(DEB_DESTDIR)
+DEB_MAKE_INSTALL_TARGET = install DESTDIR=$(DEB_DESTDIR) PREFIX=/usr
 
 include /usr/share/cdbs/1/class/makefile.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
