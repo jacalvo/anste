@@ -178,9 +178,6 @@ sub runSuite # (suite)
     my $config = ANSTE::Config->instance();
     my $reuse = $config->reuse();
 
-    my $status = ANSTE::Status->instance();
-    $status->setCurrentScenario($scenarioFile);
-
     my $sceName = $scenario->name();
     print "Deploying scenario '$sceName' for suite '$suiteName'...\n"
         if not $reuse;

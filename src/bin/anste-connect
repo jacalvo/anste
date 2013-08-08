@@ -24,7 +24,7 @@ use Error qw(:try);
 my $status = ANSTE::Status->instance();
 my $hosts;
 try {
-    $hosts = $status->readHosts();
+    $hosts = $status->hosts();
 } otherwise {
     print "Cannot read hosts file, probably there is no scenario deployed.\n";
     exit (1);

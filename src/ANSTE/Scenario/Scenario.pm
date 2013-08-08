@@ -372,6 +372,8 @@ sub loadFromFile # (filename)
         throw ANSTE::Exceptions::InvalidFile('filename', $file);
     }
 
+    $self->{file} = $filename;
+
     my $template = new Text::Template(SOURCE => $file)
         or die "Couldn't construct template: $Text::Template::ERROR";
     my $variables = ANSTE::Config->instance()->variables();

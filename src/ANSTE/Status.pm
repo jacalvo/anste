@@ -67,18 +67,25 @@ sub setCurrentScenario
     $self->{currentScenario} = $file;
 }
 
-sub hostsFile
+sub deployedHosts
 {
     my ($self) = @_;
 
-    return $self->{config}->imagePath() . '/deployed_hosts.list';
+    return $self->{hosts};
 }
 
-sub readHosts
+sub setDeployedHosts
+{
+    my ($self, $hosts) = @_;
+
+    return $self->{hosts} = $hosts;
+}
+
+sub status
 {
     my ($self) = @_;
 
-    my $file = $self->hostsFile();
+    my $file = $self->_statusFile();
 
     unless (-f $file) {
         throw ANSTE::Exceptions::NotFound('file', $file);
@@ -89,11 +96,30 @@ sub readHosts
     return decode_json($hosts);
 }
 
-sub writeHosts
+sub hosts
+{
+    my ($self) = @_;
+
+    $self->status()->{hosts};
+}
+
+sub writeStatus
 {
     my ($self, $hosts) = @_;
 
-    write_file($self->hostsFile(), encode_json($hosts));
+    my $status = {};
+
+    $status->{hosts} = $self->{hosts};
+    $status->{currentScenario} = $self->{currentScenario};
+
+    write_file($self->_statusFile(), encode_json($status));
+}
+
+sub _statusFile
+{
+    my ($self) = @_;
+
+    return $self->{config}->imagePath() . '/status.json';
 }
 
 1;

@@ -161,9 +161,11 @@ sub deploy # returns hash ref with the ip of each host
         }
     }
 
-    # Save hosts file for anste-connect
+    # Save status for other tools like anste-connect
     my $status = ANSTE::Status->instance();
-    $status->writeHosts($hostIP);
+    $status->setHosts($hostIP);
+    $status->setCurrentScenario($scenario->{file});
+    $status->writeStatus();
 
     return $hostIP;
 }
