@@ -1,6 +1,6 @@
   ANSTE
 ==========
-Copyright &copy; 2007-2012 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+Copyright &copy; 2007-2013 José Antonio Calvo Fernández <jacalvo@zentyal.com>
 
 About
 -----

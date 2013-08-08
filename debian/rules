@@ -1,49 +1,8 @@
 #!/usr/bin/make -f
-# Sample debian/rules that uses debhelper. 
-# This file is public domain software, originally written by Joey Hess.
-#
-# This version is for packages that are architecture independent.
+# Sample debian/rules that uses cdbs.  Originaly written by Robert Millan.
+# This file is public domain.
 
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+DEB_MAKE_INSTALL_TARGET = install DESTDIR=$(DEB_DESTDIR)
 
-clean:
-	dh_testdir
-	dh_testroot
-
-	$(MAKE) distclean
-
-	dh_clean
-
-build:
-
-install: build
-	dh_testdir
-	dh_testroot
-	dh_clean -k
-	dh_installdirs
-	for pkg in `dh_listpackages` ; do \
-		$(MAKE) DESTDIR=`pwd`/debian/$$pkg PREFIX=/usr install-$$pkg ; \
-	done
-	dh_install
-
-
-# Build architecture-independent files here.
-binary-indep: install
-	dh_testdir
-	dh_testroot
-#TODO	dh_installchangelogs
-	dh_installdocs
-	dh_installexamples
-#TODO	dh_installman
-	dh_link
-	dh_compress
-	dh_fixperms
-	dh_perl
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-binary: binary-indep
-.PHONY: clean binary-indep binary-indep-manager binary-indep-job binary install install-manager install-job
+include /usr/share/cdbs/1/class/makefile.mk
+include /usr/share/cdbs/1/rules/debhelper.mk

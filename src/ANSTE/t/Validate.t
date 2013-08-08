@@ -17,7 +17,7 @@ use warnings;
 use strict;
 
 use FindBin qw($Bin);
-use lib "$Bin/../lib";
+use lib "$Bin/../src";
 
 use ANSTE::Validate;
 

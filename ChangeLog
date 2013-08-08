@@ -2,6 +2,10 @@ HEAD
     + Added anste-snapshot tool
     + Use qcow2 images instead of raw to support snapshots
     + New instance() method for System and Virtualizer abstract classes
+    + Removed deprecated anste-manager and anste-job tools, use of a CI tool
+      like Jenkins instead is recommended
+    + Moved src/lib/ANSTE to src/ANSTE and data outside of src
+    + Changing the cache type of the disk to one that gives faster results
     + Bridges are now named anstebr instead of virbr to avoid conflicts
     + Do not destroy scenario when a critical test fails using -wait-fail
     + files in images can be directories whose content is put in the image
