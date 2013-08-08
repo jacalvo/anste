@@ -49,7 +49,7 @@ sub save
     system ("mkdir -p $PATH");
 
     my $config = ANSTE::Config->instance();
-    my $hosts = $status->readHosts();
+    my $hosts = $status->deployedHosts();
 
     foreach my $host (keys %{$hosts}) {
         print "taking snapshot of $host...\n";

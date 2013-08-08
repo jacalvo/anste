@@ -47,6 +47,8 @@ sub instance
 
         $self->{config} = ANSTE::Config->instance();
 
+        $self->{status} = undef;
+
         $singleton = bless($self, $class);
     }
 
@@ -57,31 +59,58 @@ sub currentScenario
 {
     my ($self) = @_;
 
-    return $self->{currentScenario};
+    $self->_get('currentScenario');
 }
 
 sub setCurrentScenario
 {
     my ($self, $file) = @_;
 
-    $self->{currentScenario} = $file;
+    $self->_set('currentScenario', $file);
 }
 
 sub deployedHosts
 {
     my ($self) = @_;
 
-    return $self->{hosts};
+    $self->_get('hosts');
 }
 
 sub setDeployedHosts
 {
     my ($self, $hosts) = @_;
 
-    return $self->{hosts} = $hosts;
+    $self->_set('hosts', $hosts);
 }
 
-sub status
+sub remove
+{
+    my ($self) = @_;
+
+    unlink ($self->_statusFile());
+}
+
+sub _set
+{
+    my ($self, $var, $value) = @_;
+
+    $self->{status}->{$var} = $value;
+
+    write_file($self->_statusFile(), encode_json($self->{status}));
+}
+
+sub _get
+{
+    my ($self, $var) = @_;
+
+    unless ($self->{status}) {
+        $self->{status} = $self->_readStatusFile();
+    }
+
+    return $self->{status}->{$var};
+}
+
+sub _readStatusFile
 {
     my ($self) = @_;
 
@@ -91,28 +120,9 @@ sub status
         throw ANSTE::Exceptions::NotFound('file', $file);
     }
 
-    my $hosts = read_file($file);
-    return undef unless $hosts;
-    return decode_json($hosts);
-}
-
-sub hosts
-{
-    my ($self) = @_;
-
-    $self->status()->{hosts};
-}
-
-sub writeStatus
-{
-    my ($self, $hosts) = @_;
-
-    my $status = {};
-
-    $status->{hosts} = $self->{hosts};
-    $status->{currentScenario} = $self->{currentScenario};
-
-    write_file($self->_statusFile(), encode_json($status));
+    my $status = read_file($file);
+    return undef unless $status;
+    return decode_json($status);
 }
 
 sub _statusFile

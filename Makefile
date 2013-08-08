@@ -13,7 +13,7 @@ else
 endif
 
 tests:
-	prove -r --timer -l -I..
+	prove -r --timer -l -Isrc
 
 distclean:
 	@rm -f anste-$(VERSION).tar.gz
@@ -65,6 +65,7 @@ install:
 	install -d $(DESTDIR)$(DATADIR)/common
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE
 	install -m644 src/ANSTE/Config.pm $(DESTDIR)$(LIBPERL)/ANSTE
+	install -m644 src/ANSTE/Status.pm $(DESTDIR)$(LIBPERL)/ANSTE
 	install -m644 src/ANSTE/Validate.pm $(DESTDIR)$(LIBPERL)/ANSTE
 	cp -a src/ANSTE/Comm $(DESTDIR)$(LIBPERL)/ANSTE
 	cp -a src/ANSTE/Deploy $(DESTDIR)$(LIBPERL)/ANSTE

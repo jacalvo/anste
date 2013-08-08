@@ -22,13 +22,12 @@ use ANSTE::Status;
 use Error qw(:try);
 
 my $status = ANSTE::Status->instance();
-my $hosts;
-try {
-    $hosts = $status->hosts();
-} otherwise {
-    print "Cannot read hosts file, probably there is no scenario deployed.\n";
+my $hosts = $status->deployedHosts();
+
+unless ($hosts) {
+    print "Cannot get hosts info, probably there is no scenario deployed.\n";
     exit (1);
-};
+}
 
 my $host;
 if (@ARGV) {

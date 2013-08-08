@@ -537,6 +537,33 @@ sub imagePath
     return $imagePath;
 }
 
+# Method: setImagePath
+#
+#   Sets the value for the images' path option.
+#
+# Parameters:
+#
+#   value - String with the value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setImagePath
+{
+    my ($self, $imagePath) = @_;
+
+    defined $imagePath or
+        throw ANSTE::Exceptions::MissingArgument('imagePath');
+
+    unless (-w $imagePath) {
+        throw ANSTE::Exceptions::InvalidOption('paths/images', $imagePath);
+    }
+
+    $self->{override}->{'paths'}->{'images'} = $imagePath;
+}
+
 # Method: logPath
 #
 #   Gets the value for the logs' path option.

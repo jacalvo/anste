@@ -163,9 +163,8 @@ sub deploy # returns hash ref with the ip of each host
 
     # Save status for other tools like anste-connect
     my $status = ANSTE::Status->instance();
-    $status->setHosts($hostIP);
     $status->setCurrentScenario($scenario->{file});
-    $status->writeStatus();
+    $status->setDeployedHosts($hostIP);
 
     return $hostIP;
 }
@@ -187,7 +186,7 @@ sub shutdown
     }
     $self->{virtualizer}->destroyNetwork($self->{scenario});
 
-    unlink (ANSTE::Config->instance()->hostsFile());
+    ANSTE::Status->instance()->remove();
 }
 
 # Method: destroy
@@ -207,7 +206,7 @@ sub destroy
     }
     $self->{virtualizer}->destroyNetwork($self->{scenario});
 
-    unlink (ANSTE::Status->instance()->hostsFile());
+    ANSTE::Status->instance()->remove();
 }
 
 sub _createMissingBaseImages
