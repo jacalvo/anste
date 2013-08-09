@@ -611,6 +611,9 @@ sub _executeSetup # (client, script)
     my $ret = $waiter->waitForExecution($image);
     print "[$image] Execution finished. Return value = $ret.\n"
         if $config->verbose();
+    if ($ret != 0) {
+        throw ANSTE::Exceptions::Error("Error executing script $script, returned exit value of $ret");
+    }
 
     return ($ret);
 }
