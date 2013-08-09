@@ -117,9 +117,7 @@ sub _readStatusFile
 
     my $file = $self->_statusFile();
 
-    unless (-f $file) {
-        throw ANSTE::Exceptions::NotFound('file', $file);
-    }
+    return undef unless (-f $file);
 
     my $status;
     try {

@@ -22,6 +22,7 @@ use FindBin qw($Bin);
 use lib "$Bin/../src";
 
 use ANSTE::Config;
+use ANSTE::Status;
 use ANSTE::Image::Creator;
 use ANSTE::Image::Image;
 use ANSTE::Deploy::ScenarioDeployer;
@@ -82,18 +83,27 @@ if (none($create, $remove, $deploy, $shutdown, $test, $clean) == 1) {
     pod2usage("$0: No action specified.");
 }
 
-if ($clean) {
-    exec('anste-clean');
-}
-
-pod2usage("$0: No files given.") if @ARGV == 0;
-
+my $status = ANSTE::Status->instance();
 my $config = ANSTE::Config->instance();
 
 unless ($path) {
     $path = '.';
 }
 $config->setUserPath($path);
+
+if ($clean) {
+    exec('anste-clean');
+} elsif ($shutdown) {
+    my $scenario = $status->currentScenario();
+    unless ($scenario) {
+        print "There is no scenario deployed.\n";
+        exit (1);
+    }
+    destroy($scenario);
+    exit (0);
+}
+
+pod2usage("$0: No files given.") if @ARGV == 0;
 
 if ($quiet) {
     $config->setVerbose(0);
@@ -179,8 +189,6 @@ foreach my $file (@files) {
         remove($file);
     } elsif ($deploy) {
         deploy($file);
-    } elsif ($shutdown) {
-        destroy($file);
     } elsif ($test) {
         if ($format) {
             $config->setFormat($format);
@@ -383,7 +391,7 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -create            create a base image
    -remove            delete a base image
    -deploy            deploy a scenario
-   -shutdown          finish and delete all the images of a scenario
+   -shutdown          destroy the deployed scenario and delete images
    -clean             destroy any deployed machine or network
    -test              test a suite
    -path <dir>        where to find the data (CWD if not specified)

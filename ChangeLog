@@ -1,4 +1,5 @@
 HEAD
+    + Current scenario can be now shut down without specifying the name again
     + Check for unrecognized running VMs in anste-clean and added --force
       option to allow destroying them
     + Added anste-snapshot tool
