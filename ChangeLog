@@ -1,4 +1,6 @@
 HEAD
+    + Check for unrecognized running VMs in anste-clean and added --force
+      option to allow destroying them
     + Added anste-snapshot tool
     + Use qcow2 images instead of raw to support snapshots
     + New instance() method for System and Virtualizer abstract classes

@@ -1,29 +1,73 @@
-#!/bin/bash
+#!/usr/bin/perl
 
-VMS=$(virsh list 2>/dev/null | tail -n +3 | awk '{ print $2 }')
+# Copyright (C) 2007-2013 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License, version 2, as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-for vm in $VMS
-do
-    echo Destroying machine $vm...
-    virsh destroy $vm
-done
+use warnings;
+use strict;
 
-BRIDGES=$(virsh net-list 2>/dev/null | grep anste | awk '{ print $1 }')
+use ANSTE::Status;
 
-for br in $BRIDGES
-do
-    echo Destroying network $br...
-    virsh net-destroy $br
-done
+my $force = 0;
+if (@ARGV and ($ARGV[0] eq '--force')) {
+    $force = 1;
+}
 
-pkill -9 -f selenium
+my $hosts = ANSTE::Status->instance()->deployedHosts();
 
-# kill ANSTE instances
-ANSTE_PIDS=$(pgrep  anste | grep -v $$ | awk '{ print $1 }')
-for PID in $ANSTE_PIDS
-do
-    kill -9 $PID
-done
+my @vms = `virsh list 2>/dev/null | tail -n +3 | head -n -1 | awk '{ print \$2 }'`;
+chomp (@vms);
+my @nonAnsteVMs;
+foreach my $vm (@vms) {
+    unless (exists $hosts->{$vm}) {
+        push (@nonAnsteVMs, $vm);
+    }
+}
 
-# killing dnsmasq otherwise we could get the error: 'dnsmasq: failed to bind listening socket for X.X.X.X: Address already in use'
-pkill -9 dnsmasq
+if (@nonAnsteVMs and not $force) {
+    print "The following running VMs are not recognized by ANSTE:\n\n";
+    print join ("\n", @nonAnsteVMs);
+    print "\nYou have to execute anste-clean --force if you really want to destroy them.\n";
+    exit 1;
+}
+
+clean();
+
+sub clean
+{
+    foreach my $vm (@vms) {
+        print "Destroying machine $vm...\n";
+        system ("virsh destroy $vm");
+    }
+
+    my @bridges = `virsh net-list 2>/dev/null | grep anste | awk '{ print \$1 }'`;
+    chomp (@bridges);
+    foreach my $br (@bridges) {
+        print "Destroying network $br...\n";
+        system ("virsh net-destroy $br");
+    }
+
+    system ('pkill -9 -f selenium');
+
+    # kill ANSTE instances
+    my @anstePids = `pgrep anste | grep -v $$ | awk '{ print \$1 }'`;
+    chomp (@anstePids);
+    foreach my $pid (@anstePids) {
+        system ("kill -9 $pid");
+    }
+
+    # killing dnsmasq otherwise we could get the error: 'dnsmasq: failed to bind listening socket for X.X.X.X: Address already in use'
+    system ('pkill -9 dnsmasq');
+}
