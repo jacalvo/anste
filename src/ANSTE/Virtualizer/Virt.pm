@@ -131,17 +131,8 @@ sub createBaseImage # (%params)
     print $FILE $xml;
     close($FILE) or return 0;
 
-    # Convert to raw format so we can mount it with -o loop
-    my $imgcommand;
-    if (-f '/usr/bin/kvm-img') {
-        $imgcommand = 'kvm-img';
-    } else {
-        $imgcommand = 'qemu-img';
-    }
-    $self->execute("$imgcommand convert $dir/*.qcow2 -O raw $dir/disk0.img");
-
-    # Delete qcow2 image
-    $self->execute("rm $dir/*.qcow2");
+    # Rename disk image
+    $self->execute("mv $dir/*.qcow2 $dir/disk.qcow2");
 }
 
 # Method: shutdownImage
@@ -259,7 +250,7 @@ sub imageFile # (path, name)
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-    return "$path/$name/disk0.img";
+    return "$path/$name/disk.qcow2";
 }
 
 # Method: copyImage
@@ -446,7 +437,7 @@ sub _createImageConfig # (image, path) returns config string
     my $arch = `arch`;
     chomp ($arch);
 
-    my $imageConfig = "<domain type='kvm'>\n"; # TODO: Unhardcode kvm
+    my $imageConfig = "<domain type='kvm'>\n";
     $imageConfig .= "\t<name>$name</name>\n";
     $imageConfig .= "\t<memory>$memory</memory>\n";
     $imageConfig .= "\t<vcpu>1</vcpu>\n";
@@ -460,8 +451,8 @@ sub _createImageConfig # (image, path) returns config string
     $imageConfig .= "\t<devices>\n";
     $imageConfig .= "\t\t<emulator>/usr/bin/kvm</emulator>\n";
     $imageConfig .= "\t\t<disk type='file' device='disk'>\n";
-    $imageConfig .= "\t\t\t<driver name='qemu' type='raw' cache='unsafe'/>\n";
-    $imageConfig .= "\t\t\t<source file='$path/disk0.img'/>\n";
+    $imageConfig .= "\t\t\t<driver name='qemu' type='qcow2' cache='unsafe'/>\n";
+    $imageConfig .= "\t\t\t<source file='$path/disk.qcow2'/>\n";
     $imageConfig .= "\t\t\t<target dev='vda' bus='virtio'/>\n";
     $imageConfig .= "\t\t</disk>\n";
     foreach my $iface (@{$image->network()->interfaces()}) {
@@ -544,5 +535,53 @@ sub _networkForBaseImage # (ip) returns network object
     return $network;
 }
 
+# Method: createSnapshot
+#
+#   Creates a VM snapshot using libvirt
+#
+# Parameters:
+#
+#   domain       - virtual machine name
+#   name         - snapshot label
+#   description  - description of the snapshot
+#
+sub createSnapshot
+{
+    my ($self, $domain, $name, $description) = @_;
+
+    $self->execute("virsh snapshot-create-as $domain $name '$description'");
+}
+
+# Method: revertSnapshot
+#
+#   Reverts a VM snapshot using libvirt
+#
+# Parameters:
+#
+#   domain       - virtual machine name
+#   name         - snapshot label
+#
+sub revertSnapshot
+{
+    my ($self, $domain, $name) = @_;
+
+    $self->execute("virsh snapshot-revert $domain $name --force");
+}
+
+# Method: deleteSnapshot
+#
+#   Deletes a VM snapshot using libvirt
+#
+# Parameters:
+#
+#   domain       - virtual machine name
+#   name         - snapshot label
+#
+sub deleteSnapshot
+{
+    my ($self, $domain, $name) = @_;
+
+    $self->execute("virsh snapshot-delete $domain $name");
+}
 
 1;

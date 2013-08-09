@@ -47,6 +47,22 @@ sub new
 	return $self;
 }
 
+# Method: instance
+#
+#   Returns a instance of the system object defined in the conf
+#
+sub instance
+{
+    my ($self) = @_;
+
+    my $config = ANSTE::Config->instance();
+    my $system = $config->system();
+    eval "use ANSTE::System::$system";
+    die "Can't load package $system: $@" if $@;
+
+    return "ANSTE::System::$system"->new();
+}
+
 # Method: execute
 #
 #   Executes a command

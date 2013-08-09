@@ -1,4 +1,10 @@
 HEAD
+    + Current scenario can be now shut down without specifying the name again
+    + Check for unrecognized running VMs in anste-clean and added --force
+      option to allow destroying them
+    + Added anste-snapshot tool
+    + Use qcow2 images instead of raw to support snapshots
+    + New instance() method for System and Virtualizer abstract classes
     + Fixed error in the reboot type of test with the JunitWriter
     + Removed deprecated anste-manager and anste-job tools, use of a CI tool
       like Jenkins instead is recommended

@@ -27,8 +27,6 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Validate;
 
 use Config::Tiny;
-use JSON::XS;
-use File::Slurp;
 
 # Class: Config
 #
@@ -539,6 +537,33 @@ sub imagePath
     return $imagePath;
 }
 
+# Method: setImagePath
+#
+#   Sets the value for the images' path option.
+#
+# Parameters:
+#
+#   value - String with the value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setImagePath
+{
+    my ($self, $imagePath) = @_;
+
+    defined $imagePath or
+        throw ANSTE::Exceptions::MissingArgument('imagePath');
+
+    unless (-w $imagePath) {
+        throw ANSTE::Exceptions::InvalidOption('paths/images', $imagePath);
+    }
+
+    $self->{override}->{'paths'}->{'images'} = $imagePath;
+}
+
 # Method: logPath
 #
 #   Gets the value for the logs' path option.
@@ -591,6 +616,60 @@ sub setLogPath # (logPath)
     }
 
     $self->{override}->{'paths'}->{'logs'} = $logPath;
+}
+
+# Method: snapshotsPath
+#
+#   Gets the value for the snapshotss' path option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub snapshotsPath
+{
+    my ($self) = @_;
+
+    my $snapshotsPath = $self->_getOption('paths', 'snapshots');
+
+    if (not ANSTE::Validate::directoryWritable($snapshotsPath)) {
+        throw ANSTE::Exceptions::InvalidConfig('paths/snapshots',
+                                               $snapshotsPath,
+                                               $self->{confFile});
+    }
+
+    return $snapshotsPath;
+}
+
+# Method: setSnapshotsPath
+#
+#   Sets the value for the snapshots path option.
+#
+# Parameters:
+#
+#   value - String with the value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setSnapshotsPath
+{
+    my ($self, $snapshotsPath) = @_;
+
+    defined $snapshotsPath or
+        throw ANSTE::Exceptions::MissingArgument('snapshotsPath');
+
+    if (not ANSTE::Validate::directoryWritable($snapshotsPath)) {
+        throw ANSTE::Exceptions::InvalidOption('paths/snapshots', $snapshotsPath);
+    }
+
+    $self->{override}->{'paths'}->{'snapshots'} = $snapshotsPath;
 }
 
 # Method: deployPath
@@ -1397,20 +1476,6 @@ sub breakpoint # (name)
     return $self->{breakpoints}->{$name};
 }
 
-sub currentScenario
-{
-    my ($self) = @_;
-
-    return $self->{currentScenario};
-}
-
-sub setCurrentScenario
-{
-    my ($self, $file) = @_;
-
-    $self->{currentScenario} = $file;
-}
-
 sub _filePath # (file)
 {
     my ($self, $file) = @_;
@@ -1503,29 +1568,6 @@ sub _setDefaults
 
     # Breakpoints
     $self->{breakpoints} = {};
-}
-
-sub hostsFile
-{
-    my ($self) = @_;
-
-    return $self->imagePath() . '/deployed_hosts.list';
-}
-
-sub readHosts
-{
-    my ($self) = @_;
-
-    my $hosts = read_file($self->hostsFile());
-    return undef unless $hosts;
-    return decode_json($hosts);
-}
-
-sub writeHosts
-{
-    my ($self, $hosts) = @_;
-
-    write_file($self->hostsFile(), encode_json($hosts));
 }
 
 1;

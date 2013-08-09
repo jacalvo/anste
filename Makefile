@@ -13,7 +13,7 @@ else
 endif
 
 tests:
-	prove -r --timer -l -I..
+	prove -r --timer -l -Isrc
 
 distclean:
 	@rm -f anste-$(VERSION).tar.gz
@@ -34,10 +34,15 @@ deb: tests dist
 	cd $(EXPORT) && dpkg-buildpackage -rfakeroot -uc -us
 	mv ../anste_*.deb .
 
+installdeb: deb
+	dpkg -i anste_*.deb
+	$(MAKE) distclean
+
 install:
 	install -d $(DESTDIR)$(SBINDIR)
 	install -m755 src/bin/anste $(DESTDIR)$(SBINDIR)
 	install -m755 src/bin/anste-clean $(DESTDIR)$(SBINDIR)
+	install -m755 src/bin/anste-snapshot $(DESTDIR)$(SBINDIR)
 	install -d $(DESTDIR)$(BINDIR)
 	install -m755 src/bin/anste-connect $(DESTDIR)$(BINDIR)
 	install -d $(DESTDIR)$(DATADIR)
@@ -60,6 +65,7 @@ install:
 	install -d $(DESTDIR)$(DATADIR)/common
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE
 	install -m644 src/ANSTE/Config.pm $(DESTDIR)$(LIBPERL)/ANSTE
+	install -m644 src/ANSTE/Status.pm $(DESTDIR)$(LIBPERL)/ANSTE
 	install -m644 src/ANSTE/Validate.pm $(DESTDIR)$(LIBPERL)/ANSTE
 	cp -a src/ANSTE/Comm $(DESTDIR)$(LIBPERL)/ANSTE
 	cp -a src/ANSTE/Deploy $(DESTDIR)$(LIBPERL)/ANSTE

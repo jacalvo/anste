@@ -31,6 +31,7 @@ use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
 use ANSTE::Exceptions::NotFound;
+use ANSTE::System::System;
 
 use Cwd;
 use File::Temp qw(tempdir);
@@ -65,12 +66,7 @@ sub new # returns new Runner object
 
     $self->{suite} = undef;
     $self->{report} = new ANSTE::Report::Report();
-    my $system = $config->system();
-
-    eval "use ANSTE::System::$system";
-    die "Can't load package $system: $@" if $@;
-
-    $self->{system} = "ANSTE::System::$system"->new();
+    $self->{system} = ANSTE::System::System->instance();
     $self->{writers} = [];
 
     foreach my $format (@{$config->formats()}) {
@@ -180,7 +176,6 @@ sub runSuite # (suite)
     my $scenario = $self->_loadScenario($scenarioFile, $suite);
 
     my $config = ANSTE::Config->instance();
-    $config->setCurrentScenario($scenarioFile);
     my $reuse = $config->reuse();
 
     my $sceName = $scenario->name();

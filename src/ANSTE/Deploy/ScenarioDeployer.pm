@@ -18,12 +18,14 @@ package ANSTE::Deploy::ScenarioDeployer;
 use strict;
 use warnings;
 
+use ANSTE::Config;
+use ANSTE::Status;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Deploy::HostDeployer;
 use ANSTE::Comm::WaiterServer;
-use ANSTE::Config;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
+use ANSTE::Virtualizer::Virtualizer;
 
 # Class: ScenarioDeployer
 #
@@ -60,10 +62,7 @@ sub new # (scenario) returns new ScenarioDeployer object
     }
     my $config = ANSTE::Config->instance();
 
-    my $virtualizer = $config->virtualizer();
-    eval "use ANSTE::Virtualizer::$virtualizer";
-    die "Can't load package $virtualizer: $@" if $@;
-    $self->{virtualizer} = "ANSTE::Virtualizer::$virtualizer"->new();
+    $self->{virtualizer} = ANSTE::Virtualizer::Virtualizer->instance();
 
     $self->{scenario} = $scenario;
 
@@ -162,8 +161,10 @@ sub deploy # returns hash ref with the ip of each host
         }
     }
 
-    # Save hosts file for anste-connect
-    $config->writeHosts($hostIP);
+    # Save status for other tools like anste-connect
+    my $status = ANSTE::Status->instance();
+    $status->setCurrentScenario($scenario->{file});
+    $status->setDeployedHosts($hostIP);
 
     return $hostIP;
 }
@@ -185,7 +186,7 @@ sub shutdown
     }
     $self->{virtualizer}->destroyNetwork($self->{scenario});
 
-    unlink (ANSTE::Config->instance()->hostsFile());
+    ANSTE::Status->instance()->remove();
 }
 
 # Method: destroy
@@ -205,7 +206,7 @@ sub destroy
     }
     $self->{virtualizer}->destroyNetwork($self->{scenario});
 
-    unlink (ANSTE::Config->instance()->hostsFile());
+    ANSTE::Status->instance()->remove();
 }
 
 sub _createMissingBaseImages

@@ -28,6 +28,8 @@ use ANSTE::Image::Image;
 use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
+use ANSTE::Virtualizer::Virtualizer;
+use ANSTE::System::System;
 
 use Cwd;
 use Error qw(:try);
@@ -66,18 +68,8 @@ sub new # (image) returns new Commands object
     $self->{mountPoint} = undef;
     $self->{image} = $image;
 
-    my $config = ANSTE::Config->instance();
-    my $system = $config->system();
-    my $virtualizer = $config->virtualizer();
-
-    eval "use ANSTE::System::$system";
-    die "Can't load package $system: $@" if $@;
-
-    eval "use ANSTE::Virtualizer::$virtualizer";
-    die "Can't load package $virtualizer: $@" if $@;
-
-    $self->{system} = "ANSTE::System::$system"->new();
-    $self->{virtualizer} = "ANSTE::Virtualizer::$virtualizer"->new();
+    $self->{system} = ANSTE::System::System->instance();
+    $self->{virtualizer} = ANSTE::Virtualizer::Virtualizer->instance();
 
 	bless($self, $class);
 

@@ -55,31 +55,20 @@ sub mountImage # (image, mountPoint)
     defined $mountPoint or
         throw ANSTE::Exceptions::MissingArgument('mountPoint');
 
-# FIXME: Unhardcode this
-
-#   Xen old way
-#    my $cmd = "mount -t ext3 -o loop $image $mountPoint";
-
-#    $self->execute($cmd);
-
-#   Kvm new way
-#
-    my $loopDev = `losetup -f`;
-    chomp($loopDev);
-
-    $self->execute("losetup $loopDev $image");
-
-    $self->execute("kpartx -a $loopDev");
-    if (not defined $self->{loopDevs}) {
-        $self->{loopDevs} = {};
+    if (not defined $self->{nbdDevs}) {
+        $self->{nbdDevs} = {};
     }
-    $self->{loopDevs}->{$mountPoint} = $loopDev;
 
-    my $mapper = $loopDev;
-    $mapper =~ s{/dev/}{/dev/mapper/};
-    my $partition = $mapper . 'p1';
+    my $num = scalar keys %{$self->{nbdDevs}};
+    my $device = "/dev/nbd$num";
 
-    $self->execute("mount $partition $mountPoint");
+    $self->execute('modprobe nbd max_part=63');
+
+    $self->execute("qemu-nbd -c $device $image");
+
+    $self->{nbdDevs}->{$mountPoint} = $device;
+
+    $self->execute("mount ${device}p1 $mountPoint");
 }
 
 # Method: unmount
@@ -104,9 +93,8 @@ sub unmount # (mountPoint)
 
     $self->execute("umount $mountPoint");
 
-    my $loopDev = $self->{loopDevs}->{$mountPoint};
-    $self->execute("kpartx -d $loopDev");
-    $self->execute("losetup -d $loopDev");
+    my $loopDev = $self->{nbdDevs}->{$mountPoint};
+    $self->execute("qemu-nbd -d $loopDev");
 }
 
 # Method: installBasePackages

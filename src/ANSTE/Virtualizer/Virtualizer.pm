@@ -47,6 +47,21 @@ sub new # returns new Virtualizer object
 	return $self;
 }
 
+# Method: instance
+#
+#   Returns a instance of the virtualizer object defined in the conf
+#
+sub instance
+{
+    my ($self) = @_;
+
+    my $virtualizer = ANSTE::Config->instance()->virtualizer();
+    eval "use ANSTE::Virtualizer::$virtualizer";
+    die "Can't load package $virtualizer: $@" if $@;
+
+    return "ANSTE::Virtualizer::$virtualizer"->new();
+}
+
 # Method: execute
 #
 #   Executes a command
@@ -276,6 +291,52 @@ sub createNetwork # (network)
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub destroyNetwork # (network)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: createSnapshot
+#
+#   Override this method to implement the
+#   snapshot creation command for a host
+#
+# Parameters:
+#
+#   domain       - virtual machine name
+#   name         - snapshot label
+#   description  - description of the snapshot
+#
+sub createSnapshot
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: revertSnapshot
+#
+#   Override this method to implement the
+#   snapshot revert command for a host
+#
+# Parameters:
+#
+#   domain       - virtual machine name
+#   name         - snapshot label
+#
+sub revertSnapshot
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: deleteSnapshot
+#
+#   Override this method to implement the
+#   snapshot delete command for a host
+#
+# Parameters:
+#
+#   domain       - virtual machine name
+#   name         - snapshot label
+#
+sub deleteSnapshot
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
