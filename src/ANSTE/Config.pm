@@ -1438,6 +1438,31 @@ sub variables
     return $self->{variables};
 }
 
+# Method: env
+#
+#   Gets the ANSTE_* environment variables to be passed to setup scripts
+#
+# Returns:
+#
+#   string - With the form "VAR1=VAL1 VAR2=VAL2 ..."
+#
+sub env
+{
+    my ($self) = @_;
+
+    my @keys = grep { /^ANSTE_/ } keys %ENV;
+
+    my $env = '';
+    foreach my $key (@keys) {
+        $env .= "$key=\"$ENV{$key}\" ";
+    }
+    chop ($env);
+
+    return $env;
+}
+
+
+
 # Method: setBreakpoint
 #
 #   Sets a breakpoint after a test.

@@ -607,7 +607,8 @@ sub _executeSetup # (client, script)
 
     print "[$image] Executing $script...\n" if $config->verbose();
     $client->put($script) or print "[$image] Upload failed.\n";
-    $client->exec($script) or print "[$image] Execution failed.\n";
+    # TODO: get log?
+    $client->exec($script, '/dev/null', $config->env()) or print "[$image] Execution failed.\n";
     my $ret = $waiter->waitForExecution($image);
     print "[$image] Execution finished. Return value = $ret.\n"
         if $config->verbose();
