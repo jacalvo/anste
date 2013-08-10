@@ -27,6 +27,7 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Validate;
 
 use Config::Tiny;
+use IO::Interface::Simple;
 
 # Class: Config
 #
@@ -1562,11 +1563,26 @@ sub _setDefaults
 
     $self->{default}->{'comm'}->{'gateway'} = '10.6.7.1';
     $self->{default}->{'comm'}->{'iface'} = 'anste0';
-    # TODO: Do not set this as default and force to conf it manually
-    $self->{default}->{'comm'}->{'nat-iface'} = 'eth1';
+
+    my $natIface = undef;
+    foreach my $iface ('eth0', 'wlan0') {
+        my $if = IO::Interface::Simple->new($iface);
+        if ($if->address) {
+            $natIface = $iface;
+            last;
+        }
+    }
+    $self->{default}->{'comm'}->{'nat-iface'} = $natIface;
+
     $self->{default}->{'comm'}->{'first-address'} = '10.6.7.10';
-    $self->{default}->{'comm'}->{'nameserver-host'} = '8.8.8.8';
-    $self->{default}->{'comm'}->{'nameserver'} = '8.8.8.8';
+
+    my $nameserver =`cat /etc/resolv.conf | grep ^nameserver | head -1 | cut -d' ' -f2`;
+    chomp ($nameserver);
+    if ((not $nameserver) or ($nameserver =~ /^127\.0/)) {
+        $nameserver = 8.8.8.8;
+    }
+    $self->{default}->{'comm'}->{'nameserver-host'} = $nameserver;
+    $self->{default}->{'comm'}->{'nameserver'} = $nameserver;
 
     $self->{default}->{'deploy'}->{'auto-create-images'} = 0;
 

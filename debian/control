@@ -5,7 +5,7 @@ Maintainer: José Antonio Calvo <jacalvo@zentyal.com>
 Build-Depends: debhelper (>= 5), liberror-perl, libxml-dom-perl, libfile-copy-recursive-perl,
   libsoap-lite-perl, libperl6-slurp-perl, libconfig-tiny-perl, libperl6-junction-perl,
   libterm-readline-gnu-perl, libmail-rfc822-address-perl, libtext-template-perl, debootstrap,
-  libvirt-bin, libyaml-libyaml-perl, libjson-xs-perl, sshpass, libattempt-perl, libfreezethaw-perl
+  libvirt-bin, libyaml-libyaml-perl, libjson-xs-perl, sshpass, libattempt-perl, libio-interface-perl
 Standards-Version: 3.7.2
 
 Package: anste
@@ -14,7 +14,7 @@ Depends: perl (>=5.8.8-7), liberror-perl, libxml-dom-perl, libfile-copy-recursiv
   libperl6-slurp-perl, kvm, ubuntu-vm-builder, libconfig-tiny-perl, libperl6-junction-perl,
   libterm-readline-gnu-perl, libmail-rfc822-address-perl, libtext-template-perl, debootstrap,
   libvirt-bin, libyaml-libyaml-perl, libjson-xs-perl, sshpass, libattempt-perl,
-  python-selenium (>= 2.28.0), libfreezethaw-perl
+  python-selenium (>= 2.28.0), libio-interface-perl
 Recommends: recordmydesktop
 Description: Advanced Network Service Testing Environment
  ANSTE is a testing environment for advanced network services, mainly intended
