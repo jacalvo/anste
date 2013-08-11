@@ -1576,10 +1576,10 @@ sub _setDefaults
 
     $self->{default}->{'comm'}->{'first-address'} = '10.6.7.10';
 
-    my $nameserver =`cat /etc/resolv.conf | grep ^nameserver | head -1 | cut -d' ' -f2`;
+    my $nameserver = `grep ^nameserver /etc/resolv.conf | head -1 | cut -d' ' -f2`;
     chomp ($nameserver);
     if ((not $nameserver) or ($nameserver =~ /^127\.0/)) {
-        $nameserver = 8.8.8.8;
+        $nameserver = '8.8.8.8';
     }
     $self->{default}->{'comm'}->{'nameserver-host'} = $nameserver;
     $self->{default}->{'comm'}->{'nameserver'} = $nameserver;
