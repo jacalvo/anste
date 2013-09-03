@@ -37,7 +37,7 @@ use threads::shared;
 use Error qw(:try);
 use Attempt;
 
-my $lockMount : shared;
+my $lockCreateVM : shared;
 
 # Class: HostDeployer
 #
@@ -248,28 +248,27 @@ sub _deploy
         return undef;
     }
 
-    # Critical section here to prevent mount errors with loop device busy
-    # or KVM crashes when trying to create two machines at the same time
-    {
-        lock($lockMount);
-        print "[$hostname] Updating hostname on the new image...\n";
-        try {
-            my $ok = $self->_updateHostname();
-            if (not $ok) {
-                print "[$hostname] Error copying host files.\n";
-                $error = 1;
-            }
-        } catch Error with {
-            my $err = shift;
-            my $msg = $err->stringify();
-            print "[$hostname] ERROR: $msg\n";
+    print "[$hostname] Updating hostname on the new image...\n";
+    try {
+        my $ok = $self->_updateHostname();
+        if (not $ok) {
+            print "[$hostname] Error copying host files.\n";
             $error = 1;
-        };
-
-        if ($error) {
-            return undef;
         }
+    } catch Error with {
+        my $err = shift;
+        my $msg = $err->stringify();
+        print "[$hostname] ERROR: $msg\n";
+        $error = 1;
+    };
 
+    if ($error) {
+        return undef;
+    }
+
+    # KVM crashes when trying to create two machines at the same time
+    {
+        lock($lockCreateVM);
         print "[$hostname] Creating virtual machine ($ip)...\n";
         $cmd->createVirtualMachine();
     };

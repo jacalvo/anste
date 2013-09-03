@@ -26,6 +26,11 @@ use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
 use File::Basename;
 
+use threads;
+use threads::shared;
+
+my $lockMount : shared;
+
 # Class: System
 #
 #    Implementation of the System class that interacts
@@ -54,6 +59,8 @@ sub mountImage # (image, mountPoint)
         throw ANSTE::Exceptions::MissingArgument('image');
     defined $mountPoint or
         throw ANSTE::Exceptions::MissingArgument('mountPoint');
+
+    lock ($lockMount);
 
     if (not defined $self->{nbdDevs}) {
         $self->{nbdDevs} = {};

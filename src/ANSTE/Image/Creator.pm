@@ -27,11 +27,7 @@ use ANSTE::Exceptions::InvalidType;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Virtualizer::Virtualizer;
 
-use threads;
-use threads::shared;
 use Error qw(:try);
-
-my $lockMount : shared;
 
 # Class: Creator
 #
@@ -106,13 +102,10 @@ sub createImage
         print "done.\n";
     }
 
-    {
-        lock ($lockMount);
-        print "[$name] Mounting image... ";
-        $cmd->mount()
-            or throw ANSTE::Exceptions::Error('Error mounting image.');
-        print "done.\n";
-    };
+    print "[$name] Mounting image... ";
+    $cmd->mount()
+        or throw ANSTE::Exceptions::Error('Error mounting image.');
+    print "done.\n";
 
     try {
         print "[$name] Copying base files... ";
