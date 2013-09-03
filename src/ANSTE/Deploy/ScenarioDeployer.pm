@@ -222,10 +222,9 @@ sub _createMissingBaseImages
         my $hostname = $host->name();
         print "[$hostname] Auto-creating base image if not exists...\n";
         my $creator = new ANSTE::Image::Creator($image);
-        if($creator->createImage()) {
+        if ($creator->createImage()) {
             print "[$hostname] Base image created.\n";
-        }
-        else {
+        } else {
             print "[$hostname] Base image already exists.\n";
         }
     }

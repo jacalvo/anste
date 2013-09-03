@@ -1,5 +1,5 @@
 HEAD
-    + Better locking when mounting images to be more thread-safe
+    + Fix assignation of nbd device numbers
     + clean option removed from the anste executable, use anste-clean instead
     + nat-iface and nameserver are now automatically detected
     + Environment variables named ANSTE_* are passed to setup scripts

@@ -29,7 +29,7 @@ use File::Basename;
 use threads;
 use threads::shared;
 
-my $lockMount : shared;
+my %nbdDevs : shared;
 
 # Class: System
 #
@@ -60,20 +60,14 @@ sub mountImage # (image, mountPoint)
     defined $mountPoint or
         throw ANSTE::Exceptions::MissingArgument('mountPoint');
 
-    lock ($lockMount);
-
-    if (not defined $self->{nbdDevs}) {
-        $self->{nbdDevs} = {};
-    }
-
-    my $num = scalar keys %{$self->{nbdDevs}};
+    my $num = scalar keys %nbdDevs;
     my $device = "/dev/nbd$num";
 
     $self->execute('modprobe nbd max_part=63');
 
     $self->execute("qemu-nbd -c $device $image");
 
-    $self->{nbdDevs}->{$mountPoint} = $device;
+    $nbdDevs{$mountPoint} = $device;
 
     $self->execute("mount ${device}p1 $mountPoint");
 }
@@ -100,7 +94,7 @@ sub unmount # (mountPoint)
 
     $self->execute("umount $mountPoint");
 
-    my $loopDev = $self->{nbdDevs}->{$mountPoint};
+    my $loopDev = $nbdDevs{$mountPoint};
     $self->execute("qemu-nbd -d $loopDev");
 }
 
