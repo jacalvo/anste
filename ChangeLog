@@ -1,4 +1,5 @@
 HEAD
+    + Lock when mounting while creating baseimage to be more thread-safe
     + clean option removed from the anste executable, use anste-clean instead
     + nat-iface and nameserver are now automatically detected
     + Environment variables named ANSTE_* are passed to setup scripts
