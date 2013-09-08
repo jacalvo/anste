@@ -282,7 +282,7 @@ sub deploy # (file)
     my $scenario = new ANSTE::Scenario::Scenario();
     try {
         $scenario->loadFromFile($file);
-        $config->setCurrentScenario($file);
+        $status->setCurrentScenario($file);
     } catch ANSTE::Exceptions::InvalidFile with {
         my $ex = shift;
         my $filename = $ex->file();
