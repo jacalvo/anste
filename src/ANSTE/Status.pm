@@ -91,6 +91,21 @@ sub remove
     unlink ($self->_statusFile());
 }
 
+sub cleanNetwork
+{
+    my @bridges = `virsh net-list 2>/dev/null | grep anste | awk '{ print \$1 }'`;
+    chomp (@bridges);
+    foreach my $br (@bridges) {
+        print "Destroying network $br...\n";
+        system ("virsh net-destroy $br");
+    }
+
+    my @pids = `ps ax | grep dnsmasq | grep anste | awk '{ print \$1 }'`;
+    foreach my $pid (@pids) {
+        system ("kill -9 $pid");
+    }
+}
+
 sub _set
 {
     my ($self, $var, $value) = @_;

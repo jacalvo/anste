@@ -149,6 +149,11 @@ unless ($shutdown or $remove) {
         my $key;
         read(STDIN, $key, 1);
     }
+
+    # Clean network from previous executions if not reusing the deployed scenario
+    unless ($reuse) {
+        ANSTE::Status->cleanNetwork();
+    }
 }
 
 my @files;

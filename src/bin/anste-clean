@@ -52,12 +52,7 @@ sub clean
         system ("virsh destroy $vm");
     }
 
-    my @bridges = `virsh net-list 2>/dev/null | grep anste | awk '{ print \$1 }'`;
-    chomp (@bridges);
-    foreach my $br (@bridges) {
-        print "Destroying network $br...\n";
-        system ("virsh net-destroy $br");
-    }
+    ANSTE::Status->cleanNetwork();
 
     system ('pkill -9 -f selenium');
 
@@ -67,7 +62,4 @@ sub clean
     foreach my $pid (@anstePids) {
         system ("kill -9 $pid");
     }
-
-    # killing dnsmasq otherwise we could get the error: 'dnsmasq: failed to bind listening socket for X.X.X.X: Address already in use'
-    system ('pkill -9 dnsmasq');
 }

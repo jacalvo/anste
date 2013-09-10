@@ -1,4 +1,5 @@
 HEAD
+    + Clean network from previous scenario when deploying a new one
     + Fix assignation of nbd device numbers
     + clean option removed from the anste executable, use anste-clean instead
     + nat-iface and nameserver are now automatically detected
