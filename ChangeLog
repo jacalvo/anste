@@ -1,4 +1,5 @@
 HEAD
+    + Fixed check of running machines when system language is not English
     + Clean network from previous scenario when deploying a new one
     + Fix assignation of nbd device numbers
     + clean option removed from the anste executable, use anste-clean instead

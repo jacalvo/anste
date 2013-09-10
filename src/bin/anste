@@ -143,7 +143,7 @@ unless (flock ($lockFile, LOCK_EX | LOCK_NB)) {
 
 unless ($shutdown or $remove) {
     # Check virtual machines already running
-    if (system ('virsh list | grep running') == 0) {
+    if (system ('LANGUAGE=C virsh list | grep running') == 0) {
         print "WARNING: The above virtual machines are running.\n" .
               "Press any key to continue or Control-C to stop.\n";
         my $key;
