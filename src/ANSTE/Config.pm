@@ -1604,8 +1604,11 @@ sub _setDefaults
     unless ($dist) {
         $dist = 'lucid';
     }
-    # Default values for variables, overridable by commandline option
-    $self->{variables} = {dist => $dist};
+
+    # Default values for variables taken from [global] section, overridable by commandline option
+    foreach my $var (keys %{$self->{config}->{global}}) {
+        $self->{variables}->{$var} = $self->{config}->{global}->{$var};
+    }
 
     # Breakpoints
     $self->{breakpoints} = {};
