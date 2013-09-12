@@ -62,4 +62,6 @@ sub clean
     foreach my $pid (@anstePids) {
         system ("kill -9 $pid");
     }
+
+    system ('pkill -9 -f qemu-nbd');
 }
