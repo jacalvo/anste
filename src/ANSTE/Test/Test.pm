@@ -280,6 +280,43 @@ sub setProtocol # protocol string
     $self->{protocol} = $protocol;
 }
 
+# Method: relativeURL
+#
+#   Gets the relative url to be used for the web test
+#
+# Returns:
+#
+#   string - contains the relative url
+#
+sub relativeURL
+{
+    my ($self) = @_;
+
+    return $self->{relativeURL};
+}
+
+# Method: setRelativeUrl
+#
+#   Sets the relativeURL for this test object to the given value.
+#
+# Parameters:
+#
+#   name - String with the relative url
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
+sub setRelativeUrl
+{
+    my ($self, $relativeURL) = @_;
+
+    defined $relativeURL or
+        throw ANSTE::Exceptions::MissingArgument('relativeURL');
+
+    $self->{relativeURL} = $relativeURL;
+}
+
 # Method: dir
 #
 #   Gets the directory of the test scripts.
@@ -706,6 +743,11 @@ sub loadYAML
             throw ANSTE::Exceptions::Error("Invalid protocol for test $name.");
         }
         $self->setProtocol($protocol);
+    }
+
+    my $relativeURL = $test->{relative_url};
+    if ($relativeURL) {
+        $self->setRelativeUrl($relativeURL);
     }
 
     my $dir = $test->{dir};

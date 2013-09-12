@@ -1,4 +1,5 @@
 HEAD
+    + Allow to define relative_url of a web test
     + Set options from [global] conf as commandline variables if not specified
     + Fixed check of running machines when system language is not English
     + Clean network from previous scenario when deploying a new one

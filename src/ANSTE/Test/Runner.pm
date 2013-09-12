@@ -646,6 +646,7 @@ sub _runWebTest
     my $hostname = $test->host();
     my $port = $test->port();
     my $protocol = $test->protocol();
+    my $relativeURL = $test->relativeURL();
 
     if (not exists $self->{hostIP}->{$hostname}) {
        throw ANSTE::Exceptions::Error("Inexistent hostname $hostname");
@@ -665,6 +666,9 @@ sub _runWebTest
     my $url = "$protocol://$ip";
     if (defined ($port)) {
         $url .= ":$port";
+    }
+    if (defined ($relativeURL)) {
+        $url .= "/$relativeURL";
     }
 
     $test->setVariable('BASE_URL', $url);
