@@ -150,6 +150,9 @@ unless ($shutdown or $remove) {
         read(STDIN, $key, 1);
     }
 
+    # Clean possible mounted nbd devices from a previous scenario
+    system ('pkill -9 -f qemu-nbd');
+
     # Clean network from previous executions if not reusing the deployed scenario
     unless ($reuse) {
         ANSTE::Status->cleanNetwork();
