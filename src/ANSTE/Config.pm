@@ -1565,9 +1565,9 @@ sub _setDefaults
     $self->{default}->{'comm'}->{'iface'} = 'anste0';
 
     my $natIface = undef;
-    foreach my $iface ('eth0', 'wlan0') {
+    foreach my $iface ('em1', 'eth0', 'wlan0') {
         my $if = IO::Interface::Simple->new($iface);
-        if ($if->address) {
+        if ($if and $if->address) {
             $natIface = $iface;
             last;
         }
