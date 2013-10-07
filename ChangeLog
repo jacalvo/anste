@@ -1,4 +1,5 @@
 HEAD
+    + Show output when setup scripts fail
     + Use qcow2 images instead of raw to support snapshots
     + Added anste-snapshot tool
     + Allow to define relative_url of a web test

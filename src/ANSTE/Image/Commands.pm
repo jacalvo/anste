@@ -604,15 +604,19 @@ sub _executeSetup # (client, script)
     my $waiter = ANSTE::Comm::HostWaiter->instance();
     my $config = ANSTE::Config->instance();
     my $image = $self->{image}->name();
+    my $log = '/tmp/anste-setup-script.log';
 
     print "[$image] Executing $script...\n" if $config->verbose();
     $client->put($script) or print "[$image] Upload failed.\n";
-    # TODO: get log?
-    $client->exec($script, '/dev/null', $config->env()) or print "[$image] Execution failed.\n";
+    $client->exec($script, $log, $config->env()) or print "[$image] Execution failed.\n";
     my $ret = $waiter->waitForExecution($image);
-    print "[$image] Execution finished. Return value = $ret.\n"
-        if $config->verbose();
-    if ($ret != 0) {
+    if ($ret == 0 ) {
+        print "[$image] Execution finished successfully.\n" if $config->verbose();
+    } else {
+        print "[$image] Execution finished with errors ($ret):\n\n";
+        $client->get($log);
+        system ("cat $log");
+        print "\n\n";
         throw ANSTE::Exceptions::Error("Error executing script $script, returned exit value of $ret");
     }
 
