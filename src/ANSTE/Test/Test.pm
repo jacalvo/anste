@@ -206,6 +206,36 @@ sub setHost # host string
     $self->{host} = $host;
 }
 
+# Method: externalHost
+#
+#   Gets a boolean value telling if the host is external to ANSTE
+#
+# Returns:
+#
+#   string - Whether the host is external or not
+#
+sub externalHost
+{
+    my ($self) = @_;
+
+    return $self->{externalHost};
+}
+
+# Method: setExternalHost
+#
+#   Sets the boolean value telling if the host is external to ANSTE
+#
+# Parameters:
+#
+#   external - True if the host is external
+#
+sub setExternalHost # host string
+{
+    my ($self, $external) = @_;
+
+    $self->{externalHost} = $external;
+}
+
 # Method: port
 #
 #   Gets the port where the test have to be executed (selenium only).
@@ -702,7 +732,6 @@ sub loadYAML
         $self->setDesc('');
     }
 
-
     # FIXME: preconditions not yet supported (they will have a new syntax)
     my $host = $test->{host};
     $self->setHost($host);
@@ -730,6 +759,11 @@ sub loadYAML
 #    }
     unless ($validHost or ($type eq 'host')) {
         throw ANSTE::Exceptions::Error("No valid host found for test $name.");
+    }
+
+    my $externalHost = $test->{external_host};
+    if ($externalHost) {
+        $self->setExternalHost($externalHost);
     }
 
     my $port = $test->{port};

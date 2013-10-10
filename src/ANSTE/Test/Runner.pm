@@ -647,15 +647,22 @@ sub _runWebTest
     my $port = $test->port();
     my $protocol = $test->protocol();
     my $relativeURL = $test->relativeURL();
+    my $externalHost = $test->externalHost();
 
-    if (not exists $self->{hostIP}->{$hostname}) {
-       throw ANSTE::Exceptions::Error("Inexistent hostname $hostname");
-    }
+    my $host;
+    if ($externalHost) {
+        $host = $hostname;
+    } else {
+        if (not exists $self->{hostIP}->{$hostname}) {
+        throw ANSTE::Exceptions::Error("Inexistent hostname $hostname");
+        }
 
-    my $ip = $self->{hostIP}->{$hostname};
-    if (not $ip) {
-       throw ANSTE::Exceptions::Error("Hostname $hostname has not IP! " .
-                                       Dumper( $self->{hostIP}->{$hostname}));
+        my $ip = $self->{hostIP}->{$hostname};
+        if (not $ip) {
+        throw ANSTE::Exceptions::Error("Hostname $hostname has not IP! " .
+                                        Dumper( $self->{hostIP}->{$hostname}));
+        }
+        $host = $ip;
     }
 
     my $config = ANSTE::Config->instance();
@@ -663,7 +670,7 @@ sub _runWebTest
         $protocol = $config->seleniumProtocol();
     }
 
-    my $url = "$protocol://$ip";
+    my $url = "$protocol://$host";
     if (defined ($port)) {
         $url .= ":$port";
     }
