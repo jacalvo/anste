@@ -654,13 +654,13 @@ sub _runWebTest
         $host = $hostname;
     } else {
         if (not exists $self->{hostIP}->{$hostname}) {
-        throw ANSTE::Exceptions::Error("Inexistent hostname $hostname");
+            throw ANSTE::Exceptions::Error("Inexistent hostname $hostname");
         }
 
         my $ip = $self->{hostIP}->{$hostname};
         if (not $ip) {
-        throw ANSTE::Exceptions::Error("Hostname $hostname has not IP! " .
-                                        Dumper( $self->{hostIP}->{$hostname}));
+            throw ANSTE::Exceptions::Error("Hostname $hostname has not IP! " .
+                                           Dumper( $self->{hostIP}->{$hostname}));
         }
         $host = $ip;
     }
