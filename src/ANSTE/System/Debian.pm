@@ -133,6 +133,24 @@ sub installBasePackages
     return($ret);
 }
 
+# Method: configureAptProxy
+#
+#  Configure the apt Proxy
+#
+# Returns:
+#
+#   integer - return value of the script
+#
+sub configureAptProxy
+{
+    my ($self, $proxy) = @_;
+
+    $self->execute("echo \"Acquire::http::Proxy \\\"$proxy\\\";\" > /etc/apt/apt.conf.d/01proxy")
+        or die "Configure apt proxy failed: $!";
+
+    return 1;
+}
+
 # Method: resizeImage
 #
 #   Overriden method that resizes a image file

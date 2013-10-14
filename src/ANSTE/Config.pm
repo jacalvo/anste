@@ -133,6 +133,8 @@ sub check
     $self->nameserver();
     $self->autoCreateImages();
     $self->vmBuilderMirror();
+    $self->vmBuilderSecurityMirror();
+    $self->vmBuilderProxy();
     $self->seleniumRCjar();
     $self->seleniumBrowser();
     $self->seleniumVideo();
@@ -1361,6 +1363,36 @@ sub vmBuilderMirror
     my ($self) = @_;
 
     return $self->_getOption('vm-builder-options', 'mirror');
+}
+
+# Method: vmBuilderSecurityMirror
+#
+#   Gets the value of the security mirror to use when generating the images with vm-builder.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+sub vmBuilderSecurityMirror
+{
+    my ($self) = @_;
+
+    return $self->_getOption('vm-builder-options', 'security-mirror');
+}
+
+# Method: vmBuilderProxy
+#
+#   Gets the value of the proxy to use when generating the images with vm-builder.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+sub vmBuilderProxy
+{
+    my ($self) = @_;
+
+    return $self->_getOption('vm-builder-options', 'proxy');
 }
 
 # Method: virtSize

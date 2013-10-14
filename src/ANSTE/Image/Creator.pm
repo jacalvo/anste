@@ -113,6 +113,14 @@ sub createImage
             or throw ANSTE::Exceptions::Error('Error copying files.');
         print "done.\n";
 
+        my $proxy = $config->vmBuilderProxy();
+        if ($proxy) {
+            print "[$name] Configuring apt proxy... ";
+            $cmd->configureAptProxy($proxy)
+                or throw ANSTE::Exceptions::Error('Error configuring apt proxy.');
+            print "done.\n";
+        }
+
         print "[$name] Installing base packages... ";
         $cmd->installBasePackages()
             or throw ANSTE::Exceptions::Error('Error installing packages.');

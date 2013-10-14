@@ -113,6 +113,16 @@ sub createBaseImage # (%params)
     #   $command .= " --swapsize $swap";
     #}
 
+    my $proxy = $config->vmBuilderProxy();
+    if ($proxy) {
+        $command .= " --proxy $proxy";
+    }
+
+    my $securityMirror = $config->vmBuilderSecurityMirror();
+    if ($securityMirror) {
+        $command .= " --security-mirror $securityMirror";
+    }
+
     $self->execute($command) or
         die "Error executing ubuntu-vm-builder";
 

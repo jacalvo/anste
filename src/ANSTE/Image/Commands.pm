@@ -245,6 +245,27 @@ sub installBasePackages
     }
 }
 
+# Method: configureAptProxy
+#
+#  Configure the apt proxy
+#
+# Returns:
+#
+#   integer - return value of the configure-apt script
+#
+sub configureAptProxy
+{
+    my ($self, $proxy) = @_;
+
+    defined $proxy or
+        throw ANSTE::Exceptions::MissingArgument('proxy');
+
+    my $system = $self->{system};
+
+    my $ret = $system->configureAptProxy($proxy);
+    return $ret;
+}
+
 # Method: prepareSystem
 #
 #   Prepares a base image executing the proper pre-setup, setup
