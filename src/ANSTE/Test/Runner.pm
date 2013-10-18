@@ -341,7 +341,8 @@ sub _runOneTest # (test)
     my ($self, $test) = @_;
 
     my $testName = $test->name();
-    print "Running test: $testName\n";
+    my $testHost = $test->host();
+    print "Running test: $testName in host $testHost\n";
     my ($testResult, $ret);
     try {
         $testResult = $self->_runTest($test);
