@@ -308,9 +308,9 @@ sub _runTests
             if ($config->waitFail()) {
                 $stop = 1;
                 $msg = "Critical test failed and wait on failure was requested.";
+            } else {
+                $critical = 1;
             }
-
-            $critical = 1;
         }
 
         if ($stop) {
