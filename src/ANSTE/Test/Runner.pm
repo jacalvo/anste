@@ -680,6 +680,7 @@ sub _runWebTest
     }
 
     $test->setVariable('BASE_URL', $url);
+    $test->setVariable('LC_ALL', 'C');
     my $env = $test->env();
 
     return $self->{system}->runTest($script, $logfile, $env, '');

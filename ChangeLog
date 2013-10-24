@@ -1,4 +1,5 @@
 HEAD
+    + Run web tests with English locale to make them language independendant
     + Depend on qemu-kvm instead of kvm
     + Adding host name to the test output in the cli
     + Added support for proxy and security-mirror in vmbuilder
