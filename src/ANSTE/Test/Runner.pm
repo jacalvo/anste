@@ -350,7 +350,7 @@ sub _runTests
     }
     if ($config->step()) {
         while (1) {
-            print "Press 'd' to destroy scenary.\n";
+            print "Press 'd' to destroy scenario.\n";
             my $key;
             read(STDIN, $key, 1);
             if ($key eq 'd') {
