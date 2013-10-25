@@ -264,6 +264,25 @@ sub _runTests
     $report->add($suiteResult);
 
     foreach my $test (@{$suite->tests()}) {
+        my $skip = 0;
+        if ($config->step()) {
+            while (1) {
+                my $testName = $test->name();
+                print "Step by step execution. Test $testName. " .
+                      "Press 'e' to execute or 's' to skip.\n";
+                my $key;
+                read (STDIN, $key, 1);
+                if ($key eq 'e') {
+                    last;
+                }
+                if ($key eq 's') {
+                    $skip = 1;
+                    last;
+                }
+            }
+        }
+        next if ($skip);
+
         my $testResult = $self->_runOneTest($test);
         my $ret;
 
@@ -289,7 +308,6 @@ sub _runTests
         my $msg;
         my $stop = 0;
         my $critical = 0;
-
         if ($config->breakpoint($test->name())) {
             $stop = 1;
             $msg = "Breakpoint requested after this test.";
@@ -297,10 +315,6 @@ sub _runTests
         if ($config->waitFail() && $ret != 0) {
             $stop = 1;
             $msg = "Test failed and wait on failure was requested.";
-        }
-        if ($config->step()) {
-            $stop = 1;
-            $msg = "Step by step execution.";
         }
 
         # Stop executing tests if a critical one fails
@@ -332,6 +346,16 @@ sub _runTests
 
         if ($critical) {
             last;
+        }
+    }
+    if ($config->step()) {
+        while (1) {
+            print "Press 'd' to destroy scenary.\n";
+            my $key;
+            read(STDIN, $key, 1);
+            if ($key eq 'd') {
+                last;
+            }
         }
     }
 }
