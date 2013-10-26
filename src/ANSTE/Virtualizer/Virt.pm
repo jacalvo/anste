@@ -484,6 +484,8 @@ sub _createImageConfig # (image, path) returns config string
         $imageConfig .= "\t\t\t<target dev='vda' bus='virtio'/>\n";
     } elsif ($backend eq 'vmware') {
         $imageConfig .= "\t\t\t<target dev='hda' bus='ide'/>\n";
+    } elsif ($backend eq 'vbox') {
+        $imageConfig .= "\t\t\t<target dev='hdd'/>\n";
     }
     $imageConfig .= "\t\t</disk>\n";
 
@@ -622,6 +624,8 @@ sub _imgFormat
     my $format = 'qcow2';
     if ($backend eq 'vmware') {
         $format = 'vmdk';
+    } elsif ($backend eq 'vbox') {
+        $format = 'vdi';
     }
     return $format;
 }
