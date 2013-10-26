@@ -5,6 +5,7 @@ SBINDIR = $(PREFIX)/sbin
 BINDIR = $(PREFIX)/bin
 VERSION = $(shell head -1 ChangeLog)
 EXPORT = ../anste-$(VERSION)
+CWD = $(shell pwd)
 
 ifeq ($(PREFIX),/usr/local)
 	LIBPERL = $(PREFIX)/lib/site_perl
@@ -114,5 +115,15 @@ uninstall:
 	rm -rf $(DESTDIR)$(DATADIR)/deploy
 
 pkg: tests dist
-	cd $(EXPORT) &&  dpkg-buildpackage -rfakeroot -uc -us
+	cd $(EXPORT) && dpkg-buildpackage -rfakeroot -uc -us
 
+symlinks:
+	sudo apt-get purge -y anste 2>/dev/null || true
+	sudo mkdir -p /usr/share/anste/deploy/modules
+	sudo ln -sf $(CWD)/src/bin/anste /usr/sbin/
+	sudo ln -sf $(CWD)/src/bin/anste-clean /usr/sbin/
+	sudo ln -sf $(CWD)/src/bin/anste-connect /usr/bin/
+	sudo ln -sf $(CWD)/src/ANSTE /usr/share/perl5/
+	sudo ln -sf $(CWD)/data/deploy/bin /usr/share/anste/bin
+	sudo ln -sf $(CWD)/data/deploy/scripts /usr/share/anste/scripts
+	sudo ln -sf /usr/share/perl5/ANSTE /usr/share/anste/deploy/modules/
