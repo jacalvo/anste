@@ -1,0 +1,11 @@
+name: baseimage-saucy
+desc: Ubuntu Saucy
+memory: 1024
+size: 2048
+install:
+    method: debootstrap
+    dist: saucy
+pre-install:
+    - write-saucy-sources.sh
+packages:
+    - openssh-server
