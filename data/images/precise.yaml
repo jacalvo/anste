@@ -4,7 +4,7 @@ memory: 1024
 size: 2048
 install:
     method: debootstrap
-    dist: saucy
+    dist: precise
 pre-install:
     - write-precise-sources.sh
 packages:

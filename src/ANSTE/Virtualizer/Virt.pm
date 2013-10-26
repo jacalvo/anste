@@ -98,6 +98,9 @@ sub createBaseImage # (%params)
     }
 
     my $backend = $config->backend();
+    if ($backend eq 'vmware') {
+        $backend = 'vmw6';
+    }
     my $command = "ubuntu-vm-builder $backend $dist --dest $dir --hostname $name" .
                   " --ip $ip --mirror $mirror --mem $memory --kernel-flavour generic --addpkg linux-generic" .
                   " --mask $netmask --gw $gateway --rootsize $size" .
@@ -266,7 +269,8 @@ sub imageFile # (path, name)
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-    return "$path/$name/disk.qcow2";
+    my $ext = $self->_imgFormat();
+    return "$path/$name/disk.$ext";
 }
 
 # Method: copyImage
