@@ -179,7 +179,7 @@ sub shutdownImage # (image)
     # so we wait a few seconds until some operations finish
     sleep 5;
 
-    $self->execute("virsh shutdown $image");
+    $self->_virsh("shutdown $image");
 
     # TODO: do this better with per-backend hooks?
 
@@ -213,7 +213,7 @@ sub destroyImage # (image)
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
 
-    $self->execute("virsh destroy $image");
+    $self->_virsh("destroy $image");
 }
 
 # Method: createVM
@@ -240,7 +240,7 @@ sub createVM # (name)
         throw ANSTE::Exceptions::MissingArgument('name');
 
     my $path = ANSTE::Config->instance()->imagePath();
-    $self->execute("virsh create $path/$name/domain.xml");
+    $self->_virsh("create $path/$name/domain.xml");
 }
 
 # Method: imageFile
@@ -403,10 +403,10 @@ sub createNetwork # (scenario)
         print $FILE $xml;
         close($FILE) or return 0;
 
-        if (not $self->execute("virsh net-create $xmlFile")) {
+        if (not $self->_virsh("net-create $xmlFile")) {
             $self->execute("ifconfig ${BRIDGE_PREFIX}${num} down");
             $self->execute("brctl delbr ${BRIDGE_PREFIX}${num}");
-            $self->execute("virsh net-create $xmlFile") or return 0;
+            $self->_virsh("net-create $xmlFile") or return 0;
         }
     }
     return 1;
@@ -442,7 +442,7 @@ sub destroyNetwork # (scenario)
 
     my %bridges = %{$scenario->bridges()};
     while (my ($net, $num) = each %bridges) {
-        $self->execute("virsh net-destroy anste-bridge$num");
+        $self->_virsh("net-destroy anste-bridge$num");
         unlink("$path/anste-bridge$num.xml");
     }
 }
@@ -583,7 +583,7 @@ sub createSnapshot
 {
     my ($self, $domain, $name, $description) = @_;
 
-    $self->execute("virsh snapshot-create-as $domain $name '$description'");
+    $self->_virsh("snapshot-create-as $domain $name '$description'");
 }
 
 # Method: revertSnapshot
@@ -599,7 +599,7 @@ sub revertSnapshot
 {
     my ($self, $domain, $name) = @_;
 
-    $self->execute("virsh snapshot-revert $domain $name --force");
+    $self->_virsh("snapshot-revert $domain $name --force");
 }
 
 # Method: deleteSnapshot
@@ -615,7 +615,23 @@ sub deleteSnapshot
 {
     my ($self, $domain, $name) = @_;
 
-    $self->execute("virsh snapshot-delete $domain $name");
+    $self->_virsh("snapshot-delete $domain $name");
+}
+
+sub _virsh
+{
+    my ($self, $args) = @_;
+
+    my $backend = ANSTE::Config->instance()->backend();
+    my $command = 'virsh';
+    if ($backend eq 'vbox') {
+        $command .= ' -c vbox:///session';
+    } elsif ($backend eq 'vmware') {
+        $command .= ' -c vmwarews:///session';
+    }
+    $command .= " $args";
+
+    $self->execute($command);
 }
 
 sub _imgFormat
