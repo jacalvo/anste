@@ -1,0 +1,18 @@
+name: precise
+desc: Simple Ubuntu 12.04 test scenario
+hosts:
+     - name: test
+       desc: test host
+       baseimage: precise
+       network:
+           interfaces:
+             - name: eth1
+               type: static
+               address: 192.168.0.2
+               netmask: 255.255.255.0
+               gateway: 192.168.0.1
+             - name: eth2
+               type: static
+               address: 192.168.1.4
+               netmask: 255.255.255.0
+               gateway: 192.168.1.1
