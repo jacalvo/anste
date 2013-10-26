@@ -351,13 +351,13 @@ sub _createImageConfig # (image, path) returns config string
     chomp ($arch);
 
     my $imageConfig = "Vagrant.configure(2) do |config|\n";
-    $imageConfig .= "\tconfigvm.define \"$name\" do |$name|\n";
-    $imageConfig .= "\t\t$name.vm.box = \"base\"\n";
+    $imageConfig .= "\tconfig.vm.define \"$name\" do |server|\n";
+    $imageConfig .= "\t\tserver.vm.box = \"base-zentyal\"\n";
     my $num = 1;
     my %macs;
     foreach my $iface (@{$image->network()->interfaces()}) {
         my $bridge = $iface->bridge();
-        $imageConfig .= "\t\t$name.vm.network :\"public_network\", :bridge => '${BRIDGE_PREFIX}${bridge}\n";
+        $imageConfig .= "\t\tserver.vm.network :\"public_network\", :bridge => '${BRIDGE_PREFIX}${bridge}'\n";
         $macs{$num} = $iface->hwAddress();
         $num++;
     }
@@ -367,6 +367,7 @@ sub _createImageConfig # (image, path) returns config string
     foreach my $num (keys %macs) {
         $imageConfig .= "\t\tv.customize [\"modifyvm\", :id, \"--macaddress$num\", \"$macs{$num}\"]\n";
     }
+    $imageConfig .= "\tend\n";
     $imageConfig .= "end\n";
 
     return $imageConfig;
@@ -441,6 +442,37 @@ sub _vagrantCommand
 
     my $path = ANSTE::Config->instance()->imagePath();
     $self->execute("cd $path/$image; vagrant $command");
+}
+
+sub imageFile # (path, name)
+{
+    my ($self, $path, $name) = @_;
+
+    defined $path or
+        throw ANSTE::Exceptions::MissingArgument('path');
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
+    return "$path/$name/disk.qcow2";
+}
+
+sub createImageCopy #(baseimage, newimage)
+{
+    my ($self, $baseimage, $image) = @_;
+
+    my $name = $image->name();
+    my $dir = "/var/tmp/anste-images/$name";
+    my $vagrantfile = $self->_createImageConfig($image, $dir);
+
+    # Writes the qemu configuration file
+    my $FILE;
+    my $vagrantfileFile = "$dir/Vagrantfile";
+    open($FILE, '>', $vagrantfileFile) or return 0;
+    print $FILE $vagrantfile;
+    close($FILE) or return 0;
+
+    return 1;
+
 }
 
 1;

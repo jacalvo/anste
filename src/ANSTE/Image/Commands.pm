@@ -479,7 +479,7 @@ sub exists
     my $image = $self->{image}->name();
     my $virtualizer = $self->{virtualizer};
     my $path = ANSTE::Config->instance()->imagePath();
-
+    return 1;
     return -r $virtualizer->imageFile($path, $image);
 }
 
