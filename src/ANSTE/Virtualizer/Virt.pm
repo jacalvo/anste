@@ -97,8 +97,8 @@ sub createBaseImage # (%params)
         $mirror = $config->vmBuilderMirror();
     }
 
-    my $vm = 'kvm'; # TODO: Unhardcode this when supporting other virtualizers
-    my $command = "ubuntu-vm-builder $vm $dist --dest $dir --hostname $name" .
+    my $backend = $config->backend();
+    my $command = "ubuntu-vm-builder $backend $dist --dest $dir --hostname $name" .
                   " --ip $ip --mirror $mirror --mem $memory --kernel-flavour generic --addpkg linux-generic" .
                   " --mask $netmask --gw $gateway --rootsize $size" .
                   " --components main,universe --removepkg=cron --domain $name";
@@ -141,8 +141,10 @@ sub createBaseImage # (%params)
     print $FILE $xml;
     close($FILE) or return 0;
 
+    my $ext = $self->_imgFormat();
+
     # Rename disk image
-    $self->execute("mv $dir/*.qcow2 $dir/disk.qcow2");
+    $self->execute("mv $dir/*.$ext $dir/disk.$ext");
 }
 
 # Method: shutdownImage
@@ -176,9 +178,13 @@ sub shutdownImage # (image)
 
     $self->execute("virsh shutdown $image");
 
+    # TODO: do this better with per-backend hooks?
+
     # Wait until shutdown finishes
-    my $waitScript = $config->scriptFile('kvm-waitshutdown.sh');
-    system("$waitScript $image");
+    if ($config->backend() eq 'kvm') {
+        my $waitScript = $config->scriptFile('kvm-waitshutdown.sh');
+        system("$waitScript $image");
+    }
 }
 
 # Method: destroyImage
@@ -328,7 +334,7 @@ sub createImageCopy # (baseimage, newimage)
 
 # Method: deleteImage
 #
-#   Overriden method that deletes the kvm image.
+#   Overriden method that deletes the image.
 #
 # Parameters:
 #
@@ -447,7 +453,9 @@ sub _createImageConfig # (image, path) returns config string
     my $arch = `arch`;
     chomp ($arch);
 
-    my $imageConfig = "<domain type='kvm'>\n";
+    my $backend = $config->backend();
+
+    my $imageConfig = "<domain type='$backend'>\n";
     $imageConfig .= "\t<name>$name</name>\n";
     $imageConfig .= "\t<memory>$memory</memory>\n";
     $imageConfig .= "\t<vcpu>1</vcpu>\n";
@@ -459,12 +467,22 @@ sub _createImageConfig # (image, path) returns config string
     $imageConfig .= "\t<on_crash>restart</on_crash>\n";
     $imageConfig .= "\t<cpu mode='host-passthrough'/>\n";
     $imageConfig .= "\t<devices>\n";
-    $imageConfig .= "\t\t<emulator>/usr/bin/kvm</emulator>\n";
+
+    if ($backend eq 'kvm') {
+        $imageConfig .= "\t\t<emulator>/usr/bin/kvm</emulator>\n";
+    }
+
     $imageConfig .= "\t\t<disk type='file' device='disk'>\n";
-    $imageConfig .= "\t\t\t<driver name='qemu' type='qcow2' cache='unsafe'/>\n";
-    $imageConfig .= "\t\t\t<source file='$path/disk.qcow2'/>\n";
-    $imageConfig .= "\t\t\t<target dev='vda' bus='virtio'/>\n";
+    my $ext = $self->_imgFormat();
+    $imageConfig .= "\t\t\t<source file='$path/disk.$ext'/>\n";
+    if ($backend eq 'kvm') {
+        $imageConfig .= "\t\t\t<driver name='qemu' type='qcow2' cache='unsafe'/>\n";
+        $imageConfig .= "\t\t\t<target dev='vda' bus='virtio'/>\n";
+    } elsif ($backend eq 'vmware') {
+        $imageConfig .= "\t\t\t<target dev='hda' bus='ide'/>\n";
+    }
     $imageConfig .= "\t\t</disk>\n";
+
     foreach my $iface (@{$image->network()->interfaces()}) {
         $imageConfig .= "\t\t<interface type='bridge'>\n";
         my $bridge = $iface->bridge();
@@ -592,6 +610,16 @@ sub deleteSnapshot
     my ($self, $domain, $name) = @_;
 
     $self->execute("virsh snapshot-delete $domain $name");
+}
+
+sub _imgFormat
+{
+    my $backend = ANSTE::Config->instance()->backend();
+    my $format = 'qcow2';
+    if ($backend eq 'vmware') {
+        $format = 'vmdk';
+    }
+    return $format;
 }
 
 1;

@@ -285,11 +285,42 @@ sub virtualizer
     my $virtualizer = $self->_getOption('global', 'virtualizer');
 
     if (not ANSTE::Validate::virtualizer($virtualizer)) {
-        throw ANSTE::Exceptions::NotFound('Virtualizer',
-                                          $virtualizer);
+        throw ANSTE::Exceptions::NotFound('Virtualizer', $virtualizer);
     }
 
     return $virtualizer;
+}
+
+# FIXME: Move this to Virt.pm
+my %SUPPORTED_BACKENDS = (
+    kvm => 1,
+    vbox => 1,
+    vmware => 1,
+);
+
+# Method: backend
+#
+#   Gets the value for the backend option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::NotFound> - throw if backend is not found
+#
+sub backend
+{
+    my ($self) = @_;
+
+    my $backend = $self->_getOption('global', 'backend');
+
+    unless ($SUPPORTED_BACKENDS{$backend}) {
+        throw ANSTE::Exceptions::NotFound('Backend', $backend);
+    }
+
+    return $backend;
 }
 
 # Method: verbose
