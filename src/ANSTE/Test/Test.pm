@@ -51,6 +51,7 @@ sub new # returns new Test object
     $self->{assert} = 'passed';
     $self->{type} = '';
     $self->{critical} = 0;
+    $self->{executeAlways} = 0;
     $self->{precondition} = 1;
 
     bless($self, $class);
@@ -540,6 +541,31 @@ sub setCritical
 {
     my ($self, $critical) = @_;
     $self->{critical} = $critical;
+}
+
+# Method: executeAlways
+#
+#   Gets if the test should be executed always
+#
+# Returns:
+#
+#   boolean - true if the test should be executed always
+#
+sub executeAlways
+{
+    my ($self) = @_;
+
+    return $self->{executeAlways};
+}
+
+# Method: setExecuteAlways
+#
+#   Specifies if the test should be executed always
+#
+sub setExecuteAlways
+{
+    my ($self, $executeAlways) = @_;
+    $self->{executeAlways} = $executeAlways;
 }
 
 # Method: precondition

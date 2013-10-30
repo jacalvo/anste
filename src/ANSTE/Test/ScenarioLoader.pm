@@ -56,6 +56,7 @@ sub _loadPostTestsScriptsAsTests # (suite, scriptsToAdd, hostName)
         $test->setDesc("PostTest added from the baseImage of the host $hostName");
         $test->setDir($script);
         $test->setHost($hostName);
+        $test->setExecuteAlways(1);
 
         $suite->addTest($test);
     }
