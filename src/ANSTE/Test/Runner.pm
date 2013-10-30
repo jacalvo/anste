@@ -262,8 +262,11 @@ sub _runTests
     $suiteResult->setSuite($suite);
 
     $report->add($suiteResult);
+    my $executeOnlyForcedTests = 0;
 
     foreach my $test (@{$suite->tests()}) {
+        next if ($executeOnlyForcedTests and not $test->executeAlways());
+
         my $skip = 0;
         if ($config->step()) {
             while (1) {
@@ -345,7 +348,7 @@ sub _runTests
         }
 
         if ($critical) {
-            last;
+            $executeOnlyForcedTests = 1;
         }
     }
     if ($config->step()) {

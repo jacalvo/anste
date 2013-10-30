@@ -1,4 +1,5 @@
 HEAD
+    + Add option to the post-tests so they are executed always
     + Add skip option to the step by step execution
     + Stop before each test on step by step execution
     + Ignore critical attribute if running with -wait-fail
