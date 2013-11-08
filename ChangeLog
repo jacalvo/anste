@@ -1,4 +1,5 @@
 HEAD
+    + Use TryCatch instead of Error
     + Now copied directories in files section maintain structure as they are
       transferred as tar files and unpacked on the destination VM
     + Add option to the post-tests so they are executed always

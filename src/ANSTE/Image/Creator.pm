@@ -27,7 +27,7 @@ use ANSTE::Exceptions::InvalidType;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Virtualizer::Virtualizer;
 
-use Error qw(:try);
+use TryCatch::Lite;
 
 # Class: Creator
 #
@@ -125,12 +125,11 @@ sub createImage
         $cmd->installBasePackages()
             or throw ANSTE::Exceptions::Error('Error installing packages.');
         print "done.\n";
-    } finally {
-        print "[$name] Umounting image... ";
-        $cmd->umount()
-            or throw ANSTE::Exceptions::Error('Error unmounting image.');
-        print "done.\n";
-    };
+    } catch ($e) {
+        $self->_umountImage($cmd, $name);
+        $e->throw();
+    }
+    $self->_umountImage($cmd, $name);
 
     # Starts Master Server thread
     my $server = new ANSTE::Comm::WaiterServer();
@@ -156,24 +155,16 @@ sub createImage
         print "[$name] Starting to prepare the system... \n";
         $cmd->prepareSystem()
             or throw ANSTE::Exceptions::Error('Error preparing system.');
-    } catch ANSTE::Exceptions::Error with {
-        my $ex = shift;
-        my $msg = $ex->message();
+    } catch (ANSTE::Exceptions::Error $e) {
+        my $msg = $e->message();
         print "ERROR: $msg\n";
-        $ex->throw();
-    } catch Error with {
-        my $ex = shift;
-        my $msg = $ex->stringify();
+        $self->_shutdown($cmd);
+        $e->throw();
+    } catch ($e) {
+        my $msg = $e->stringify();
         print "ERROR: $msg\n";
-    } finally {
-        if ($config->wait()) {
-            print "Waiting for testing on the image. " .
-                  "Press any key to shutdown it and finish.\n";
-            my $key;
-            read(STDIN, $key, 1);
-        }
-        $cmd->shutdown();
-    };
+    }
+    $self->_shutdown($cmd);
 
     $virtualizer->destroyNetwork($scenario);
 
@@ -185,6 +176,30 @@ sub createImage
     print "[$name] Image creation finished.\n";
 
     return 1;
+}
+
+sub _shutdown
+{
+    my ($self, $cmd) = @_;
+
+    my $config = ANSTE::Config->instance();
+    if ($config->wait()) {
+        print "Waiting for testing on the image. " .
+              "Press any key to shutdown it and finish.\n";
+        my $key;
+        read(STDIN, $key, 1);
+    }
+    $cmd->shutdown();
+}
+
+sub _umountImage
+{
+    my ($self, $cmd, $name) = @_;
+
+    print "[$name] Umounting image... ";
+    $cmd->umount()
+        or throw ANSTE::Exceptions::Error('Error unmounting image.');
+    print "done.\n";
 }
 
 1;

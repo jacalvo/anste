@@ -20,7 +20,7 @@ use strict;
 
 use ANSTE::Config;
 use ANSTE::Scenario::Snapshot;
-use Error qw(:try);
+use TryCatch::Lite;
 
 my ($command, $name, $desc) = @ARGV;
 
@@ -59,12 +59,11 @@ sub save
     try {
         ANSTE::Scenario::Snapshot->save($name, $desc);
         exit (0);
-    } catch ANSTE::Exceptions::NotFound with {
+    } catch (ANSTE::Exceptions::NotFound $e) {
         print "Cannot read hosts file, probably there is no scenario deployed.\n";
-    } otherwise {
-        my $ex = shift;
-        print "ERROR: $ex\n";
-    };
+    } catch ($e) {
+        print "ERROR: $e\n";
+    }
 
     exit (1);
 }

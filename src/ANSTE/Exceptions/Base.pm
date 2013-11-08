@@ -19,7 +19,13 @@ package ANSTE::Exceptions::Base;
 use strict;
 use warnings;
 
-use base 'Error';
+use Log::Log4perl;
+use Devel::StackTrace;
+
+use overload (
+    '""'     => 'stringify',
+    fallback => 1
+);
 
 # Class: Base
 #
@@ -40,21 +46,61 @@ use base 'Error';
 #
 sub new # (text)
 {
-	my ($class, $text) = @_;
+    my $class = shift;
+    my $text = shift;
+    my (%opts) = @_;
 
-	my $self = $class->SUPER::new(-text => "$text", @_);
-	bless ($self, $class);
-	return $self;
+    my $self = { text => $text };
+    if (exists $opts{silent} and $opts{silent}) {
+        $self->{silent} = 1;
+    } else {
+        $self->{silent} = 0;
+    }
+
+    bless ($self, $class);
+    return $self;
 }
 
-# Method: toStderr
-#
-#   Prints the exception message to system's standard error.
-#
-sub toStderr 
+sub text
 {
-	my ($self) = @_;
-	print STDERR "[ANSTE::Exceptions] ". $self->stringify() ."\n";
+    my ($self) = @_;
+
+    return $self->{text};
+}
+
+sub stringify
+{
+    my ($self) = @_;
+    return $self->{text} ? $self->{text} : 'Died';
+}
+
+sub stacktrace
+{
+    my ($self) = @_;
+
+    my $trace = new Devel::StackTrace();
+    my $msg = $self->{text};
+    $msg .= ' at ';
+    $msg .= $trace->as_string();
+
+    return $msg;
+}
+
+sub throw
+{
+    my $self = shift;
+
+    unless (ref $self) {
+        $self = $self->new(@_);
+    }
+
+    die $self;
+}
+
+sub toStderr
+{
+    my ($self) = @_;
+    print STDERR "[ANSTE::Exceptions] ". $self->stringify() ."\n";
 }
 
 1;

@@ -19,7 +19,7 @@ use warnings;
 use strict;
 
 use ANSTE::Status;
-use Error qw(:try);
+use TryCatch::Lite;
 
 my $status = ANSTE::Status->instance();
 my $hosts = $status->deployedHosts();

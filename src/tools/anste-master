@@ -28,7 +28,7 @@ use ANSTE::Comm::HostWaiter;
 
 use Term::ReadLine;
 use Perl6::Slurp;
-use Error qw(:try);
+use TryCatch::Lite;
 
 my $term = new Term::ReadLine('anste-master');
 
@@ -55,11 +55,10 @@ while (defined($cmd = $term->readline($prompt))) {
         my $result = _parseCmd($cmd);
         print $OUT $result, "\n";
         $term->addhistory($cmd);
-    } catch Error with {
-        my $E = shift;
-        my $msg = $E->stringify();
+    } catch ($e) {
+        my $msg = $e->stringify();
         print $OUT "Execution error: $msg\n";
-    };
+    }
 }
 
 # TODO: Check number of arguments, etc.

@@ -32,7 +32,7 @@ use ANSTE::Virtualizer::Virtualizer;
 use ANSTE::System::System;
 
 use Cwd;
-use Error qw(:try);
+use TryCatch::Lite;
 use File::Temp qw(tempfile tempdir);
 
 # Class: Commands
@@ -218,8 +218,7 @@ sub installBasePackages
     my $pid = fork();
     if (not defined $pid) {
         die "Can't fork: $!";
-    }
-    elsif ($pid == 0) { # child
+    } elsif ($pid == 0) { # child
         chroot($mountPoint) or die "Can't chroot: $!";
         chdir('/');
         $ENV{HOSTNAME} = $self->{image}->name();
@@ -230,15 +229,12 @@ sub installBasePackages
 
         try {
             $ret = $system->installBasePackages();
-        } catch Error with {
-            my $err = shift;
-            my $msg = $err->stringify();
+        } catch ($e) {
+            my $msg = $e->stringify();
             print "ERROR: $msg\n";
-        } finally {
-            exit($ret);
-        };
-    }
-    else { # parent
+        }
+        exit($ret);
+    } else { # parent
         waitpid($pid, 0);
         return($?);
         # TODO: Abort process if exit code != 0 ??

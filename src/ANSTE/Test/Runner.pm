@@ -38,7 +38,7 @@ use File::Temp qw(tempdir);
 use Text::Template;
 use Safe;
 use Perl6::Slurp;
-use Error qw(:try);
+use TryCatch::Lite;
 
 my $SUITE_FILE = 'suite.html';
 my $SUITE_LIST_FILE = 'suites.list';
@@ -190,28 +190,33 @@ sub runSuite # (suite)
             if not $reuse;
 
         $self->_runTests();
-    } catch ANSTE::Exceptions::Error with {
-        my $ex = shift;
-        my $msg = $ex->message();
+    } catch (ANSTE::Exceptions::Error $e) {
+        my $msg = $e->message();
         print "ERROR: $msg\n";
-        $ex->throw();
-    } catch Error with {
-        my $ex = shift;
-        my $msg = $ex->stringify();
+        $self->_destroy($deployer, $reuse);
+        $e->throw();
+    } catch ($e) {
+        my $msg = $e->stringify();
         print "ERROR: $msg\n";
-    } finally {
-        if ($config->wait()) {
-            print "Waiting for testing on the scenario. " .
-                  "Press any key to shutdown it and continue.\n";
-            my $key;
-            read(STDIN, $key, 1);
-        }
-        $deployer->destroy()
-            if not $reuse;
-    };
+    }
+    $self->_destroy($deployer, $reuse);
     print "Finished testing of suite '$suiteName'.\n\n";
 
     $self->{report}->setTime($self->_time());
+}
+
+sub _destroy
+{
+    my ($self, $deployer, $reuse) = @_;
+
+    my $config = ANSTE::Config->instance();
+    if ($config->wait()) {
+        print "Waiting for testing on the scenario. " .
+              "Press any key to shutdown it and continue.\n";
+        my $key;
+        read(STDIN, $key, 1);
+    }
+    $deployer->destroy() if not $reuse;
 }
 
 # Method: report
@@ -236,13 +241,12 @@ sub _loadScenario # (file, suite)
     my $scenario;
     try {
         $scenario = ANSTE::Test::ScenarioLoader->loadScenario($file,$suite);
-    } catch ANSTE::Exceptions::InvalidFile with {
-        my $ex = shift;
-        my $filename = $ex->file();
+    } catch (ANSTE::Exceptions::InvalidFile $e) {
+        my $filename = $e->file();
         print STDERR "Can't load scenario $file for suite $suite->name().\n";
         print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
-    };
+    }
 
     return $scenario;
 }
@@ -374,14 +378,13 @@ sub _runOneTest # (test)
     try {
         $testResult = $self->_runTest($test);
         $ret = $testResult->value();
-    } catch ANSTE::Exceptions::NotFound with {
-        my $ex = shift;
-        my $what = $ex->what();
-        my $value = $ex->value();
+    } catch (ANSTE::Exceptions::NotFound $e) {
+        my $what = $e->what();
+        my $value = $e->value();
         print STDERR "Error running test $testName.\n";
         print STDERR "Reason: $what $value not found.\n";
         $ret = -1;
-    };
+    }
     print "Result: $ret\n\n";
     return $testResult;
 }
@@ -763,10 +766,10 @@ sub _runSeleniumRC
                                  url => $url,
                                  testFile => $file,
                                  resultFile => $log);
-    } catch ANSTE::Exceptions::Error with {
+    } catch (ANSTE::Exceptions::Error $e) {
         throw ANSTE::Exceptions::Error("Can't execute Selenium or Java. " .
                                        "Ensure that everything is ok.");
-    };
+    }
 
     return $self->_seleniumResult($log);
 }

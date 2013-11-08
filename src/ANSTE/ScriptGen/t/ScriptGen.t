@@ -31,7 +31,7 @@ use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
 
 use Test::More tests => 7;
-use Error qw(:try);
+use TryCatch::Lite;
 
 use constant IMAGE => 'hardy-base.xml';
 use constant SCENARIO => 'scenario.xml';
@@ -62,8 +62,7 @@ pass('host pre-install script generation');
 my $scenario = new ANSTE::Scenario::Scenario;
 $scenario->loadFromFile(SCENARIO);
 my $hosts = $scenario->hosts();
-$gen = new ANSTE::ScriptGen::HostImageSetup($hosts->[0], 
-                                            $scenario->system());
+$gen = new ANSTE::ScriptGen::HostImageSetup($hosts->[0], $scenario->system());
 $gen->writeScript($file);
 pass('host setup script generation');
 
@@ -71,16 +70,16 @@ pass('host setup script generation');
 try {
     $gen = new ANSTE::ScriptGen::BaseImageSetup($image);
     $gen->writeScript('notFilehandle')
-} catch ANSTE::Exceptions::InvalidFile with {
+} catch (ANSTE::Exceptions::InvalidFile $e) {
     pass('invalid file throwing');
-};
+}
 try {
     $gen = new ANSTE::ScriptGen::BaseImageSetup();
-} catch ANSTE::Exceptions::MissingArgument with {
+} catch (ANSTE::Exceptions::MissingArgument $e) {
     pass('missing argument exception throwing');
-};
+}
 try {
     $gen = new ANSTE::ScriptGen::BaseImageSetup($scenario);
-} catch ANSTE::Exceptions::InvalidType with {
+} catch (ANSTE::Exceptions::InvalidType $e) {
     pass('invalid type exception throwing');
-};
+}

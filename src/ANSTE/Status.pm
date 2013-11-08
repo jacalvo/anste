@@ -23,7 +23,7 @@ use ANSTE::Exceptions::NotFound;
 
 use JSON::XS;
 use File::Slurp;
-use Error qw(:try);
+use TryCatch::Lite;
 
 # Class: Status
 #
@@ -137,7 +137,8 @@ sub _readStatusFile
     my $status;
     try {
         $status = read_file($file);
-    } otherwise {};
+    } catch {
+    }
     return undef unless $status;
     return decode_json($status);
 }

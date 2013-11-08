@@ -23,7 +23,7 @@ use lib "$Bin/../src";
 
 use ANSTE::Comm::SlaveClient;
 
-use Error qw(:try);
+use TryCatch::Lite;
 
 use constant MASTER => '/var/local/anste.master';
 use constant PORT => 8001;
@@ -42,15 +42,13 @@ if (@ARGV < 1) {
 
 if ($command eq 'ready') {
     handleReady();
-}
-elsif ($command eq 'finished') {
+} elsif ($command eq 'finished') {
     if (@ARGV < 2) {
         usage();
         exit(1);
     }
     handleFinished();
-}
-else { 
+} else {
     usage();
     exit(1);
 }
@@ -61,10 +59,10 @@ sub handleReady
     my $ok;
     try {
         $ok = $client->hostReady();
-    } catch Error with {
+    } catch {
         sleep 5;
         $ok = $client->hostReady();
-    };
+    }
     exit(!$ok);
 }
 
@@ -75,14 +73,14 @@ sub handleFinished
     my $ok;
     try {
         $ok = $client->executionFinished($ret);
-    } catch Error with {
+    } catch {
         sleep 5;
         $ok = $client->executionFinished($ret);
-    };
+    }
     exit(!$ok);
 }
 
-sub getClient 
+sub getClient
 {
     # Read the master host from file
     my $fh;

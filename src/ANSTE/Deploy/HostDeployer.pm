@@ -34,7 +34,7 @@ use ANSTE::System::System;
 
 use threads;
 use threads::shared;
-use Error qw(:try);
+use TryCatch::Lite;
 use Attempt;
 
 my $lockMount : shared;
@@ -239,10 +239,10 @@ sub _deploy
 
     try {
         $self->_copyBaseImage() or die "Can't copy base image";
-    } catch ANSTE::Exceptions::NotFound with {
+    } catch (ANSTE::Exceptions::NotFound $e) {
         print "[$hostname] Base image not found, can't continue.";
         $error = 1;
-    };
+    }
 
     if ($error) {
         return undef;
@@ -260,12 +260,11 @@ sub _deploy
                 print "[$hostname] Error copying host files.\n";
                 $error = 1;
             }
-        } catch Error with {
-            my $err = shift;
-            my $msg = $err->stringify();
+        } catch ($e) {
+            my $msg = $e->stringify();
             print "[$hostname] ERROR: $msg\n";
             $error = 1;
-        };
+        }
 
         if ($error) {
             return undef;
@@ -315,15 +314,13 @@ sub _deploy
             print "[$hostname] Executing post scripts...\n";
             $cmd->executeScripts($post);
         }
-    } catch ANSTE::Exceptions::Error with {
-        my $ex = shift;
-        my $msg = $ex->message();
+    } catch (ANSTE::Exceptions::Error $e) {
+        my $msg = $e->message();
         print "[$hostname] ERROR: $msg\n";
-    } catch Error with {
-        my $err = shift;
-        my $msg = $err->stringify();
+    } catch ($e) {
+        my $msg = $e->stringify();
         print "[$hostname] ERROR: $msg\n";
-    };
+    }
 }
 
 sub _copyBaseImage
@@ -351,18 +348,20 @@ sub _updateHostname # returns boolean
     attempt {
         try {
             $cmd->mount() or die "Can't mount image: $!";
-        } catch Error with {
+        } catch {
             $cmd->deleteMountPoint();
             die "Can't mount image.";
-        };
+        }
     } tries => 5, delay => 5;
 
     try {
         $cmd->copyHostFiles() or die "Can't copy files: $!";
         $ok = 1;
-    } finally {
+    } catch ($e) {
         $cmd->umount() or die "Can't unmount image: $!";
-    };
+        $e->throw();
+    }
+    $cmd->umount() or die "Can't unmount image: $!";
 
     return $ok;
 }

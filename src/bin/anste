@@ -35,7 +35,7 @@ use ANSTE::Report::HTMLWriter;
 
 use Getopt::Long;
 use Pod::Usage;
-use Error qw(:try);
+use TryCatch::Lite;
 use Perl6::Junction qw(none);
 use Fcntl qw(:flock);
 
@@ -169,12 +169,11 @@ foreach my $arg (@ARGV) {
         if ($var and defined($value)) {
             try {
                 $config->setVariable($var, $value);
-            } catch ANSTE::Exceptions::InvalidOption with {
+            } catch (ANSTE::Exceptions::InvalidOption $e) {
                 print STDERR "Invalid variable name: $var\n";
                 exit(1);
-            };
-        }
-        else {
+            }
+        } else {
             print STDERR "Malformed variable declaration passed.\n";
             exit(1);
         }
@@ -226,19 +225,17 @@ sub create # (file)
 
     try {
         $image->loadFromFile($file);
-    } catch ANSTE::Exceptions::InvalidFile with {
-        my $ex = shift;
-        my $filename = $ex->file();
+    } catch (ANSTE::Exceptions::InvalidFile $e) {
+        my $filename = $e->file();
         print STDERR "Can't load image $file.\n";
         print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
-    } catch ANSTE::Exceptions::Error with {
-        my $ex = shift;
-        my $msg = $ex->message();
+    } catch (ANSTE::Exceptions::Error $e) {
+        my $msg = $e->message();
         print STDERR "Error creating image $file:\n";
         print STDERR "$msg\n";
         exit(1);
-    };
+    }
 
     my $address = $config->firstAddress();
     $image->setIp($address);
@@ -260,19 +257,17 @@ sub remove # (file)
 
     try {
         $image->loadFromFile($file);
-    } catch ANSTE::Exceptions::InvalidFile with {
-        my $ex = shift;
-        my $filename = $ex->file();
+    } catch (ANSTE::Exceptions::InvalidFile $e) {
+        my $filename = $e->file();
         print STDERR "Can't load scenario $file.\n";
         print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
-    } catch ANSTE::Exceptions::Error with {
-        my $ex = shift;
-        my $msg = $ex->message();
+    } catch (ANSTE::Exceptions::Error $e) {
+        my $msg = $e->message();
         print STDERR "Error removing image $file:\n";
         print STDERR "$msg\n";
         exit(1);
-    };
+    }
 
     my $cmd = new ANSTE::Image::Commands($image);
     if (not $cmd->deleteImage()) {
@@ -291,15 +286,13 @@ sub deploy # (file)
     try {
         $scenario->loadFromFile($file);
         $status->setCurrentScenario($file);
-    } catch ANSTE::Exceptions::InvalidFile with {
-        my $ex = shift;
-        my $filename = $ex->file();
+    } catch (ANSTE::Exceptions::InvalidFile $e) {
+        my $filename = $e->file();
         print STDERR "Can't load scenario $file.\n";
         print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
-    } catch ANSTE::Exceptions::Error with {
-        my $ex = shift;
-        my $msg = $ex->message();
+    } catch (ANSTE::Exceptions::Error $e) {
+        my $msg = $e->message();
         print STDERR "Error deploying scenario $file:\n";
         print STDERR "$msg\n";
         exit(1);
@@ -316,15 +309,13 @@ sub destroy # (file)
     my $scenario = new ANSTE::Scenario::Scenario();
     try {
         $scenario->loadFromFile($file);
-    } catch ANSTE::Exceptions::InvalidFile with {
-        my $ex = shift;
-        my $filename = $ex->file();
+    } catch (ANSTE::Exceptions::InvalidFile $e) {
+        my $filename = $e->file();
         print STDERR "Can't load scenario $file.\n";
         print STDERR "Reason: Can't open file $filename.\n";
         exit(1);
-    } catch ANSTE::Exceptions::Error with {
-        my $ex = shift;
-        my $msg = $ex->message();
+    } catch (ANSTE::Exceptions::Error $e) {
+        my $msg = $e->message();
         print STDERR "Error destroying scenario $file:\n";
         print STDERR "$msg\n";
         exit(1);
@@ -348,28 +339,27 @@ sub test # (file)
         } else {
             $runner->runDir($file);
         }
-    } catch ANSTE::Exceptions::InvalidFile with {
-        my $ex = shift;
-        my $filename = $ex->file();
+    } catch (ANSTE::Exceptions::InvalidFile $e) {
+        my $filename = $e->file();
         print STDERR "Can't load test suite $file.\n";
         print STDERR "Reason: Can't open file $filename.\n";
+        printResults($runner->report());
         exit(1);
-    } catch ANSTE::Exceptions::NotFound with {
-        my $ex = shift;
-        my $what = $ex->what();
-        my $value = $ex->value();
+    } catch (ANSTE::Exceptions::NotFound $e) {
+        my $what = $e->what();
+        my $value = $e->value();
         print STDERR "Error running test suite $file.\n";
         print STDERR "Reason: $what $value not found.\n";
+        printResults($runner->report());
         exit(1);
-    } catch ANSTE::Exceptions::Error with {
-        my $ex = shift;
-        my $msg = $ex->message();
+    } catch (ANSTE::Exceptions::Error $e) {
+        my $msg = $e->message();
         print STDERR "Error running test suite $file:\n";
         print STDERR "$msg\n";
-        exit(1);
-    } finally {
         printResults($runner->report());
-    };
+        exit(1);
+    }
+    printResults($runner->report());
 }
 
 sub printResults # (report)
