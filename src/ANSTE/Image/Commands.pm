@@ -650,18 +650,17 @@ sub _transferFile
 {
     my ($self, $file, $image, $config, $client) = @_;
 
+    my $tarFile = undef;
     my $filePath = $config->listsFile($file);
-    if ( -d $filePath ) {
-        opendir(my $dh, $filePath);
-        while (my $dirContent = readdir($dh)) {
-            next if ($dirContent eq '.' or $dirContent eq '..');
-            $self->_transferFile("$file/$dirContent", $image, $config, $client);
-        }
-        closedir($dh);
-    } else {
-        $client->put($filePath) or
-          print "[$image:$filePath] Transfer failed.\n";
+    if (-d $filePath) {
+        $tarFile = "$filePath.tar";
+        system ("tar cf $tarFile $filePath");
+        $filePath = $tarFile;
     }
+
+    $client->put($filePath) or print "[$image:$filePath] Transfer failed.\n";
+
+    unlink ($tarFile) if $tarFile;
 }
 
 1;

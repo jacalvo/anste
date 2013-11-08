@@ -1,4 +1,6 @@
 HEAD
+    + Now copied directories in files section maintain structure as they are
+      transferred as tar files and unpacked on the destination VM
     + Add option to the post-tests so they are executed always
     + Add skip option to the step by step execution
     + Stop before each test on step by step execution

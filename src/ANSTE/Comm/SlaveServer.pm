@@ -44,7 +44,7 @@ my $LOGPATH = '/var/log/anste';
 #
 #   string - OK if everything goes well, ERR if not
 #
-sub put	# (file, content)
+sub put # (file, content)
 {
     my ($self, $file, $content) = @_;
 
@@ -52,9 +52,12 @@ sub put	# (file, content)
 
     my $FILE;
     if (open($FILE, '>', "$DIR/$name")) {
-    	print $FILE $content;
-    	close $FILE or die "Can't close: $!";
-    	return 'OK';
+        print $FILE $content;
+        close $FILE or die "Can't close: $!";
+        if ($name =~ /\.tar$/) {
+            system ("tar xf $DIR/$name");
+        }
+        return 'OK';
     } else {
         return 'ERR';
     }
@@ -73,7 +76,7 @@ sub put	# (file, content)
 #
 #   string - String with the contents of the file or ERR if fails.
 #
-sub get	# (file)
+sub get # (file)
 {
     my ($self, $file) = @_;
 
@@ -81,11 +84,11 @@ sub get	# (file)
 
     my $FILE;
     if (open($FILE, '<', "$DIR/$name")) {
-	    chomp(my @lines = <$FILE>);
-	    close $FILE;
-	    return encode_base64(join("\n", @lines) . "\n");
+        chomp(my @lines = <$FILE>);
+        close $FILE;
+        return encode_base64(join("\n", @lines) . "\n");
     } else {
-	    return 'ERR';
+        return 'ERR';
     }
 }
 
@@ -158,7 +161,7 @@ sub exec # (file, log?, env?, params?)
 #
 #   string - OK if removed correctly, ERR if not
 #
-sub del	# (file)
+sub del # (file)
 {
     my ($self, $file) = @_;
 
@@ -167,7 +170,7 @@ sub del	# (file)
     if(unlink "$DIR/$name") {
         return 'OK';
     } else {
-	    return 'ERR';
+        return 'ERR';
     }
 }
 
