@@ -13,6 +13,7 @@ else
 endif
 
 tests:
+	src/tools/check-syntax
 	prove -r --timer -l -Isrc
 
 distclean:
