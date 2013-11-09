@@ -498,7 +498,7 @@ sub createVirtualMachine
 
     $system->enableNAT($iface, $addr);
 
-    $virtualizer->createVM($name);
+    $virtualizer->createVM($self->{image}, $addr);
 
     print "[$name] Waiting for the system start...\n";
     my $waiter = ANSTE::Comm::HostWaiter->instance();
