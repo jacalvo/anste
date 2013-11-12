@@ -1,7 +1,7 @@
 #!/bin/bash
 
 for FILE in $(find src -wholename "*.pm"); do
-    perl -c $FILE
+    perl -Isrc -c $FILE
     if [ $? != 0 ]
     then
         echo "Failed check syntax in file $FILE"
