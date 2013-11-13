@@ -119,6 +119,9 @@ sub installBasePackages
                     'netcat',
                     'tcpdump');
 
+    $self->execute('echo "deb http://ppa.launchpad.net/zentyal/anste/ubuntu precise main" > /etc/apt/sources.list.d/anste.list')
+        or die "write anste repository to sources.list failed: $!";
+
     $self->execute('apt-get update')
         or die "apt-get update failed: $!";
 
