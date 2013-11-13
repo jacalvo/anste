@@ -113,7 +113,7 @@ sub installBasePackages
     my ($self) = @_;
 
     my @PACKAGES = ('libsoap-lite-perl',
-                    'liberror-perl',
+                    'libtrycatch-lite-perl',
                     'iptables',
                     'hping3',
                     'netcat',
