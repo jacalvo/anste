@@ -269,11 +269,19 @@ sub getimg # (file)
         system("mkdir -p $tmpDir");
 
         print "[$name] Downloading image...\n";
-        system("wget $repoUrl/$fileName -O $tmpDir/$fileName");
-        # TODO: Check errors
+        my $ret = system("wget $repoUrl/$fileName -O $tmpDir/$fileName");
+        unless ($ret == 0) {
+            print STDERR "Download failed\n";
+            return;
+        }
 
         print "[$name] Importing image...\n";
-        system("tar -xvzf $tmpDir/$fileName -C $imgdir");
+        $ret = system("tar -xvzf $tmpDir/$fileName -C $imgdir");
+        unless ($ret == 0) {
+            print STDERR "Import failed\n";
+            return;
+        }
+
         print "[$name] Done\n";
     }
 }
