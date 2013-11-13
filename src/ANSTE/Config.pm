@@ -1029,6 +1029,25 @@ sub nameserver
     return $nameserver;
 }
 
+
+# Method: imageRepo
+#
+#   Gets the value for the image-repo option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# TODO: Validation ??
+sub imageRepo
+{
+    my ($self) = @_;
+
+    my $repo = $self->_getOption('deploy', 'image-repo');
+
+    return $repo;
+}
+
 # Method: imageMissingAction
 #
 #   Gets the value for the image-missing-action option.

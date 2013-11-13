@@ -1,4 +1,5 @@
 HEAD
+    + Added image-repo conf key to set the place where to download images from
     + Change auto-create-images conf key for image-missing-action, that allows
       auto-create, auto-download or ask as values
     + Use TryCatch instead of Error
