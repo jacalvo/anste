@@ -1038,12 +1038,19 @@ sub nameserver
 #
 #   string - Value for the option.
 #
-# TODO: Validation ??
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingConfig> - throw if option is missing
+#
 sub imageRepo
 {
     my ($self) = @_;
 
     my $repo = $self->_getOption('deploy', 'image-repo');
+
+    unless (defined $repo) {
+        throw ANSTE::Exceptions::MissingConfig('deploy/image-repo');
+    }
 
     return $repo;
 }
