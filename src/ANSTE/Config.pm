@@ -131,7 +131,7 @@ sub check
     $self->natIface();
     $self->nameserverHost();
     $self->nameserver();
-    $self->autoCreateImages();
+    $self->imageMissingAction();
     $self->vmBuilderMirror();
     $self->vmBuilderSecurityMirror();
     $self->vmBuilderProxy();
@@ -1029,9 +1029,9 @@ sub nameserver
     return $nameserver;
 }
 
-# Method: autoCreateImages
+# Method: imageMissingAction
 #
-#   Gets the value for the auto-create-images option.
+#   Gets the value for the image-missing-action option.
 #
 # Returns:
 #
@@ -1041,20 +1041,30 @@ sub nameserver
 #
 #   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
-sub autoCreateImages
+sub imageMissingAction
 {
     my ($self) = @_;
 
     # TODO: Make this overridable in command line??
-    my $auto = $self->_getOption('deploy', 'auto-create-images');
+    my $action = $self->_getOption('deploy', 'image-missing-action');
 
-    if (not ANSTE::Validate::boolean($auto)) {
-        throw ANSTE::Exceptions::InvalidConfig('deploy/auto-create-images',
-                                               $auto,
+    my @valid = ('auto-create', 'auto-download', 'ask');
+    unless (grep {$_ eq $action} @valid) {
+        throw ANSTE::Exceptions::InvalidConfig('deploy/image-missing-action',
+                                               $action,
                                                $self->{confFile});
     }
 
-    return $auto;
+    return $action;
+}
+
+sub autoCreateImages
+{
+    my ($self) = @_;
+
+    my $action = $self->_getOption('deploy', 'image-missing-action');
+
+    return ($action eq 'auto-create');
 }
 
 # Method: seleniumRCjar
@@ -1616,7 +1626,7 @@ sub _setDefaults
     $self->{default}->{'comm'}->{'nameserver-host'} = $nameserver;
     $self->{default}->{'comm'}->{'nameserver'} = $nameserver;
 
-    $self->{default}->{'deploy'}->{'auto-create-images'} = 0;
+    $self->{default}->{'deploy'}->{'image-missing-action'} = 'ask';
 
     $self->{default}->{'selenium'}->{'browser'} = '*firefox';
     $self->{default}->{'selenium'}->{'video'} = 0;

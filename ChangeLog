@@ -1,4 +1,6 @@
 HEAD
+    + Change auto-create-images conf key for image-missing-action, that allows
+      auto-create, auto-download or ask as values
     + Use TryCatch instead of Error
     + Now copied directories in files section maintain structure as they are
       transferred as tar files and unpacked on the destination VM
