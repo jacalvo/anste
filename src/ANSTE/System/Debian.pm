@@ -114,6 +114,7 @@ sub installBasePackages
 
     my @PACKAGES = ('libsoap-lite-perl',
                     'libtrycatch-lite-perl',
+                    'libdevel-stacktrace-perl',
                     'iptables',
                     'hping3',
                     'netcat',

@@ -19,7 +19,6 @@ package ANSTE::Exceptions::Base;
 use strict;
 use warnings;
 
-use Log::Log4perl;
 use Devel::StackTrace;
 
 use overload (
