@@ -42,6 +42,7 @@ use Fcntl qw(:flock);
 use constant LOCK_FILE => '/var/run/anste.lock';
 
 my $create = '';
+my $getimg = '';
 my $remove = '';
 my $deploy = '';
 my $shutdown = '';
@@ -58,7 +59,8 @@ my $step = 0;
 my $reuse = 0;
 my $break = '';
 
-GetOptions('create' => \$create,
+GetOptions('createimg' => \$create,
+           'getimg' => \$getimg,
            'remove' => \$remove,
            'deploy' => \$deploy,
            'shutdown' => \$shutdown,
@@ -77,7 +79,7 @@ GetOptions('create' => \$create,
 
 pod2usage(1) if $help;
 
-if (none($create, $remove, $deploy, $shutdown, $test) == 1) {
+if (none($create, $remove, $getimg, $deploy, $shutdown, $test) == 1) {
     pod2usage("$0: No action specified.");
 }
 
@@ -188,6 +190,8 @@ $SIG{TERM} = \&term_handler;
 foreach my $file (@files) {
     if ($create) {
         create($file);
+    } elsif ($getimg) {
+        getimg($file);
     } elsif ($remove) {
         remove($file);
     } elsif ($deploy) {
@@ -247,6 +251,14 @@ sub create # (file)
                      "Delete it before trying to create it again.\n";
         exit(1);
     }
+}
+
+sub getimg # (file)
+{
+    my ($file) = @_;
+
+    #TODO: Download image bundle
+    #TODO: Uncompress inside the image folder
 }
 
 sub remove # (file)
@@ -382,7 +394,8 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
 
  Options:
    -help              show this help
-   -create            create a base image
+   -createimg         create a base image
+   -getimg            download a base image
    -remove            delete a base image
    -deploy            deploy a scenario
    -shutdown          destroy the deployed scenario and delete images

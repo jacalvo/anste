@@ -124,6 +124,8 @@ sub deploy # returns hash ref with the ip of each host
     my $config = ANSTE::Config->instance();
     my $reuse = $config->reuse();
 
+    # TODO: Download missing/updated base images
+
     if ($config->autoCreateImages() and not $reuse) {
         $self->_createMissingBaseImages();
     }
