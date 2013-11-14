@@ -24,6 +24,7 @@ use ANSTE::Status;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Deploy::HostDeployer;
 use ANSTE::Comm::WaiterServer;
+use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Virtualizer::Virtualizer;
@@ -131,7 +132,8 @@ sub deploy # returns hash ref with the ip of each host
         } elsif ($config->autoCreateImages()) {
             $self->_createMissingBaseImages();
         } else {
-            # TODO: Ask
+            my $action = $self->imageMissingAction();
+            throw ANSTE::Exceptions::Error("Not valid action '$action'.");
         }
 
         # Set up the network before deploy

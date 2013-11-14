@@ -1075,7 +1075,7 @@ sub imageMissingAction
     # TODO: Make this overridable in command line??
     my $action = $self->_getOption('deploy', 'image-missing-action');
 
-    my @valid = ('auto-create', 'auto-download', 'ask');
+    my @valid = ('auto-create', 'auto-download');
     unless (grep {$_ eq $action} @valid) {
         throw ANSTE::Exceptions::InvalidConfig('deploy/image-missing-action',
                                                $action,
@@ -1662,7 +1662,7 @@ sub _setDefaults
     $self->{default}->{'comm'}->{'nameserver-host'} = $nameserver;
     $self->{default}->{'comm'}->{'nameserver'} = $nameserver;
 
-    $self->{default}->{'deploy'}->{'image-missing-action'} = 'ask';
+    $self->{default}->{'deploy'}->{'image-missing-action'} = 'auto-create';
 
     $self->{default}->{'selenium'}->{'browser'} = '*firefox';
     $self->{default}->{'selenium'}->{'video'} = 0;
