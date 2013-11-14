@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -24,6 +25,7 @@ use lib "$Bin/../src";
 use ANSTE::Config;
 use ANSTE::Status;
 use ANSTE::Image::Creator;
+use ANSTE::Image::Getter;
 use ANSTE::Image::Image;
 use ANSTE::Deploy::ScenarioDeployer;
 use ANSTE::Scenario::Scenario;
@@ -42,6 +44,7 @@ use Fcntl qw(:flock);
 use constant LOCK_FILE => '/var/run/anste.lock';
 
 my $create = '';
+my $getimg = '';
 my $remove = '';
 my $deploy = '';
 my $shutdown = '';
@@ -58,7 +61,8 @@ my $step = 0;
 my $reuse = 0;
 my $break = '';
 
-GetOptions('create' => \$create,
+GetOptions('createimg' => \$create,
+           'getimg' => \$getimg,
            'remove' => \$remove,
            'deploy' => \$deploy,
            'shutdown' => \$shutdown,
@@ -77,7 +81,7 @@ GetOptions('create' => \$create,
 
 pod2usage(1) if $help;
 
-if (none($create, $remove, $deploy, $shutdown, $test) == 1) {
+if (none($create, $getimg, $remove, $deploy, $shutdown, $test) == 1) {
     pod2usage("$0: No action specified.");
 }
 
@@ -188,6 +192,8 @@ $SIG{TERM} = \&term_handler;
 foreach my $file (@files) {
     if ($create) {
         create($file);
+    } elsif ($getimg) {
+        getimg($file);
     } elsif ($remove) {
         remove($file);
     } elsif ($deploy) {
@@ -245,6 +251,19 @@ sub create # (file)
         my $name = $image->name();
         print STDERR "The image $name already exists.\n".
                      "Delete it before trying to create it again.\n";
+        exit(1);
+    }
+}
+
+sub getimg # (file)
+{
+    my ($name) = @_;
+
+    my $image = new ANSTE::Image::Image(name => $name);
+    my $getter = new ANSTE::Image::Getter($image);
+    if (not $getter->getImage()) {
+        print STDERR "The image $name already exists.\n".
+                        "Delete it before trying to download it again.\n";
         exit(1);
     }
 }
@@ -382,7 +401,8 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
 
  Options:
    -help              show this help
-   -create            create a base image
+   -createimg         create a base image
+   -getimg            download a base image
    -remove            delete a base image
    -deploy            deploy a scenario
    -shutdown          destroy the deployed scenario and delete images

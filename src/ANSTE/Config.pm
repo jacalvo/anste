@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -131,7 +132,7 @@ sub check
     $self->natIface();
     $self->nameserverHost();
     $self->nameserver();
-    $self->autoCreateImages();
+    $self->imageMissingAction();
     $self->vmBuilderMirror();
     $self->vmBuilderSecurityMirror();
     $self->vmBuilderProxy();
@@ -1029,9 +1030,35 @@ sub nameserver
     return $nameserver;
 }
 
-# Method: autoCreateImages
+
+# Method: imageRepo
 #
-#   Gets the value for the auto-create-images option.
+#   Gets the value for the image-repo option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingConfig> - throw if option is missing
+#
+sub imageRepo
+{
+    my ($self) = @_;
+
+    my $repo = $self->_getOption('deploy', 'image-repo');
+
+    unless (defined $repo) {
+        throw ANSTE::Exceptions::MissingConfig('deploy/image-repo');
+    }
+
+    return $repo;
+}
+
+# Method: imageMissingAction
+#
+#   Gets the value for the image-missing-action option.
 #
 # Returns:
 #
@@ -1041,20 +1068,39 @@ sub nameserver
 #
 #   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
-sub autoCreateImages
+sub imageMissingAction
 {
     my ($self) = @_;
 
     # TODO: Make this overridable in command line??
-    my $auto = $self->_getOption('deploy', 'auto-create-images');
+    my $action = $self->_getOption('deploy', 'image-missing-action');
 
-    if (not ANSTE::Validate::boolean($auto)) {
-        throw ANSTE::Exceptions::InvalidConfig('deploy/auto-create-images',
-                                               $auto,
+    my @valid = ('auto-create', 'auto-download');
+    unless (grep {$_ eq $action} @valid) {
+        throw ANSTE::Exceptions::InvalidConfig('deploy/image-missing-action',
+                                               $action,
                                                $self->{confFile});
     }
 
-    return $auto;
+    return $action;
+}
+
+sub autoCreateImages
+{
+    my ($self) = @_;
+
+    my $action = $self->imageMissingAction();
+
+    return ($action eq 'auto-create');
+}
+
+sub autoDownloadImages
+{
+    my ($self) = @_;
+
+    my $action = $self->imageMissingAction();
+
+    return ($action eq 'auto-download');
 }
 
 # Method: seleniumRCjar
@@ -1616,7 +1662,7 @@ sub _setDefaults
     $self->{default}->{'comm'}->{'nameserver-host'} = $nameserver;
     $self->{default}->{'comm'}->{'nameserver'} = $nameserver;
 
-    $self->{default}->{'deploy'}->{'auto-create-images'} = 0;
+    $self->{default}->{'deploy'}->{'image-missing-action'} = 'auto-create';
 
     $self->{default}->{'selenium'}->{'browser'} = '*firefox';
     $self->{default}->{'selenium'}->{'video'} = 0;
