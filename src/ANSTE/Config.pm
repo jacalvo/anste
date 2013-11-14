@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -1091,6 +1092,15 @@ sub autoCreateImages
     my $action = $self->_getOption('deploy', 'image-missing-action');
 
     return ($action eq 'auto-create');
+}
+
+sub autoDownloadImages
+{
+    my ($self) = @_;
+
+    my $action = $self->_getOption('deploy', 'image-missing-action');
+
+    return ($action eq 'auto-download');
 }
 
 # Method: seleniumRCjar

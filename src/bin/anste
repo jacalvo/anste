@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -24,6 +25,7 @@ use lib "$Bin/../src";
 use ANSTE::Config;
 use ANSTE::Status;
 use ANSTE::Image::Creator;
+use ANSTE::Image::Getter;
 use ANSTE::Image::Image;
 use ANSTE::Deploy::ScenarioDeployer;
 use ANSTE::Scenario::Scenario;
@@ -79,7 +81,7 @@ GetOptions('createimg' => \$create,
 
 pod2usage(1) if $help;
 
-if (none($create, $remove, $getimg, $deploy, $shutdown, $test) == 1) {
+if (none($create, $getimg, $remove, $deploy, $shutdown, $test) == 1) {
     pod2usage("$0: No action specified.");
 }
 
@@ -257,32 +259,12 @@ sub getimg # (file)
 {
     my ($name) = @_;
 
-    my $imgdir = $config->imagePath();
-    if (-d "$imgdir/$name") {
+    my $image = new ANSTE::Image::Image(name => $name);
+    my $getter = new ANSTE::Image::Getter($image);
+    if (not $getter->getImage()) {
         print STDERR "The image $name already exists.\n".
-                     "Delete it before trying to download it again.\n";
+                        "Delete it before trying to download it again.\n";
         exit(1);
-    } else {
-        my $repoUrl = $config->imageRepo();
-        my $fileName = "$name.tar.gz";
-        my $tmpDir = "/tmp/anste-downloads";
-        system("mkdir -p $tmpDir");
-
-        print "[$name] Downloading image...\n";
-        my $ret = system("wget $repoUrl/$fileName -O $tmpDir/$fileName");
-        unless ($ret == 0) {
-            print STDERR "Download failed\n";
-            return;
-        }
-
-        print "[$name] Importing image...\n";
-        $ret = system("tar -xvzf $tmpDir/$fileName -C $imgdir");
-        unless ($ret == 0) {
-            print STDERR "Import failed\n";
-            return;
-        }
-
-        print "[$name] Done\n";
     }
 }
 

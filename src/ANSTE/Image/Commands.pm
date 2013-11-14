@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2013 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -132,6 +133,38 @@ sub create
                                   arch => $arch,
                                   command => $command,
                                   mirror => $mirror);
+}
+
+# Method: get
+#
+#   Gets the image from the image repo
+#
+sub get
+{
+    my ($self) = @_;
+
+    my $image = $self->{image};
+    my $name = $image->name();
+
+    my $config = ANSTE::Config->instance();
+    my $imgdir = $config->imagePath();
+    my $repoUrl = $config->imageRepo();
+
+    my $fileName = "$name.tar.gz";
+    my $tmpDir = "/tmp/anste-downloads";
+    system("mkdir -p $tmpDir");
+
+    my $ret = system("wget $repoUrl/$fileName -O $tmpDir/$fileName");
+    unless ($ret == 0) {
+        print STDERR "Download failed\n";
+        return;
+    }
+
+    $ret = system("tar -xvzf $tmpDir/$fileName -C $imgdir");
+    unless ($ret == 0) {
+        print STDERR "Import failed\n";
+        return;
+    }
 }
 
 # Method: mount

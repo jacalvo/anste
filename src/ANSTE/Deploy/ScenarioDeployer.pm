@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -124,14 +125,16 @@ sub deploy # returns hash ref with the ip of each host
     my $config = ANSTE::Config->instance();
     my $reuse = $config->reuse();
 
-    # TODO: Download missing/updated base images
-
-    if ($config->autoCreateImages() and not $reuse) {
-        $self->_createMissingBaseImages();
-    }
-
-    # Set up the network before deploy
     if (not $reuse) {
+        if ($config->autoDownloadImages()) {
+            $self->_downloadMissingBaseImages();
+        } elsif ($config->autoCreateImages()) {
+            $self->_createMissingBaseImages();
+        } else {
+            # TODO: Ask
+        }
+
+        # Set up the network before deploy
         print "Setting up network...\n";
         $self->{virtualizer}->createNetwork($scenario)
             or throw ANSTE::Exceptions::Error('Error creating network.');
@@ -226,6 +229,27 @@ sub _createMissingBaseImages
         my $creator = new ANSTE::Image::Creator($image);
         if ($creator->createImage()) {
             print "[$hostname] Base image created.\n";
+        } else {
+            print "[$hostname] Base image already exists.\n";
+        }
+    }
+}
+
+sub _downloadMissingBaseImages
+{
+    my ($self) = @_;
+
+    my $scenario = $self->{scenario};
+
+    # Tries to download all the base images, if a image
+    # already exists, does nothing.
+    foreach my $host (@{$scenario->hosts()}) {
+        my $image = $host->baseImage();
+        my $hostname = $host->name();
+        print "[$hostname] Auto-downloading base image if not exists...\n";
+        my $getter = new ANSTE::Image::Getter($image);
+        if ($getter->getImage()) {
+            print "[$hostname] Base image downloaded.\n";
         } else {
             print "[$hostname] Base image already exists.\n";
         }
