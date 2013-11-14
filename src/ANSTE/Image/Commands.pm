@@ -139,6 +139,10 @@ sub create
 #
 #   Gets the image from the image repo
 #
+# Returns:
+#
+#   boolean - true if success, false otherwise
+#
 sub get
 {
     my ($self) = @_;
@@ -157,14 +161,18 @@ sub get
     my $ret = system("wget $repoUrl/$fileName -O $tmpDir/$fileName");
     unless ($ret == 0) {
         print STDERR "Download failed\n";
-        return;
+        return 0;
     }
 
     $ret = system("tar -xvzf $tmpDir/$fileName -C $imgdir");
     unless ($ret == 0) {
         print STDERR "Import failed\n";
-        return;
+        return 0;
     }
+
+    system("rm -f $tmpDir/$fileName");
+
+    return 1;
 }
 
 # Method: mount
@@ -303,7 +311,7 @@ sub configureAptProxy
 #
 # Returns:
 #
-#   boolean - true if sucesss, false otherwise
+#   boolean - true if success, false otherwise
 #
 # Exceptions:
 #
@@ -365,7 +373,7 @@ sub prepareSystem
 #
 # Returns:
 #
-#   boolean - true if sucesss, false otherwise
+#   boolean - true if success, false otherwise
 #
 # Exceptions:
 #
@@ -391,7 +399,7 @@ sub umount
 #
 # Returns:
 #
-#   boolean - true if sucesss, false otherwise
+#   boolean - true if success, false otherwise
 #
 sub deleteImage
 {
@@ -410,7 +418,7 @@ sub deleteImage
 #
 # Returns:
 #
-#   boolean - true if sucesss, false otherwise
+#   boolean - true if success, false otherwise
 #
 sub deleteMountPoint
 {
@@ -473,7 +481,7 @@ sub destroy
 #
 # Returns:
 #
-#   boolean - true if sucesss, false otherwise
+#   boolean - true if success, false otherwise
 #
 sub resize # (size)
 {

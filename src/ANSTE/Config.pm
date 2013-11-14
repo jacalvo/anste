@@ -1089,7 +1089,7 @@ sub autoCreateImages
 {
     my ($self) = @_;
 
-    my $action = $self->_getOption('deploy', 'image-missing-action');
+    my $action = $self->imageMissingAction();
 
     return ($action eq 'auto-create');
 }
@@ -1098,7 +1098,7 @@ sub autoDownloadImages
 {
     my ($self) = @_;
 
-    my $action = $self->_getOption('deploy', 'image-missing-action');
+    my $action = $self->imageMissingAction();
 
     return ($action eq 'auto-download');
 }
