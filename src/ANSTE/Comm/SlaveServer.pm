@@ -55,7 +55,7 @@ sub put # (file, content)
         print $FILE $content;
         close $FILE or die "Can't close: $!";
         if ($name =~ /\.tar$/) {
-            system ("tar xf $DIR/$name -C $DIR");
+            system ("tar xf $DIR/$name -C $DIR --transform 's/files\\///'");
         }
         return 'OK';
     } else {
