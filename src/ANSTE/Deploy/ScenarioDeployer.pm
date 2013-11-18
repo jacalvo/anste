@@ -224,15 +224,23 @@ sub _createMissingBaseImages
 
     # Tries to create all the base images, if a image
     # already exists, does nothing.
+    # Only creates images for linux hosts
     foreach my $host (@{$scenario->hosts()}) {
-        my $image = $host->baseImage();
+        my $os = $host->OS();
         my $hostname = $host->name();
-        print "[$hostname] Auto-creating base image if not exists...\n";
-        my $creator = new ANSTE::Image::Creator($image);
-        if ($creator->createImage()) {
-            print "[$hostname] Base image created.\n";
+        if ($os eq 'linux') {
+            my $image = $host->baseImage();
+            my $hostname = $host->name();
+            print "[$hostname] Auto-creating base image if not exists...\n";
+            my $creator = new ANSTE::Image::Creator($image);
+            if ($creator->createImage()) {
+                print "[$hostname] Base image created.\n";
+            } else {
+                print "[$hostname] Base image already exists.\n";
+            }
         } else {
-            print "[$hostname] Base image already exists.\n";
+            print "[$hostname] Ignoring not linux host.\n";
+            # TODO: Error if baseimage does not exists
         }
     }
 }
