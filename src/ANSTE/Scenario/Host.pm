@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -59,6 +60,7 @@ sub new # returns new Host object
     $self->{scenario} = undef;
     $self->{precondition} = 1;
     $self->{bridges} = [];
+    $self->{os} = 'linux';
 
     bless($self, $class);
 
@@ -488,6 +490,43 @@ sub setScenario # (scenario)
     $self->{scenario} = $scenario;
 }
 
+# Method: OS
+#
+#   Returns the OS of the image
+#
+# Returns:
+#
+#   string - contains the OS to use
+#
+sub OS # returns string
+{
+    my ($self) = @_;
+
+    return $self->{'os'};
+}
+
+# Method: setOS
+#
+#   Sets the OS of the image.
+#
+# Parameters:
+#
+#   os - String with the OS of the image.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setOS # name string
+{
+    my ($self, $os) = @_;
+
+    defined $os or
+        throw ANSTE::Exceptions::MissingArgument('os');
+
+    $self->{'os'} = $os;
+}
+
 # Method: loadXML
 #
 #   Loads the information contained in the given XML node representing
@@ -567,6 +606,12 @@ sub loadXML # (node)
         $self->_addScripts('post-scripts', $postNode);
     }
 
+    my $osNode = $node->getElementsByTagName('os', 0)->item(0);
+    if ($osNode) {
+        my $os = $osNode->getFirstChild()->getNodeValue();
+        $self->setOS($os);
+    }
+
     # Check if all preconditions are satisfied
     my $configVars = ANSTE::Config->instance()->variables();
     my $preconditionNodes = $node->getElementsByTagName('precondition', 0);
@@ -637,6 +682,11 @@ sub loadYAML
     my $postInstall = $host->{'post-install'};
     if ($postInstall) {
         $self->_addScriptsYAML('post-scripts', $postInstall);
+    }
+
+    my $os = $host->{os};
+    if ($os) {
+        $self->setOS($os);
     }
 
     # FIXME

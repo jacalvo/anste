@@ -105,7 +105,7 @@ sub ip
 #
 sub create
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
     my $image = $self->{image};
     my $name = $image->name();
