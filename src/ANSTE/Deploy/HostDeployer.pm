@@ -98,8 +98,6 @@ sub new # (host, ip) returns new HostDeployer object
     $self->{cmd} = $cmd;
     $self->{ip} = $ip;
 
-    my $foo = $host->network()->interfaces()->[0]->address();
-
     bless($self, $class);
 
     return $self;
