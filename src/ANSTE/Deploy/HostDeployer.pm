@@ -251,21 +251,23 @@ sub _deploy
     {
         lock ($lockMount);
 
-        print "[$hostname] Updating hostname on the new image...\n";
-        try {
-            my $ok = $self->_updateHostname();
-            if (not $ok) {
-                print "[$hostname] Error copying host files.\n";
+        if ($host->OS() eq 'linux') {
+            print "[$hostname] Updating hostname on the new image...\n";
+            try {
+                my $ok = $self->_updateHostname();
+                if (not $ok) {
+                    print "[$hostname] Error copying host files.\n";
+                    $error = 1;
+                }
+            } catch ($e) {
+                my $msg = $e->stringify();
+                print "[$hostname] ERROR: $msg\n";
                 $error = 1;
             }
-        } catch ($e) {
-            my $msg = $e->stringify();
-            print "[$hostname] ERROR: $msg\n";
-            $error = 1;
-        }
 
-        if ($error) {
-            return undef;
+            if ($error) {
+                return undef;
+            }
         }
 
         print "[$hostname] Creating virtual machine ($ip)...\n";
@@ -332,7 +334,11 @@ sub _copyBaseImage
     my $baseimage = $host->baseImage();
     my $newimage = $self->{image};
 
-    $virtualizer->createImageCopy($baseimage, $newimage);
+    if ($host->OS() eq 'linux') {
+        $virtualizer->createImageCopy($baseimage, $newimage, 1);
+    } else {
+        $virtualizer->createImageCopy($baseimage, $newimage, 0);
+    }
 }
 
 sub _updateHostname # returns boolean

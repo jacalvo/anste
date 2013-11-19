@@ -1,4 +1,5 @@
 HEAD
+    + Skip some actions in the deploy for non linux hosts
     + Added support for image removal using the image name
     + Added 'os' attribute to hosts that defaults to 'linux'
     + Added getimg command line option to trigger the download of an image

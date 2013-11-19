@@ -162,7 +162,10 @@ sub deploy # returns hash ref with the ip of each host
 
     if (not $reuse) {
         foreach my $deployer (@{$self->{deployers}}) {
-            $deployer->waitForFinish();
+            my $os = $deployer->{host}->OS();
+            if ($os eq 'linux') {
+                $deployer->waitForFinish();
+            }
             my $host = $deployer->{host}->name();
             print "[$host] Deployment finished.\n";
         }

@@ -274,6 +274,8 @@ sub imageFile # (path, name)
 #               of the base image
 #   newimage  - an <ANSTE::Image::Image> object with the configuration
 #               of the new image
+#   genConf   - a Boolean telling whether the domain conf must be generated
+#               or just updated from the one in the base image
 #
 # Returns:
 #
@@ -284,9 +286,9 @@ sub imageFile # (path, name)
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType>     - throw if argument has invalid type
 #
-sub createImageCopy # (baseimage, newimage)
+sub createImageCopy # (baseimage, newimage, genConf)
 {
-    my ($self, $baseimage, $newimage) = @_;
+    my ($self, $baseimage, $newimage, $genConf) = @_;
 
     defined $baseimage or
         throw ANSTE::Exceptions::MissingArgument('baseimage');
@@ -314,11 +316,26 @@ sub createImageCopy # (baseimage, newimage)
     dircopy("$path/$basename", "$path/$newname");
 
     # Creates the configuration file for the new image
-    my $config = $self->_createImageConfig($newimage, "$path/$newname");
+    my $configFile = "$path/$newname/domain.xml";
+    my $config;
+    if ($genConf){
+        # Generate the configuration
+        $config = $self->_createImageConfig($newimage, "$path/$newname");
+    } else {
+        # Read the configuration file
+        my $FILE;
+        open($FILE, '<', $configFile) or return 0;
+        local $/;
+        $config = <$FILE>;
+        close($FILE) or return 0;
+
+        # Update the configuration
+        $config =~ s:'.*\.(qcow2|img)':'$path/$newname/disk.qcow2':;
+        $config =~ s:<name>.*</name>:<name>$newname</name>:;
+    }
 
     # Writes the configuration file
     my $FILE;
-    my $configFile = "$path/$newname/domain.xml";
     open($FILE, '>', $configFile) or return 0;
     print $FILE $config;
     close($FILE) or return 0;
