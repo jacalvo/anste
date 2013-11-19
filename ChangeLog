@@ -1,7 +1,7 @@
 HEAD
-    + Skip some actions in the deploy for non linux hosts
+    + Skip some actions in the deploy for hosts with raw base images
     + Added support for image removal using the image name
-    + Added 'os' attribute to hosts that defaults to 'linux'
+    + Added 'baseImage-type' attribute to hosts
     + Added getimg command line option to trigger the download of an image
     + Renamed command line option from create to createimg
     + Added image-repo conf key to set the place where to download images from

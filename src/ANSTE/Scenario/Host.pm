@@ -53,6 +53,7 @@ sub new # returns new Host object
     $self->{desc} = '';
     $self->{type} = 'none';
     $self->{baseImage} = new ANSTE::Scenario::BaseImage;
+    $self->{'baseImage-type'} = '';
     $self->{network} = new ANSTE::Scenario::Network;
     $self->{packages} = new ANSTE::Scenario::Packages;
     $self->{files} = new ANSTE::Scenario::Files;
@@ -61,7 +62,6 @@ sub new # returns new Host object
     $self->{scenario} = undef;
     $self->{precondition} = 1;
     $self->{bridges} = [];
-    $self->{os} = 'linux';
 
     bless($self, $class);
 
@@ -250,6 +250,43 @@ sub setBaseImage # (baseImage)
     }
 
     $self->{baseImage} = $baseImage;
+}
+
+# Method: baseImageType
+#
+#   Returns the baseImage type
+#
+# Returns:
+#
+#   string - contains the baseImage type
+#
+sub baseImageType # returns string
+{
+    my ($self) = @_;
+
+    return $self->{'baseImage-type'};
+}
+
+# Method: setBaseImageType
+#
+#   Sets the base image type of the image.
+#
+# Parameters:
+#
+#   baseImageType - String with the base image type
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setBaseImageType # name string
+{
+    my ($self, $baseImageType) = @_;
+
+    defined $baseImageType or
+        throw ANSTE::Exceptions::MissingArgument('baseImageType');
+
+    $self->{'baseImage-type'} = $baseImageType;
 }
 
 # Method: network
@@ -491,43 +528,6 @@ sub setScenario # (scenario)
     $self->{scenario} = $scenario;
 }
 
-# Method: OS
-#
-#   Returns the OS of the image
-#
-# Returns:
-#
-#   string - contains the OS to use
-#
-sub OS # returns string
-{
-    my ($self) = @_;
-
-    return $self->{'os'};
-}
-
-# Method: setOS
-#
-#   Sets the OS of the image.
-#
-# Parameters:
-#
-#   os - String with the OS of the image.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
-#
-sub setOS # name string
-{
-    my ($self, $os) = @_;
-
-    defined $os or
-        throw ANSTE::Exceptions::MissingArgument('os');
-
-    $self->{'os'} = $os;
-}
-
 # Method: loadXML
 #
 #   Loads the information contained in the given XML node representing
@@ -603,10 +603,10 @@ sub loadXML # (node)
         $self->_addScripts('post-scripts', $postNode);
     }
 
-    my $osNode = $node->getElementsByTagName('os', 0)->item(0);
-    if ($osNode) {
-        my $os = $osNode->getFirstChild()->getNodeValue();
-        $self->setOS($os);
+    my $baseImageTypeNode = $node->getElementsByTagName('baseimage-type', 0)->item(0);
+    if ($baseImageTypeNode) {
+        my $baseImageType = $baseImageTypeNode->getFirstChild()->getNodeValue();
+        $self->setBaseImageType($baseImageType);
     }
 
     my $baseimageNode = $node->getElementsByTagName('baseimage', 0)->item(0);
@@ -614,10 +614,11 @@ sub loadXML # (node)
     try {
         $self->baseImage()->loadFromFile("$baseimage.xml");
     } catch (ANSTE::Exceptions::InvalidFile $e) {
-        if ($self->OS() eq 'linux') {
-            $e->throw();
-        } else {
+        if ($self->baseImageType() eq 'raw') {
+            # Dummy image for raw base images
             $self->baseImage()->setName($baseimage);
+        } else {
+            $e->throw();
         }
     }
 
@@ -690,19 +691,20 @@ sub loadYAML
         $self->_addScriptsYAML('post-scripts', $postInstall);
     }
 
-    my $os = $host->{os};
-    if ($os) {
-        $self->setOS($os);
+    my $baseImageType = $host->{'baseimage-type'};
+    if ($baseImageType) {
+        $self->setBaseImageType($baseImageType);
     }
 
     my $baseimage = $host->{baseimage};
     try {
         $self->baseImage()->loadFromFile("$baseimage.xml");
     } catch (ANSTE::Exceptions::InvalidFile $e) {
-        if ($self->OS() eq 'linux') {
-            $e->throw();
-        } else {
+        if ($self->baseImageType() eq 'raw') {
+            # Dummy image for raw base images
             $self->baseImage()->setName($baseimage);
+        } else {
+            $e->throw();
         }
     }
 

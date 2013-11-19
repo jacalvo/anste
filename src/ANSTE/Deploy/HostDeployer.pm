@@ -251,7 +251,7 @@ sub _deploy
     {
         lock ($lockMount);
 
-        if ($host->OS() eq 'linux') {
+        if (not $host->baseImageType() eq 'raw') {
             print "[$hostname] Updating hostname on the new image...\n";
             try {
                 my $ok = $self->_updateHostname();
@@ -334,10 +334,10 @@ sub _copyBaseImage
     my $baseimage = $host->baseImage();
     my $newimage = $self->{image};
 
-    if ($host->OS() eq 'linux') {
-        $virtualizer->createImageCopy($baseimage, $newimage, 1);
-    } else {
+    if ($host->baseImageType() eq 'raw') {
         $virtualizer->createImageCopy($baseimage, $newimage, 0);
+    } else {
+        $virtualizer->createImageCopy($baseimage, $newimage, 1);
     }
 }
 

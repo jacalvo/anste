@@ -162,8 +162,7 @@ sub deploy # returns hash ref with the ip of each host
 
     if (not $reuse) {
         foreach my $deployer (@{$self->{deployers}}) {
-            my $os = $deployer->{host}->OS();
-            if ($os eq 'linux') {
+            if (not $deployer->{host}->baseImageType() eq 'raw') {
                 $deployer->waitForFinish();
             }
             my $host = $deployer->{host}->name();
@@ -227,11 +226,12 @@ sub _createMissingBaseImages
 
     # Tries to create all the base images, if a image
     # already exists, does nothing.
-    # Only creates images for linux hosts
+    # Does not create raw base images
     foreach my $host (@{$scenario->hosts()}) {
-        my $os = $host->OS();
         my $hostname = $host->name();
-        if ($os eq 'linux') {
+        if ($host->baseImageType() eq 'raw') {
+            print "[$hostname] Ignoring, raw base image.\n";
+        } else {
             my $image = $host->baseImage();
             my $hostname = $host->name();
             print "[$hostname] Auto-creating base image if not exists...\n";
@@ -241,9 +241,6 @@ sub _createMissingBaseImages
             } else {
                 print "[$hostname] Base image already exists.\n";
             }
-        } else {
-            print "[$hostname] Ignoring not linux host.\n";
-            # TODO: Error if baseimage does not exists
         }
     }
 }
