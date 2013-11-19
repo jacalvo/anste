@@ -29,6 +29,7 @@ use ANSTE::Config;
 
 use XML::DOM;
 use Perl6::Junction qw(any);
+use TryCatch::Lite;
 
 # Class: Host
 #
@@ -577,10 +578,6 @@ sub loadXML # (node)
         $self->setMemory($memory);
     }
 
-    my $baseimageNode = $node->getElementsByTagName('baseimage', 0)->item(0);
-    my $baseimage = $baseimageNode->getFirstChild()->getNodeValue();
-    $self->baseImage()->loadFromFile("$baseimage.xml");
-
     my $networkNode = $node->getElementsByTagName('network', 0)->item(0);
     if($networkNode){
         $self->network()->load($networkNode);
@@ -610,6 +607,18 @@ sub loadXML # (node)
     if ($osNode) {
         my $os = $osNode->getFirstChild()->getNodeValue();
         $self->setOS($os);
+    }
+
+    my $baseimageNode = $node->getElementsByTagName('baseimage', 0)->item(0);
+    my $baseimage = $baseimageNode->getFirstChild()->getNodeValue();
+    try {
+        $self->baseImage()->loadFromFile("$baseimage.xml");
+    } catch (ANSTE::Exceptions::InvalidFile $e) {
+        if ($self->OS() eq 'linux') {
+            $e->throw();
+        } else {
+            $self->baseImage()->setName($baseimage);
+        }
     }
 
     # Check if all preconditions are satisfied
@@ -657,9 +666,6 @@ sub loadYAML
         $self->setMemory($memory);
     }
 
-    my $baseimage = $host->{baseimage};
-    $self->baseImage()->loadFromFile("$baseimage.xml");
-
     my $network = $host->{network};
     if ($network) {
         $self->network()->loadYAML($network);
@@ -687,6 +693,17 @@ sub loadYAML
     my $os = $host->{os};
     if ($os) {
         $self->setOS($os);
+    }
+
+    my $baseimage = $host->{baseimage};
+    try {
+        $self->baseImage()->loadFromFile("$baseimage.xml");
+    } catch (ANSTE::Exceptions::InvalidFile $e) {
+        if ($self->OS() eq 'linux') {
+            $e->throw();
+        } else {
+            $self->baseImage()->setName($baseimage);
+        }
     }
 
     # FIXME
