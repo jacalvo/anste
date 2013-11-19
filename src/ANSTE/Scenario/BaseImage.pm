@@ -657,11 +657,12 @@ sub loadFromFile # (filename)
         }
 
         my $image = $doc->getDocumentElement();
-        $self->_loadFromXml($image);
+        my $ret = $self->_loadFromXml($image);
         $doc->dispose();
+        return $ret;
     } elsif ($filename =~ /\.yaml$/) {
         my ($image) = YAML::XS::Load($text);
-        $self->_loadFromYAML($image);
+        return $self->_loadFromYAML($image);
     } else {
         throw ANSTE::Exceptions::Error("Invalid file type ($file), only .xml or .yaml files are supported");
     }

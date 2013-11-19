@@ -31,7 +31,7 @@ sub loadScenario # (file, suite)
 
     my $hosts = $scenario->hosts();
 
-	foreach my $host (@{$hosts}) {
+    foreach my $host (@{$hosts}) {
 
         my $baseImage = $host->baseImage();
         my $postTestsScripts = $baseImage->postTestsScripts();
@@ -39,7 +39,7 @@ sub loadScenario # (file, suite)
         if (scalar @{$postTestsScripts} > 0 ) {
             _loadPostTestsScriptsAsTests($suite, $postTestsScripts, $host->name());
         }
-	}
+    }
 
     return $scenario;
 }
