@@ -525,9 +525,18 @@ sub exists
 #   Creates the image virtual machine using the virtualizer interface,
 #   once the machine is created it waits for the system start.
 #
+# Parameters:
+#
+#   wait - Boolean telling whether the method must wait for the system to start
+#          Defaults to 1 (True)
+#
 sub createVirtualMachine
 {
-    my ($self) = @_;
+    my ($self, $wait) = @_;
+
+    unless (defined $wait) {
+        $wait = 1;
+    }
 
     my $virtualizer = $self->{virtualizer};
     my $system = $self->{system};
@@ -541,10 +550,12 @@ sub createVirtualMachine
 
     $virtualizer->createVM($name);
 
-    print "[$name] Waiting for the system start...\n";
-    my $waiter = ANSTE::Comm::HostWaiter->instance();
-    $waiter->waitForReady($name);
-    print "[$name] System is up.\n";
+    if ($wait) {
+        print "[$name] Waiting for the system start...\n";
+        my $waiter = ANSTE::Comm::HostWaiter->instance();
+        $waiter->waitForReady($name);
+        print "[$name] System is up.\n";
+    }
 }
 
 # Method: executeScripts

@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -251,7 +252,8 @@ sub _deploy
     {
         lock ($lockMount);
 
-        if (not $host->baseImageType() eq 'raw') {
+        # Do not do this for raw base images
+        if ($host->baseImageType() ne 'raw') {
             print "[$hostname] Updating hostname on the new image...\n";
             try {
                 my $ok = $self->_updateHostname();
@@ -271,30 +273,34 @@ sub _deploy
         }
 
         print "[$hostname] Creating virtual machine ($ip)...\n";
-        $cmd->createVirtualMachine();
+
+        my $wait = ($host->baseImageType() ne 'raw');
+        $cmd->createVirtualMachine($wait);
     };
 
     try {
+        # Do not do this for raw base images
+        if ($host->baseImageType() ne 'raw') {
+            # Execute pre-install scripts
+            my $pre = $host->preScripts();
+            if (@{$pre}) {
+                print "[$hostname] Executing pre scripts...\n";
+                $cmd->executeScripts($pre);
+            }
 
-        # Execute pre-install scripts
-        my $pre = $host->preScripts();
-        if (@{$pre}) {
-            print "[$hostname] Executing pre scripts...\n";
-            $cmd->executeScripts($pre);
+            my $setupScript = "$hostname-setup.sh";
+            print "[$hostname] Generating setup script...\n";
+            $self->_generateSetupScript($setupScript);
+            $self->_executeSetupScript($ip, $setupScript);
+
+            # It worths it stays here in order to be able to use pre/post-install
+            # scripts as well. This permits us to move trasferred file,
+            # change their rights and so on.
+            my $list = $host->{files}->list(); # retrieve files list
+            print "[$hostname] Transferring files...";
+            $cmd->transferFiles($list);
+            print "... done\n";
         }
-
-        my $setupScript = "$hostname-setup.sh";
-        print "[$hostname] Generating setup script...\n";
-        $self->_generateSetupScript($setupScript);
-        $self->_executeSetupScript($ip, $setupScript);
-
-        # It worths it stays here in order to be able to use pre/post-install
-        # scripts as well. This permits us to move trasferred file,
-        # change their rights and so on.
-        my $list = $host->{files}->list(); # retrieve files list
-        print "[$hostname] Transferring files...";
-        $cmd->transferFiles($list);
-        print "... done\n";
 
         # NAT with this address is not needed anymore
         my $iface = $config->natIface();
@@ -308,11 +314,14 @@ sub _deploy
             }
         }
 
-        # Execute post-install scripts
-        my $post = $host->postScripts();
-        if (@{$post}) {
-            print "[$hostname] Executing post scripts...\n";
-            $cmd->executeScripts($post);
+        # Do not do this for raw base images
+        if ($host->baseImageType() ne 'raw') {
+            # Execute post-install scripts
+            my $post = $host->postScripts();
+            if (@{$post}) {
+                print "[$hostname] Executing post scripts...\n";
+                $cmd->executeScripts($post);
+            }
         }
     } catch (ANSTE::Exceptions::Error $e) {
         my $msg = $e->message();

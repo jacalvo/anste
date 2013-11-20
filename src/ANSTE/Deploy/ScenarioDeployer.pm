@@ -162,7 +162,8 @@ sub deploy # returns hash ref with the ip of each host
 
     if (not $reuse) {
         foreach my $deployer (@{$self->{deployers}}) {
-            if (not $deployer->{host}->baseImageType() eq 'raw') {
+            # Do not wait for hosts with raw base images
+            if ($deployer->{host}->baseImageType() ne 'raw') {
                 $deployer->waitForFinish();
             }
             my $host = $deployer->{host}->name();
