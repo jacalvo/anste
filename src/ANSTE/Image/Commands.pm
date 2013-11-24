@@ -175,6 +175,46 @@ sub get
     return 1;
 }
 
+# Method: importImage
+#
+#   Imports the image using the virtualizer interface.
+#
+# Returns:
+#
+#   boolean - true if success, false otherwise
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
+sub importImage
+{
+    my ($self, $hostname) = @_;
+
+    defined $hostname or
+        throw ANSTE::Exceptions::MissingArgument('hostname');
+
+    my $virtualizer = $self->{virtualizer};
+    my $name = $self->{image}->name();
+
+    # TODO: Do nothing if the VM already exists
+    $virtualizer->createVM($name);
+    $virtualizer->createSnapshot($name, $hostname, 'Base snapshot');
+}
+
+# TODO
+sub restoreBaseSnapshot
+{
+    my ($self, $hostname) = @_;
+
+    defined $hostname or
+        throw ANSTE::Exceptions::MissingArgument('hostname');
+
+    my $virtualizer = $self->{virtualizer};
+    my $name = $self->{image}->name();
+    $virtualizer->revertSnapshot($name, $hostname);
+}
+
 # Method: mount
 #
 #   Mounts the image to a temporary mount point.

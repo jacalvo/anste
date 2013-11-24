@@ -28,6 +28,7 @@ use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Virtualizer::Virtualizer;
+use ANSTE::Image::Commands;
 
 # Class: ScenarioDeployer
 #
@@ -263,6 +264,12 @@ sub _downloadMissingBaseImages
             print "[$hostname] Base image downloaded.\n";
         } else {
             print "[$hostname] Base image already exists.\n";
+        }
+
+        if ($host->baseImageType() eq 'raw') {
+            print "[$hostname] Auto-importing base image if not exists...\n";
+            my $cmd = new ANSTE::Image::Commands($image);
+            $cmd->importImage($hostname);
         }
     }
 }

@@ -215,13 +215,39 @@ sub _deploy
 {
     my ($self) = @_;
 
+    my $host = $self->{host};
+
+    if ($host->baseImageType() eq 'raw') {
+        $self->_deploySnapshot();
+    } else {
+        $self->_deployCopy();
+    }
+}
+
+sub _deploySnapshot
+{
+    my ($self) = @_;
+
+    my $host = $self->{host};
+    my $hostname = $host->name();
+    my $cmd = $self->{cmd};
+
+    print "[$hostname] Restoring base snapshot...\n";
+    $cmd->restoreBaseSnapshot($hostname);
+}
+
+sub _deployCopy
+{
+    my ($self) = @_;
+
+    my $host = $self->{host};
+    my $hostname = $host->name();
+
     my $system = $self->{system};
 
     my $image = $self->{image};
     my $cmd = $self->{cmd};
 
-    my $host = $self->{host};
-    my $hostname = $host->name();
     my $ip = $image->ip();
 
     my $config = ANSTE::Config->instance();
@@ -234,6 +260,7 @@ sub _deploy
     unshift (@{$host->network()->interfaces()}, $commIface);
 
     my $error = 0;
+
     print "[$hostname] Creating a copy of the base image...\n";
 
     try {
@@ -252,55 +279,47 @@ sub _deploy
     {
         lock ($lockMount);
 
-        # Do not do this for raw base images
-        if ($host->baseImageType() ne 'raw') {
-            print "[$hostname] Updating hostname on the new image...\n";
-            try {
-                my $ok = $self->_updateHostname();
-                if (not $ok) {
-                    print "[$hostname] Error copying host files.\n";
-                    $error = 1;
-                }
-            } catch ($e) {
-                my $msg = $e->stringify();
-                print "[$hostname] ERROR: $msg\n";
+        print "[$hostname] Updating hostname on the new image...\n";
+        try {
+            my $ok = $self->_updateHostname();
+            if (not $ok) {
+                print "[$hostname] Error copying host files.\n";
                 $error = 1;
             }
+        } catch ($e) {
+            my $msg = $e->stringify();
+            print "[$hostname] ERROR: $msg\n";
+            $error = 1;
+        }
 
-            if ($error) {
-                return undef;
-            }
+        if ($error) {
+            return undef;
         }
 
         print "[$hostname] Creating virtual machine ($ip)...\n";
-
-        my $wait = ($host->baseImageType() ne 'raw');
-        $cmd->createVirtualMachine($wait);
+        $cmd->createVirtualMachine();
     };
 
     try {
-        # Do not do this for raw base images
-        if ($host->baseImageType() ne 'raw') {
-            # Execute pre-install scripts
-            my $pre = $host->preScripts();
-            if (@{$pre}) {
-                print "[$hostname] Executing pre scripts...\n";
-                $cmd->executeScripts($pre);
-            }
-
-            my $setupScript = "$hostname-setup.sh";
-            print "[$hostname] Generating setup script...\n";
-            $self->_generateSetupScript($setupScript);
-            $self->_executeSetupScript($ip, $setupScript);
-
-            # It worths it stays here in order to be able to use pre/post-install
-            # scripts as well. This permits us to move trasferred file,
-            # change their rights and so on.
-            my $list = $host->{files}->list(); # retrieve files list
-            print "[$hostname] Transferring files...";
-            $cmd->transferFiles($list);
-            print "... done\n";
+        # Execute pre-install scripts
+        my $pre = $host->preScripts();
+        if (@{$pre}) {
+            print "[$hostname] Executing pre scripts...\n";
+            $cmd->executeScripts($pre);
         }
+
+        my $setupScript = "$hostname-setup.sh";
+        print "[$hostname] Generating setup script...\n";
+        $self->_generateSetupScript($setupScript);
+        $self->_executeSetupScript($ip, $setupScript);
+
+        # It worths it stays here in order to be able to use pre/post-install
+        # scripts as well. This permits us to move trasferred file,
+        # change their rights and so on.
+        my $list = $host->{files}->list(); # retrieve files list
+        print "[$hostname] Transferring files...";
+        $cmd->transferFiles($list);
+        print "... done\n";
 
         # NAT with this address is not needed anymore
         my $iface = $config->natIface();
@@ -314,14 +333,11 @@ sub _deploy
             }
         }
 
-        # Do not do this for raw base images
-        if ($host->baseImageType() ne 'raw') {
-            # Execute post-install scripts
-            my $post = $host->postScripts();
-            if (@{$post}) {
-                print "[$hostname] Executing post scripts...\n";
-                $cmd->executeScripts($post);
-            }
+        # Execute post-install scripts
+        my $post = $host->postScripts();
+        if (@{$post}) {
+            print "[$hostname] Executing post scripts...\n";
+            $cmd->executeScripts($post);
         }
     } catch (ANSTE::Exceptions::Error $e) {
         my $msg = $e->message();
