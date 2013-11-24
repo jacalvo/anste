@@ -41,13 +41,13 @@ use base 'ANSTE::Exceptions::Base';
 #
 sub new # (option, value, file)
 {
-	my ($class, $option, $value, $file) = @_;
+    my ($class, $option, $value, $file) = @_;
 
-	my $self = $class->SUPER::new("Invalid value for option $option: " .
+    my $self = $class->SUPER::new("Invalid value for option $option: " .
                                   "'$value' in configuration file $file\n");
 
-	bless ($self, $class);
-	return $self;
+    bless ($self, $class);
+    return $self;
 }
 
 1;

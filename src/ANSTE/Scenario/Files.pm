@@ -38,14 +38,14 @@ use XML::DOM;
 #
 sub new # returns new Files object
 {
-	my $class = shift;
-	my $self = {};
+    my $class = shift;
+    my $self = {};
 
-	$self->{list} = [];
+    $self->{list} = [];
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: list
@@ -58,9 +58,9 @@ sub new # returns new Files object
 #
 sub list # returns the files list
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{list};
+    return $self->{list};
 }
 
 # Method: add
@@ -123,10 +123,10 @@ sub load # (node)
         $self->add(@names);
     }
 
-	foreach my $file ($node->getElementsByTagName('file', 0)) {
-		my $name = $file->getFirstChild()->getNodeValue();
-		$self->add($name);
-	}
+    foreach my $file ($node->getElementsByTagName('file', 0)) {
+        my $name = $file->getFirstChild()->getNodeValue();
+        $self->add($name);
+    }
 }
 
 sub loadYAML

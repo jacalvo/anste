@@ -27,29 +27,29 @@ use constant SUITE_YAML => 'test-yaml';
 
 sub testTest # (test)
 {
-	my ($test) = @_;
-	my $name = $test->name();
+    my ($test) = @_;
+    my $name = $test->name();
     is($name, 'testName', 'name = testName');
-	my $desc = $test->desc();
+    my $desc = $test->desc();
     is($desc, 'testDesc', 'desc = testDesc');
-	my $host = $test->host();
+    my $host = $test->host();
     is($host, 'testHost', 'host = testHost');
-	my $dir = $test->dir();
+    my $dir = $test->dir();
     is($dir, 'testDir', 'dir = testDir');
 
 }
 
 sub test # (suite)
 {
-	my ($suite) = @_;
-	my $name = $suite->name();
+    my ($suite) = @_;
+    my $name = $suite->name();
     is($name, 'suiteName', 'suite name = suiteName');
-	my $desc = $suite->desc();
+    my $desc = $suite->desc();
     is($desc, 'suiteDesc', 'suite desc = suiteDesc');
 
-	foreach my $test (@{$suite->tests()}) {
-		testTest($test);
-	}
+    foreach my $test (@{$suite->tests()}) {
+        testTest($test);
+    }
 }
 
 my $suite = new ANSTE::Test::Suite();

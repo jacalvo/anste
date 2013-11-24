@@ -37,8 +37,8 @@ use ANSTE::Exceptions::InvalidType;
 #
 sub new # returns new TestResult object
 {
-	my ($class) = @_;
-	my $self = {};
+    my ($class) = @_;
+    my $self = {};
 
     $self->{test} = undef;
     $self->{value} = undef;
@@ -49,9 +49,9 @@ sub new # returns new TestResult object
     $self->{endTime} = undef;
     $self->{duration} = undef;
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: test
@@ -64,9 +64,9 @@ sub new # returns new TestResult object
 #
 sub test # returns test string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{test};
+    return $self->{test};
 }
 
 # Method: setTest
@@ -84,7 +84,7 @@ sub test # returns test string
 #
 sub setTest # test string
 {
-	my ($self, $test) = @_;
+    my ($self, $test) = @_;
 
     defined $test or
         throw ANSTE::Exceptions::MissingArgument('test');
@@ -94,7 +94,7 @@ sub setTest # test string
                                              'ANSTE::Test::Test');
     }
 
-	$self->{test} = $test;
+    $self->{test} = $test;
 }
 
 # Method: value

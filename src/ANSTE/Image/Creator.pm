@@ -48,8 +48,8 @@ use TryCatch::Lite;
 #
 sub new # (image) returns new ImageCreator object
 {
-	my ($class, $image) = @_;
-	my $self = {};
+    my ($class, $image) = @_;
+    my $self = {};
 
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
@@ -61,11 +61,11 @@ sub new # (image) returns new ImageCreator object
 
     $self->{virtualizer} = ANSTE::Virtualizer::Virtualizer->instance();
 
-	$self->{image} = $image;
+    $self->{image} = $image;
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: createImage

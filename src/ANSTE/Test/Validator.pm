@@ -48,12 +48,12 @@ my $SUITE_FILE = 'suite.html';
 #
 sub new # returns new Validator object
 {
-	my ($class) = @_;
-	my $self = {};
+    my ($class) = @_;
+    my $self = {};
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: validateSuite

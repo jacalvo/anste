@@ -37,15 +37,15 @@ use ANSTE::Exceptions::InvalidType;
 #
 sub new # returns new Report object
 {
-	my ($class) = @_;
-	my $self = {};
+    my ($class) = @_;
+    my $self = {};
 
     $self->{suites} = [];
     $self->{time} = '';
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: add

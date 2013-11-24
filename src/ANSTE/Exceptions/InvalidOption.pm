@@ -40,11 +40,11 @@ use base 'ANSTE::Exceptions::Base';
 #
 sub new # (option, value)
 {
-	my ($class, $option, $value) = @_;
+    my ($class, $option, $value) = @_;
 
-	my $self = $class->SUPER::new("Invalid value for option $option: $value\n");
+    my $self = $class->SUPER::new("Invalid value for option $option: $value\n");
 
-	bless ($self, $class);
-	return $self;
+    bless ($self, $class);
+    return $self;
 }
 1;

@@ -55,8 +55,8 @@ use File::Temp qw(tempfile tempdir);
 #
 sub new # (image) returns new Commands object
 {
-	my ($class, $image) = @_;
-	my $self = {};
+    my ($class, $image) = @_;
+    my $self = {};
 
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
@@ -72,9 +72,9 @@ sub new # (image) returns new Commands object
     $self->{system} = ANSTE::System::System->instance();
     $self->{virtualizer} = ANSTE::Virtualizer::Virtualizer->instance();
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: ip
@@ -221,7 +221,7 @@ sub restoreBaseSnapshot
 #
 sub mount
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
     my $name = $self->{image}->name();
 

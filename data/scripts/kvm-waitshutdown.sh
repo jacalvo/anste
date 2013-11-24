@@ -5,11 +5,11 @@ DOMAIN=$1
 VIRSH=`whereis -b virsh | cut -f2 -d' '`
 
 while true; do
-	$VIRSH list | grep $DOMAIN
-	if [ $? -eq 0 ]
+    $VIRSH list | grep $DOMAIN
+    if [ $? -eq 0 ]
     then
-	    sleep 1
-    else        
+        sleep 1
+    else
         exit 0
-	fi
+    fi
 done > /dev/null

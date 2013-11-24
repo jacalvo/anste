@@ -27,7 +27,7 @@ use constant SUITE_YAML => 'test-yaml';
 
 sub _checkTests # (tests)
 {
-	my ($tests) = @_;
+    my ($tests) = @_;
 
     is(@{$tests}[2]->name(), "script1" , 'name = script1');
     is(@{$tests}[3]->name(), "script2" , 'name = script2');

@@ -38,15 +38,15 @@ use ANSTE::Exceptions::InvalidType;
 #
 sub new # returns new SuiteResult object
 {
-	my ($class) = @_;
-	my $self = {};
+    my ($class) = @_;
+    my $self = {};
 
     $self->{suite} = '';
     $self->{tests} = [];
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: suite
@@ -59,9 +59,9 @@ sub new # returns new SuiteResult object
 #
 sub suite # returns suite string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{suite};
+    return $self->{suite};
 }
 
 # Method: setSuite
@@ -79,7 +79,7 @@ sub suite # returns suite string
 #
 sub setSuite # (suite)
 {
-	my ($self, $suite) = @_;	
+    my ($self, $suite) = @_;
 
     defined $suite or
         throw ANSTE::Exceptions::MissingArgument('suite');
@@ -89,7 +89,7 @@ sub setSuite # (suite)
                                              'ANSTE::Test::Suite');
     }
 
-	$self->{suite} = $suite;
+    $self->{suite} = $suite;
 }
 
 # Method: add

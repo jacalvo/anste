@@ -23,46 +23,46 @@ use Test::More tests => 54;
 
 sub testImage # (image)
 {
-	my ($image) = @_;
-	my $name = $image->name();
+    my ($image) = @_;
+    my $name = $image->name();
     is($name, 'imageName', 'image name = imageName');
-	my $desc = $image->desc();
+    my $desc = $image->desc();
     is($desc, 'imageDesc', 'image desc = imageDesc');
 
-	my $memory = $image->memory();
+    my $memory = $image->memory();
     is($memory, 'imageMemory', 'image memory = imageMemory');
-	my $size = $image->size();
+    my $size = $image->size();
     is($size, 'imageSize', 'image size = imageSize');
-	my $arch = $image->arch();
+    my $arch = $image->arch();
     is($arch, 'imageArch', 'image arch = imageArch');
-	my $swap = $image->swap();
+    my $swap = $image->swap();
     is($swap, 'imageSwap', 'image swap = imageSwap');
 
-	my $installMethod = $image->installMethod();
+    my $installMethod = $image->installMethod();
     is($installMethod, 'copy', 'image installMethod = copy');
-	my $installSource = $image->installSource();
+    my $installSource = $image->installSource();
     is($installSource, '/tmp', 'image installSource = /tmp');
 
-	my $preScripts = $image->preScripts();
+    my $preScripts = $image->preScripts();
     is(scalar @{$preScripts}, 2, 'size pre-install scripts = 2');
     _checkScripts($preScripts);
 
-	my $postScripts = $image->postScripts();
+    my $postScripts = $image->postScripts();
     is(scalar @{$postScripts}, 3, 'size post-install scripts = 3');
     _checkScripts($postScripts);
 
-	my $packages = $image->packages();
+    my $packages = $image->packages();
     is(scalar @{$packages->list()}, 4, 'size packages = 4');
     _checkPackages($packages);
 
-	my $mirror = $image->mirror();
+    my $mirror = $image->mirror();
     is($mirror, 'imageMirror', 'image mirror = imageMirror');
 
-	my $files = $image->files();
+    my $files = $image->files();
     is(scalar @{$files->list()}, 2, 'size files = 2');
     _checkFiles($files);
 
-	my $postTestsScripts = $image->postTestsScripts();
+    my $postTestsScripts = $image->postTestsScripts();
     is(scalar @{$postTestsScripts}, 2, 'size files = 2');
     _checkScripts($postTestsScripts);
 
