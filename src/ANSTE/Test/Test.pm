@@ -350,11 +350,11 @@ sub setRelativeUrl
 
 # Method: script
 #
-#   Gets the scriptectory of the test scripts.
+#   Gets the directory of the test scripts.
 #
 # Returns:
 #
-#   string - Name of the scriptectory of this test.
+#   string - Name of the directory of this test.
 #
 sub script # returns script string
 {
@@ -365,11 +365,11 @@ sub script # returns script string
 
 # Method: setScript
 #
-#   Sets the scriptectory for this test object to the given value.
+#   Sets the directory for this test object to the given value.
 #
 # Parameters:
 #
-#   name - String with the relative path of the test scriptectory.
+#   name - String with the relative path of the test directory.
 #
 # Exceptions:
 #
