@@ -401,13 +401,16 @@ sub _runTest # (test)
     my $verbose = $config->verbose();
 
     my $suiteDir = $self->{suite}->dir();
-    my $testDir = $test->dir();
+    my $testScript = $test->script();
 
-    my $path = $config->testFile("$suiteDir/$testDir");
-    if (not $path) {
-        throw ANSTE::Exceptions::NotFound(
-            "In test '$name', directory '$testDir'"
-        )
+    my $path;
+    if ($testScript =~ m{/}) {
+        $path = $testScript;
+    } else {
+        $path = $config->testFile("$suiteDir/$testScript");
+    }
+    unless ($path) {
+        throw ANSTE::Exceptions::NotFound("In test '$name', script '$testScript'");
     }
 
     my $logPath = $config->logPath();
@@ -429,13 +432,6 @@ sub _runTest # (test)
     # Create a temp directory for this test
     my $newPath = tempdir(CLEANUP => 1)
         or die "Can't create temp directory: $!";
-
-    # Run pre-test script if exists
-    if (-r "$path/pre") {
-        my $script = "$newPath/$name.pre";
-        system("cp $path/pre $script");
-        $self->_runScriptOnHost($hostname, $script);
-    }
 
     # TODO: separate this in two functions runSeleniumTest and runShellTest ??
 
@@ -519,11 +515,11 @@ sub _runTest # (test)
         my $endTime = $self->_time();
         $testResult->setEndTime($endTime);
     } else {
-        if (not -r "$path/test") {
-            $path = $config->scriptFile($testDir);
-            if (not -r "$path/test") {
+        if (not -r $path) {
+            $path = $config->scriptFile($testScript);
+            if (not -r $path) {
                 throw ANSTE::Exceptions::NotFound('Test script',
-                                              "$suiteDir/$testDir/test");
+                                              "$suiteDir/$testScript");
             }
         }
 
@@ -531,8 +527,8 @@ sub _runTest # (test)
         my $scriptfile = "$logPath/$suiteDir/script/$name.txt";
 
         # Copy to temp directory dereferencing links and rename to test name
-        system("cp -rL $path/* $newPath/");
-        system("mv $newPath/test $newPath/$name");
+        system("cp $path $newPath/$name");
+        system("cp -r lib/* $newPath/");
         system("chmod +x $newPath/$name");
 
         my $env = $test->env();
@@ -551,7 +547,7 @@ sub _runTest # (test)
             my $paramsStr = "# Arguments passed to the test: $params\n";
             print $SCRIPT $paramsStr;
         }
-        my $scriptContent = slurp "<$path/test";
+        my $scriptContent = slurp "<$path";
         print $SCRIPT "# Test script executed:\n";
         print $SCRIPT $scriptContent;
         close ($SCRIPT);
@@ -585,13 +581,6 @@ sub _runTest # (test)
 
         $testResult->setLog("$logfile");
         $testResult->setScript("$suiteDir/script/$name.txt");
-    }
-
-    # Run post-test script if exists
-    if (-r "$path/post") {
-        my $script = "$newPath/$name.post";
-        system("cp $path/post $script");
-        $self->_runScriptOnHost($hostname, $script);
     }
 
     # Invert the result of the test when checking for fail

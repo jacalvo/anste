@@ -8,14 +8,14 @@
         <name>testName</name>
         <desc>testDesc</desc>
         <host>testHost</host>
-        <dir>testDir</dir>
+        <script>testScript</script>
     </test>
 
     <test>
         <name>testName</name>
         <desc>testDesc</desc>
         <host>testHost</host>
-        <dir>testDir</dir>
+        <script>testScript</script>
     </test>
 
 </suite>

@@ -35,8 +35,8 @@ sub _checkTests # (tests)
     is(@{$tests}[2]->desc(), "PostTest added from the baseImage of the host hostName" , 'desc = text');
     is(@{$tests}[3]->desc(), "PostTest added from the baseImage of the host hostName" , 'desc = text');
 
-    is(@{$tests}[2]->dir(), "script1" , 'dir = script1');
-    is(@{$tests}[3]->dir(), "script2" , 'dir = script2');
+    is(@{$tests}[2]->script(), "script1" , 'dir = script1');
+    is(@{$tests}[3]->script(), "script2" , 'dir = script2');
 
     is(@{$tests}[2]->host(), "hostName" , 'host = hostName');
     is(@{$tests}[3]->host(), "hostName" , 'host = hostName');

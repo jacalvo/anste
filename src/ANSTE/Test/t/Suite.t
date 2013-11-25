@@ -34,8 +34,8 @@ sub testTest # (test)
     is($desc, 'testDesc', 'desc = testDesc');
 	my $host = $test->host();
     is($host, 'testHost', 'host = testHost');
-	my $dir = $test->dir();
-    is($dir, 'testDir', 'dir = testDir');
+	my $dir = $test->script();
+    is($dir, 'testScript', 'script = testScript');
 
 }
 

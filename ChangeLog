@@ -1,4 +1,5 @@
 HEAD
+    + Now test suites refer directly to test scripts instead of dirs
     + Added getimg command line option to trigger the download of an image
     + Renamed command line option from create to createimg
     + Added image-repo conf key to set the place where to download images from
