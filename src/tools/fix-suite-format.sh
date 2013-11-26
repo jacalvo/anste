@@ -13,7 +13,7 @@ fi
 
 pushd $DIR
 
-LINKS=$(ls -l | cut -d' ' -f11-13 | grep ".." | sed 's/\.\.//g' | sed 's/ \/\// /g' | sed 's/ -> /:/g')
+LINKS=$(ls -l | grep "\.\." | sed 's/.*[0-9]:[0-9][0-9] //' | sed 's/\.\.//g' | sed 's/ \/\// /g' | sed 's/ -> /:/g')
 
 for i in $LINKS
 do
