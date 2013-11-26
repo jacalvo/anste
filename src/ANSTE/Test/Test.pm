@@ -44,7 +44,7 @@ sub new # returns new Test object
 
     $self->{name} = '';
     $self->{desc} = '';
-    $self->{dir} = '';
+    $self->{script} = '';
     $self->{params} = '';
     $self->{env} = '';
     $self->{variables} = {};
@@ -348,7 +348,7 @@ sub setRelativeUrl
     $self->{relativeURL} = $relativeURL;
 }
 
-# Method: dir
+# Method: script
 #
 #   Gets the directory of the test scripts.
 #
@@ -356,14 +356,14 @@ sub setRelativeUrl
 #
 #   string - Name of the directory of this test.
 #
-sub dir # returns dir string
+sub script # returns script string
 {
     my ($self) = @_;
 
-    return $self->{dir};
+    return $self->{script};
 }
 
-# Method: setDir
+# Method: setScript
 #
 #   Sets the directory for this test object to the given value.
 #
@@ -375,14 +375,14 @@ sub dir # returns dir string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
-sub setDir # dir string
+sub setScript # script string
 {
-    my ($self, $dir) = @_;
+    my ($self, $script) = @_;
 
-    defined $dir or
-        throw ANSTE::Exceptions::MissingArgument('dir');
+    defined $script or
+        throw ANSTE::Exceptions::MissingArgument('script');
 
-    $self->{dir} = $dir;
+    $self->{script} = $script;
 }
 
 # Method: params
@@ -687,10 +687,10 @@ sub loadXML
         $self->setProtocol($protocol);
     }
 
-    my $dirNode = $node->getElementsByTagName('dir', 0)->item(0);
-    if ($dirNode) {
-        my $dir = $dirNode->getFirstChild()->getNodeValue();
-        $self->setDir($dir);
+    my $scriptNode = $node->getElementsByTagName('script', 0)->item(0);
+    if ($scriptNode) {
+        my $script = $scriptNode->getFirstChild()->getNodeValue();
+        $self->setScript($script);
     }
 
     my $assertNode = $node->getElementsByTagName('assert', 0)->item(0);
@@ -810,9 +810,9 @@ sub loadYAML
         $self->setRelativeUrl($relativeURL);
     }
 
-    my $dir = $test->{dir};
-    if ($dir) {
-        $self->setDir($dir);
+    my $script = $test->{script};
+    if ($script) {
+        $self->setScript($script);
     }
 
     my $assert = $test->{assert};
