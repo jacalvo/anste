@@ -286,6 +286,8 @@ sub remove # (file)
             print STDERR "Reason: Can't open file $filename.\n";
             exit(1);
         }
+
+        return 0;
     } catch (ANSTE::Exceptions::Error $e) {
         my $msg = $e->message();
         print STDERR "Error removing image $file:\n";
@@ -300,6 +302,8 @@ sub remove # (file)
                      "Maybe it doesn't exists.\n";
         exit(1);
     }
+
+    return 0;
 }
 
 sub deploy # (file)
