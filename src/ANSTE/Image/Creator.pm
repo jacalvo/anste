@@ -161,8 +161,7 @@ sub createImage
         $self->_shutdown($cmd);
         $e->throw();
     } catch ($e) {
-        my $msg = $e->stringify();
-        print "ERROR: $msg\n";
+        print "ERROR: $e\n";
     }
     $self->_shutdown($cmd);
 

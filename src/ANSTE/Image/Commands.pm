@@ -271,8 +271,7 @@ sub installBasePackages
         try {
             $ret = $system->installBasePackages();
         } catch ($e) {
-            my $msg = $e->stringify();
-            print "ERROR: $msg\n";
+            print "ERROR: $e\n";
         }
         exit($ret);
     } else { # parent

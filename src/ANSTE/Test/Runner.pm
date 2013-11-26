@@ -196,8 +196,7 @@ sub runSuite # (suite)
         $self->_destroy($deployer, $reuse);
         $e->throw();
     } catch ($e) {
-        my $msg = $e->stringify();
-        print "ERROR: $msg\n";
+        print "ERROR: $e\n";
     }
     $self->_destroy($deployer, $reuse);
     print "Finished testing of suite '$suiteName'.\n\n";
