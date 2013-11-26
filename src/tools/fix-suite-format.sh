@@ -15,7 +15,12 @@ LINKS=$(ls -l | cut -d' ' -f11-13 | grep ".." | sed 's/\.\.//g' | sed 's/ \/\// 
 for i in $LINKS
 do
     SRC=$(echo $i | cut -d':' -f1)
-    DST=$(echo $i | cut -d':' -f2 | sed 's/\/$//' | sed 's/^\//tests\//' | sed 's/\//\\\//g')
+    DST=$(echo $i | cut -d':' -f2 | sed 's/\/$//' | sed 's/^\///')
+    if ! echo "$DST" | grep -q ^common
+    then
+        DST="tests\\/$DST"
+    fi
+    DST=$(echo $DST | sed 's/\//\\\//g')
     sed -i "s/dir: $SRC/script: $DST/g" suite.yaml
     git rm $SRC
 done
@@ -29,3 +34,6 @@ popd
 
 git commit -m "adapt $DIR suite"
 git show
+
+echo "Contents of the suite:"
+ls --color $DIR
