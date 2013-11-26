@@ -141,6 +141,8 @@ sub deploy # returns hash ref with the ip of each host
         print "Setting up network...\n";
         $self->{virtualizer}->createNetwork($scenario)
             or throw ANSTE::Exceptions::Error('Error creating network.');
+
+        $self->_importMissingBaseImages();
     }
 
     # Starts Master Server thread
@@ -265,7 +267,17 @@ sub _downloadMissingBaseImages
         } else {
             print "[$hostname] Base image already exists.\n";
         }
+    }
+}
 
+sub _importMissingBaseImages
+{
+    my ($self) = @_;
+
+    my $scenario = $self->{scenario};
+    foreach my $host (@{$scenario->hosts()}) {
+        my $image = $host->baseImage();
+        my $hostname = $host->name();
         if ($host->baseImageType() eq 'raw') {
             print "[$hostname] Auto-importing base image if not exists...\n";
             my $cmd = new ANSTE::Image::Commands($image);
