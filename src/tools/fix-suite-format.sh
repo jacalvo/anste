@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -x
+set -e
+
 DIR=$1
 
 if [ -z "$DIR" ]
@@ -18,7 +21,7 @@ do
     DST=$(echo $i | cut -d':' -f2 | sed 's/\/$//' | sed 's/^\///')
     if ! echo "$DST" | grep -q ^common
     then
-        DST="tests\\/$DST"
+        DST="tests/$DST"
     fi
     DST=$(echo $DST | sed 's/\//\\\//g')
     sed -i "s/dir: $SRC/script: $DST/g" suite.yaml
