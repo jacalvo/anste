@@ -185,6 +185,28 @@ sub createVM # (name)
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: removeVM
+#
+#   Override this method to remove the Virtual Machine
+#   with the corresponding virtualizer program.
+#
+# Parameters:
+#
+#   name - name of the virtual machine
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented>
+#
+sub removeVM # (name)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 # Method: imageFile
 #
 #   Override this method to return the full path

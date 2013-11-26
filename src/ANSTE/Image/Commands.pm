@@ -450,6 +450,9 @@ sub deleteImage
     my $image = $self->{image}->name();
 
     $virtualizer->deleteImage($image);
+
+    # Deletes also the VM in case it is permanent
+    $virtualizer->removeVM($image);
 }
 
 # Method: deleteMountPoint

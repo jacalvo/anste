@@ -234,6 +234,32 @@ sub createVM # (name)
     $self->execute("virsh create $path/$name/domain.xml");
 }
 
+# Method: removeVM
+#
+#   Overriden method that removes a Virtual Machine
+#
+# Parameters:
+#
+#   name - name of the libvirt domain
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub removeVM # (name)
+{
+    my ($self, $name) = @_;
+
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
+    $self->execute("virsh undefine $name --snapshots-metadata");
+}
+
 # Method: imageFile
 #
 #   Overriden method to get the path o a KVM disk image.
