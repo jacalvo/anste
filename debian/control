@@ -5,7 +5,7 @@ Maintainer: José Antonio Calvo <jacalvo@zentyal.com>
 Build-Depends: debhelper (>= 5), libtrycatch-lite-perl, libxml-dom-perl, libfile-copy-recursive-perl,
   libsoap-lite-perl, libperl6-slurp-perl, libconfig-tiny-perl, libperl6-junction-perl,
   libterm-readline-gnu-perl, libmail-rfc822-address-perl, libtext-template-perl, debootstrap,
-  libvirt-bin, libyaml-libyaml-perl, libjson-xs-perl, sshpass, libattempt-perl, libio-interface-perl libdevel-stacktrace-perl
+  libvirt-bin, libyaml-libyaml-perl, libjson-xs-perl, sshpass, libattempt-perl, libio-interface-perl, libdevel-stacktrace-perl
 Standards-Version: 3.7.2
 
 Package: anste
