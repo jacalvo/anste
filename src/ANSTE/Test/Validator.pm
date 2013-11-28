@@ -89,7 +89,7 @@ sub validateSuite # (suite)
 
         my $path;
         if ($testScript =~ m{/}) {
-            $path = $testScript;
+            $path = "tests/$testScript";
         } else {
             $path = $config->testFile("$suiteDir/$testScript");
         }
