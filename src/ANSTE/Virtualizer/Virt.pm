@@ -261,6 +261,32 @@ sub defineVM # (name)
     $self->execute("virsh define $path/$name/domain.xml");
 }
 
+# Method: startVM
+#
+#   Overriden method that starts a KVM Virtual Machine.
+#
+# Parameters:
+#
+#   name - name of the domain
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub startVM # (name)
+{
+    my ($self, $name) = @_;
+
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
+    $self->execute("virsh start $name");
+}
+
 # Method: removeVM
 #
 #   Overriden method that removes a Virtual Machine

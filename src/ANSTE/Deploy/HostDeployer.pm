@@ -236,6 +236,9 @@ sub _deploySnapshot
 
     print "[$hostname] Restoring base snapshot...\n";
     $cmd->restoreBaseSnapshot($hostname);
+
+    my $virtualizer = $self->{virtualizer};
+    $virtualizer->startVM($hostname);
 }
 
 sub _deployCopy

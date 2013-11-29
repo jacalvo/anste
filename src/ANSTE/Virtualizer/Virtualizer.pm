@@ -207,6 +207,28 @@ sub defineVM # (name)
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: startVM
+#
+#   Override this method to start the Virtual Machine
+#   with the corresponding virtualizer program.
+#
+# Parameters:
+#
+#   name - name of the virtual machine
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub startVM # (name)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 # Method: removeVM
 #
 #   Override this method to remove the Virtual Machine
