@@ -195,7 +195,7 @@ sub destroy
 
 # Method: deleteImage
 #
-#   Deletes the image of the deployed host.
+#   Deletes the image of the deployed hosts that does not use raw base images
 #
 sub deleteImage
 {
@@ -206,9 +206,11 @@ sub deleteImage
     my $host = $self->{host};
     my $hostname = $host->name();
 
-    print "[$hostname] Deleting image...\n";
-    $virtualizer->deleteImage($hostname);
-    print "[$hostname] Image deleted.\n";
+    unless ($host->baseImageType() eq 'raw') {
+        print "[$hostname] Deleting image...\n";
+        $virtualizer->deleteImage($hostname);
+        print "[$hostname] Image deleted.\n";
+    }
 }
 
 sub _deploy
