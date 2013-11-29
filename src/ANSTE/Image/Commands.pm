@@ -197,12 +197,27 @@ sub importImage
     my $virtualizer = $self->{virtualizer};
     my $name = $self->{image}->name();
 
-    # TODO: Do nothing if the VM already exists
-    $virtualizer->createVM($name);
-    $virtualizer->createSnapshot($name, $hostname, 'Base snapshot');
+    unless ($virtualizer->existsVM($name)) {
+        $virtualizer->defineVM($name);
+    }
+
+    unless ($virtualizer->existsSnapshot($name, $hostname)) {
+        $virtualizer->createSnapshot($name, $hostname, 'Base snapshot');
+    }
 }
 
-# TODO
+# Method: restoreBaseSnapshot
+#
+#   Restores the base snapshot of a host with a raw base image
+#
+# Returns:
+#
+#   boolean - true if success, false otherwise
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
 sub restoreBaseSnapshot
 {
     my ($self, $hostname) = @_;

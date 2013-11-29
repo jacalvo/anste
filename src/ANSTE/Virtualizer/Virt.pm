@@ -287,6 +287,35 @@ sub removeVM # (name)
     $self->execute("virsh undefine $name --snapshots-metadata");
 }
 
+# Method: existsVM
+#
+#   Overriden method that tells if a VM exists
+#
+# Parameters:
+#
+#   name - name of the libvirt domain
+#
+# Returns:
+#
+#   boolean - indicates if the VM exists
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub existsVM
+{
+    my ($self, $name) = @_;
+
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
+    my $out = `virsh list --all | grep -c '$name'`;
+    chomp($out);
+
+    return $out;
+}
+
 # Method: imageFile
 #
 #   Overriden method to get the path o a KVM disk image.
@@ -662,6 +691,25 @@ sub deleteSnapshot
     my ($self, $domain, $name) = @_;
 
     $self->execute("virsh snapshot-delete $domain $name");
+}
+
+# Method: existsSnapshot
+#
+#   Override this method to tell if a snapshot exists
+#
+# Parameters:
+#
+#   domain       - virtual machine name
+#   name         - snapshot label
+#
+sub existsSnapshot
+{
+    my ($self, $domain, $name) = @_;
+
+    my $out = `virsh snapshot-list $domain | grep -c ' $name '`;
+    chomp($out);
+
+    return $out;
 }
 
 1;

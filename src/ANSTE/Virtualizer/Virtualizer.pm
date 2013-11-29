@@ -229,6 +229,28 @@ sub removeVM # (name)
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: existsVM
+#
+#   Override this method to tell if a VM exists
+#   with the corresponding virtualizer program.
+#
+# Parameters:
+#
+#   name - name of the virtual machine
+#
+# Returns:
+#
+#   boolean - indicates if the VM exists
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub existsVM
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 # Method: imageFile
 #
 #   Override this method to return the full path
@@ -381,6 +403,20 @@ sub revertSnapshot
 #   name         - snapshot label
 #
 sub deleteSnapshot
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: existsSnapshot
+#
+#   Override this method to tell if a snapshot exists
+#
+# Parameters:
+#
+#   domain       - virtual machine name
+#   name         - snapshot label
+#
+sub existsSnapshot
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
