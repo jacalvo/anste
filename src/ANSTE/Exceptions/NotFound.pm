@@ -40,15 +40,15 @@ use base 'ANSTE::Exceptions::Base';
 #
 sub new # (what, value)
 {
-	my ($class, $what, $value) = @_;
+    my ($class, $what, $value) = @_;
 
-	my $self = $class->SUPER::new("$what '$value' not present\n");
+    my $self = $class->SUPER::new("$what '$value' not present\n");
 
     $self->{what} = $what;
     $self->{value} = $value;
 
-	bless ($self, $class);
-	return $self;
+    bless ($self, $class);
+    return $self;
 }
 
 # Method: what

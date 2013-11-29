@@ -39,14 +39,14 @@ use base 'ANSTE::Exceptions::Base';
 #
 sub new # (msg)
 {
-	my ($class, $msg) = @_;
+    my ($class, $msg) = @_;
 
-	my $self = $class->SUPER::new("ERROR: $msg\n");
+    my $self = $class->SUPER::new("ERROR: $msg\n");
 
     $self->{message} = $msg;
 
-	bless ($self, $class);
-	return $self;
+    bless ($self, $class);
+    return $self;
 }
 
 # Method: message

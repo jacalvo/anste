@@ -64,7 +64,7 @@ sub new
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub connect	# (url) 
+sub connect # (url)
 {
     my ($self, $url) = @_;
 
@@ -94,7 +94,7 @@ sub hostReady
 
     my $response = $soap->hostReady(SOAP::Data->name('host' => $hostname)); 
     if ($response->fault) {
-    	die "SOAP request failed: $!";
+        die "SOAP request failed: $!";
     }
     my $result = $response->result;
     return($result eq 'OK');
@@ -132,7 +132,7 @@ sub executionFinished # (retValue)
         $soap->executionFinished(SOAP::Data->name('host' => $host),
                                  SOAP::Data->name('retValue' =>$retValue));
     if ($response->fault) {
-    	die "SOAP request failed: $!";
+        die "SOAP request failed: $!";
     }
     my $result = $response->result;
     return($result eq 'OK');

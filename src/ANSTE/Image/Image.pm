@@ -47,15 +47,15 @@ use ANSTE::Exceptions::MissingArgument;
 #
 sub new # returns new Image object
 {
-	my ($class, %params) = @_;
+    my ($class, %params) = @_;
 
-	my $self = $class->SUPER::new();
+    my $self = $class->SUPER::new();
 
     if (exists $params{name}) {
         $self->{name} = $params{name};
     }
     if (exists $params{ip}) {
-	    $self->{ip} = $params{ip};
+        $self->{ip} = $params{ip};
     }
     if (exists $params{memory}) {
         $self->{memory} = $params{memory};
@@ -66,9 +66,9 @@ sub new # returns new Image object
 
     $self->{network} = undef;
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: ip
@@ -81,9 +81,9 @@ sub new # returns new Image object
 #
 sub ip # returns ip string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{ip};
+    return $self->{ip};
 }
 
 # Method: setIp
@@ -100,12 +100,12 @@ sub ip # returns ip string
 #
 sub setIp # ip string
 {
-	my ($self, $ip) = @_;
+    my ($self, $ip) = @_;
 
     defined $ip or
         throw ANSTE::Exceptions::MissingArgument('ip');
 
-	$self->{ip} = $ip;
+    $self->{ip} = $ip;
 }
 
 
@@ -119,9 +119,9 @@ sub setIp # ip string
 #
 sub network # returns Network object
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{network};
+    return $self->{network};
 }
 
 # Method: setNetwork
@@ -139,7 +139,7 @@ sub network # returns Network object
 #
 sub setNetwork # (network)
 {
-	my ($self, $network) = @_;
+    my ($self, $network) = @_;
 
     defined $network or
         throw ANSTE::Exceptions::MissingArgument('network');
@@ -149,7 +149,7 @@ sub setNetwork # (network)
                                              'ANSTE::Scenario::Network');
     }
 
-	$self->{network} = $network;
+    $self->{network} = $network;
 }
 
 # Method: commInterface

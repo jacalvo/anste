@@ -41,16 +41,16 @@ use base 'ANSTE::Exceptions::Base';
 #
 sub new 
 {
-	my ($class, $arg) = @_;
+    my ($class, $arg) = @_;
 
     my ($package, undef, $line, $method) = caller(2);
 
-	my $self = $class->SUPER::new("Missing argument '$arg' calling " .
+    my $self = $class->SUPER::new("Missing argument '$arg' calling " .
                                   "method '$method' at '$package:$line'\n");
 
-	bless ($self, $class);
+    bless ($self, $class);
 
-	return $self;
+    return $self;
 }
 
 1;

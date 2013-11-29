@@ -38,17 +38,17 @@ use ANSTE::Validate;
 #
 sub new # returns new NetworkRoute object
 {
-	my ($class) = @_;
-	my $self = {};
+    my ($class) = @_;
+    my $self = {};
 
-	$self->{destination} = '';
-	$self->{gateway} = '*';
-	$self->{netmask} = '';
-	$self->{iface} = '';
+    $self->{destination} = '';
+    $self->{gateway} = '*';
+    $self->{netmask} = '';
+    $self->{iface} = '';
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: name
@@ -61,9 +61,9 @@ sub new # returns new NetworkRoute object
 #
 sub destination # returns route destination string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{destination};
+    return $self->{destination};
 }
 
 # Method: setDestination
@@ -80,12 +80,12 @@ sub destination # returns route destination string
 #
 sub setDestination # (destination) 
 {
-	my ($self, $destination) = @_;	
-    
+    my ($self, $destination) = @_;
+
     defined $destination or
         throw ANSTE::Exceptions::MissingArgument('destination');
 
-	$self->{destination} = $destination;
+    $self->{destination} = $destination;
 }
 
 # Method: gateway
@@ -98,9 +98,9 @@ sub setDestination # (destination)
 #
 sub gateway # returns gateway string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{gateway};
+    return $self->{gateway};
 }
 
 # Method: setGateway
@@ -118,12 +118,12 @@ sub gateway # returns gateway string
 #
 sub setGateway # gateway string
 {
-	my ($self, $gateway) = @_;	
+    my ($self, $gateway) = @_;
 
     defined $gateway or
         throw ANSTE::Exceptions::MissingArgument('gateway');
 
-	$self->{gateway} = $gateway;
+    $self->{gateway} = $gateway;
 }
 
 # Method: netmask
@@ -136,9 +136,9 @@ sub setGateway # gateway string
 #
 sub netmask # returns netmask string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{netmask};
+    return $self->{netmask};
 }
 
 # Method: setNetmask
@@ -156,7 +156,7 @@ sub netmask # returns netmask string
 #
 sub setNetmask # netmask string
 {
-	my ($self, $netmask) = @_;	
+    my ($self, $netmask) = @_;
 
     defined $netmask or
         throw ANSTE::Exceptions::MissingArgument('netmask');
@@ -165,7 +165,7 @@ sub setNetmask # netmask string
         throw ANSTE::Exceptions::InvalidData('netmask', $netmask);
     }
 
-	$self->{netmask} = $netmask;
+    $self->{netmask} = $netmask;
 }
 
 # Method: iface
@@ -178,9 +178,9 @@ sub setNetmask # netmask string
 #
 sub iface # returns iface string
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->{iface};
+    return $self->{iface};
 }
 
 # Method: setIface
@@ -197,12 +197,12 @@ sub iface # returns iface string
 #
 sub setIface # iface string
 {
-	my ($self, $iface) = @_;	
+    my ($self, $iface) = @_;
 
     defined $iface or
         throw ANSTE::Exceptions::MissingArgument('iface');
 
-	$self->{iface} = $iface;
+    $self->{iface} = $iface;
 }
 
 # Method: load

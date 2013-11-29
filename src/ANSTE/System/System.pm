@@ -39,12 +39,12 @@ use ANSTE::Exceptions::MissingArgument;
 #
 sub new
 {
-	my ($class) = @_;
-	my $self = {};
+    my ($class) = @_;
+    my $self = {};
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: instance

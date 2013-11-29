@@ -38,13 +38,13 @@ use base 'ANSTE::Exceptions::Base';
 #
 sub new # (option)
 {
-	my ($class, $option) = @_;
+    my ($class, $option) = @_;
 
-	my $self = $class->SUPER::new("Missing mandatory option $option " .
+    my $self = $class->SUPER::new("Missing mandatory option $option " .
                                   "in configuration file\n");
 
-	bless ($self, $class);
-	return $self;
+    bless ($self, $class);
+    return $self;
 }
 
 1;

@@ -1,4 +1,8 @@
 HEAD
+    + Made VMs from host with raw base images permanent
+    + Skip some actions in the deploy for hosts with raw base images
+    + Added support for image removal using the image name
+    + Added 'baseImage-type' attribute to hosts
     + Now test suites refer directly to test scripts instead of dirs
     + Added getimg command line option to trigger the download of an image
     + Renamed command line option from create to createimg

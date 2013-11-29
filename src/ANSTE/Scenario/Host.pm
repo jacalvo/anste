@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -28,6 +29,7 @@ use ANSTE::Config;
 
 use XML::DOM;
 use Perl6::Junction qw(any);
+use TryCatch::Lite;
 
 # Class: Host
 #
@@ -51,6 +53,7 @@ sub new # returns new Host object
     $self->{desc} = '';
     $self->{type} = 'none';
     $self->{baseImage} = new ANSTE::Scenario::BaseImage;
+    $self->{'baseImage-type'} = '';
     $self->{network} = new ANSTE::Scenario::Network;
     $self->{packages} = new ANSTE::Scenario::Packages;
     $self->{files} = new ANSTE::Scenario::Files;
@@ -247,6 +250,43 @@ sub setBaseImage # (baseImage)
     }
 
     $self->{baseImage} = $baseImage;
+}
+
+# Method: baseImageType
+#
+#   Returns the baseImage type
+#
+# Returns:
+#
+#   string - contains the baseImage type
+#
+sub baseImageType # returns string
+{
+    my ($self) = @_;
+
+    return $self->{'baseImage-type'};
+}
+
+# Method: setBaseImageType
+#
+#   Sets the base image type of the image.
+#
+# Parameters:
+#
+#   baseImageType - String with the base image type
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setBaseImageType # name string
+{
+    my ($self, $baseImageType) = @_;
+
+    defined $baseImageType or
+        throw ANSTE::Exceptions::MissingArgument('baseImageType');
+
+    $self->{'baseImage-type'} = $baseImageType;
 }
 
 # Method: network
@@ -538,10 +578,6 @@ sub loadXML # (node)
         $self->setMemory($memory);
     }
 
-    my $baseimageNode = $node->getElementsByTagName('baseimage', 0)->item(0);
-    my $baseimage = $baseimageNode->getFirstChild()->getNodeValue();
-    $self->baseImage()->loadFromFile("$baseimage.xml");
-
     my $networkNode = $node->getElementsByTagName('network', 0)->item(0);
     if($networkNode){
         $self->network()->load($networkNode);
@@ -565,6 +601,25 @@ sub loadXML # (node)
     my $postNode = $node->getElementsByTagName('post-install', 0)->item(0);
     if($postNode){
         $self->_addScripts('post-scripts', $postNode);
+    }
+
+    my $baseImageTypeNode = $node->getElementsByTagName('baseimage-type', 0)->item(0);
+    if ($baseImageTypeNode) {
+        my $baseImageType = $baseImageTypeNode->getFirstChild()->getNodeValue();
+        $self->setBaseImageType($baseImageType);
+    }
+
+    my $baseimageNode = $node->getElementsByTagName('baseimage', 0)->item(0);
+    my $baseimage = $baseimageNode->getFirstChild()->getNodeValue();
+    try {
+        $self->baseImage()->loadFromFile("$baseimage.xml");
+    } catch (ANSTE::Exceptions::InvalidFile $e) {
+        if ($self->baseImageType() eq 'raw') {
+            # Dummy image for raw base images
+            $self->baseImage()->setName($baseimage);
+        } else {
+            $e->throw();
+        }
     }
 
     # Check if all preconditions are satisfied
@@ -612,9 +667,6 @@ sub loadYAML
         $self->setMemory($memory);
     }
 
-    my $baseimage = $host->{baseimage};
-    $self->baseImage()->loadFromFile("$baseimage.xml");
-
     my $network = $host->{network};
     if ($network) {
         $self->network()->loadYAML($network);
@@ -637,6 +689,23 @@ sub loadYAML
     my $postInstall = $host->{'post-install'};
     if ($postInstall) {
         $self->_addScriptsYAML('post-scripts', $postInstall);
+    }
+
+    my $baseImageType = $host->{'baseimage-type'};
+    if ($baseImageType) {
+        $self->setBaseImageType($baseImageType);
+    }
+
+    my $baseimage = $host->{baseimage};
+    try {
+        $self->baseImage()->loadFromFile("$baseimage.xml");
+    } catch (ANSTE::Exceptions::InvalidFile $e) {
+        if ($self->baseImageType() eq 'raw') {
+            # Dummy image for raw base images
+            $self->baseImage()->setName($baseimage);
+        } else {
+            $e->throw();
+        }
     }
 
     # FIXME

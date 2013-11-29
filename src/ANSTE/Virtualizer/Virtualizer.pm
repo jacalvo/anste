@@ -39,12 +39,12 @@ use ANSTE::Exceptions::MissingArgument;
 #
 sub new # returns new Virtualizer object
 {
-	my ($class) = @_;
-	my $self = {};
+    my ($class) = @_;
+    my $self = {};
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: instance
@@ -181,6 +181,94 @@ sub destroyImage # (image)
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub createVM # (name)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: defineVM
+#
+#   Override this method to define the Virtual Machine
+#   with the corresponding virtualizer program.
+#
+# Parameters:
+#
+#   name - name of the virtual machine
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented>
+#
+sub defineVM # (name)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: startVM
+#
+#   Override this method to start the Virtual Machine
+#   with the corresponding virtualizer program.
+#
+# Parameters:
+#
+#   name - name of the virtual machine
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub startVM # (name)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: removeVM
+#
+#   Override this method to remove the Virtual Machine
+#   with the corresponding virtualizer program.
+#
+# Parameters:
+#
+#   name - name of the virtual machine
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented>
+#
+sub removeVM # (name)
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: existsVM
+#
+#   Override this method to tell if a VM exists
+#   with the corresponding virtualizer program.
+#
+# Parameters:
+#
+#   name - name of the virtual machine
+#
+# Returns:
+#
+#   boolean - indicates if the VM exists
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub existsVM
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -337,6 +425,20 @@ sub revertSnapshot
 #   name         - snapshot label
 #
 sub deleteSnapshot
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: existsSnapshot
+#
+#   Override this method to tell if a snapshot exists
+#
+# Parameters:
+#
+#   domain       - virtual machine name
+#   name         - snapshot label
+#
+sub existsSnapshot
 {
     throw ANSTE::Exceptions::NotImplemented();
 }

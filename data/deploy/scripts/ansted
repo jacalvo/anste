@@ -37,14 +37,14 @@ then
 fi
 
 case "$1" in
-start)	echo -n "Starting ANSTE daemon"
+start)  echo -n "Starting ANSTE daemon"
         start-stop-daemon --start --quiet --pidfile /var/run/ansted.pid --name ansted --startas /usr/local/bin/ansted
         echo "." 
         echo -n "Notifying readiness to ANSTE master"
         notify_ready
         echo "."
-	;;
-stop)   echo -n "Stopping ANSTE daemon"	
+        ;;
+stop)   echo -n "Stopping ANSTE daemon"
         start-stop-daemon --stop --quiet --pidfile /var/run/ansted.pid --name ansted 
         echo "." 
         ;;
@@ -53,7 +53,7 @@ restart) echo -n "Restarting ANSTE daemon"
         start-stop-daemon --start --quiet --pidfile /var/run/ansted.pid --name ansted --startas /usr/local/bin/ansted
         echo "." 
         ;;
-*)	    echo "Usage: /etc/init.d/ansted {start|stop|restart}"
+*)      echo "Usage: /etc/init.d/ansted {start|stop|restart}"
         exit 1 
         ;;
 esac

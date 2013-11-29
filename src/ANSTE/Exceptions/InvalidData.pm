@@ -40,15 +40,15 @@ use base 'ANSTE::Exceptions::Base';
 #
 sub new # (data, value)
 {
-	my ($class, $data, $value) = @_;
+    my ($class, $data, $value) = @_;
 
     my ($package, undef, $line, $method) = caller(2);
 
-	my $self = $class->SUPER::new("Invalid value for $data: '$value' in " .
+    my $self = $class->SUPER::new("Invalid value for $data: '$value' in " .
                                   "method '$method' at '$package:$line'\n");
 
-	bless ($self, $class);
-	return $self;
+    bless ($self, $class);
+    return $self;
 }
 
 1;

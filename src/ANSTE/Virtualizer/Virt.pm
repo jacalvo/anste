@@ -234,6 +234,114 @@ sub createVM # (name)
     $self->execute("virsh create $path/$name/domain.xml");
 }
 
+# Method: defineVM
+#
+#   Overriden method that defines a KVM Virtual Machine.
+#
+# Parameters:
+#
+#   name - name of the libvirt configuration file for the image
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub defineVM # (name)
+{
+    my ($self, $name) = @_;
+
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
+    my $path = ANSTE::Config->instance()->imagePath();
+    $self->execute("virsh define $path/$name/domain.xml");
+}
+
+# Method: startVM
+#
+#   Overriden method that starts a KVM Virtual Machine.
+#
+# Parameters:
+#
+#   name - name of the domain
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub startVM # (name)
+{
+    my ($self, $name) = @_;
+
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
+    $self->execute("virsh start $name");
+}
+
+# Method: removeVM
+#
+#   Overriden method that removes a Virtual Machine
+#
+# Parameters:
+#
+#   name - name of the libvirt domain
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub removeVM # (name)
+{
+    my ($self, $name) = @_;
+
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
+    $self->execute("virsh undefine $name --snapshots-metadata");
+}
+
+# Method: existsVM
+#
+#   Overriden method that tells if a VM exists
+#
+# Parameters:
+#
+#   name - name of the libvirt domain
+#
+# Returns:
+#
+#   boolean - indicates if the VM exists
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub existsVM
+{
+    my ($self, $name) = @_;
+
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
+    my $out = `virsh list --all | grep -c '$name'`;
+    chomp($out);
+
+    return $out;
+}
+
 # Method: imageFile
 #
 #   Overriden method to get the path o a KVM disk image.
@@ -274,6 +382,8 @@ sub imageFile # (path, name)
 #               of the base image
 #   newimage  - an <ANSTE::Image::Image> object with the configuration
 #               of the new image
+#   genConf   - a Boolean telling whether the domain conf must be generated
+#               or just updated from the one in the base image
 #
 # Returns:
 #
@@ -284,9 +394,9 @@ sub imageFile # (path, name)
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType>     - throw if argument has invalid type
 #
-sub createImageCopy # (baseimage, newimage)
+sub createImageCopy # (baseimage, newimage, genConf)
 {
-    my ($self, $baseimage, $newimage) = @_;
+    my ($self, $baseimage, $newimage, $genConf) = @_;
 
     defined $baseimage or
         throw ANSTE::Exceptions::MissingArgument('baseimage');
@@ -314,11 +424,26 @@ sub createImageCopy # (baseimage, newimage)
     dircopy("$path/$basename", "$path/$newname");
 
     # Creates the configuration file for the new image
-    my $config = $self->_createImageConfig($newimage, "$path/$newname");
+    my $configFile = "$path/$newname/domain.xml";
+    my $config;
+    if ($genConf){
+        # Generate the configuration
+        $config = $self->_createImageConfig($newimage, "$path/$newname");
+    } else {
+        # Read the configuration file
+        my $FILE;
+        open($FILE, '<', $configFile) or return 0;
+        local $/;
+        $config = <$FILE>;
+        close($FILE) or return 0;
+
+        # Update the configuration
+        $config =~ s:'.*\.(qcow2|img)':'$path/$newname/disk.qcow2':;
+        $config =~ s:<name>.*</name>:<name>$newname</name>:;
+    }
 
     # Writes the configuration file
     my $FILE;
-    my $configFile = "$path/$newname/domain.xml";
     open($FILE, '>', $configFile) or return 0;
     print $FILE $config;
     close($FILE) or return 0;
@@ -592,6 +717,25 @@ sub deleteSnapshot
     my ($self, $domain, $name) = @_;
 
     $self->execute("virsh snapshot-delete $domain $name");
+}
+
+# Method: existsSnapshot
+#
+#   Override this method to tell if a snapshot exists
+#
+# Parameters:
+#
+#   domain       - virtual machine name
+#   name         - snapshot label
+#
+sub existsSnapshot
+{
+    my ($self, $domain, $name) = @_;
+
+    my $out = `virsh snapshot-list $domain | grep -c ' $name '`;
+    chomp($out);
+
+    return $out;
 }
 
 1;

@@ -55,8 +55,8 @@ use File::Temp qw(tempfile tempdir);
 #
 sub new # (image) returns new Commands object
 {
-	my ($class, $image) = @_;
-	my $self = {};
+    my ($class, $image) = @_;
+    my $self = {};
 
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
@@ -72,9 +72,9 @@ sub new # (image) returns new Commands object
     $self->{system} = ANSTE::System::System->instance();
     $self->{virtualizer} = ANSTE::Virtualizer::Virtualizer->instance();
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: ip
@@ -105,7 +105,7 @@ sub ip
 #
 sub create
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
     my $image = $self->{image};
     my $name = $image->name();
@@ -175,13 +175,68 @@ sub get
     return 1;
 }
 
+# Method: importImage
+#
+#   Imports the image using the virtualizer interface.
+#
+# Returns:
+#
+#   boolean - true if success, false otherwise
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
+sub importImage
+{
+    my ($self, $hostname) = @_;
+
+    defined $hostname or
+        throw ANSTE::Exceptions::MissingArgument('hostname');
+
+    my $virtualizer = $self->{virtualizer};
+    my $name = $self->{image}->name();
+
+    unless ($virtualizer->existsVM($name)) {
+        $virtualizer->defineVM($name);
+    }
+
+    unless ($virtualizer->existsSnapshot($name, $hostname)) {
+        $virtualizer->createSnapshot($name, $hostname, 'Base snapshot');
+    }
+}
+
+# Method: restoreBaseSnapshot
+#
+#   Restores the base snapshot of a host with a raw base image
+#
+# Returns:
+#
+#   boolean - true if success, false otherwise
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
+sub restoreBaseSnapshot
+{
+    my ($self, $hostname) = @_;
+
+    defined $hostname or
+        throw ANSTE::Exceptions::MissingArgument('hostname');
+
+    my $virtualizer = $self->{virtualizer};
+    my $name = $self->{image}->name();
+    $virtualizer->revertSnapshot($name, $hostname);
+}
+
 # Method: mount
 #
 #   Mounts the image to a temporary mount point.
 #
 sub mount
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
     my $name = $self->{image}->name();
 
@@ -409,6 +464,9 @@ sub deleteImage
     my $image = $self->{image}->name();
 
     $virtualizer->deleteImage($image);
+
+    # Deletes also the VM in case it is permanent
+    $virtualizer->removeVM($image);
 }
 
 # Method: deleteMountPoint
@@ -524,9 +582,18 @@ sub exists
 #   Creates the image virtual machine using the virtualizer interface,
 #   once the machine is created it waits for the system start.
 #
+# Parameters:
+#
+#   wait - Boolean telling whether the method must wait for the system to start
+#          Defaults to 1 (True)
+#
 sub createVirtualMachine
 {
-    my ($self) = @_;
+    my ($self, $wait) = @_;
+
+    unless (defined $wait) {
+        $wait = 1;
+    }
 
     my $virtualizer = $self->{virtualizer};
     my $system = $self->{system};
@@ -540,10 +607,12 @@ sub createVirtualMachine
 
     $virtualizer->createVM($name);
 
-    print "[$name] Waiting for the system start...\n";
-    my $waiter = ANSTE::Comm::HostWaiter->instance();
-    $waiter->waitForReady($name);
-    print "[$name] System is up.\n";
+    if ($wait) {
+        print "[$name] Waiting for the system start...\n";
+        my $waiter = ANSTE::Comm::HostWaiter->instance();
+        $waiter->waitForReady($name);
+        print "[$name] System is up.\n";
+    }
 }
 
 # Method: executeScripts

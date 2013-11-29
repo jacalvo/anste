@@ -45,8 +45,8 @@ use ANSTE::Exceptions::NotImplemented;
 #
 sub new # (report) returns new Write object
 {
-	my ($class, $report) = @_;
-	my $self = {};
+    my ($class, $report) = @_;
+    my $self = {};
 
     defined $report or
         throw ANSTE::Exceptions::MissingArgument('report');
@@ -54,9 +54,9 @@ sub new # (report) returns new Write object
     $self->{report} = $report;
     $self->{file} = undef;
 
-	bless($self, $class);
+    bless($self, $class);
 
-	return $self;
+    return $self;
 }
 
 # Method: write

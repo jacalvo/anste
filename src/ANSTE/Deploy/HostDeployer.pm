@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -98,8 +99,6 @@ sub new # (host, ip) returns new HostDeployer object
     $self->{cmd} = $cmd;
     $self->{ip} = $ip;
 
-    my $foo = $host->network()->interfaces()->[0]->address();
-
     bless($self, $class);
 
     return $self;
@@ -196,7 +195,7 @@ sub destroy
 
 # Method: deleteImage
 #
-#   Deletes the image of the deployed host.
+#   Deletes the image of the deployed hosts that does not use raw base images
 #
 sub deleteImage
 {
@@ -207,22 +206,53 @@ sub deleteImage
     my $host = $self->{host};
     my $hostname = $host->name();
 
-    print "[$hostname] Deleting image...\n";
-    $virtualizer->deleteImage($hostname);
-    print "[$hostname] Image deleted.\n";
+    unless ($host->baseImageType() eq 'raw') {
+        print "[$hostname] Deleting image...\n";
+        $virtualizer->deleteImage($hostname);
+        print "[$hostname] Image deleted.\n";
+    }
 }
 
 sub _deploy
 {
     my ($self) = @_;
 
+    my $host = $self->{host};
+
+    if ($host->baseImageType() eq 'raw') {
+        $self->_deploySnapshot();
+    } else {
+        $self->_deployCopy();
+    }
+}
+
+sub _deploySnapshot
+{
+    my ($self) = @_;
+
+    my $host = $self->{host};
+    my $hostname = $host->name();
+    my $cmd = $self->{cmd};
+
+    print "[$hostname] Restoring base snapshot...\n";
+    $cmd->restoreBaseSnapshot($hostname);
+
+    my $virtualizer = $self->{virtualizer};
+    $virtualizer->startVM($hostname);
+}
+
+sub _deployCopy
+{
+    my ($self) = @_;
+
+    my $host = $self->{host};
+    my $hostname = $host->name();
+
     my $system = $self->{system};
 
     my $image = $self->{image};
     my $cmd = $self->{cmd};
 
-    my $host = $self->{host};
-    my $hostname = $host->name();
     my $ip = $image->ip();
 
     my $config = ANSTE::Config->instance();
@@ -235,6 +265,7 @@ sub _deploy
     unshift (@{$host->network()->interfaces()}, $commIface);
 
     my $error = 0;
+
     print "[$hostname] Creating a copy of the base image...\n";
 
     try {
@@ -274,7 +305,6 @@ sub _deploy
     };
 
     try {
-
         # Execute pre-install scripts
         my $pre = $host->preScripts();
         if (@{$pre}) {
@@ -332,7 +362,11 @@ sub _copyBaseImage
     my $baseimage = $host->baseImage();
     my $newimage = $self->{image};
 
-    $virtualizer->createImageCopy($baseimage, $newimage);
+    if ($host->baseImageType() eq 'raw') {
+        $virtualizer->createImageCopy($baseimage, $newimage, 0);
+    } else {
+        $virtualizer->createImageCopy($baseimage, $newimage, 1);
+    }
 }
 
 sub _updateHostname # returns boolean

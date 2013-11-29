@@ -26,15 +26,15 @@ use constant SCENARIO_YAML => 'test.yaml';
 
 sub testServer # (host)
 {
-	my ($host) = @_;
+    my ($host) = @_;
 
-	my $name = $host->name();
+    my $name = $host->name();
     is($name, 'hostName', 'name = hostName');
-	my $desc = $host->desc();
+    my $desc = $host->desc();
     is($desc, 'hostDesc', 'desc = hostDesc');
 
-	testNetwork($host->network());
-	testPackages($host->packages());
+    testNetwork($host->network());
+    testPackages($host->packages());
     testBaseImage($host->baseImage());
 }
 
@@ -42,20 +42,20 @@ sub testNetwork # (network)
 {
     my ($network) = @_;
 
-	foreach my $interface (@{$network->interfaces()}) {
-		testInterface($interface);
-	}
+    foreach my $interface (@{$network->interfaces()}) {
+        testInterface($interface);
+    }
 
-	foreach my $route (@{$network->routes()}) {
-		testRoute($route);
-	}
+    foreach my $route (@{$network->routes()}) {
+        testRoute($route);
+    }
 }
 
 sub testInterface # (interface)
 {
-	my ($iface) = @_;
+    my ($iface) = @_;
 
-	my $type = ($iface->type() == 
+    my $type = ($iface->type() ==
                 ANSTE::Scenario::NetworkInterface::IFACE_TYPE_DHCP) ? 
                 'dhcp' : 
                 'static';
@@ -73,15 +73,15 @@ sub testInterface # (interface)
 
 sub testRoute # (route)
 {
-	my ($route) = @_;
+    my ($route) = @_;
 
-	my $destination = $route->destination();
+    my $destination = $route->destination();
     is($destination, 'default', 'destination = default');
-	my $gateway = $route->gateway();
+    my $gateway = $route->gateway();
     is($gateway, 'routeGateway', 'gateway = routeGateway');
-	my $netmask = $route->netmask();
+    my $netmask = $route->netmask();
     is($netmask, '0.0.0.0', 'netmask = 0.0.0.0');
-	my $iface = $route->iface();
+    my $iface = $route->iface();
     like($iface, qr/^eth/, 'interface name matchs /^eth/'); 
 }
 
@@ -89,20 +89,20 @@ sub testBaseImage # (image)
 {
     my ($image) = @_;
 
-	my $name = $image->name();
+    my $name = $image->name();
     is($name, 'imageName', 'name = imageName');
-	my $desc = $image->desc();
+    my $desc = $image->desc();
     is($desc, 'imageDesc', 'desc = imageDesc');
-	my $memory = $image->memory();
+    my $memory = $image->memory();
     is($memory, 'imageMemory', 'memory = imageMemory');
-	my $size = $image->size();
+    my $size = $image->size();
     is($size, 'imageSize', 'size = imageSize');
-	my $method = $image->installMethod();
+    my $method = $image->installMethod();
     is($method, 'copy', 'method = copy');
-	my $source = $image->installSource();
+    my $source = $image->installSource();
     is($source, '/tmp', 'source = /tmp');
 
-	testPackages($image->packages());
+    testPackages($image->packages());
 
     is(scalar(@{$image->preScripts()}), 2, 'pre-script count test');
 
@@ -111,33 +111,33 @@ sub testBaseImage # (image)
 
 sub testPackages # (packages)
 {
-	my ($packages) = @_;
+    my ($packages) = @_;
 
-	print "Showing Packages...\n";
+    print "Showing Packages...\n";
     ok(length(@{$packages->list()}) > 0, 'packages count test');
     my $count = 0;
-	foreach my $package (@{$packages->list()}) {
+    foreach my $package (@{$packages->list()}) {
         ok(defined($package), 'package defined');
         unlike($package, qr/^$/, 'package not empty');
         $count++;
         if ($count == 2) {
             last;
         }
-	}
+    }
 }
 
 sub test # (scenario)
 {
-	my ($scenario) = @_;
+    my ($scenario) = @_;
 
-	my $name = $scenario->name();
+    my $name = $scenario->name();
     is($name, 'scenarioName', 'scenario name = scenarioName');
-	my $desc = $scenario->desc();
+    my $desc = $scenario->desc();
     is($desc, 'scenarioDesc', 'scenario desc = scenarioDesc');
 
-	foreach my $host (@{$scenario->hosts()}) {
-		testServer($host);
-	}
+    foreach my $host (@{$scenario->hosts()}) {
+        testServer($host);
+    }
 }
 
 my $scenario = new ANSTE::Scenario::Scenario();
