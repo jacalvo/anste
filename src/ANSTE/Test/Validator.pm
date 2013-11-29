@@ -85,9 +85,14 @@ sub validateSuite # (suite)
 
     foreach my $test (@{$suite->tests()}) {
         my $suiteDir = $suite->dir();
-        my $testDir = $test->dir();
+        my $testScript = $test->script();
 
-        my $path = $config->testFile("$suiteDir/$testDir");
+        my $path;
+        if ($testScript =~ m{/}) {
+            $path = "tests/$testScript";
+        } else {
+            $path = $config->testFile("$suiteDir/$testScript");
+        }
 
         if ($test->type() eq 'selenium') {
             if (not -x $path) {
@@ -110,9 +115,8 @@ sub validateSuite # (suite)
             }
         } elsif ($test->type() eq 'reboot') {
         } else {
-            if (not -r "$path/test") {
-                throw ANSTE::Exceptions::NotFound('Test script',
-                                                  "$suiteDir/$testDir/test");
+            unless (-r $path) {
+                throw ANSTE::Exceptions::NotFound('Test script', "$path");
             }
         }
     }

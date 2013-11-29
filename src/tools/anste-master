@@ -56,8 +56,7 @@ while (defined($cmd = $term->readline($prompt))) {
         print $OUT $result, "\n";
         $term->addhistory($cmd);
     } catch ($e) {
-        my $msg = $e->stringify();
-        print $OUT "Execution error: $msg\n";
+        print $OUT "Execution error: $e\n";
     }
 }
 

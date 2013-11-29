@@ -289,8 +289,7 @@ sub _deployCopy
                 $error = 1;
             }
         } catch ($e) {
-            my $msg = $e->stringify();
-            print "[$hostname] ERROR: $msg\n";
+            print "[$hostname] ERROR: $e\n";
             $error = 1;
         }
 
@@ -345,8 +344,7 @@ sub _deployCopy
         my $msg = $e->message();
         print "[$hostname] ERROR: $msg\n";
     } catch ($e) {
-        my $msg = $e->stringify();
-        print "[$hostname] ERROR: $msg\n";
+        print "[$hostname] ERROR: $e\n";
     }
 }
 

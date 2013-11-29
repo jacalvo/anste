@@ -5,9 +5,9 @@ tests:
     - name: testName
       desc: testDesc
       host: testHost
-      dir: testDir
+      script: testScript
 
     - name: testName
       desc: testDesc
       host: testHost
-      dir: testDir
+      script: testScript
