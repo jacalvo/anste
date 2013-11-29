@@ -234,6 +234,33 @@ sub createVM # (name)
     $self->execute("virsh create $path/$name/domain.xml");
 }
 
+# Method: defineVM
+#
+#   Overriden method that defines a KVM Virtual Machine.
+#
+# Parameters:
+#
+#   name - name of the libvirt configuration file for the image
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub defineVM # (name)
+{
+    my ($self, $name) = @_;
+
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
+    my $path = ANSTE::Config->instance()->imagePath();
+    $self->execute("virsh define $path/$name/domain.xml");
+}
+
 # Method: removeVM
 #
 #   Overriden method that removes a Virtual Machine
