@@ -486,7 +486,8 @@ sub deleteImage
     $virtualizer->deleteImage($image);
 
     # Deletes also the VM in case it is permanent
-    $virtualizer->removeVM($image);
+    #TODO: This should be improved to work with raw images and detect when we are deleteing volatile ones
+    #$virtualizer->removeVM($image);
 }
 
 # Method: deleteMountPoint
