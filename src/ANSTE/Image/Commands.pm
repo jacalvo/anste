@@ -172,6 +172,26 @@ sub get
 
     system("rm -f $tmpDir/$fileName");
 
+    # Creates the configuration file for the new image
+    my $configFile = "$imgdir/$name/domain.xml";
+    my $configVar;
+
+    # Read the configuration file
+    my $FILE;
+    open($FILE, '<', $configFile) or return 0;
+    local $/;
+    $configVar = <$FILE>;
+    close($FILE) or return 0;
+
+    # Update the configuration
+    $configVar =~ s:'.*\.(qcow2|img)':'$imgdir/$name/disk.qcow2':;
+    $configVar =~ s:<name>.*</name>:<name>$name</name>:;
+
+    # Writes the configuration file
+    open($FILE, '>', $configFile) or return 0;
+    print $FILE $configVar;
+    close($FILE) or return 0;
+
     return 1;
 }
 

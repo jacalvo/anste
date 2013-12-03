@@ -362,11 +362,7 @@ sub _copyBaseImage
     my $baseimage = $host->baseImage();
     my $newimage = $self->{image};
 
-    if ($host->baseImageType() eq 'raw') {
-        $virtualizer->createImageCopy($baseimage, $newimage, 0);
-    } else {
-        $virtualizer->createImageCopy($baseimage, $newimage, 1);
-    }
+    $virtualizer->createImageCopy($baseimage, $newimage);
 }
 
 sub _updateHostname # returns boolean
