@@ -110,15 +110,17 @@ sub runTest # (command, logfile, env, params)
     my $verbose = $config->verbose();
 
     my $cmd = "$env $command $params > $log 2>&1";
-    print "Running test: $cmd\n" if $verbose;
     my $ret = system($cmd);
+    my $result = $?;
 
     # Checks if the command can't be executed or broken pipe signal
     if ($ret == -1) {
         throw ANSTE::Exceptions::Error("Can't execute $command");
+    } elsif ($verbose and ($result != 0)) {
+        system ("cat $log");
     }
 
-    return $?;
+    return $result;
 }
 
 # Method: mountImage

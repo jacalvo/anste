@@ -629,21 +629,16 @@ sub _runScriptOnHost # (hostname, script, log?, env?, params?)
 
     my $client = new ANSTE::Comm::MasterClient();
 
-    my $port = ANSTE::Config->instance()->anstedPort();
+    my $config = ANSTE::Config->instance();
+    my $port = $config->anstedPort();
     my $ip = $self->{hostIP}->{$hostname};
 
     $client->connect("http://$ip:$port");
 
     $client->put($script);
     if (defined $log) {
-        my $config = ANSTE::Config->instance();
-        my $verbose = $config->verbose();
-        if ($verbose) {
-            print "Executing $env $script $params > $log\n";
-        }
         $client->exec($script, $log, $env, $params);
-    }
-    else {
+    } else {
         $client->exec($script);
     }
     my $waiter = ANSTE::Comm::HostWaiter->instance();
@@ -653,6 +648,10 @@ sub _runScriptOnHost # (hostname, script, log?, env?, params?)
     if (defined $log) {
         $client->get($log);
         $client->del($log);
+
+        if ($config->verbose() and ($ret != 0)) {
+            system ("cat $log");
+        }
     }
 
     return $ret;
