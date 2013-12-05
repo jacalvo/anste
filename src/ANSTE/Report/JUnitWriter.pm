@@ -87,7 +87,7 @@ sub _writeSuiteFile # (suite, file)
     my ($self, $suite, $file) = @_;
 
     my $FILE;
-    open($FILE, '>', $file)
+    open($FILE, '>:utf8', $file)
         or die "Can't write file $file: $!";
 
     $self->{file} = $FILE;
