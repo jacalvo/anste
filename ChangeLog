@@ -1,4 +1,5 @@
 HEAD
+    + Run tests in /var/tmp/anste-tests with a run.sh wrapper
     + Show test log on failures when verbose mode is enabled
     + Made VMs from host with raw base images permanent
     + Skip some actions in the deploy for hosts with raw base images

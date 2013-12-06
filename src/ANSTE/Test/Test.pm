@@ -426,18 +426,26 @@ sub setParams # params string
 #
 #   Gets the environment string to be set before the test execution.
 #
+# Parameters:
+#
+#   sep - *optional* Separator character, usually ' ' or '\n'
+#
 # Returns:
 #
 #   string - String containing list of variables (FOO=bar BAR=foo)
 #
 sub env # returns params string
 {
-    my ($self) = @_;
+    my ($self, $sep) = @_;
+
+    unless ($sep) {
+        $sep = ' ';
+    }
 
     my $env = '';
 
     while (my ($name, $value) = each(%{$self->{variables}})) {
-        $env .= "$name=\"$value\" ";
+        $env .= "$name=\"$value\"$sep";
     }
 
     if ($env) {

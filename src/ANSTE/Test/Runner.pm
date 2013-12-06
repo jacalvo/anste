@@ -34,7 +34,6 @@ use ANSTE::Exceptions::NotFound;
 use ANSTE::System::System;
 
 use Cwd;
-use File::Temp qw(tempdir);
 use Text::Template;
 use Safe;
 use Perl6::Slurp;
@@ -429,8 +428,9 @@ sub _runTest # (test)
     $testResult->setStartTime($self->_time());
 
     # Create a temp directory for this test
-    my $newPath = tempdir(CLEANUP => 1)
-        or die "Can't create temp directory: $!";
+    my $newPath = "/var/tmp/anste-tests/$name";
+    system ("rm -rf $newPath");
+    system ("mkdir -p $newPath");
 
     # TODO: separate this in two functions runSeleniumTest and runShellTest ??
 
@@ -698,7 +698,7 @@ sub _runWebTest
 
     $test->setVariable('BASE_URL', $url);
     $test->setVariable('LC_ALL', 'C');
-    my $env = $test->env();
+    my $env = $test->env("\n");
 
     return $self->{system}->runTest($script, $logfile, $env, '');
 }

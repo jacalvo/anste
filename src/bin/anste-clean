@@ -64,4 +64,6 @@ sub clean
     }
 
     system ('pkill -9 -f qemu-nbd');
+
+    system ('rm -rf /var/tmp/anste-tests');
 }

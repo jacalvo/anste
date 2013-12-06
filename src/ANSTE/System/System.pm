@@ -22,6 +22,9 @@ use ANSTE::Config;
 use ANSTE::Exceptions::NotImplemented;
 use ANSTE::Exceptions::MissingArgument;
 
+use File::Slurp;
+use File::Basename;
+
 # Class: System
 #
 #   Abstract class with the methods called by the rest of the ANSTE
@@ -109,8 +112,12 @@ sub runTest # (command, logfile, env, params)
     my $config = ANSTE::Config->instance();
     my $verbose = $config->verbose();
 
-    my $cmd = "$env $command $params > $log 2>&1";
-    my $ret = system($cmd);
+    $env =~ s/^/export /mg;
+    my $wrapper = dirname($command) . '/run.sh';
+    write_file($wrapper, "#!/bin/sh\n\n$env\n$command $params\n");
+    system ("chmod +x $wrapper");
+
+    my $ret = system("$wrapper > $log 2>&1");
     my $result = $?;
 
     # Checks if the command can't be executed or broken pipe signal
