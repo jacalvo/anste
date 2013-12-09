@@ -27,7 +27,7 @@ use ANSTE::Comm::WaiterServer;
 use ANSTE::Comm::HostWaiter;
 
 use Term::ReadLine;
-use Perl6::Slurp;
+use File::Slurp;
 use TryCatch::Lite;
 
 my $term = new Term::ReadLine('anste-master');
@@ -113,7 +113,7 @@ sub _put # (file)
     }
 
     $client->put($file);
-    
+
     return 'OK';
 }
 
@@ -125,11 +125,11 @@ sub _execute # (file)
     $client->exec($file, 'out.log');
     $waiter->waitForAnyExecution();
     $client->get('out.log');
-    my $content = slurp '<out.log';
+    my $content = read_file('out.log');
     $client->del('out.log');
     $client->del($cmd);
     unlink 'out.log';
-    
+
     return "Output:\n$content";
 }
 

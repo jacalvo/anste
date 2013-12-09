@@ -36,7 +36,7 @@ use ANSTE::System::System;
 use Cwd;
 use Text::Template;
 use Safe;
-use Perl6::Slurp;
+use File::Slurp;
 use TryCatch::Lite;
 
 my $SUITE_FILE = 'suite.html';
@@ -547,7 +547,7 @@ sub _runTest # (test)
             my $paramsStr = "# Arguments passed to the test: $params\n";
             print $SCRIPT $paramsStr;
         }
-        my $scriptContent = slurp "<$path";
+        my $scriptContent = read_file($path);
         print $SCRIPT "# Test script executed:\n";
         print $SCRIPT $scriptContent;
         close ($SCRIPT);
@@ -570,7 +570,7 @@ sub _runTest # (test)
         $testResult->setDuration(time() - $initialTime);
 
         # Editing the log to write the starting and ending times.
-        my $contents = slurp "<$logfile";
+        my $contents = read_file($logfile);
         my $LOG;
         open($LOG, '>', $logfile);
         my $startTime = $testResult->startTime();

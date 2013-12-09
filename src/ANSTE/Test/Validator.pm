@@ -28,7 +28,7 @@ use ANSTE::Exceptions::NotFound;
 use Cwd;
 use File::Temp qw(tempdir);
 use TryCatch::Lite;
-use Perl6::Slurp;
+use File::Slurp;
 
 my $SUITE_FILE = 'suite.html';
 
@@ -104,7 +104,7 @@ sub validateSuite # (suite)
                 throw ANSTE::Exceptions::NotFound('Suite file', $suiteFile);
             }
             # Validate selenium suite files
-            my @lines = slurp "<$suiteFile";
+            my @lines = read_file($suiteFile);
             my @htmls = map {substr ((split /"/)[1], 2)}
                             (grep /href=".\/.*.html"/, @lines);
             foreach my $html (@htmls) {

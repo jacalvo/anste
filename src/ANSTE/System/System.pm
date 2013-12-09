@@ -114,7 +114,8 @@ sub runTest # (command, logfile, env, params)
 
     $env =~ s/^/export /mg;
     my $wrapper = dirname($command) . '/run.sh';
-    write_file($wrapper, "#!/bin/sh\n\n$env\n$command $params\n");
+    write_file($wrapper, { binmode => ':utf8' },
+               "#!/bin/sh\n\n$env\n$command $params\n");
     system ("chmod +x $wrapper");
 
     my $ret = system("$wrapper > $log 2>&1");
