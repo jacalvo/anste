@@ -536,6 +536,7 @@ sub _runTest # (test)
         # Copy the script to the results adding env and params
         my $SCRIPT;
         open ($SCRIPT, '>', $scriptfile);
+        binmode ($SCRIPT, ':utf8');
 
         if ($env) {
             my $envStr = "# Environment passed to the test:\n";
