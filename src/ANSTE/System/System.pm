@@ -124,8 +124,6 @@ sub runTest # (command, logfile, env, params)
     # Checks if the command can't be executed or broken pipe signal
     if ($ret == -1) {
         throw ANSTE::Exceptions::Error("Can't execute $command");
-    } elsif ($verbose and ($result != 0)) {
-        system ("cat $log");
     }
 
     return $result;

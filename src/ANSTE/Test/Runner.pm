@@ -432,6 +432,8 @@ sub _runTest # (test)
     system ("rm -rf $newPath");
     system ("mkdir -p $newPath");
 
+    my $assertFailed = $test->assert() eq 'failed';
+
     # TODO: separate this in two functions runSeleniumTest and runShellTest ??
 
     # Run the test itself either it's a selenium one or a normal one
@@ -569,6 +571,13 @@ sub _runTest # (test)
         $testResult->setEndTime($endTime);
         $testResult->setDuration(time() - $initialTime);
 
+        if ($config->verbose()) {
+            if (($assertFailed and ($ret == 0)) or
+                (not $assertFailed) and ($ret != 0)) {
+                system ("cat $logfile");
+            }
+        }
+
         # Editing the log to write the starting and ending times.
         my $contents = read_file($logfile);
         my $LOG;
@@ -584,7 +593,7 @@ sub _runTest # (test)
     }
 
     # Invert the result of the test when checking for fail
-    if ($test->assert() eq 'failed') {
+    if ($assertFailed) {
         $ret = ($ret != 0) ? 0 : 1;
     }
     $testResult->setValue($ret);
@@ -649,10 +658,6 @@ sub _runScriptOnHost # (hostname, script, log?, env?, params?)
     if (defined $log) {
         $client->get($log);
         $client->del($log);
-
-        if ($config->verbose() and ($ret != 0)) {
-            system ("cat $log");
-        }
     }
 
     return $ret;
