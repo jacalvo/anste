@@ -192,6 +192,7 @@ sub get
         # Writes the file
         my $FILE;
         open($FILE, ">", $file) or die "Can't open(): $!";
+        binmode ($FILE, ':utf8');
         print $FILE decode_base64($content);
         close $FILE;
         return 1;
