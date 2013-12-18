@@ -1072,7 +1072,6 @@ sub imageMissingAction
 {
     my ($self) = @_;
 
-    # TODO: Make this overridable in command line??
     my $action = $self->_getOption('deploy', 'image-missing-action');
 
     my @valid = ('auto-create', 'auto-download');
@@ -1083,15 +1082,6 @@ sub imageMissingAction
     }
 
     return $action;
-}
-
-sub autoCreateImages
-{
-    my ($self) = @_;
-
-    my $action = $self->imageMissingAction();
-
-    return ($action eq 'auto-create');
 }
 
 sub autoDownloadImages

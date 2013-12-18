@@ -128,14 +128,7 @@ sub deploy # returns hash ref with the ip of each host
     my $reuse = $config->reuse();
 
     if (not $reuse) {
-        if ($config->autoDownloadImages()) {
-            $self->_downloadMissingBaseImages();
-        } elsif ($config->autoCreateImages()) {
-            $self->_createMissingBaseImages();
-        } else {
-            my $action = $self->imageMissingAction();
-            throw ANSTE::Exceptions::Error("Not valid action '$action'.");
-        }
+        $self->_createOrGetMissingBaseImages();
 
         # Set up the network before deploy
         print "Setting up network...\n";
@@ -222,22 +215,28 @@ sub destroy
     ANSTE::Status->instance()->remove();
 }
 
-sub _createMissingBaseImages
+sub _createOrGetMissingBaseImages
 {
     my ($self) = @_;
 
     my $scenario = $self->{scenario};
+    my $config = ANSTE::Config->instance();
 
     # Tries to create all the base images, if a image
     # already exists, does nothing.
     # Does not create raw base images
     foreach my $host (@{$scenario->hosts()}) {
         my $hostname = $host->name();
-        if ($host->baseImageType() eq 'raw') {
-            print "[$hostname] Ignoring, raw base image.\n";
+        my $image = $host->baseImage();
+        if ($host->baseImageType() eq 'raw' or $config->autoDownloadImages()) {
+            print "[$hostname] Auto-downloading base image if not exists...\n";
+            my $getter = new ANSTE::Image::Getter($image);
+            if ($getter->getImage()) {
+                print "[$hostname] Base image downloaded.\n";
+            } else {
+                print "[$hostname] Base image already exists.\n";
+            }
         } else {
-            my $image = $host->baseImage();
-            my $hostname = $host->name();
             print "[$hostname] Auto-creating base image if not exists...\n";
             my $creator = new ANSTE::Image::Creator($image);
             if ($creator->createImage()) {
@@ -245,27 +244,6 @@ sub _createMissingBaseImages
             } else {
                 print "[$hostname] Base image already exists.\n";
             }
-        }
-    }
-}
-
-sub _downloadMissingBaseImages
-{
-    my ($self) = @_;
-
-    my $scenario = $self->{scenario};
-
-    # Tries to download all the base images, if a image
-    # already exists, does nothing.
-    foreach my $host (@{$scenario->hosts()}) {
-        my $image = $host->baseImage();
-        my $hostname = $host->name();
-        print "[$hostname] Auto-downloading base image if not exists...\n";
-        my $getter = new ANSTE::Image::Getter($image);
-        if ($getter->getImage()) {
-            print "[$hostname] Base image downloaded.\n";
-        } else {
-            print "[$hostname] Base image already exists.\n";
         }
     }
 }
