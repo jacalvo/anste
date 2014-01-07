@@ -225,7 +225,12 @@ sub updateNetworkCommand # returns string
 {
     my ($self) = @_;
 
-    return '/sbin/restart networking';
+    system ("lsb_release -c | grep precise");
+    if ($? == 0) {
+        return '/etc/init.d/networking restart';
+    } else {
+        return '/sbin/restart networking';
+    }
 }
 
 # Method: cleanPackagesCommand
