@@ -224,9 +224,10 @@ sub updatePackagesCommand # returns string
 sub updateNetworkCommand # returns string
 {
     my ($self) = @_;
+    my $config = ANSTE::Config->instance();
 
-    system ("lsb_release -c | grep precise");
-    if ($? == 0) {
+    my $dist = $config->variables()->{'dist'};
+    if ($dist eq "precise") {
         return '/etc/init.d/networking restart';
     } else {
         return '/sbin/restart networking';
