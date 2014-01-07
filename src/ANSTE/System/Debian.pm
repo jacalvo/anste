@@ -225,7 +225,7 @@ sub updateNetworkCommand # returns string
 {
     my ($self) = @_;
 
-    return '/etc/init.d/networking restart';
+    return '/sbin/restart networking';
 }
 
 # Method: cleanPackagesCommand
