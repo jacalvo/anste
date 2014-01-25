@@ -27,7 +27,6 @@ use ANSTE::Exceptions::InvalidFile;
 
 use Text::Template;
 use Safe;
-use XML::DOM;
 use YAML::XS;
 
 # Class: BaseImage
@@ -612,7 +611,7 @@ sub postTestsScripts # returns list ref
 
 # Method: loadFromFile
 #
-#   Loads the base image data from a XML file.
+#   Loads the base image data from a YAML file.
 #
 # Parameters:
 #
@@ -646,113 +645,8 @@ sub loadFromFile # (filename)
     my $text = $template->fill_in(HASH => $variables, SAFE => new Safe)
         or die "Couldn't fill in the template: $Text::Template::ERROR";
 
-    if ($filename =~ /\.xml$/) {
-        my $parser = new XML::DOM::Parser;
-        my $doc;
-        eval {
-            $doc = $parser->parse($text);
-        };
-        if ($@) {
-            throw ANSTE::Exceptions::Error("Error parsing $filename: $@");
-        }
-
-        my $image = $doc->getDocumentElement();
-        my $ret = $self->_loadFromXml($image);
-        $doc->dispose();
-        return $ret;
-    } elsif ($filename =~ /\.yaml$/) {
-        my ($image) = YAML::XS::Load($text);
-        return $self->_loadFromYAML($image);
-    } else {
-        throw ANSTE::Exceptions::Error("Invalid file type ($file), only .xml or .yaml files are supported");
-    }
-}
-
-sub _loadFromXml # (image)
-{
-    my ($self, $image) = @_;
-
-    my $nameNode = $image->getElementsByTagName('name', 0)->item(0);
-    my $name = $nameNode->getFirstChild()->getNodeValue();
-    $self->setName($name);
-
-    my $descNode = $image->getElementsByTagName('desc', 0)->item(0);
-    my $desc = $descNode->getFirstChild()->getNodeValue();
-    $self->setDesc($desc);
-
-    my $installNode = $image->getElementsByTagName('install', 0)->item(0);
-    my $method = $installNode->getAttribute('method');
-    $self->setInstallMethod($method);
-    my $distNode = $installNode->getElementsByTagName('dist', 0)->item(0);
-    if ($distNode) {
-        my $dist = $distNode->getFirstChild()->getNodeValue();
-        $self->setInstallDist($dist);
-    }
-    my $commandNode = $installNode->getElementsByTagName('command', 0)->item(0);
-    if ($commandNode) {
-        my $command = $commandNode->getFirstChild()->getNodeValue();
-        $self->setInstallCommand($command);
-    }
-    my $sourceNode = $installNode->getElementsByTagName('source', 0)->item(0);
-    if ($sourceNode) {
-        my $source = $sourceNode->getFirstChild()->getNodeValue();
-        $self->setInstallSource($source);
-    }
-
-    my $memoryNode = $image->getElementsByTagName('memory', 0)->item(0);
-    if ($memoryNode) {
-        my $memory = $memoryNode->getFirstChild()->getNodeValue();
-        $self->setMemory($memory);
-    }
-
-    my $sizeNode = $image->getElementsByTagName('size', 0)->item(0);
-    my $size = $sizeNode->getFirstChild()->getNodeValue();
-    $self->setSize($size);
-
-    my $archNode = $image->getElementsByTagName('arch', 0)->item(0);
-    if ($archNode) {
-        my $arch = $archNode->getFirstChild()->getNodeValue();
-        $self->setArch($arch);
-    }
-
-    my $swapNode = $image->getElementsByTagName('swap', 0)->item(0);
-    if ($swapNode) {
-        my $swap = $swapNode->getFirstChild()->getNodeValue();
-        $self->setSwap($swap);
-    }
-
-    my $packagesNode = $image->getElementsByTagName('packages', 0)->item(0);
-    if ($packagesNode) {
-        $self->packages()->load($packagesNode);
-    }
-
-    my $filesNode = $image->getElementsByTagName('files', 0)->item(0);
-    if($filesNode){
-        $self->files()->load($filesNode);
-    }
-
-    my $preNode = $image->getElementsByTagName('pre-install', 0)->item(0);
-    if ($preNode) {
-        $self->_addScripts('pre-scripts', $preNode);
-    }
-
-    my $postNode = $image->getElementsByTagName('post-install', 0)->item(0);
-    if ($postNode) {
-        $self->_addScripts('post-scripts', $postNode);
-    }
-
-    my $postTestsNode = $image->getElementsByTagName('post-tests', 0)->item(0);
-    if ($postTestsNode) {
-        $self->_addScripts('post-tests-scripts', $postTestsNode);
-    }
-
-    my $mirrorNode = $image->getElementsByTagName('mirror', 0)->item(0);
-    if ($mirrorNode) {
-        my $mirror = $mirrorNode->getFirstChild()->getNodeValue();
-        $self->setMirror($mirror);
-    }
-
-    return(1);
+    my ($image) = YAML::XS::Load($text);
+    return $self->_loadFromYAML($image);
 }
 
 sub _addScripts # (list, node)
@@ -764,7 +658,7 @@ sub _addScripts # (list, node)
         push(@{$self->{$list}}, $script);
     }
 }
-# TODO: Support arch swap and files
+
 sub _loadFromYAML # (image)
 {
     my ($self, $image) = @_;
@@ -793,19 +687,18 @@ sub _loadFromYAML # (image)
         $self->setSwap($swap);
     }
 
-    my $install = $image->{install};
-    my $installMethod = $install->{method};
+    my $installMethod = $image->{method};
     $self->setInstallMethod($installMethod);
 
-    my $installSource = $install->{source};
+    my $installSource = $image->{source};
     if  ($installSource) {
         $self->setInstallSource($installSource);
     }
-    my $installDist = $install->{dist};
+    my $installDist = $image->{dist};
     if  ($installDist) {
         $self->setInstallDist($installDist);
     }
-    my $installCommand = $install->{command};
+    my $installCommand = $image->{command};
     if  ($installCommand) {
         $self->setInstallCommand($installCommand);
     }

@@ -1,0 +1,8 @@
+name: baseimage-saucy
+desc: Ubuntu Saucy
+memory: 256
+size: 1500
+method: debootstrap
+dist: saucy
+pre-install:
+    - write-saucy-sources.sh

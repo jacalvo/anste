@@ -24,7 +24,7 @@ use lib "$Bin/../src";
 use ANSTE::Scenario::BaseImage;
 use ANSTE::ScriptGen::BaseImageSetup;
 
-use constant IMAGE => 'hardy-ebox-base.xml';
+use constant IMAGE => 'ubuntu-saucy.yaml';
 
 my $image = new ANSTE::Scenario::BaseImage;
 $image->loadFromFile(IMAGE);

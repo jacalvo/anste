@@ -24,7 +24,7 @@ use lib "$Bin/../src";
 use ANSTE::Scenario::Scenario;
 use ANSTE::ScriptGen::HostImageSetup;
 
-use constant SCENARIO => 'big.xml';
+use constant SCENARIO => 'sample.yaml';
 
 my $arg = $ARGV[0] ? $ARGV[0] : SCENARIO;
 

@@ -1464,7 +1464,7 @@ sub virtMemory
 
 # Method: setVariable
 #
-#   Sets a variable to be substituted on the XML files.
+#   Sets a variable to be substituted on the YAML files.
 #
 # Parameters:
 #
@@ -1494,7 +1494,7 @@ sub setVariable # (name, value)
 
 # Method: variables
 #
-#   Gets the variables to be substituted on the XML files.
+#   Gets the variables to be substituted on the YAML files.
 #
 # Returns:
 #

@@ -1,6 +1,6 @@
 name: suiteName
 desc: suiteDesc
-scenario: test.xml
+scenario: test.yaml
 tests:
     - name: testName
       desc: testDesc

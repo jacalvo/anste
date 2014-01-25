@@ -33,8 +33,8 @@ use ANSTE::Exceptions::InvalidFile;
 use Test::More tests => 7;
 use TryCatch::Lite;
 
-use constant IMAGE => 'hardy-base.xml';
-use constant SCENARIO => 'scenario.xml';
+use constant IMAGE => 'ubuntu-saucy.yaml';
+use constant SCENARIO => 'scenario.yaml';
 use constant HOSTNAME => 'hostname1';
 use constant IP => '192.168.45.192';
 

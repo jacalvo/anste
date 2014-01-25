@@ -78,7 +78,7 @@ sub destination # returns route destination string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setDestination # (destination) 
+sub setDestination # (destination)
 {
     my ($self, $destination) = @_;
 
@@ -212,7 +212,7 @@ sub setIface # iface string
 #
 # Parameters:
 #
-#   node - <XML::DOM::Element> object containing the test data.    
+#   node - <XML::DOM::Element> object containing the test data.
 #
 # Exceptions:
 #
@@ -230,7 +230,7 @@ sub load # (node)
         throw ANSTE::Exceptions::InvalidType('node', 'XML::DOM::Element');
     }
 
-    my $destinationNode = 
+    my $destinationNode =
         $node->getElementsByTagName('destination', 0)->item(0);
     my $destination = $destinationNode->getFirstChild()->getNodeValue();
     $self->setDestination($destination);

@@ -126,8 +126,7 @@ sub runDir # (suites)
         # If the dir contains more suites, descend on it
         if (-r "$path/$SUITE_LIST_FILE") {
             $self->runDir("$suites/$subdir");
-        }
-        elsif ((-r "$path/suite.xml") or (-r "$path/suite.yaml")) {
+        } elsif (-r "$path/suite.yaml") {
             # If the dir contains a single suit, run it
             my $suite = new ANSTE::Test::Suite;
             my $suiteDir = "$suites/$subdir";

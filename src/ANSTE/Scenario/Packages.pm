@@ -21,8 +21,6 @@ use warnings;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 
-use XML::DOM;
-
 # Class: Packages
 #
 #   Contains the list of packages that have to be installed on a image.
@@ -86,50 +84,6 @@ sub add # (packages)
     push(@{$self->{list}}, @packages);
 }
 
-# Method: load
-#
-#   Loads the information contained in the given XML node representing
-#   the package list into this object.
-#
-# Parameters:
-#
-#   node - <XML::DOM::Element> object containing the test data.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
-#   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
-#
-sub load # (node)
-{
-    my ($self, $node) = @_;
-
-    defined $node or
-        throw ANSTE::Exceptions::MissingArgument('node');
-
-    if (not $node->isa('XML::DOM::Element')) {
-        throw ANSTE::Exceptions::InvalidType('node',
-                                             'XML::DOM::Element');
-    }
-
-
-    foreach my $profile ($node->getElementsByTagName('profile', 0)) {
-        my $name = $profile->getFirstChild()->getNodeValue();
-        my $file = ANSTE::Config->instance()->profileFile($name);
-        my $FILE;
-        open($FILE, '<', $file) or die "Error loading $file";
-        my @names;
-        chomp(@names = <$FILE>);
-        close $FILE or die "Can't close $file";
-        $self->add(@names);
-    }
-
-    foreach my $package ($node->getElementsByTagName('package', 0)) {
-        my $name = $package->getFirstChild()->getNodeValue();
-        $self->add($name);
-    }
-}
-
 sub loadYAML
 {
     my ($self, $packages) = @_;
@@ -140,9 +94,9 @@ sub loadYAML
     foreach my $packageOrProfile (@{$packages}) {
         my $file = ANSTE::Config->instance()->profileFile($packageOrProfile);
         my $FILE;
-        if ( open($FILE, '<', $file) ) {
+        if (open ($FILE, '<', $file)) {
             my @names;
-            chomp(@names = <$FILE>);
+            chomp (@names = <$FILE>);
             close $FILE or die "Can't close $file";
             $self->add(@names);
         } else {

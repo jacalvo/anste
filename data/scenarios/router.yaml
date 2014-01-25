@@ -1,0 +1,29 @@
+name: Scenario Name
+desc: Description of the scenario
+hosts:
+   - name: router
+     type: router
+     desc: Host that acts like a router
+     baseimage: ubuntu-saucy
+     memory: 128
+     network:
+        interfaces:
+            - name: eth1
+              type: static
+              address: 192.168.2.1
+              netmask: 255.255.255.0
+
+   - name: test-client
+     desc: Client that connects to the router
+     baseimage: ubuntu-saucy
+     memory: 64
+     network:
+        interfaces:
+            - name: eth1
+              type: static
+              address: 192.168.2.2
+              netmask: 255.255.255.0
+              gateway: 192.168.2.1
+     packages:
+        - host
+        - wget

@@ -19,10 +19,9 @@ use warnings;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Config;
 
-use Test::More tests => 112;
+use Test::More tests => 54;
 
-use constant SCENARIO => 'test.xml';
-use constant SCENARIO_YAML => 'test.yaml';
+use constant SCENARIO => 'test.yaml';
 
 sub testServer # (host)
 {
@@ -143,7 +142,3 @@ sub test # (scenario)
 my $scenario = new ANSTE::Scenario::Scenario();
 $scenario->loadFromFile(SCENARIO);
 test($scenario);
-
-my $scenarioYaml = new ANSTE::Scenario::Scenario();
-$scenarioYaml->loadFromFile(SCENARIO_YAML);
-test($scenarioYaml);

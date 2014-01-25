@@ -389,8 +389,7 @@ sub suite # (suite)
 
     my $config = ANSTE::Config->instance();
 
-    return ((-r $config->testFile("$suite/suite.xml")) or
-            (-r $config->testFile("$suite/suite.yaml")));
+    return (-r $config->testFile("$suite/suite.yaml"));
 }
 
 # Function: template
