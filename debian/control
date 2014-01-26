@@ -4,17 +4,16 @@ Priority: optional
 Maintainer: José Antonio Calvo <jacalvo@zentyal.com>
 Build-Depends: debhelper (>= 5), libtrycatch-lite-perl, libfile-copy-recursive-perl,
   libsoap-lite-perl, libfile-slurp-perl, libconfig-tiny-perl, libperl6-junction-perl,
-  libterm-readline-gnu-perl, libmail-rfc822-address-perl, libtext-template-perl, debootstrap,
-  libvirt-bin, libyaml-libyaml-perl, libjson-xs-perl, sshpass, libattempt-perl, libio-interface-perl, libdevel-stacktrace-perl
+  libterm-readline-gnu-perl, libtext-template-perl, libdevel-stacktrace-perl,
+  libyaml-libyaml-perl, libjson-xs-perl, libattempt-perl, libio-interface-perl
 Standards-Version: 3.7.2
 
 Package: anste
 Architecture: all
 Depends: perl, libtrycatch-lite-perl, libfile-copy-recursive-perl, libsoap-lite-perl,
   libperl6-slurp-perl, qemu-kvm, ubuntu-vm-builder, libconfig-tiny-perl, libperl6-junction-perl,
-  libterm-readline-gnu-perl, libmail-rfc822-address-perl, libtext-template-perl, debootstrap,
-  libvirt-bin, libyaml-libyaml-perl, libjson-xs-perl, sshpass, libattempt-perl,
-  python-selenium (>= 2.28.0), libio-interface-perl
+  libterm-readline-gnu-perl, libtext-template-perl, libvirt-bin, libyaml-libyaml-perl,
+  libjson-xs-perl, sshpass, libattempt-perl, python-selenium (>= 2.28.0), libio-interface-perl
 Recommends: recordmydesktop
 Description: Advanced Network Service Testing Environment
  ANSTE is a testing environment for advanced network services, mainly intended

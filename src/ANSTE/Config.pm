@@ -819,33 +819,6 @@ sub testFile # (file)
     return $self->_filePath("tests/$file");
 }
 
-# Method: templatePath
-#
-#   Gets the value for the templates' path option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
-#
-sub templatePath
-{
-    my ($self) = @_;
-
-    my $templatePath = $self->_getOption('paths', 'templates');
-
-    if (not ANSTE::Validate::path($templatePath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/templates',
-                                               $templatePath,
-                                               $self->{confFile});
-    }
-
-    return $templatePath;
-}
-
 # Method: anstedPort
 #
 #   Gets the value for the ansted listen port option.
@@ -1434,7 +1407,7 @@ sub vmBuilderProxy
 # Method: virtSize
 #
 #
-#   Gets the value of the Xen's size option.
+#   Gets the value of the size option for VMs.
 #
 # Returns:
 #
@@ -1449,7 +1422,7 @@ sub virtSize
 
 # Method: virtMemory
 #
-#   Gets the value of the Xen's memory option.
+#   Gets the value of the memory option for VMs.
 #
 # Returns:
 #
@@ -1623,7 +1596,6 @@ sub _setDefaults
 
     $self->{default}->{'paths'}->{'images'} = '/tmp/images';
     $self->{default}->{'paths'}->{'deploy'} = "$data/deploy";
-    $self->{default}->{'paths'}->{'templates'} = "$data/templates";
 
     $self->{default}->{'ansted'}->{'port'} = '8000';
 

@@ -57,8 +57,6 @@ install:
 	cp -a data/files/* $(DESTDIR)$(DATADIR)/files
 	install -d $(DESTDIR)$(DATADIR)/scripts
 	install -m755 data/scripts/* $(DESTDIR)$(DATADIR)/scripts
-	install -d $(DESTDIR)$(DATADIR)/templates
-	cp -a data/templates/* $(DESTDIR)$(DATADIR)/templates
 	install -d $(DESTDIR)$(DATADIR)/tests
 	cp -a data/tests/sample $(DESTDIR)$(DATADIR)/tests
 	cp -a data/tests/routers $(DESTDIR)$(DATADIR)/tests
@@ -98,7 +96,6 @@ uninstall:
 	rm -rf $(DESTDIR)$(DATADIR)/scripts
 	rm -rf $(DESTDIR)$(DATADIR)/tests
 	rm -rf $(DESTDIR)$(DATADIR)/common
-	rm -rf $(DESTDIR)$(DATADIR)/templates
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Config.pm
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Validate.pm
 	rm -rf $(DESTDIR)$(LIBPERL)/ANSTE/Comm

@@ -167,11 +167,6 @@ sub createImage
 
     $virtualizer->destroyNetwork($scenario);
 
-    print "[$name] Resizing image... ";
-    $cmd->resize($image->size())
-        or throw ANSTE::Exceptions::Error('Error resizing image.');
-    print "done.\n";
-
     print "[$name] Image creation finished.\n";
 
     return 1;

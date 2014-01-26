@@ -20,8 +20,6 @@ use warnings;
 
 use ANSTE::Config;
 
-use Mail::RFC822::Address;
-
 use Cwd;
 use File::Basename;
 
@@ -350,25 +348,6 @@ sub mac # (mac)
     # Add this to simplify the regex
     $mac .= ':';
     return $mac =~ /^([0-9a-fA-F]{1,2}:){6}$/;
-}
-
-# Function: email
-#
-#   Checks if the given email address is valid according to RFC 822.
-#
-# Parameters:
-#
-#   email - String with the email.
-#
-# Returns:
-#
-#   boolean - true if it's valid, false otherwise
-#
-sub email # (address)
-{
-    my ($address) = @_;
-
-    return Mail::RFC822::Address::valid($address);
 }
 
 # Function: suite

@@ -155,47 +155,6 @@ sub configureAptProxy
     return 1;
 }
 
-# Method: resizeImage
-#
-#   Overriden method that resizes a image file
-#   using resize2fs, checking it first with e2fsck.
-#
-# Parameters:
-#
-#   image   - image file
-#   size    - new size
-#
-# Returns:
-#
-#   boolean - indicates if the process has been successful
-#
-sub resizeImage # (image, size)
-{
-    my ($self, $image, $size) = @_;
-
-    defined $image or
-        throw ANSTE::Exceptions::MissingArgument('image');
-    defined $size or
-        throw ANSTE::Exceptions::MissingArgument('size');
-
-    my ($ret, $tries) = (1, 0);
-
-#FIXME: This doesn't work with kvm, only with xen
-# temporary unimplemented.
-    return 1;
-
-#    # Sometimes it needs two (or more?) passes to work.
-#    do {
-#        $self->execute("e2fsck -f $image");
-#
-#        $ret = $self->execute("resize2fs $image $size");
-#
-#        $tries++;
-#    } while ($ret == 0 and $tries < 2);
-#
-#    return $ret ;
-}
-
 # Method: updatePackagesCommand
 #
 #   Overriden method that returns the Debian command
