@@ -1,4 +1,5 @@
 HEAD
+    + Remove old Selenium 1.0 support
     + Remove deprecated Xen stuff
     + Remove support for deprecated XML format
     + Proper use of upstart instead of /etc/init.d for networking and dhcp

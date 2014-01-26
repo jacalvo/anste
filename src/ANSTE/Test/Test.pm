@@ -237,7 +237,7 @@ sub setExternalHost # host string
 
 # Method: port
 #
-#   Gets the port where the test have to be executed (selenium only).
+#   Gets the port where the test have to be executed (web only).
 #
 # Returns:
 #
@@ -274,7 +274,7 @@ sub setPort # port string
 
 # Method: protocol
 #
-#   Gets the protocol (http or https) to be used (selenium only).
+#   Gets the protocol (http or https) to be used (web only).
 #
 # Returns:
 #

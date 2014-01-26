@@ -54,8 +54,6 @@ sub clean
 
     ANSTE::Status->cleanNetwork();
 
-    system ('pkill -9 -f selenium');
-
     # kill ANSTE instances
     my @anstePids = `pgrep anste | grep -v $$ | awk '{ print \$1 }'`;
     chomp (@anstePids);

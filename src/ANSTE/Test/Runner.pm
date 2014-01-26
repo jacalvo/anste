@@ -393,9 +393,11 @@ sub _runTest # (test)
     my $system = $self->{system};
     my $name = $test->name();
     my $hostname = $test->host();
+    my $type = $test->type();
 
     my $config = ANSTE::Config->instance();
     my $verbose = $config->verbose();
+    my $video = $config->webVideo();
 
     my $suiteDir = $self->{suite}->dir();
     my $testScript = $test->script();
@@ -415,7 +417,7 @@ sub _runTest # (test)
     # Create directories
     use File::Path;
     mkpath "$logPath/$suiteDir";
-    mkdir "$logPath/$suiteDir/video" if $config->seleniumVideo();
+    mkdir "$logPath/$suiteDir/video" if $config->webVideo();
     mkdir "$logPath/$suiteDir/script";
 
     my ($logfile, $ret);
@@ -433,82 +435,7 @@ sub _runTest # (test)
 
     my $assertFailed = $test->assert() eq 'failed';
 
-    # TODO: separate this in two functions runSeleniumTest and runShellTest ??
-
-    # Run the test itself either it's a selenium one or a normal one
-    if ($test->type() eq 'selenium') {
-        if (not -x $path) {
-            throw ANSTE::Exceptions::NotFound('Test', $path);
-        }
-
-        my $suiteFile = "$path/$SUITE_FILE";
-        if (not -r $suiteFile) {
-            throw ANSTE::Exceptions::NotFound('Suite file', $suiteFile);
-        }
-        my $video;
-        if ($config->seleniumVideo()) {
-            $video = "$logPath/$suiteDir/video/$name.ogv";
-            print "Starting video recording for test $name...\n" if $verbose;
-            $system->startVideoRecording($video);
-        }
-
-        my $variables = $test->variables();
-        if (%{$variables}) {
-            # Fill template in another directory
-            my $cwd = getcwd();
-            chdir($path);
-            my @templateFiles = <*.html>;
-            chdir($cwd);
-            foreach my $file (@templateFiles) {
-                system("cp $path/$file $newPath/$file");
-            }
-            $suiteFile = "$newPath/$SUITE_FILE";
-
-            foreach my $file (@templateFiles) {
-                # Skip suite.html
-                next if $file eq $SUITE_FILE;
-
-                my $template = new Text::Template(SOURCE => "$newPath/$file")
-                    or die "Couldn't construct template: $Text::Template::ERROR";
-                my $text = $template->fill_in(HASH => $variables, SAFE => new Safe)
-                    or die "Couldn't fill in the template: $Text::Template::ERROR";
-
-                # Write the filled file.
-                my $FH;
-                open($FH, '>', "$newPath/$file");
-                print $FH $text;
-                close($FH);
-            }
-        }
-
-        $logfile = "$logPath/$suiteDir/$name.html";
-        my $port = $test->port();
-        my $protocol = $test->protocol();
-        $ret = $self->_runSeleniumRC(hostname => $hostname,
-                                     file => $suiteFile,
-                                     log => $logfile,
-                                     port => $port,
-                                     protocl => $protocol);
-
-        if ($config->seleniumVideo()) {
-            print "Ending video recording for test $name... " if $verbose;
-            $system->stopVideoRecording();
-            print "Done.\n" if $verbose;
-
-            # If test was correct and record all videos option
-            # is not activated, delete the video
-            if (!$config->seleniumRecordAll() && $ret == 0) {
-                unlink($video);
-            }
-            else {
-                $testResult->setVideo("$suiteDir/video/$name.ogv");
-            }
-        }
-        # Store end time
-        my $endTime = $self->_time();
-        $testResult->setEndTime($endTime);
-        $testResult->setLog("$suiteDir/$name.html");
-    } elsif ($test->type() eq 'reboot') {
+    if ($type eq 'reboot') {
         $ret = $self->_reboot($hostname);
 
         # Store end time
@@ -555,11 +482,32 @@ sub _runTest # (test)
 
         my $initialTime = time();
 
-        if ($test->type() eq 'host') {
+        if ($type eq 'host') {
             $ret = $self->{system}->runTest("$newPath/$name",
                                              $logfile, $env, $params);
-        } elsif ($test->type() eq 'web') {
+        } elsif ($type eq 'web') {
+            my $videofile;
+            if ($video) {
+                $videofile = "$logPath/$suiteDir/video/$name.ogv";
+                print "Starting video recording for test $name...\n" if $verbose;
+                $system->startVideoRecording($videofile);
+            }
+
             $ret = $self->_runWebTest($test, "$newPath/$name", $logfile);
+
+            if ($video) {
+                print "Ending video recording for test $name... " if $verbose;
+                $system->stopVideoRecording();
+                print "Done.\n" if $verbose;
+
+                # If test was correct and record all videos option
+                # is not activated, delete the video
+                if (($ret == 0) and not $config->webRecordAll()) {
+                    unlink ($videofile);
+                } else {
+                    $testResult->setVideo("$suiteDir/video/$name.ogv");
+                }
+            }
         } else {
             $ret = $self->_runScriptOnHost($hostname, "$newPath/$name",
                                            $logfile, $env, $params);
@@ -690,7 +638,7 @@ sub _runWebTest
 
     my $config = ANSTE::Config->instance();
     unless ($protocol) {
-        $protocol = $config->seleniumProtocol();
+        $protocol = $config->webProtocol();
     }
 
     my $url = "$protocol://$host";
@@ -706,87 +654,6 @@ sub _runWebTest
     my $env = $test->env("\n");
 
     return $self->{system}->runTest($script, $logfile, $env, '');
-}
-
-# Method: _runSeleniumRC
-#
-#   Executes Selenium remote control
-#
-# Parameters:
-#
-#   hostname - hostname
-#   file     - suite file
-#   log      - log file
-#   port     - *optional* port value
-#   protocol - *optional* protocol (http/https)
-#
-# Returns:
-#
-#   boolean - test result
-#
-sub _runSeleniumRC
-{
-    my ($self, %args) = @_;
-
-    my $hostname = $args{hostname};
-    my $file = $args{file};
-    my $log = $args{log};
-    my $port = $args{port};
-    my $protocol = $args{protocol};
-
-    my $system = $self->{system};
-
-    my $ip = $self->{hostIP}->{$hostname};
-
-    my $config = ANSTE::Config->instance();
-
-    unless ($protocol) {
-        $protocol = $config->seleniumProtocol();
-    }
-
-    my $url = "$protocol://$ip";
-    if (defined ($port)) {
-        $url .= ":$port";
-    }
-
-    my $jar = $config->seleniumRCjar();
-    my $browser = $config->seleniumBrowser();
-
-    try {
-        $system->executeSelenium(jar => $jar,
-                                 browser => $browser,
-                                 url => $url,
-                                 testFile => $file,
-                                 resultFile => $log);
-    } catch (ANSTE::Exceptions::Error $e) {
-        throw ANSTE::Exceptions::Error("Can't execute Selenium or Java. " .
-                                       "Ensure that everything is ok.");
-    }
-
-    return $self->_seleniumResult($log);
-}
-
-sub _seleniumResult # (logfile)
-{
-    my ($self, $logfile) = @_;
-
-    my $LOG;
-    open($LOG, '<', $logfile) or
-        throw ANSTE::Exceptions::Error("Selenium results not found. " .
-                                       "Check if it's working properly.");
-    foreach my $line (<$LOG>) {
-        if ($line =~ /^<td>passed/) {
-            close($LOG);
-            return 0;
-        }
-        elsif ($line =~ /^<td>failed/) {
-            close($LOG);
-            return 1;
-        }
-    }
-    close($LOG);
-
-    return -1;
 }
 
 1;
