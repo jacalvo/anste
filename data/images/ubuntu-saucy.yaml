@@ -1,8 +1,10 @@
-name: baseimage-saucy
+name: saucy-mini
 desc: Ubuntu Saucy
 memory: 256
-size: 1500
+size: 1150
 method: debootstrap
 dist: saucy
 pre-install:
     - write-saucy-sources.sh
+packages:
+    - openssh-server
