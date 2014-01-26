@@ -19,7 +19,7 @@ use warnings;
 use ANSTE::Scenario::BaseImage;
 use ANSTE::Config;
 
-use Test::More tests => 54;
+use Test::More tests => 27;
 
 sub testImage # (image)
 {
@@ -93,10 +93,6 @@ sub _checkFiles# (filesToCheck)
     is(${$filesToCheck->list()}[0], 'file1', 'file 1 = file1');
     is(${$filesToCheck->list()}[1], 'file2', 'file 2 = file2');
 }
-
-my $image = new ANSTE::Scenario::BaseImage();
-$image->loadFromFile("test.xml");
-testImage($image);
 
 my $imageYaml = new ANSTE::Scenario::BaseImage();
 $imageYaml->loadFromFile("test.yaml");

@@ -118,7 +118,7 @@ if ($out) {
     $config->setLogPath($out);
 }
 if ($video) {
-    $config->setSeleniumVideo(1);
+    $config->setWebVideo(1);
 }
 if ($reuse) {
     $config->setReuse(1);
@@ -418,7 +418,7 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -test              test a suite
    -path <dir>        where to find the data (CWD if not specified)
    -out  <dir>        report output directory
-   -video             save video recording of selenium tests
+   -video             save video recording of web tests
    -format <fmt>      select the output format for the reports
    -wait              wait before shutting down once the test is completed
    -wait-fail         wait if a test fails

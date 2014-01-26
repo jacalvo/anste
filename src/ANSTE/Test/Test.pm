@@ -22,8 +22,6 @@ use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Config;
 
-use XML::DOM;
-
 # Class: Test
 #
 #   Contains the information of a test.
@@ -239,7 +237,7 @@ sub setExternalHost # host string
 
 # Method: port
 #
-#   Gets the port where the test have to be executed (selenium only).
+#   Gets the port where the test have to be executed (web only).
 #
 # Returns:
 #
@@ -276,7 +274,7 @@ sub setPort # port string
 
 # Method: protocol
 #
-#   Gets the protocol (http or https) to be used (selenium only).
+#   Gets the protocol (http or https) to be used (web only).
 #
 # Returns:
 #
@@ -604,139 +602,6 @@ sub setPrecondition
     my ($self, $ok) = @_;
 
     $self->{precondition} = $ok;
-}
-
-# Method: load
-#
-#   Loads the information contained in the given XML node representing
-#   the test into this object.
-#
-# Parameters:
-#
-#   node - <XML::DOM::Element> object containing the test data.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
-#   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
-#
-sub loadXML
-{
-    my ($self, $node) = @_;
-
-    defined $node or
-        throw ANSTE::Exceptions::MissingArgument('node');
-
-    if (not $node->isa('XML::DOM::Element')) {
-        throw ANSTE::Exceptions::InvalidType('node',
-                'XML::DOM::Element');
-    }
-
-    my $configVars = ANSTE::Config->instance()->variables();
-
-    my $type = $node->getAttribute('type');
-    if ($type) {
-        $self->setType($type);
-    }
-    my $critical = $node->getAttribute('critical');
-    if ($critical) {
-        $self->setCritical(1);
-    }
-
-    my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
-    my $name = $nameNode->getFirstChild()->getNodeValue();
-    $self->setName($name);
-
-    my $descNode = $node->getElementsByTagName('desc', 0)->item(0);
-    my $nodeDesc= $descNode->getFirstChild();
-    my $desc='';
-    if (defined $nodeDesc) {
-        $desc = $nodeDesc->getNodeValue();
-    }
-    $self->setDesc($desc);
-
-    my $validHost = 0;
-    my $hostNodes = $node->getElementsByTagName('host', 0);
-    for (my $i = 0; $i < $hostNodes->getLength(); $i++) {
-        my $hostNode = $hostNodes->item($i);
-        my $hostPrecondition = 1;
-        my $var = $hostNode->getAttribute('var');
-        if ($var) {
-            my $expectedValue = $hostNode->getAttribute('eq');
-            my $value = $configVars->{$var};
-            unless (defined $value) {
-                $value = 0;
-            }
-            $hostPrecondition = $expectedValue eq $value;
-        }
-        if ($hostPrecondition) {
-            my $host = $hostNode->getFirstChild()->getNodeValue();
-            $self->setHost($host);
-            $validHost = 1;
-            last;
-        }
-    }
-    unless ($validHost or ($type eq 'host')) {
-        throw ANSTE::Exceptions::Error("No valid host found for test $name.");
-    }
-
-    my $portNode = $node->getElementsByTagName('port', 0)->item(0);
-    if ($portNode) {
-        my $port = $portNode->getFirstChild()->getNodeValue();
-        $self->setPort($port);
-    }
-
-    my $protocolNode = $node->getElementsByTagName('protocol', 0)->item(0);
-    if ($protocolNode) {
-        my $protocol = $protocolNode->getFirstChild()->getNodeValue();
-        unless (($protocol eq 'http') or ($protocol eq 'https')) {
-            throw ANSTE::Exceptions::Error("Invalid protocol for test $name.");
-        }
-        $self->setProtocol($protocol);
-    }
-
-    my $scriptNode = $node->getElementsByTagName('script', 0)->item(0);
-    if ($scriptNode) {
-        my $script = $scriptNode->getFirstChild()->getNodeValue();
-        $self->setScript($script);
-    }
-
-    my $assertNode = $node->getElementsByTagName('assert', 0)->item(0);
-    if ($assertNode) {
-        my $assert = $assertNode->getFirstChild()->getNodeValue();
-        $self->setAssert($assert);
-    }
-
-    my $paramsNode = $node->getElementsByTagName('params', 0)->item(0);
-    if ($paramsNode) {
-        if ($type eq 'web') {
-            throw ANSTE::Exceptions::Error("Wrong <params> element in $name. Web tests can't receive params, just variables.");
-        }
-        my $params = $paramsNode->getFirstChild()->getNodeValue();
-        $self->setParams($params);
-    }
-
-    my $varNodes = $node->getElementsByTagName('var', 0);
-    for (my $i = 0; $i < $varNodes->getLength(); $i++) {
-        my $name = $varNodes->item($i)->getAttribute('name');
-        my $value = $varNodes->item($i)->getAttribute('value');
-        $self->setVariable($name, $value);
-    }
-
-    # Check if all preconditions are satisfied
-    my $preconditionNodes = $node->getElementsByTagName('precondition', 0);
-    for (my $i = 0; $i < $preconditionNodes->getLength(); $i++) {
-        my $var = $preconditionNodes->item($i)->getAttribute('var');
-        my $expectedValue = $preconditionNodes->item($i)->getAttribute('eq');
-        my $value = $configVars->{$var};
-        unless (defined $value) {
-            $value = 0;
-        }
-        if ($value ne $expectedValue) {
-            $self->setPrecondition(0);
-            last;
-        }
-    }
 }
 
 sub loadYAML

@@ -19,7 +19,7 @@ use warnings;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::SlaveServer;
 
-use Test::More tests => 14;
+use Test::More skip_all => 'FIXME';
 use SOAP::Transport::HTTP;
 
 use constant PORT => '8000';

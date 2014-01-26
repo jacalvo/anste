@@ -27,7 +27,6 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Config;
 
-use XML::DOM;
 use Perl6::Junction qw(any);
 use TryCatch::Lite;
 
@@ -528,117 +527,6 @@ sub setScenario # (scenario)
     $self->{scenario} = $scenario;
 }
 
-# Method: loadXML
-#
-#   Loads the information contained in the given XML node representing
-#   the host configuration into this object.
-#
-# Parameters:
-#
-#   node - <XML::DOM::Element> object containing the test data.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
-#   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
-#
-sub loadXML # (node)
-{
-    my ($self, $node) = @_;
-
-    defined $node or
-        throw ANSTE::Exceptions::MissingArgument('node');
-
-    if (not $node->isa('XML::DOM::Element')) {
-        throw ANSTE::Exceptions::InvalidType('node',
-                                             'XML::DOM::Element');
-    }
-
-    my $nameNode = $node->getElementsByTagName('name', 0)->item(0);
-    my $name = $nameNode->getFirstChild()->getNodeValue();
-    $self->setName($name);
-
-    my $descNode = $node->getElementsByTagName('desc', 0)->item(0);
-    my $desc = $descNode->getFirstChild()->getNodeValue();
-    $self->setDesc($desc);
-
-    my $type = $node->getAttribute('type');
-    if ($type) {
-        if ($type eq any ('router', 'pppoe-router', 'dhcp-router')) {
-            $self->{type} = $type;
-        } else {
-            my $error = "Type $type not supported in host $name";
-            throw ANSTE::Exceptions::Error($error);
-        }
-    }
-
-    my $memoryNode = $node->getElementsByTagName('memory', 0)->item(0);
-    if ($memoryNode) {
-        my $memory = $memoryNode->getFirstChild()->getNodeValue();
-        $self->setMemory($memory);
-    }
-
-    my $networkNode = $node->getElementsByTagName('network', 0)->item(0);
-    if($networkNode){
-        $self->network()->load($networkNode);
-    }
-
-    my $packagesNode = $node->getElementsByTagName('packages', 0)->item(0);
-    if($packagesNode){
-        $self->packages()->load($packagesNode);
-    }
-
-    my $filesNode = $node->getElementsByTagName('files', 0)->item(0);
-    if($filesNode){
-        $self->files()->load($filesNode);
-    }
-
-    my $preNode = $node->getElementsByTagName('pre-install', 0)->item(0);
-    if($preNode){
-        $self->_addScripts('pre-scripts', $preNode);
-    }
-
-    my $postNode = $node->getElementsByTagName('post-install', 0)->item(0);
-    if($postNode){
-        $self->_addScripts('post-scripts', $postNode);
-    }
-
-    my $baseImageTypeNode = $node->getElementsByTagName('baseimage-type', 0)->item(0);
-    if ($baseImageTypeNode) {
-        my $baseImageType = $baseImageTypeNode->getFirstChild()->getNodeValue();
-        $self->setBaseImageType($baseImageType);
-    }
-
-    my $baseimageNode = $node->getElementsByTagName('baseimage', 0)->item(0);
-    my $baseimage = $baseimageNode->getFirstChild()->getNodeValue();
-    try {
-        $self->baseImage()->loadFromFile("$baseimage.xml");
-    } catch (ANSTE::Exceptions::InvalidFile $e) {
-        if ($self->baseImageType() eq 'raw') {
-            # Dummy image for raw base images
-            $self->baseImage()->setName($baseimage);
-        } else {
-            $e->throw();
-        }
-    }
-
-    # Check if all preconditions are satisfied
-    my $configVars = ANSTE::Config->instance()->variables();
-    my $preconditionNodes = $node->getElementsByTagName('precondition', 0);
-    for (my $i = 0; $i < $preconditionNodes->getLength(); $i++) {
-        my $var = $preconditionNodes->item($i)->getAttribute('var');
-        my $expectedValue = $preconditionNodes->item($i)->getAttribute('eq');
-        my $value = $configVars->{$var};
-        unless (defined $value) {
-            $value = 0;
-        }
-        if ($value ne $expectedValue) {
-            $self->setPrecondition(0);
-            last;
-        }
-    }
-}
-
 sub loadYAML
 {
     my ($self, $host) = @_;
@@ -698,7 +586,7 @@ sub loadYAML
 
     my $baseimage = $host->{baseimage};
     try {
-        $self->baseImage()->loadFromFile("$baseimage.xml");
+        $self->baseImage()->loadFromFile("$baseimage.yaml");
     } catch (ANSTE::Exceptions::InvalidFile $e) {
         if ($self->baseImageType() eq 'raw') {
             # Dummy image for raw base images
@@ -744,6 +632,5 @@ sub _addScriptsYAML
         push(@{$self->{$list}}, $script);
     }
 }
-
 
 1;

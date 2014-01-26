@@ -1,28 +1,33 @@
   ANSTE
 ==========
-Copyright &copy; 2007-2013 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+Copyright &copy; 2007-2014 José Antonio Calvo Fernández <jacalvo@zentyal.com>
 
 About
 -----
-Advanced Network Services Testing Environment, that create scenarios using kvm and libvirt and run scripts or selenium tests on them.
+Advanced Network Services Testing Environment is a tool to create complex network scenarios using virtual machines and run script or WebDriver tests on them.
+
+You can find more information at http://www.anste.org
 
 Install
 -------
 
-Install guide:
+From PPA repository:
+
+* `echo 'deb http://ppa.launchpad.net/zentyal/anste/ubuntu precise main' > /etc/apt/sources.list.d/anste.list`
+* `apt-get update`
+* `apt-get install anste`
+
+Building from source:
 
 * Download the code, from [Github](https://github.com/Zentyal/anste)
-* Add `deb http://ppa.launchpad.net/zentyal/anste/ubuntu precise main` to your sources.list
 * Check build dependencies with `dpkg-checkbuilddeps` and install them with `apt-get install` tool
-* Execute `make deb` in the root of the folder
-* Install with `dpkg -i anste_0.9_all.deb` the debian package generated
-* Install the dependencies needed using `apt-get -f install`
-* Download [Selenium RC](http://seleniumhq.org/projects/remote-control/) and modify the configuration to search for it in the folder you have it.
+* Execute `make installdeb` in the root of the folder
+* Install the missing dependencies using `apt-get -f install`
 
 Bug tracker
 -----------
 
-Have a bug? Please create an issue here on GitHub
+Found a bug? Don't hesitate to open an issue at:
 
 https://github.com/Zentyal/anste/issues
 

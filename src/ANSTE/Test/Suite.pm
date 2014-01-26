@@ -23,7 +23,6 @@ use ANSTE::Exceptions::MissingArgument;
 
 use Text::Template;
 use Safe;
-use XML::DOM;
 use YAML::XS;
 
 # Class: Suite
@@ -247,7 +246,7 @@ sub addTest # (test)
 # Parameters:
 #
 #   dirname - String with the name of the directory that contains a file
-#             called suite.xml with the data of the suite.
+#             called suite.yaml with the data of the suite.
 #
 # Exceptions:
 #
@@ -264,12 +263,9 @@ sub loadFromDir # (dirname)
     $self->setDir($dirname);
 
     my $config = ANSTE::Config->instance();
-    my $file = $config->testFile("$dirname/suite.xml");
+    my $file = $config->testFile("$dirname/suite.yaml");
     if (not -r $file) {
-        $file = $config->testFile("$dirname/suite.yaml");
-        if (not -r $file) {
-            throw ANSTE::Exceptions::InvalidFile('dirname', $file);
-        }
+        throw ANSTE::Exceptions::InvalidFile('dirname', $file);
     }
 
     my $template = new Text::Template(SOURCE => $file)
@@ -278,55 +274,7 @@ sub loadFromDir # (dirname)
     my $text = $template->fill_in(HASH => $variables, SAFE => new Safe)
         or die "Couldn't fill in the template: $Text::Template::ERROR";
 
-    if ($file =~ /\.xml$/) {
-        my $parser = new XML::DOM::Parser;
-        my $doc;
-        eval {
-            $doc = $parser->parse($text);
-        };
-        if ($@) {
-            throw ANSTE::Exceptions::Error("Error parsing $file: $@");
-        }
-
-        my $suite = $doc->getDocumentElement();
-        $self->_loadXML($suite);
-        $doc->dispose();
-    } elsif ($file =~ /\.yaml$/) {
-        my ($suite) = YAML::XS::Load($text);
-        $self->_loadYAML($suite);
-    }
-}
-
-sub _loadXML
-{
-    my ($self, $suite) = @_;
-
-    # Read name and description of the suite
-    my $nameNode = $suite->getElementsByTagName('name', 0)->item(0);
-    my $name = $nameNode->getFirstChild()->getNodeValue();
-    $self->setName($name);
-    my $descNode = $suite->getElementsByTagName('desc', 0)->item(0);
-    my $desc = $descNode->getFirstChild()->getNodeValue();
-    $self->setDesc($desc);
-
-    # Read the scenario filename
-    my $scenarioNode = $suite->getElementsByTagName('scenario', 0)->item(0);
-    my $scenario = $scenarioNode->getFirstChild()->getNodeValue();
-    $self->setScenario($scenario);
-
-    # Read the <test> elements
-    foreach my $element ($suite->getElementsByTagName('test', 0)) {
-        my $test = new ANSTE::Test::Test();
-        $test->loadXML($element);
-        if ($test->precondition()) {
-            $self->addTest($test);
-        }
-    }
-}
-
-sub _loadYAML
-{
-    my ($self, $suite) = @_;
+    my ($suite) = YAML::XS::Load($text);
 
     # Read name and description of the suite
     my $name = $suite->{name};

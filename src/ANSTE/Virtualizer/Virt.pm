@@ -147,7 +147,7 @@ sub createBaseImage # (%params)
 
 # Method: shutdownImage
 #
-#   Overriden method that shuts down a Xen running image.
+#   Overriden method that shuts down a KVM running image.
 #
 # Parameters:
 #
@@ -183,7 +183,7 @@ sub shutdownImage # (image)
 
 # Method: destroyImage
 #
-#   Overriden method that destroys a Xen running image.
+#   Overriden method that destroys a KVM running image.
 #
 # Parameters:
 #

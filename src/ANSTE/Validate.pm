@@ -20,8 +20,6 @@ use warnings;
 
 use ANSTE::Config;
 
-use Mail::RFC822::Address;
-
 use Cwd;
 use File::Basename;
 
@@ -352,25 +350,6 @@ sub mac # (mac)
     return $mac =~ /^([0-9a-fA-F]{1,2}:){6}$/;
 }
 
-# Function: email
-#
-#   Checks if the given email address is valid according to RFC 822.
-#
-# Parameters:
-#
-#   email - String with the email.
-#
-# Returns:
-#
-#   boolean - true if it's valid, false otherwise
-#
-sub email # (address)
-{
-    my ($address) = @_;
-
-    return Mail::RFC822::Address::valid($address);
-}
-
 # Function: suite
 #
 #   Checks if the directory passed is an existing test suite directory.
@@ -389,8 +368,7 @@ sub suite # (suite)
 
     my $config = ANSTE::Config->instance();
 
-    return ((-r $config->testFile("$suite/suite.xml")) or
-            (-r $config->testFile("$suite/suite.yaml")));
+    return (-r $config->testFile("$suite/suite.yaml"));
 }
 
 # Function: template

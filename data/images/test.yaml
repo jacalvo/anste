@@ -5,9 +5,8 @@ swap: imageSwap
 arch: imageArch
 size: imageSize
 mirror: imageMirror
-install:
-    method: copy
-    source: /tmp
+method: copy
+source: /tmp
 packages:
     - test-profile
     - postfix

@@ -25,7 +25,6 @@ use ANSTE::Exceptions::InvalidFile;
 
 use Text::Template;
 use Safe;
-use XML::DOM;
 use YAML::XS;
 
 
@@ -344,7 +343,7 @@ sub addBridge # (network, num?)
 
 # Method: loadFromFile
 #
-#   Loads the scenario data from a XML file.
+#   Loads the scenario data from a YAML file.
 #
 # Parameters:
 #
@@ -380,60 +379,8 @@ sub loadFromFile # (filename)
     my $text = $template->fill_in(HASH => $variables, SAFE => new Safe)
         or die "Couldn't fill in the template: $Text::Template::ERROR";
 
-    if ($filename =~ /\.xml$/) {
-        my $parser = new XML::DOM::Parser;
-        my $doc;
-        eval {
-            $doc = $parser->parse($text);
-        };
-        if ($@) {
-            throw ANSTE::Exceptions::Error("Error parsing $file: $@");
-        }
-
-        my $scenario = $doc->getDocumentElement();
-        $self->_loadXML($scenario);
-
-        $doc->dispose();
-    } elsif ($filename =~ /\.yaml$/) {
-        my ($scenario) = YAML::XS::Load($text);
-        $self->_loadYAML($scenario);
-    } else {
-        throw ANSTE::Exceptions::Error("Invalid file type ($file), only .xml or .yaml files are supported");
-    }
-}
-
-sub _loadXML
-{
-    my ($self, $scenario) = @_;
-
-    # Read name and description of the scenario
-    my $nameNode = $scenario->getElementsByTagName('name', 0)->item(0);
-    my $name = $nameNode->getFirstChild()->getNodeValue();
-    $self->setName($name);
-    my $descNode = $scenario->getElementsByTagName('desc', 0)->item(0);
-    my $desc = $descNode->getFirstChild()->getNodeValue();
-    $self->setDesc($desc);
-    my $manualBridgingNode = $scenario->getElementsByTagName('manual-bridging', 0)->item(0);
-    if ($manualBridgingNode) {
-        $self->setManualBridging(1);
-
-        # FIXME
-        #my $bridgesNode = $scenario->getElementsByTagName('bridges', 0)->item(0);
-        #foreach my $bridgeNode ($bridgesNode->getElementsByTagName('bridge', 0)) {
-        #    my $id = $bridgeNode->getAttribute('id');
-        #    my $net = $bridgeNode->getFirstChild()->getNodeValue();
-        #    $self->{bridges}->{$net} = $id;
-        #}
-    }
-
-    # Read the <host> elements
-    foreach my $element ($scenario->getElementsByTagName('host', 0)) {
-        my $host = new ANSTE::Scenario::Host;
-        $host->loadXML($element);
-        if ($host->precondition()) {
-            $self->addHost($host);
-        }
-    }
+    my ($scenario) = YAML::XS::Load($text);
+    $self->_loadYAML($scenario);
 }
 
 sub _loadYAML

@@ -124,7 +124,6 @@ sub check
     $self->imagePath();
     $self->logPath();
     $self->deployPath();
-    $self->templatePath();
     $self->anstedPort();
     $self->masterPort();
     $self->firstAddress();
@@ -136,14 +135,9 @@ sub check
     $self->vmBuilderMirror();
     $self->vmBuilderSecurityMirror();
     $self->vmBuilderProxy();
-    $self->seleniumRCjar();
-    $self->seleniumBrowser();
-    $self->seleniumVideo();
-    $self->seleniumRecordAll();
-    $self->seleniumProtocol();
-    $self->seleniumFirefoxProfile();
-    $self->seleniumSingleWindow();
-    $self->seleniumUserExtensions();
+    $self->webProtocol();
+    $self->webVideo();
+    $self->webRecordAll();
     $self->virtSize();
     $self->virtMemory();
 
@@ -819,33 +813,6 @@ sub testFile # (file)
     return $self->_filePath("tests/$file");
 }
 
-# Method: templatePath
-#
-#   Gets the value for the templates' path option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
-#
-sub templatePath
-{
-    my ($self) = @_;
-
-    my $templatePath = $self->_getOption('paths', 'templates');
-
-    if (not ANSTE::Validate::path($templatePath)) {
-        throw ANSTE::Exceptions::InvalidConfig('paths/templates',
-                                               $templatePath,
-                                               $self->{confFile});
-    }
-
-    return $templatePath;
-}
-
 # Method: anstedPort
 #
 #   Gets the value for the ansted listen port option.
@@ -1093,9 +1060,9 @@ sub autoDownloadImages
     return ($action eq 'auto-download');
 }
 
-# Method: seleniumRCjar
+# Method: webProtocol
 #
-#   Gets the value for the path selenium-rc jar option.
+#   Gets the value for the default web protocol (http or https)
 #
 # Returns:
 #
@@ -1103,46 +1070,27 @@ sub autoDownloadImages
 #
 # Exceptions:
 #
-#   <ANSTE::Exceptions::MissingConfig> - throw if option is missing
 #   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
-sub seleniumRCjar
+sub webProtocol
 {
     my ($self) = @_;
 
-    my $jar = $self->_getOption('selenium', 'rc-jar');
+    my $protocol = $self->_getOption('web', 'protocol');
 
-    if (defined $jar and not ANSTE::Validate::fileReadable($jar)) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/rc-jar',
-                                               $jar,
+    unless (($protocol eq 'http') or ($protocol eq 'https')) {
+        throw ANSTE::Exceptions::InvalidConfig('web/protocol',
+                                               $protocol,
                                                $self->{confFile});
     }
 
-    return $jar;
+    return $protocol;
 }
 
-# Method: seleniumBrowser
-#
-#   Gets the value for the Selenium browser option.
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-sub seleniumBrowser
-{
-    my ($self) = @_;
 
-    my $browser = $self->_getOption('selenium', 'browser');
-
-    # TODO: validate browser??
-    #
-    return $browser;
-}
-
-# Method: seleniumVideo
+# Method: webVideo
 #
-#   Gets the value for the Selenium video recording option.
+#   Gets the value for the video recording option.
 #
 # Returns:
 #
@@ -1152,14 +1100,14 @@ sub seleniumBrowser
 #
 #   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
-sub seleniumVideo
+sub webVideo
 {
     my ($self) = @_;
 
-    my $video = $self->_getOption('selenium', 'video');
+    my $video = $self->_getOption('web', 'video');
 
     if (not ANSTE::Validate::boolean($video)) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/video',
+        throw ANSTE::Exceptions::InvalidConfig('web/video',
                                                $video,
                                                $self->{confFile});
     }
@@ -1167,9 +1115,9 @@ sub seleniumVideo
     return $video;
 }
 
-# Method: setSeleniumVideo
+# Method: setWebVideo
 #
-#   Sets the value for the Selenium video recording option.
+#   Sets the value for the Web video recording option.
 #
 # Parameters:
 #
@@ -1180,7 +1128,7 @@ sub seleniumVideo
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
-sub setSeleniumVideo # (value)
+sub setWebVideo # (value)
 {
     my ($self, $value) = @_;
 
@@ -1188,16 +1136,16 @@ sub setSeleniumVideo # (value)
         throw ANSTE::Exceptions::MissingArgument('value');
 
     if (not ANSTE::Validate::boolean($value)) {
-        throw ANSTE::Exceptions::InvalidOption('selenium/video',
+        throw ANSTE::Exceptions::InvalidOption('web/video',
                                                $value);
     }
 
-    $self->{override}->{'selenium'}->{'video'} = $value;
+    $self->{override}->{'web'}->{'video'} = $value;
 }
 
-# Method: seleniumRecordAll
+# Method: webRecordAll
 #
-#   Gets the value for the Selenium record all videos option.
+#   Gets the value for the record all videos option.
 #
 # Returns:
 #
@@ -1207,128 +1155,19 @@ sub setSeleniumVideo # (value)
 #
 #   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
 #
-sub seleniumRecordAll
+sub webRecordAll
 {
     my ($self) = @_;
 
-    my $all = $self->_getOption('selenium', 'record-all');
+    my $all = $self->_getOption('web', 'record-all');
 
     if (not ANSTE::Validate::boolean($all)) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/record-all',
+        throw ANSTE::Exceptions::InvalidConfig('web/record-all',
                                                $all,
                                                $self->{confFile});
     }
 
     return $all;
-}
-
-# Method: seleniumProtocol
-#
-#   Gets the value for the default Selenium protocol (http or https)
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
-#
-sub seleniumProtocol
-{
-    my ($self) = @_;
-
-    my $protocol = $self->_getOption('selenium', 'protocol');
-
-    unless (($protocol eq 'http') or ($protocol eq 'https')) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/protocol',
-                                               $protocol,
-                                               $self->{confFile});
-    }
-
-    return $protocol;
-}
-
-# Method: seleniumFirefoxProfile
-#
-#   Gets the value for the path to custom firefox profile
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
-#
-sub seleniumFirefoxProfile
-{
-    my ($self) = @_;
-
-    my $profile = $self->_getOption('selenium', 'firefox-profile');
-
-    if ($profile and (not ANSTE::Validate::path($profile))) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/firefox-profile',
-                                               $profile,
-                                               $self->{confFile});
-    }
-
-    return $profile;
-}
-
-# Method: seleniumSingleWindow
-#
-#   Selenium runs the browser in only a window, incompatible with frames
-#
-# Returns:
-#
-#   value - Value for the option.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
-#
-sub seleniumSingleWindow
-{
-    my ($self) = @_;
-
-    my $singleWindow = $self->_getOption('selenium', 'single-window');
-
-    if (not ANSTE::Validate::boolean($singleWindow)) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/single-window',
-                                               $singleWindow,
-                                               $self->{confFile});
-    }
-
-    return $singleWindow;
-}
-
-# Method: seleniumUserExtensions
-#
-#   Gets the value for the path to user extensions for Selenium
-#
-# Returns:
-#
-#   string - Value for the option.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
-#
-sub seleniumUserExtensions
-{
-    my ($self) = @_;
-
-    my $userExtensions = $self->_getOption('selenium', 'user-extensions');
-
-    if ($userExtensions and
-        (not ANSTE::Validate::fileReadable($userExtensions))) {
-        throw ANSTE::Exceptions::InvalidConfig('selenium/user-extensions',
-                                               $userExtensions,
-                                               $self->{confFile});
-    }
-
-    return $userExtensions;
 }
 
 # Method: step
@@ -1434,7 +1273,7 @@ sub vmBuilderProxy
 # Method: virtSize
 #
 #
-#   Gets the value of the Xen's size option.
+#   Gets the value of the size option for VMs.
 #
 # Returns:
 #
@@ -1449,7 +1288,7 @@ sub virtSize
 
 # Method: virtMemory
 #
-#   Gets the value of the Xen's memory option.
+#   Gets the value of the memory option for VMs.
 #
 # Returns:
 #
@@ -1464,7 +1303,7 @@ sub virtMemory
 
 # Method: setVariable
 #
-#   Sets a variable to be substituted on the XML files.
+#   Sets a variable to be substituted on the YAML files.
 #
 # Parameters:
 #
@@ -1494,7 +1333,7 @@ sub setVariable # (name, value)
 
 # Method: variables
 #
-#   Gets the variables to be substituted on the XML files.
+#   Gets the variables to be substituted on the YAML files.
 #
 # Returns:
 #
@@ -1623,7 +1462,6 @@ sub _setDefaults
 
     $self->{default}->{'paths'}->{'images'} = '/tmp/images';
     $self->{default}->{'paths'}->{'deploy'} = "$data/deploy";
-    $self->{default}->{'paths'}->{'templates'} = "$data/templates";
 
     $self->{default}->{'ansted'}->{'port'} = '8000';
 
@@ -1654,14 +1492,9 @@ sub _setDefaults
 
     $self->{default}->{'deploy'}->{'image-missing-action'} = 'auto-create';
 
-    $self->{default}->{'selenium'}->{'browser'} = '*firefox';
-    $self->{default}->{'selenium'}->{'video'} = 0;
-    $self->{default}->{'selenium'}->{'record-all'} = 0;
-    $self->{default}->{'selenium'}->{'protocol'} = 'http';
-    $self->{default}->{'selenium'}->{'firefox-profile'} = '';
-    $self->{default}->{'selenium'}->{'single-window'} = 0;
-    $self->{default}->{'selenium'}->{'user-extensions'} =
-        "$data/scripts/user-extensions.js";
+    $self->{default}->{'web'}->{'protocol'} = 'http';
+    $self->{default}->{'web'}->{'video'} = 0;
+    $self->{default}->{'web'}->{'record-all'} = 0;
 
     $self->{default}->{'test'}->{'step'} = 0;
 

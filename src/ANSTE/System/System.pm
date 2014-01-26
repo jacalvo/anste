@@ -193,29 +193,6 @@ sub installBasePackages
     throw ANSTE::Exceptions::NotImplemented();
 }
 
-# Method: resizeImage
-#
-#   Override this method with the system-specific
-#   commands to resize a image file.
-#
-# Parameters:
-#
-#   image   - image file
-#   size    - new size
-#
-# Returns:
-#
-#   boolean - indicates if the process has been successful
-#
-# Exceptions:
-#
-#   throws <ANSTE::Exceptions::NotImplemented>
-#
-sub resizeImage # (image, size)
-{
-    throw ANSTE::Exceptions::NotImplemented();
-}
-
 # Method: updatePackagesCommand
 #
 #   Override this method to return the system-specific
@@ -593,31 +570,6 @@ sub enableNAT # (iface, sourceAddr)
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub disableNAT # (iface, sourceAddr)
-{
-    throw ANSTE::Exceptions::NotImplemented();
-}
-
-# Method: executeSelenium
-#
-#   Override this method to execute Selenium.
-#
-# Parameters:
-#
-#   jar - String with the path of the selenium jar.
-#   browser - String with the web browser to be used.
-#   url - String with the url of the web we want to test.
-#   testFile - String with the filename of the Selenium test suite.
-#   resultFile - String with the filename of the Selenium results to be saved.
-#
-# Returns:
-#
-#   string - contains the command
-#
-# Exceptions:
-#
-#   throws <ANSTE::Exceptions::NotImplemented>
-#
-sub executeSelenium # (%params)
 {
     throw ANSTE::Exceptions::NotImplemented();
 }

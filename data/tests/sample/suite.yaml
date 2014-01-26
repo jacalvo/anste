@@ -1,0 +1,33 @@
+name: Sample Test Suite
+desc: Contains a set of tests
+scenario: sample.yaml
+tests:
+   - name: Test1
+     desc: Checks if the system is Linux
+     host: hostname1
+     dir: test1
+
+   - name: Test2
+     desc: Print /etc/debian_version if exists
+     host: hostname1
+     dir: test2
+
+   - name: Test3
+     desc: Checks if wget is installed
+     host: hostname1
+     dir: test3
+
+   - name: Test1-2
+     desc: Checks if the system is Linux
+     host: hostname2
+     dir: test1
+
+   - name: Test2-2
+     desc: Print /etc/debian_version if exists
+     host: hostname2
+     dir: test2
+
+   - name: Test3-2
+     desc: Checks if wget is installed
+     host: hostname2
+     dir: test3

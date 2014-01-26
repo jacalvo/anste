@@ -148,45 +148,6 @@ sub bridges
     return $self->{bridges};
 }
 
-# Method: load
-#
-#   Loads the information contained in the given XML node representing
-#   the network configuration into this object.
-#
-# Parameters:
-#
-#   node - <XML::DOM::Element> object containing the test data.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
-#   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
-#
-sub load # (node)
-{
-    my ($self, $node) = @_;
-
-    defined $node or
-        throw ANSTE::Exceptions::MissingArgument('node');
-
-    if (not $node->isa('XML::DOM::Element')) {
-        throw ANSTE::Exceptions::InvalidType('node',
-                                             'XML::DOM::Element');
-    }
-
-    foreach my $element ($node->getElementsByTagName('interface', 0)) {
-        my $interface = new ANSTE::Scenario::NetworkInterface();
-        $interface->load($element);
-        $self->addInterface($interface);
-    }
-
-    foreach my $element ($node->getElementsByTagName('route', 0)) {
-        my $route = new ANSTE::Scenario::NetworkRoute();
-        $route->load($element);
-        $self->addRoute($route);
-    }
-}
-
 sub loadYAML
 {
     my ($self, $network) = @_;

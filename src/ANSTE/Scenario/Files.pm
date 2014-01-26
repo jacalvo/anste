@@ -21,8 +21,6 @@ use warnings;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 
-use XML::DOM;
-
 # Class: Files
 #
 #   Contains the list of files that have to be copied to a image.
@@ -86,58 +84,12 @@ sub add # (files)
     push(@{$self->{list}}, @files);
 }
 
-# Method: load
-#
-#   Loads the information contained in the given XML node representing
-#   the files list into this object.
-#
-# Parameters:
-#
-#   node - <XML::DOM::Element> object containing the test data.
-#
-# Exceptions:
-#
-#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
-#   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
-#
-sub load # (node)
-{
-    my ($self, $node) = @_;
-
-    defined $node or
-        throw ANSTE::Exceptions::MissingArgument('node');
-
-    if (not $node->isa('XML::DOM::Element')) {
-        throw ANSTE::Exceptions::InvalidType('node',
-                                             'XML::DOM::Element');
-    }
-
-    foreach my $profile ($node->getElementsByTagName('fileslists', 0)) {
-        my $name = $profile->getFirstChild()->getNodeValue();
-        my $file = ANSTE::Config->instance()->listsFile($name);
-        my $FILE;
-        open($FILE, '<', $file) or die "Error loading $file";
-        my @names;
-        chomp(@names = <$FILE>);
-        close $FILE or die "Can't close $file";
-        $self->add(@names);
-    }
-
-    foreach my $file ($node->getElementsByTagName('file', 0)) {
-        my $name = $file->getFirstChild()->getNodeValue();
-        $self->add($name);
-    }
-}
-
 sub loadYAML
 {
     my ($self, $files) = @_;
 
     defined $files or
         throw ANSTE::Exceptions::MissingArgument('files');
-
-    # FIXME
-    # Add support for list of filelists check above example of xml
 
     foreach my $file (@{$files}) {
         $self->add($file);

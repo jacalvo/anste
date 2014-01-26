@@ -1,0 +1,32 @@
+name: DHCP router test
+desc: Scenario for basic testing of the DHCP router
+manual-bridging: 1
+bridges:
+    - id: 2
+      address: 192.168.2.254
+hosts:
+   - name: dhcp-router
+     type: dhcp-router
+     desc: Host that acts like a DHCP router
+     baseimage: ubuntu-saucy
+     memory: 256
+     network:
+        interfaces:
+            - name: eth1
+              type: static
+              bridge: 2
+              address: 192.168.2.1
+              netmask: 255.255.255.0
+
+   - name: test-client
+     desc: Client that connects to the router
+     baseimage: ubuntu-saucy
+     memory: 256
+     network:
+        interfaces:
+            - name: eth1
+              type: dhcp
+              bridge: 2
+     packages:
+        - host
+        - wget

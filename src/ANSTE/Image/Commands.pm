@@ -549,36 +549,6 @@ sub destroy
     $self->_disableNAT();
 }
 
-# Method: resize
-#
-#   Changes the size of the image.
-#
-# Parameters:
-#
-#   size - String with the new size of the image.
-#
-# Returns:
-#
-#   boolean - true if success, false otherwise
-#
-sub resize # (size)
-{
-    my ($self, $size) = @_;
-
-    defined $size or
-        throw ANSTE::Exceptions::MissingArgument('size');
-
-    my $system = $self->{system};
-    my $virtualizer = $self->{virtualizer};
-    my $image = $self->{image}->name();
-
-    # Read images path from the config
-    my $config = ANSTE::Config->instance();
-    my $imagePath = $config->imagePath();
-
-    $system->resizeImage($virtualizer->imageFile($imagePath, $image), $size);
-}
-
 # Method: exists
 #
 #   Checks if this image exists physically in the disk.

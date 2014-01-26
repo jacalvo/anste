@@ -1,0 +1,23 @@
+name: Simple Router Test Suite
+desc: Checks that a client can access internet through a router
+scenario: router.yaml
+tests:
+   - name: TestConnectionRouter
+     desc: Checks if we can ping the router
+     host: test-client
+     dir: test-ping-router
+
+   - name: TestPingExternalIP
+     desc: Checks if we can ping an IP on the internet
+     host: test-client
+     dir: test-ping-ip
+
+   - name: TestResolveHost
+     desc: Checks if we can resolve a host
+     host: test-client
+     dir: test-resolve
+
+   - name: TestWWW
+     desc: Test if we can get a webpage
+     host: test-client
+     dir: test-wget
