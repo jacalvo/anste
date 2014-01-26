@@ -58,7 +58,7 @@ sub new # returns new Network object
 #
 #   ref - list of <ANSTE::Scenario::NetworkInterface> objects
 #
-sub interfaces # returns interfaces list reference
+sub interfaces
 {
     my ($self) = @_;
 
@@ -78,7 +78,7 @@ sub interfaces # returns interfaces list reference
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub addInterface # (interface)
+sub addInterface
 {
     my ($self, $interface) = @_;
 
@@ -106,7 +106,7 @@ sub addInterface # (interface)
 #
 #   ref - list of <ANSTE::Scenario::NetworkRoute> objects
 #
-sub routes # returns routes list reference
+sub routes
 {
     my ($self) = @_;
 
@@ -126,7 +126,7 @@ sub routes # returns routes list reference
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub addRoute # (route)
+sub addRoute
 {
     my ($self, $route) = @_;
 

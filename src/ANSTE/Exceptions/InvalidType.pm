@@ -40,7 +40,7 @@ use base 'ANSTE::Exceptions::Base';
 #
 #   A recently created <ANSTE::Exceptions::InvalidType> object.
 #
-sub new # (arg, type)
+sub new
 {
     my ($class, $arg, $type) = @_;
 

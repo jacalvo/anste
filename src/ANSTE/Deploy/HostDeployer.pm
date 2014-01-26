@@ -61,7 +61,7 @@ my $lockMount : shared;
 #
 #   A recently created <ANSTE::Deploy::HostDeployer> object.
 #
-sub new # (host, ip) returns new HostDeployer object
+sub new
 {
     my ($class, $host, $ip) = @_;
     my $self = {};
@@ -112,7 +112,7 @@ sub new # (host, ip) returns new HostDeployer object
 #
 #   ref - <ANSTE::Scenario::Host> object.
 #
-sub host # returns ref
+sub host
 {
     my ($self) = @_;
 
@@ -127,7 +127,7 @@ sub host # returns ref
 #
 #   string - contains the IP address
 #
-sub ip # returns ip string
+sub ip
 {
     my ($self) = @_;
 
@@ -365,7 +365,7 @@ sub _copyBaseImage
     $virtualizer->createImageCopy($baseimage, $newimage);
 }
 
-sub _updateHostname # returns boolean
+sub _updateHostname
 {
     my ($self) = @_;
 
@@ -410,7 +410,7 @@ sub _generateSetupScript # (script)
         or throw ANSTE::Exceptions::Error("Can't close file $script: $!");
 }
 
-sub _executeSetupScript # (host, script)
+sub _executeSetupScript
 {
     my ($self, $host, $script) = @_;
 
@@ -442,8 +442,8 @@ sub _executeSetupScript # (host, script)
     print "[$hostname] Deleting generated files...\n" if $verbose;
     $client->del($script);
     $client->del("$script.out");
-    unlink($script);
-    unlink("$script.out") if $verbose;
+    unlink ($script);
+    unlink ("$script.out") if $verbose;
 }
 
 sub _printOutput # (hostname, file)
@@ -451,13 +451,13 @@ sub _printOutput # (hostname, file)
     my ($self, $hostname, $file) = @_;
 
     my $FILE;
-    open($FILE, '<', $file) or die "Can't open file $file: $!";
+    open ($FILE, '<', $file) or die "Can't open file $file: $!";
     my @lines = <$FILE>;
     foreach my $line (@lines) {
         print "[$hostname] $line";
     }
     print "\n";
-    close($FILE) or die "Can't close file $file: $!";
+    close ($FILE) or die "Can't close file $file: $!";
 }
 
 1;

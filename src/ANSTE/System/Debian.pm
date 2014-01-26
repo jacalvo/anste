@@ -51,7 +51,7 @@ my %nbdDevs : shared;
 #
 #   boolean    - indicates if the process has been successful
 #
-sub mountImage # (image, mountPoint)
+sub mountImage
 {
     my ($self, $image, $mountPoint) = @_;
 
@@ -85,7 +85,7 @@ sub mountImage # (image, mountPoint)
 #
 #   boolean    - indicates if the process has been successful
 #
-sub unmount # (mountPoint)
+sub unmount
 {
     my ($self, $mountPoint) = @_;
 
@@ -164,7 +164,7 @@ sub configureAptProxy
 #
 #   string - command string
 #
-sub updatePackagesCommand # returns string
+sub updatePackagesCommand
 {
     my ($self) = @_;
 
@@ -180,7 +180,7 @@ sub updatePackagesCommand # returns string
 #
 #   string - command string
 #
-sub updateNetworkCommand # returns string
+sub updateNetworkCommand
 {
     my ($self) = @_;
     my $config = ANSTE::Config->instance();
@@ -202,7 +202,7 @@ sub updateNetworkCommand # returns string
 #
 #   string - command string
 #
-sub cleanPackagesCommand # returns string
+sub cleanPackagesCommand
 {
     my ($self) = @_;
 
@@ -222,7 +222,7 @@ sub cleanPackagesCommand # returns string
 #
 #   string - command string
 #
-sub installPackagesCommand # (packages) returns string
+sub installPackagesCommand
 {
     my ($self, @packages) = @_;
 
@@ -245,7 +245,7 @@ sub installPackagesCommand # (packages) returns string
 #
 #   string - command string
 #
-sub installPackagesCommandType # (type) returns string
+sub installPackagesCommandType
 {
     my ($self, $type) = @_;
 
@@ -269,7 +269,7 @@ sub installPackagesCommandType # (type) returns string
 #
 #   string - contains the environment variables set commands
 #
-sub installVars # return strings
+sub installVars
 {
     my ($self) = @_;
 
@@ -301,7 +301,7 @@ sub installVars # return strings
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub networkConfig # (network) returns string
+sub networkConfig
 {
     my ($self, $network) = @_;
 
@@ -344,7 +344,7 @@ sub networkConfig # (network) returns string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub hostsConfig # (%hosts) returns string
+sub hostsConfig
 {
     my ($self, %hosts) = @_;
 
@@ -363,7 +363,6 @@ sub hostsConfig # (%hosts) returns string
 # Method: initialNetworkConfig
 #
 #
-#
 # Parameters:
 #
 #   iface    - communications interface
@@ -373,12 +372,10 @@ sub hostsConfig # (%hosts) returns string
 # Returns:
 #
 #
-#
 # Exceptions:
 #
 #
-#
-sub initialNetworkConfig # (iface, network) returns string
+sub initialNetworkConfig
 {
     my ($self, $iface, $network) = @_;
 
@@ -440,7 +437,7 @@ sub initialNetworkConfig # (iface, network) returns string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub hostnameConfig # (hostname) returns string
+sub hostnameConfig
 {
     my ($self, $hostname) = @_;
 
@@ -467,7 +464,7 @@ sub hostnameConfig # (hostname) returns string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub hostConfig # (hostname) returns string
+sub hostConfig
 {
     my ($self, $hostname) = @_;
 
@@ -509,7 +506,7 @@ sub hostConfig # (hostname) returns string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub storeMasterAddress # (address) returns string
+sub storeMasterAddress
 {
     my ($self, $address) = @_;
 
@@ -537,7 +534,7 @@ sub storeMasterAddress # (address) returns string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub copyToMountCommand # (orig, dest) returns string
+sub copyToMountCommand
 {
     my ($self, $orig, $dest) = @_;
 
@@ -566,7 +563,7 @@ sub copyToMountCommand # (orig, dest) returns string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub createMountDirCommand # (path) returns string
+sub createMountDirCommand
 {
     my ($self, $path) = @_;
 
@@ -585,7 +582,7 @@ sub createMountDirCommand # (path) returns string
 #
 #   string - contains the commands
 #
-sub firewallDefaultRules # returns string
+sub firewallDefaultRules
 {
     my ($self) = @_;
 
@@ -612,7 +609,7 @@ sub firewallDefaultRules # returns string
 #
 #   string - contains the command
 #
-sub enableRouting # (@iface)
+sub enableRouting
 {
     my ($self, @ifaces) = @_;
 
@@ -638,7 +635,7 @@ sub enableRouting # (@iface)
 #
 #   string - contains the command
 #
-sub setupTypeScript # (type)
+sub setupTypeScript
 {
     my ($self, $type) = @_;
 
@@ -663,7 +660,7 @@ sub setupTypeScript # (type)
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub enableNAT # (iface, sourceAddr)
+sub enableNAT
 {
     my ($self, $iface, $sourceAddr) = @_;
 
@@ -677,7 +674,6 @@ sub enableNAT # (iface, sourceAddr)
     $self->execute('echo 1 > /proc/sys/net/ipv4/ip_forward');
 
     $self->execute("iptables -t nat -A POSTROUTING " .
-#                   "-o $iface -s $sourceAddr -j MASQUERADE");
                    "-o $iface -j MASQUERADE");
 }
 
@@ -699,7 +695,7 @@ sub enableNAT # (iface, sourceAddr)
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub disableNAT # (iface, sourceAddr)
+sub disableNAT
 {
     my ($self, $iface, $sourceAddr) = @_;
 
@@ -730,7 +726,7 @@ sub disableNAT # (iface, sourceAddr)
 #
 #   <ANSTE::Exceptions::InvalidFile> - throw if file is not writable
 #
-sub startVideoRecording # (filename)
+sub startVideoRecording
 {
     my ($self, $filename) = @_;
 
@@ -774,7 +770,7 @@ sub stopVideoRecording
     waitpid($pid, 0);
 }
 
-sub _interfaceConfig # (iface)
+sub _interfaceConfig
 {
     my ($self, $iface) = @_;
 
@@ -801,7 +797,7 @@ sub _interfaceConfig # (iface)
     return $config;
 }
 
-sub _routeCommand # (route)
+sub _routeCommand
 {
     my ($self, $route) = @_;
 
@@ -823,7 +819,7 @@ sub _routeCommand # (route)
     return $command;
 }
 
-sub _installPackages # (list)
+sub _installPackages
 {
     my ($self, @list) = @_;
 

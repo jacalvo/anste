@@ -38,7 +38,7 @@ use YAML::XS;
 #
 #   A recently created <ANSTE::Test::Suite> object.
 #
-sub new # returns new TestSuite object
+sub new
 {
     my ($class, $dir) = @_;
     my $self = {};
@@ -62,7 +62,7 @@ sub new # returns new TestSuite object
 #
 #   string - Name of the test suite.
 #
-sub name # returns name string
+sub name
 {
     my ($self) = @_;
 
@@ -81,7 +81,7 @@ sub name # returns name string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
-sub setName # name string
+sub setName
 {
     my ($self, $name) = @_;
 
@@ -99,7 +99,7 @@ sub setName # name string
 #
 #   string - Description of the test suite.
 #
-sub desc # returns desc string
+sub desc
 {
     my ($self) = @_;
 
@@ -118,7 +118,7 @@ sub desc # returns desc string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
-sub setDesc # desc string
+sub setDesc
 {
     my ($self, $desc) = @_;
 
@@ -136,7 +136,7 @@ sub setDesc # desc string
 #
 #   string - Name of the directory of the test suite.
 #
-sub dir # returns dir string
+sub dir
 {
     my ($self) = @_;
 
@@ -155,7 +155,7 @@ sub dir # returns dir string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
-sub setDir # dir string
+sub setDir
 {
     my ($self, $dir) = @_;
 
@@ -173,7 +173,7 @@ sub setDir # dir string
 #
 #   string - String with the name of the scenario.
 #
-sub scenario # returns scenario string
+sub scenario
 {
     my ($self) = @_;
 
@@ -192,7 +192,7 @@ sub scenario # returns scenario string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
-sub setScenario # scenario string
+sub setScenario
 {
     my ($self, $scenario) = @_;
 
@@ -210,7 +210,7 @@ sub setScenario # scenario string
 #
 #   list ref - Reference to the list of tests.
 #
-sub tests # return tests list ref
+sub tests
 {
     my ($self) = @_;
 
@@ -229,7 +229,7 @@ sub tests # return tests list ref
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
-sub addTest # (test)
+sub addTest
 {
     my ($self, $test) = @_;
 
@@ -253,7 +253,7 @@ sub addTest # (test)
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #   <ANSTE::Exceptions::InvalidFile> - throw if parameter is not a valid suite
 #
-sub loadFromDir # (dirname)
+sub loadFromDir
 {
     my ($self, $dirname) = @_;
 

@@ -50,7 +50,7 @@ use ANSTE::System::System;
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub new # (image) returns new CommInstallGen object
+sub new
 {
     my ($class, $image) = @_;
     my $self = {};
@@ -84,7 +84,7 @@ sub new # (image) returns new CommInstallGen object
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidFile> - throw if argument is not a writable file
 #
-sub writeScript # (file)
+sub writeScript
 {
     my ($self, $file) = @_;
 
@@ -127,7 +127,7 @@ sub writeScript # (file)
     print $file "echo '/usr/local/bin/anste-slave ready\n' > \$MOUNT/etc/rc.local\n";
 }
 
-sub _writeCopyFiles # (file)
+sub _writeCopyFiles
 {
     my ($self, $file) = @_;
 
@@ -162,7 +162,7 @@ sub _writeCopyFiles # (file)
     print $file "\n";
 }
 
-sub _writeHostsConfig # (file)
+sub _writeHostsConfig
 {
     my ($self, $file) = @_;
 

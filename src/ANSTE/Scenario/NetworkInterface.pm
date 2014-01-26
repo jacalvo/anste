@@ -66,7 +66,7 @@ use constant IFACE_TYPE_UNSET => 2;
 #
 #   A recently created <ANSTE::Scenario::NetworkInterface> object.
 #
-sub new # returns new NetworkInterface object
+sub new
 {
     my ($class) = @_;
     my $self = {};
@@ -86,7 +86,6 @@ sub new # returns new NetworkInterface object
         if ($MAC_ADDR_COUNTER < 0) {
             $MAC_ADDR_COUNTER = 99;
         }
-
     }
 
     bless($self, $class);
@@ -102,7 +101,7 @@ sub new # returns new NetworkInterface object
 #
 #   string - contains the name of the interface
 #
-sub name # returns interface name string
+sub name
 {
     my ($self) = @_;
 
@@ -121,7 +120,7 @@ sub name # returns interface name string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setName # (name)
+sub setName
 {
     my ($self, $name) = @_;
 
@@ -139,7 +138,7 @@ sub setName # (name)
 #
 #   constant - IFACE_TYPE_STATIC or IFACE_TYPE_DHCP or IFACE_TYPE_UNSET
 #
-sub type # returns interface type
+sub type
 {
     my ($self) = @_;
 
@@ -187,7 +186,7 @@ sub setTypeUnset
 #
 #   string - the interface IP address
 #
-sub address # returns address string
+sub address
 {
     my ($self) = @_;
 
@@ -207,7 +206,7 @@ sub address # returns address string
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidData> - throw if argument is not an IP address
 #
-sub setAddress # address string
+sub setAddress
 {
     my ($self, $address) = @_;
 
@@ -229,7 +228,7 @@ sub setAddress # address string
 #
 #   string - the interface hardware address
 #
-sub hwAddress # returns address string
+sub hwAddress
 {
     my ($self) = @_;
 
@@ -249,7 +248,7 @@ sub hwAddress # returns address string
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidData> - throw if argument is not an IP address
 #
-sub setHwAddress # hardware address string
+sub setHwAddress
 {
     my ($self, $hwAddress) = @_;
 
@@ -272,7 +271,7 @@ sub setHwAddress # hardware address string
 #
 #   string - contains the network mask of the interface
 #
-sub netmask # returns netmask string
+sub netmask
 {
     my ($self) = @_;
 
@@ -292,7 +291,7 @@ sub netmask # returns netmask string
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidData> - throw if argument is not an IP address
 #
-sub setNetmask # netmask string
+sub setNetmask
 {
     my ($self, $netmask) = @_;
 
@@ -314,7 +313,7 @@ sub setNetmask # netmask string
 #
 #   string - contains the gateway of the interface
 #
-sub gateway # returns gateway string
+sub gateway
 {
     my ($self) = @_;
 
@@ -334,7 +333,7 @@ sub gateway # returns gateway string
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidData> - throw if argument is not an IP address
 #
-sub setGateway # gateway string
+sub setGateway
 {
     my ($self, $gateway) = @_;
 
@@ -367,7 +366,7 @@ sub removeGateway
 #
 #   boolean - true if it's external, false otherwise.
 #
-sub external # returns external string
+sub external
 {
     my ($self) = @_;
 
@@ -386,7 +385,7 @@ sub external # returns external string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setExternal # external string
+sub setExternal
 {
     my ($self, $external) = @_;
 
@@ -404,7 +403,7 @@ sub setExternal # external string
 #
 #   string - contains the bridge of the interface
 #
-sub bridge # returns interface bridge string
+sub bridge
 {
     my ($self) = @_;
 
@@ -423,7 +422,7 @@ sub bridge # returns interface bridge string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setBridge # (bridge)
+sub setBridge
 {
     my ($self, $bridge) = @_;
 

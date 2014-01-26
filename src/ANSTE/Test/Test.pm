@@ -35,7 +35,7 @@ use ANSTE::Config;
 #
 #   A recently created <ANSTE::Test::Test> object.
 #
-sub new # returns new Test object
+sub new
 {
     my ($class) = @_;
     my $self = {};
@@ -65,7 +65,7 @@ sub new # returns new Test object
 #
 #   string - Name of the test.
 #
-sub name # returns name string
+sub name
 {
     my ($self) = @_;
 
@@ -84,7 +84,7 @@ sub name # returns name string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
-sub setName # name string
+sub setName
 {
     my ($self, $name) = @_;
 
@@ -102,7 +102,7 @@ sub setName # name string
 #
 #   string - Description of the test.
 #
-sub desc # returns desc string
+sub desc
 {
     my ($self) = @_;
 
@@ -121,7 +121,7 @@ sub desc # returns desc string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
-sub setDesc # desc string
+sub setDesc
 {
     my ($self, $desc) = @_;
 
@@ -139,7 +139,7 @@ sub setDesc # desc string
 #
 #   string - Name of the assertectory of this test.
 #
-sub assert # returns assert string
+sub assert
 {
     my ($self) = @_;
 
@@ -158,7 +158,7 @@ sub assert # returns assert string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
-sub setAssert # assert string
+sub setAssert
 {
     my ($self, $assert) = @_;
 
@@ -176,7 +176,7 @@ sub setAssert # assert string
 #
 #   string - Hostname where execute the test.
 #
-sub host # returns host string
+sub host
 {
     my ($self) = @_;
 
@@ -195,7 +195,7 @@ sub host # returns host string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
-sub setHost # host string
+sub setHost
 {
     my ($self, $host) = @_;
 
@@ -228,7 +228,7 @@ sub externalHost
 #
 #   external - True if the host is external
 #
-sub setExternalHost # host string
+sub setExternalHost
 {
     my ($self, $external) = @_;
 
@@ -243,7 +243,7 @@ sub setExternalHost # host string
 #
 #   string - port number of the web server to be tested
 #
-sub port # returns port string
+sub port
 {
     my ($self) = @_;
 
@@ -262,7 +262,7 @@ sub port # returns port string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
-sub setPort # port string
+sub setPort
 {
     my ($self, $port) = @_;
 
@@ -280,7 +280,7 @@ sub setPort # port string
 #
 #   string - contains the protocol
 #
-sub protocol # returns protocol string
+sub protocol
 {
     my ($self) = @_;
 
@@ -299,7 +299,7 @@ sub protocol # returns protocol string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
-sub setProtocol # protocol string
+sub setProtocol
 {
     my ($self, $protocol) = @_;
 
@@ -354,7 +354,7 @@ sub setRelativeUrl
 #
 #   string - Name of the directory of this test.
 #
-sub script # returns script string
+sub script
 {
     my ($self) = @_;
 
@@ -373,7 +373,7 @@ sub script # returns script string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
-sub setScript # script string
+sub setScript
 {
     my ($self, $script) = @_;
 
@@ -391,7 +391,7 @@ sub setScript # script string
 #
 #   string - String with the params to be pased to the test script.
 #
-sub params # returns params string
+sub params
 {
     my ($self) = @_;
 
@@ -410,7 +410,7 @@ sub params # returns params string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #
-sub setParams # params string
+sub setParams
 {
     my ($self, $params) = @_;
 
@@ -432,7 +432,7 @@ sub setParams # params string
 #
 #   string - String containing list of variables (FOO=bar BAR=foo)
 #
-sub env # returns params string
+sub env
 {
     my ($self, $sep) = @_;
 
@@ -468,7 +468,7 @@ sub env # returns params string
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
-sub setVariable # (name, value)
+sub setVariable
 {
     my ($self, $name, $value) = @_;
 
@@ -582,7 +582,7 @@ sub setExecuteAlways
 #
 #   boolean - true if passed, false if not
 #
-sub precondition # returns boolean
+sub precondition
 {
     my ($self) = @_;
 

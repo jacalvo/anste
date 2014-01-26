@@ -36,7 +36,7 @@ use File::Basename;
 #
 #   filename - In this case is not a file but a directory.
 #
-sub write # (file)
+sub write
 {
     my ($self, $dir) = @_;
 
@@ -58,7 +58,7 @@ sub write # (file)
 #   name - String with the suite name.
 #   desc - String with the suite description.
 #
-sub writeSuiteHeader # (name, desc)
+sub writeSuiteHeader
 {
     my ($self, $name, $desc) = @_;
 
@@ -82,7 +82,7 @@ sub writeSuiteEnd
     print $file "</testsuite>\n";
 }
 
-sub _writeSuiteFile # (suite, file)
+sub _writeSuiteFile
 {
     my ($self, $suite, $file) = @_;
 
@@ -126,7 +126,7 @@ sub _writeSuiteFile # (suite, file)
 #   log   - *optional* String with the log path.
 #   video - *optional* String with the video path.
 #
-sub writeTestResult # (%params)
+sub writeTestResult
 {
     my ($self, %params) = @_;
 
@@ -145,10 +145,6 @@ sub writeTestResult # (%params)
         print $filehandle "<testcase name=\"$name\">\n";
     }
 
-#    if ($desc) {
-#        print $filehandle "<desc>$desc</desc>\n";
-#    }
-
     if ($result != 0) {
         print $filehandle "<failure message=\"Error in Anste Tests\">\n";
         if ($file) {
@@ -158,22 +154,17 @@ sub writeTestResult # (%params)
         print $filehandle "</failure>\n";
     }
 
-
-#    if ($video) {
-#        print $filehandle "<video>$video</video>\n";
-#    }
-
     print $filehandle "</testcase>\n";
 }
 
-sub readLogFileToString # (%params)
+sub readLogFileToString
 {
     my ($self, %params) = @_;
     my $file = $params{file};
 
-    my $log="";
+    my $log = '';
     open FILE, $file or die "Couldn't open file: $!";
-    while (<FILE>){
+    while (<FILE>) {
         $log .= $_;
     }
     close FILE;

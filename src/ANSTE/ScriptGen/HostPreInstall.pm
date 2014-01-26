@@ -50,7 +50,7 @@ use ANSTE::System::System;
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub new # (image) returns new HostInstallGen object
+sub new
 {
     my ($class, $image) = @_;
     my $self = {};
@@ -84,7 +84,7 @@ sub new # (image) returns new HostInstallGen object
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidFile> - throw if argument is not a writable file
 #
-sub writeScript # (file)
+sub writeScript
 {
     my ($self, $file) = @_;
 
@@ -110,7 +110,7 @@ sub writeScript # (file)
     $self->_writeMasterAddress($file);
 }
 
-sub _writeHostnameConfig # (file)
+sub _writeHostnameConfig
 {
     my ($self, $file) = @_;
 
@@ -123,7 +123,7 @@ sub _writeHostnameConfig # (file)
     print $file "$config\n\n";
 }
 
-sub _writeHostConfig # (file)
+sub _writeHostConfig
 {
     my ($self, $file) = @_;
 
@@ -135,7 +135,7 @@ sub _writeHostConfig # (file)
     print $file "$config\n\n";
 }
 
-sub _writeInitialNetworkConfig # (file)
+sub _writeInitialNetworkConfig
 {
     my ($self, $file) = @_;
 
@@ -152,7 +152,7 @@ sub _writeInitialNetworkConfig # (file)
     print $file "$config\n\n";
 }
 
-sub _writeMasterAddress # (file)
+sub _writeMasterAddress
 {
     my ($self, $file) = @_;
 

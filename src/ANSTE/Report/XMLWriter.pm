@@ -29,7 +29,7 @@ use warnings;
 #
 #   Overriden method that writes the header of the report in XML.
 #
-sub writeHeader 
+sub writeHeader
 {
     my ($self) = @_;
 
@@ -40,7 +40,7 @@ sub writeHeader
     print $file "<report>\n";
     print $file "<title>ANSTE Test report</title>\n";
     print $file "<time>$time</time>\n";
-}    
+}
 
 # Method: writeEnd
 #
@@ -53,7 +53,7 @@ sub writeEnd
     my $file = $self->{file};
 
     print $file "</report>\n";
-}    
+}
 
 # Method: writeSuiteHeader
 #
@@ -73,7 +73,7 @@ sub writeSuiteHeader # (name, desc)
     print $file "<suite>\n";
     print $file "<name>$name</name>\n";
     print $file "<desc>$desc</desc>\n";
-}    
+}
 
 # Method: writeSuiteEnd
 #
@@ -86,7 +86,7 @@ sub writeSuiteEnd
     my $file = $self->{file};
 
     print $file "</suite>\n";
-}    
+}
 
 # Method: writeTestResult
 #
@@ -100,7 +100,7 @@ sub writeSuiteEnd
 #   log   - *optional* String with the log path.
 #   video - *optional* String with the video path.
 #
-sub writeTestResult # (%params)
+sub writeTestResult
 {
     my ($self, %params) = @_;
 
@@ -118,21 +118,21 @@ sub writeTestResult # (%params)
 
     if ($desc) {
         print $filehandle "<desc>$desc</desc>\n";
-    }        
+    }
 
     my $resultStr = $result == 0 ? 'OK' : 'ERROR';
     print $filehandle "<result>$resultStr</result>\n";
 
     if ($file) {
         print $filehandle "<log>$file</log>\n";
-    }        
+    }
 
     if ($video) {
         print $filehandle "<video>$video</video>\n";
     }
 
     print $filehandle "</test>\n";
-}    
+}
 
 # Method: filename
 #
@@ -147,6 +147,6 @@ sub filename
     my ($self) = @_;
 
     return 'anste-report.xml';
-}    
+}
 
 1;

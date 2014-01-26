@@ -39,7 +39,7 @@ use base 'ANSTE::Exceptions::Base';
 #
 #   A recently created <ANSTE::Exceptions::MissingArgument> object.
 #
-sub new 
+sub new
 {
     my ($class, $arg) = @_;
 

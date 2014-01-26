@@ -34,7 +34,7 @@ use base 'ANSTE::Exceptions::Base';
 #
 #   A recently created <ANSTE::Exceptions::NotImplemented> object.
 #
-sub new 
+sub new
 {
     my ($class) = @_;
 

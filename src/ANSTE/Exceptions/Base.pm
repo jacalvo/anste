@@ -43,7 +43,7 @@ use overload (
 #
 #   A recently created <ANSTE::Exceptions::Base> object.
 #
-sub new # (text)
+sub new
 {
     my $class = shift;
     my $text = shift;

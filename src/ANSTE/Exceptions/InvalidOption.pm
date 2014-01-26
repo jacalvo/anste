@@ -38,7 +38,7 @@ use base 'ANSTE::Exceptions::Base';
 #
 #   A recently created <ANSTE::Exceptions::InvalidOption> object.
 #
-sub new # (option, value)
+sub new
 {
     my ($class, $option, $value) = @_;
 

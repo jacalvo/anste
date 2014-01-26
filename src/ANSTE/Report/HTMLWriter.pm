@@ -36,7 +36,7 @@ use File::Basename;
 #
 #   file - String with the file name.
 #
-sub write # (file)
+sub write
 {
     my ($self, $file) = @_;
 
@@ -45,7 +45,7 @@ sub write # (file)
     }
 
     my $FILE;
-    open($FILE, '>', $file);
+    open ($FILE, '>', $file);
     $self->{file} = $FILE;
 
     $self->writeHeader();
@@ -66,15 +66,15 @@ sub write # (file)
     $self->writeSuiteEnd();
     $self->writeEnd();
 
-    close($FILE);
+    close ($FILE);
 }
 
-sub _writeSuiteFile # (suite, file)
+sub _writeSuiteFile
 {
     my ($self, $suite, $file) = @_;
 
     my $FILE;
-    open($FILE, '>', $file);
+    open ($FILE, '>', $file);
 
     $self->{file} = $FILE;
 
@@ -105,7 +105,7 @@ sub _writeSuiteFile # (suite, file)
     }
     $self->writeSuiteEnd();
 
-    close($FILE);
+    close ($FILE);
 }
 
 sub _writeReportHeader
@@ -122,7 +122,7 @@ sub _writeReportHeader
     print $file "</tr></th>\n";
 }
 
-sub _writeSuiteLink # (suite)
+sub _writeSuiteLink
 {
     my ($self, $suite) = @_;
 

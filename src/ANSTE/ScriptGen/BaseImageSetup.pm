@@ -48,7 +48,7 @@ use ANSTE::System::System;
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub new # (image) returns new BaseScriptGen object
+sub new
 {
     my ($class, $image) = @_;
     my $self = {};
@@ -82,7 +82,7 @@ sub new # (image) returns new BaseScriptGen object
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidFile> - throw if argument is not a writable file
 #
-sub writeScript # (file)
+sub writeScript
 {
     my ($self, $file) = @_;
 
@@ -107,7 +107,7 @@ sub writeScript # (file)
     $self->_writeFirewallRules($file);
 }
 
-sub _writePreInstall # (file)
+sub _writePreInstall
 {
     my ($self, $file) = @_;
 
@@ -120,7 +120,7 @@ sub _writePreInstall # (file)
     print $file "$command\n\n";
 }
 
-sub _writePackageInstall # (file, @packages)
+sub _writePackageInstall
 {
     my ($self, $file, @packages) = @_;
 
@@ -148,7 +148,7 @@ sub _writePackageInstall # (file, @packages)
     }
 }
 
-sub _writePostInstall # (file)
+sub _writePostInstall
 {
     my ($self, $file) = @_;
 
@@ -159,7 +159,7 @@ sub _writePostInstall # (file)
     print $file "$command\n\n";
 }
 
-sub _writeFirewallRules # (file)
+sub _writeFirewallRules
 {
     my ($self, $file) = @_;
 

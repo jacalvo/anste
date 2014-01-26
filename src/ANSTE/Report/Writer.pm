@@ -32,7 +32,7 @@ use ANSTE::Exceptions::NotImplemented;
 #   Constructor for Writer class.
 #
 # Parameters:
-#   
+#
 #   report - <ANSTE::Report::Report> object.
 #
 # Returns:
@@ -43,7 +43,7 @@ use ANSTE::Exceptions::NotImplemented;
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub new # (report) returns new Write object
+sub new
 {
     my ($class, $report) = @_;
     my $self = {};
@@ -67,7 +67,7 @@ sub new # (report) returns new Write object
 #
 #   file - String with the file name or an opened file descriptor.
 #
-sub write # (file) 
+sub write
 {
     my ($self, $file) = @_;
 
@@ -119,7 +119,7 @@ sub write # (file)
 sub writeHeader
 {
     throw ANSTE::Exceptions::NotImplemented();
-}    
+}
 
 # Method: writeEnd
 #
@@ -132,7 +132,7 @@ sub writeHeader
 sub writeEnd
 {
     throw ANSTE::Exceptions::NotImplemented();
-}    
+}
 
 # Method: writeSuiteHeader
 #
@@ -147,10 +147,10 @@ sub writeEnd
 #
 #   throw <ANSTE::Exceptions::NotImplemented>
 #
-sub writeSuiteHeader # (name, desc)
+sub writeSuiteHeader
 {
     throw ANSTE::Exceptions::NotImplemented();
-}    
+}
 
 # Method: writeSuiteEnd
 #
@@ -163,7 +163,7 @@ sub writeSuiteHeader # (name, desc)
 sub writeSuiteEnd
 {
     throw ANSTE::Exceptions::NotImplemented();
-}    
+}
 
 # Method: writeTestResult
 #
@@ -181,10 +181,10 @@ sub writeSuiteEnd
 #
 #   throw <ANSTE::Exceptions::NotImplemented>
 #
-sub writeTestResult # (%params)
+sub writeTestResult
 {
     throw ANSTE::Exceptions::NotImplemented();
-}    
+}
 
 # Method: filename
 #
@@ -197,6 +197,6 @@ sub writeTestResult # (%params)
 sub filename
 {
     throw ANSTE::Exceptions::NotImplemented();
-}    
+}
 
 1;

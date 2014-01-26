@@ -51,7 +51,7 @@ use Perl6::Junction qw(any);
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub new # (host) returns new HostImageSetup object
+sub new
 {
     my ($class, $host) = @_;
     my $self = {};
@@ -85,7 +85,7 @@ sub new # (host) returns new HostImageSetup object
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidFile> - throw if argument is not a writable file
 #
-sub writeScript # (file)
+sub writeScript
 {
     my ($self, $file) = @_;
 
@@ -115,7 +115,7 @@ sub writeScript # (file)
     $self->_writeHostsConfig($file);
 }
 
-sub _addTemporaryNameServer # (file)
+sub _addTemporaryNameServer
 {
     my ($self, $file) = @_;
 
@@ -126,7 +126,7 @@ sub _addTemporaryNameServer # (file)
     print $file "$command\n\n";
 }
 
-sub _writePreInstall # (file)
+sub _writePreInstall
 {
     my ($self, $file) = @_;
 
@@ -139,7 +139,7 @@ sub _writePreInstall # (file)
     print $file "$command\n\n";
 }
 
-sub _writePackageInstall # (file, @packages)
+sub _writePackageInstall
 {
     my ($self, $file, @packages) = @_;
 
@@ -150,7 +150,7 @@ sub _writePackageInstall # (file, @packages)
     print $file "$command\n\n";
 }
 
-sub _writePostInstall # (file)
+sub _writePostInstall
 {
     my ($self, $file) = @_;
 
@@ -161,7 +161,7 @@ sub _writePostInstall # (file)
     print $file "$command\n\n";
 }
 
-sub _writeNetworkConfig # (file)
+sub _writeNetworkConfig
 {
     my ($self, $file) = @_;
 
@@ -198,7 +198,7 @@ sub _writeNetworkConfig # (file)
     }
 }
 
-sub _writeHostsConfig # (file)
+sub _writeHostsConfig
 {
     my ($self, $file) = @_;
 
@@ -232,7 +232,7 @@ sub _writeHostsConfig # (file)
     }
 }
 
-sub _addressInNetwork # (hostInterfaces, myInterfaces)
+sub _addressInNetwork
 {
     my ($hostInterfaces, $myInterfaces) = @_;
 
@@ -263,7 +263,7 @@ sub _addressInNetwork # (hostInterfaces, myInterfaces)
     return undef;
 }
 
-sub _octetsToNumber # (str)
+sub _octetsToNumber
 {
     my ($str) = @_;
     return unpack("L", pack("CCCC", split(/\./, $str)));

@@ -22,7 +22,7 @@ use ANSTE::Scenario::Scenario;
 use ANSTE::Test::Suite;
 use ANSTE::Test::Test;
 
-sub loadScenario # (file, suite)
+sub loadScenario
 {
     my ($self, $file, $suite) = @_;
 
@@ -44,7 +44,7 @@ sub loadScenario # (file, suite)
     return $scenario;
 }
 
-sub _loadPostTestsScriptsAsTests # (suite, scriptsToAdd, hostName)
+sub _loadPostTestsScriptsAsTests
 {
     my ($suite, $scriptsToAdd, $hostName) = @_;
 

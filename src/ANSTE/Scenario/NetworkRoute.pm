@@ -36,7 +36,7 @@ use ANSTE::Validate;
 #
 #   A recently created <ANSTE::Scenario::NetworkRoute> object.
 #
-sub new # returns new NetworkRoute object
+sub new
 {
     my ($class) = @_;
     my $self = {};
@@ -59,7 +59,7 @@ sub new # returns new NetworkRoute object
 #
 #   string - contains the route destination string
 #
-sub destination # returns route destination string
+sub destination
 {
     my ($self) = @_;
 
@@ -78,7 +78,7 @@ sub destination # returns route destination string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setDestination # (destination)
+sub setDestination
 {
     my ($self, $destination) = @_;
 
@@ -96,7 +96,7 @@ sub setDestination # (destination)
 #
 #   string - contains the gateway of the route
 #
-sub gateway # returns gateway string
+sub gateway
 {
     my ($self) = @_;
 
@@ -116,7 +116,7 @@ sub gateway # returns gateway string
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidData> - throw if argument is not an IP address
 #
-sub setGateway # gateway string
+sub setGateway
 {
     my ($self, $gateway) = @_;
 
@@ -134,7 +134,7 @@ sub setGateway # gateway string
 #
 #   string - contains the network mask of the route
 #
-sub netmask # returns netmask string
+sub netmask
 {
     my ($self) = @_;
 
@@ -154,7 +154,7 @@ sub netmask # returns netmask string
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidData> - throw if argument is not an IP address
 #
-sub setNetmask # netmask string
+sub setNetmask
 {
     my ($self, $netmask) = @_;
 
@@ -176,7 +176,7 @@ sub setNetmask # netmask string
 #
 #   string - contains the name of the interface
 #
-sub iface # returns iface string
+sub iface
 {
     my ($self) = @_;
 
@@ -195,7 +195,7 @@ sub iface # returns iface string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setIface # iface string
+sub setIface
 {
     my ($self, $iface) = @_;
 
@@ -219,7 +219,7 @@ sub setIface # iface string
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
 #
-sub load # (node)
+sub load
 {
     my ($self, $node) = @_;
 

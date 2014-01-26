@@ -69,7 +69,7 @@ sub instance
 #
 #   host - String with the hostname of the ready host
 #
-sub hostReady # (host)
+sub hostReady
 {
     my ($self, $host, $ready) = @_;
     defined $ready or $ready = 1;
@@ -88,7 +88,7 @@ sub hostReady # (host)
 #   host - String with the hostname of the host that has finished execution.
 #   retValue - Integer with the return value of the script.
 #
-sub executionFinished # (host, retValue)
+sub executionFinished
 {
     my ($self, $host, $retValue) = @_;
 
@@ -106,7 +106,7 @@ sub executionFinished # (host, retValue)
 #
 #   host - String with the hostname we want to wait for.
 #
-sub waitForReady # (host)
+sub waitForReady
 {
     my ($self, $host) = @_;
 
@@ -137,7 +137,7 @@ sub waitForReady # (host)
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter not passed
 #
-sub waitForExecution # (host) returns retValue
+sub waitForExecution
 {
     my ($self, $host) = @_;
 
@@ -160,7 +160,7 @@ sub waitForExecution # (host) returns retValue
 #
 #   integer - Return value of the script being executed.
 #
-sub waitForAnyExecution # returns retValue
+sub waitForAnyExecution
 {
     my ($self) = @_;
 

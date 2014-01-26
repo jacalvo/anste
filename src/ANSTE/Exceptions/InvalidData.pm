@@ -38,7 +38,7 @@ use base 'ANSTE::Exceptions::Base';
 #
 #   A recently created <ANSTE::Exceptions::InvalidData> object.
 #
-sub new # (data, value)
+sub new
 {
     my ($class, $data, $value) = @_;
 

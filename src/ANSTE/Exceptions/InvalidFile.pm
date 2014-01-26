@@ -39,7 +39,7 @@ use base 'ANSTE::Exceptions::Base';
 #
 #   A recently created <ANSTE::Exceptions::InvalidFile> object.
 #
-sub new # (arg, file)
+sub new
 {
     my ($class, $arg, $file) = @_;
 
@@ -63,7 +63,7 @@ sub new # (arg, file)
 #
 #   string - Contains the filename.
 #
-sub file # returns string
+sub file
 {
     my ($self) = @_;
 

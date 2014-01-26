@@ -20,13 +20,13 @@ use warnings;
 
 use ANSTE::Exceptions::MissingArgument;
 
-use SOAP::Lite; # +trace => 'debug'; 
+use SOAP::Lite; # +trace => 'debug';
 use Net::Domain qw(hostname);
 
 use constant URI => "urn:ANSTE::Comm::MasterServer";
 
 # Class: SlaveClient
-#   
+#
 #   Client that runs on the slave hosts and sends notifications
 #   to the master host.
 #
@@ -64,7 +64,7 @@ sub new
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub connect # (url)
+sub connect
 {
     my ($self, $url) = @_;
 
@@ -73,7 +73,7 @@ sub connect # (url)
 
     $self->{soap} = new SOAP::Lite(uri => URI,
                                    proxy => $url,
-                                   endpoint => $url); 
+                                   endpoint => $url);
 }
 
 # Method: hostReady
@@ -90,9 +90,9 @@ sub hostReady
 
     my $soap = $self->{soap};
 
-    my $hostname = hostname(); 
+    my $hostname = hostname();
 
-    my $response = $soap->hostReady(SOAP::Data->name('host' => $hostname)); 
+    my $response = $soap->hostReady(SOAP::Data->name('host' => $hostname));
     if ($response->fault) {
         die "SOAP request failed: $!";
     }
@@ -117,7 +117,7 @@ sub hostReady
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub executionFinished # (retValue)
+sub executionFinished
 {
     my ($self, $retValue) = @_;
 
@@ -126,9 +126,9 @@ sub executionFinished # (retValue)
 
     my $soap = $self->{soap};
 
-    my $host = hostname(); 
+    my $host = hostname();
 
-    my $response = 
+    my $response =
         $soap->executionFinished(SOAP::Data->name('host' => $host),
                                  SOAP::Data->name('retValue' =>$retValue));
     if ($response->fault) {

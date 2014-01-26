@@ -51,7 +51,7 @@ use ANSTE::Image::Commands;
 #
 #   A recently created <ANSTE::Deploy::ScenarioDeployer> object.
 #
-sub new # (scenario) returns new ScenarioDeployer object
+sub new
 {
     my ($class, $scenario) = @_;
     my $self = {};
@@ -101,7 +101,7 @@ sub new # (scenario) returns new ScenarioDeployer object
         }
     }
 
-    bless($self, $class);
+    bless ($self, $class);
 
     return $self;
 }
@@ -116,7 +116,7 @@ sub new # (scenario) returns new ScenarioDeployer object
 #
 #   hash - Contains the IP address of each deployed host indexed by hostname.
 #
-sub deploy # returns hash ref with the ip of each host
+sub deploy
 {
     my ($self) = @_;
 

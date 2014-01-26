@@ -44,7 +44,7 @@ my $LOGPATH = '/var/log/anste';
 #
 #   string - OK if everything goes well, ERR if not
 #
-sub put # (file, content)
+sub put
 {
     my ($self, $file, $content) = @_;
 
@@ -76,7 +76,7 @@ sub put # (file, content)
 #
 #   string - String with the contents of the file or ERR if fails.
 #
-sub get # (file)
+sub get
 {
     my ($self, $file) = @_;
 
@@ -111,7 +111,7 @@ sub get # (file)
 #
 #   string - OK
 #
-sub exec # (file, log?, env?, params?)
+sub exec
 {
     my ($self, $file, $log, $env, $params) = @_;
 
@@ -125,8 +125,7 @@ sub exec # (file, log?, env?, params?)
     my $pid = fork();
     if (not defined $pid) {
         die "Can't fork: $!";
-    }
-    elsif ($pid == 0){
+    } elsif ($pid == 0) {
         my $name = fileparse($file);
         chmod 700, "$DIR/$name";
         my $command = "$DIR/$name";
@@ -136,15 +135,13 @@ sub exec # (file, log?, env?, params?)
             my $logfile = "$DIR/$log";
             $ret = $self->_executeSavingLog($command, $logfile,
                                             $env, $params);
-        }
-        else {
+        } else {
             $ret = $self->_execute($command);
         }
         sleep 1; # Avoid notification before starting to wait for finish
         exec("/usr/local/bin/anste-slave finished $ret");
         exit(0);
-    }
-    else {
+    } else {
         return 'OK';
     }
 }
@@ -167,7 +164,7 @@ sub del # (file)
 
     my $name = fileparse($file);
 
-    if(unlink "$DIR/$name") {
+    if (unlink ("$DIR/$name")) {
         return 'OK';
     } else {
         return 'ERR';
@@ -182,14 +179,14 @@ sub reboot
 {
     my ($self) = @_;
 
-    if (system('/sbin/reboot') == 0) {
+    if (system ('/sbin/reboot') == 0) {
         return 'OK';
     } else {
         return 'ERR';
     }
 }
 
-sub _execute # (command)
+sub _execute
 {
     my ($self, $command) = @_;
 
@@ -201,7 +198,7 @@ sub _execute # (command)
     return system("$command > $LOGPATH/$name-$date.log 2>&1");
 }
 
-sub _executeSavingLog # (command, log, env, params)
+sub _executeSavingLog
 {
     my ($self, $command, $log, $env, $params) = @_;
 

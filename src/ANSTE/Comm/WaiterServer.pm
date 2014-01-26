@@ -39,7 +39,7 @@ my $thread = undef;
 #
 #   A recently created <ANSTE::Comm::WaiterServer> object.
 #
-sub new # returns new WaiterServer object
+sub new
 {
     my ($class) = @_;
     my $self = {};
@@ -57,12 +57,12 @@ sub new # returns new WaiterServer object
 #
 #   ref - reference to the thread object
 #
-sub startThread # returns thread object
+sub startThread
 {
     my ($self) = @_;
 
     $thread = threads->create('_startServer') unless defined $thread;
-    
+
     return($thread);
 }
 
@@ -70,10 +70,10 @@ sub _startServer
 {
     my $port = ANSTE::Config->instance()->masterPort();
 
-    my $server = new SOAP::Transport::HTTP::Daemon(LocalPort => $port, 
+    my $server = new SOAP::Transport::HTTP::Daemon(LocalPort => $port,
                                                    Reuse => 1);
     $server->dispatch_to('ANSTE::Comm::MasterServer');
-    $server->handle();    
+    $server->handle();
 }
 
 1;
