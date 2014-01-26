@@ -8,3 +8,4 @@ pre-install:
     - write-saucy-sources.sh
 packages:
     - openssh-server
+    - wget
