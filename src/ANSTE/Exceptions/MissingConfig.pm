@@ -36,7 +36,7 @@ use base 'ANSTE::Exceptions::Base';
 #
 #   A recently created <ANSTE::Exceptions::MissingConfig> object.
 #
-sub new # (option)
+sub new
 {
     my ($class, $option) = @_;
 

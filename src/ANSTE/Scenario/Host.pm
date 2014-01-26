@@ -43,7 +43,7 @@ use TryCatch::Lite;
 #
 #   A recently created <ANSTE::Scenario::Host> object.
 #
-sub new # returns new Host object
+sub new
 {
     my $class = shift;
     my $self = {};
@@ -75,7 +75,7 @@ sub new # returns new Host object
 #
 #   string - contains the host name
 #
-sub name # returns name string
+sub name
 {
     my ($self) = @_;
 
@@ -94,7 +94,7 @@ sub name # returns name string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setName # name string
+sub setName
 {
     my ($self, $name) = @_;
 
@@ -112,7 +112,7 @@ sub setName # name string
 #
 #   string - contains the host description
 #
-sub desc # returns desc string
+sub desc
 {
     my ($self) = @_;
     return $self->{desc};
@@ -130,7 +130,7 @@ sub desc # returns desc string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setDesc # desc string
+sub setDesc
 {
     my ($self, $desc) = @_;
 
@@ -148,7 +148,7 @@ sub setDesc # desc string
 #
 #   boolean - true if it's a router, false if not
 #
-sub isRouter # returns boolean
+sub isRouter
 {
     my ($self) = @_;
 
@@ -164,7 +164,7 @@ sub isRouter # returns boolean
 #
 #   string - type of the host
 #
-sub type # returns string
+sub type
 {
     my ($self) = @_;
 
@@ -179,7 +179,7 @@ sub type # returns string
 #
 #   string - contains the memory size
 #
-sub memory # returns memory string
+sub memory
 {
     my ($self) = @_;
 
@@ -198,7 +198,7 @@ sub memory # returns memory string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setMemory # (memory)
+sub setMemory
 {
     my ($self, $memory) = @_;
 
@@ -216,7 +216,7 @@ sub setMemory # (memory)
 #
 #   ref - <ANSTE::Scenario::BaseImage> object.
 #
-sub baseImage # returns BaseImage object
+sub baseImage
 {
     my ($self) = @_;
 
@@ -236,7 +236,7 @@ sub baseImage # returns BaseImage object
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub setBaseImage # (baseImage)
+sub setBaseImage
 {
     my ($self, $baseImage) = @_;
 
@@ -259,7 +259,7 @@ sub setBaseImage # (baseImage)
 #
 #   string - contains the baseImage type
 #
-sub baseImageType # returns string
+sub baseImageType
 {
     my ($self) = @_;
 
@@ -278,7 +278,7 @@ sub baseImageType # returns string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setBaseImageType # name string
+sub setBaseImageType
 {
     my ($self, $baseImageType) = @_;
 
@@ -296,7 +296,7 @@ sub setBaseImageType # name string
 #
 #   ref - <ANSTE::Scenario::Network> object.
 #
-sub network # returns Network object
+sub network
 {
     my ($self) = @_;
 
@@ -316,7 +316,7 @@ sub network # returns Network object
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub setNetwork # (network)
+sub setNetwork
 {
     my ($self, $network) = @_;
 
@@ -339,7 +339,7 @@ sub setNetwork # (network)
 #
 #   ref - <ANSTE::Scenario::Packages> object.
 #
-sub packages # returns Packages object
+sub packages
 {
     my ($self) = @_;
 
@@ -359,7 +359,7 @@ sub packages # returns Packages object
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub setPackages # (packages)
+sub setPackages
 {
     my ($self, $packages) = @_;
 
@@ -389,7 +389,7 @@ sub bridges
 #
 #   ref - <ANSTE::Scenario::Files> object.
 #
-sub files # returns Files object
+sub files
 {
     my ($self) = @_;
 
@@ -432,7 +432,7 @@ sub setFiles # (files)
 #
 #   ref - reference to the list of script names
 #
-sub preScripts # returns list
+sub preScripts
 {
     my ($self) = @_;
 
@@ -447,7 +447,7 @@ sub preScripts # returns list
 #
 #   ref - reference to the list of script names
 #
-sub postScripts # returns list
+sub postScripts
 {
     my ($self) = @_;
 
@@ -462,7 +462,7 @@ sub postScripts # returns list
 #
 #   boolean - true if passed, false if not
 #
-sub precondition # returns boolean
+sub precondition
 {
     my ($self) = @_;
 
@@ -492,7 +492,7 @@ sub setPrecondition
 #
 #   ref - <ANSTE::Scenario::Scenario> object.
 #
-sub scenario # returns Scenario object
+sub scenario
 {
     my ($self) = @_;
 
@@ -512,7 +512,7 @@ sub scenario # returns Scenario object
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub setScenario # (scenario)
+sub setScenario
 {
     my ($self, $scenario) = @_;
 
@@ -614,7 +614,7 @@ sub loadYAML
 #    }
 }
 
-sub _addScripts # (list, node)
+sub _addScripts
 {
     my ($self, $list, $node) = @_;
 

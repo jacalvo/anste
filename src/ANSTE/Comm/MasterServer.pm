@@ -38,11 +38,11 @@ use warnings;
 #
 #   string - OK
 #
-sub hostReady # (host) 
+sub hostReady
 {
     my ($self, $host) = @_;
 
-    my $waiter = ANSTE::Comm::HostWaiter->instance(); 
+    my $waiter = ANSTE::Comm::HostWaiter->instance();
     $waiter->hostReady($host);
 
     return 'OK';
@@ -61,11 +61,11 @@ sub hostReady # (host)
 #
 #   string - OK
 #
-sub executionFinished # (host, retValue) 
+sub executionFinished
 {
     my ($self, $host, $retValue) = @_;
 
-    my $waiter = ANSTE::Comm::HostWaiter->instance(); 
+    my $waiter = ANSTE::Comm::HostWaiter->instance();
     $waiter->executionFinished($host, $retValue);
 
     return 'OK';

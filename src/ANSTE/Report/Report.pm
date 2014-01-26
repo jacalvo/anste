@@ -35,7 +35,7 @@ use ANSTE::Exceptions::InvalidType;
 #
 #   A recently created <ANSTE::Report::Report> object.
 #
-sub new # returns new Report object
+sub new
 {
     my ($class) = @_;
     my $self = {};
@@ -61,7 +61,7 @@ sub new # returns new Report object
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub add # (suite)
+sub add
 {
     my ($self, $suite) = @_;
 
@@ -84,7 +84,7 @@ sub add # (suite)
 #
 #   ref - Reference to the list of <ANSTE::Report::SuiteResult>.
 #
-sub suites # returns list ref
+sub suites
 {
     my ($self) = @_;
 
@@ -99,7 +99,7 @@ sub suites # returns list ref
 #
 #   string - contains the date/time representation of the report generation
 #
-sub time # returns time
+sub time
 {
     my ($self) = @_;
 
@@ -118,14 +118,14 @@ sub time # returns time
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub setTime # (time)
+sub setTime
 {
     my ($self, $time) = @_;
 
     defined $time or
         throw ANSTE::Exceptions::MissingArgument('time');
 
-    $self->{time} = $time;        
+    $self->{time} = $time;
 }
 
 1;

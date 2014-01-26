@@ -56,7 +56,7 @@ my $SUITE_LIST_FILE = 'suites.list';
 #
 #   A recently created <ANSTE::Test::Runner> object.
 #
-sub new # returns new Runner object
+sub new
 {
     my ($class) = @_;
     my $self = {};
@@ -93,7 +93,7 @@ sub new # returns new Runner object
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub runDir # (suites)
+sub runDir
 {
     my ($self, $suites) = @_;
 
@@ -151,7 +151,7 @@ sub runDir # (suites)
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub runSuite # (suite)
+sub runSuite
 {
     my ($self, $suite) = @_;
 
@@ -224,14 +224,14 @@ sub _destroy
 #
 #   ref - <ANSTE::Report::Report> object.
 #
-sub report # returns report object
+sub report
 {
     my ($self) = @_;
 
     return $self->{report};
 }
 
-sub _loadScenario # (file, suite)
+sub _loadScenario
 {
     my ($self, $file, $suite) = @_;
 
@@ -364,7 +364,7 @@ sub _runTests
     }
 }
 
-sub _runOneTest # (test)
+sub _runOneTest
 {
     my ($self, $test) = @_;
 
@@ -386,7 +386,7 @@ sub _runOneTest # (test)
     return $testResult;
 }
 
-sub _runTest # (test)
+sub _runTest
 {
     my ($self, $test) = @_;
 
@@ -559,7 +559,7 @@ sub _time
     return $str;
 }
 
-sub _reboot # (hostname, log?)
+sub _reboot
 {
     my ($self, $hostname, $log) = @_;
 
@@ -580,7 +580,7 @@ sub _reboot # (hostname, log?)
     return $ret;
 }
 
-sub _runScriptOnHost # (hostname, script, log?, env?, params?)
+sub _runScriptOnHost
 {
     my ($self, $hostname, $script, $log, $env, $params) = @_;
 

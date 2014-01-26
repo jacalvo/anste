@@ -36,7 +36,7 @@ use ANSTE::Exceptions::InvalidType;
 #
 #   A recently created <ANSTE::Report::SuiteResult> object.
 #
-sub new # returns new SuiteResult object
+sub new
 {
     my ($class) = @_;
     my $self = {};
@@ -44,7 +44,7 @@ sub new # returns new SuiteResult object
     $self->{suite} = '';
     $self->{tests} = [];
 
-    bless($self, $class);
+    bless ($self, $class);
 
     return $self;
 }
@@ -57,7 +57,7 @@ sub new # returns new SuiteResult object
 #
 #   ref - <ANSTE::Test::Suite> object.
 #
-sub suite # returns suite string
+sub suite
 {
     my ($self) = @_;
 
@@ -77,7 +77,7 @@ sub suite # returns suite string
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub setSuite # (suite)
+sub setSuite
 {
     my ($self, $suite) = @_;
 
@@ -105,7 +105,7 @@ sub setSuite # (suite)
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub add # (test)
+sub add
 {
     my ($self, $test) = @_;
 
@@ -117,7 +117,7 @@ sub add # (test)
                                              'ANSTE::Report::TestResult');
     }
 
-    push(@{$self->{tests}}, $test);
+    push (@{$self->{tests}}, $test);
 }
 
 # Method: tests
@@ -128,7 +128,7 @@ sub add # (test)
 #
 #   ref - Reference to the list of <ANSTE::Report::TestResult>.
 #
-sub tests # returns list ref 
+sub tests
 {
     my ($self) = @_;
 
@@ -143,7 +143,7 @@ sub tests # returns list ref
 #
 #   integer - result value
 #
-sub value # returns value
+sub value
 {
     my ($self) = @_;
 

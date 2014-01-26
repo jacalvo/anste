@@ -1,4 +1,4 @@
-# Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2007-2013 José Antonio Calvo Fernández <jacalvo@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as

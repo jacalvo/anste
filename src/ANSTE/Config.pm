@@ -172,7 +172,7 @@ sub configPath
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
-sub setUserPath # (path)
+sub setUserPath
 {
     my ($self, $path) = @_;
 
@@ -218,7 +218,7 @@ sub formats
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
-sub setFormat # (format)
+sub setFormat
 {
     my ($self, $format) = @_;
 
@@ -327,7 +327,7 @@ sub verbose
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
-sub setVerbose # (value)
+sub setVerbose
 {
     my ($self, $value) = @_;
 
@@ -382,7 +382,7 @@ sub wait
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
-sub setWait # (value)
+sub setWait
 {
     my ($self, $value) = @_;
 
@@ -437,7 +437,7 @@ sub waitFail
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
-sub setWaitFail # (value)
+sub setWaitFail
 {
     my ($self, $value) = @_;
 
@@ -492,7 +492,7 @@ sub reuse
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
-sub setReuse # (value)
+sub setReuse
 {
     my ($self, $value) = @_;
 
@@ -602,7 +602,7 @@ sub logPath
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
-sub setLogPath # (logPath)
+sub setLogPath
 {
     my ($self, $logPath) = @_;
 
@@ -710,7 +710,7 @@ sub deployPath
 #
 #   string - The full path of the file.
 #
-sub imageTypeFile # (file)
+sub imageTypeFile
 {
     my ($self, $file) = @_;
 
@@ -729,7 +729,7 @@ sub imageTypeFile # (file)
 #
 #   string - The full path of the file.
 #
-sub scenarioFile # (file)
+sub scenarioFile
 {
     my ($self, $file) = @_;
 
@@ -748,7 +748,7 @@ sub scenarioFile # (file)
 #
 #   string - The full path of the file.
 #
-sub profileFile # (file)
+sub profileFile
 {
     my ($self, $file) = @_;
 
@@ -767,7 +767,7 @@ sub profileFile # (file)
 #
 #   string - The full path of the file.
 #
-sub listsFile # (file)
+sub listsFile
 {
     my ($self, $file) = @_;
 
@@ -786,7 +786,7 @@ sub listsFile # (file)
 #
 #   string - The full path of the file.
 #
-sub scriptFile # (file)
+sub scriptFile
 {
     my ($self, $file) = @_;
 
@@ -806,7 +806,7 @@ sub scriptFile # (file)
 #
 #   string - The full path of the file.
 #
-sub testFile # (file)
+sub testFile
 {
     my ($self, $file) = @_;
 
@@ -1128,7 +1128,7 @@ sub webVideo
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
-sub setWebVideo # (value)
+sub setWebVideo
 {
     my ($self, $value) = @_;
 
@@ -1210,7 +1210,7 @@ sub step
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
-sub setStep # (value)
+sub setStep
 {
     my ($self, $value) = @_;
 
@@ -1315,7 +1315,7 @@ sub virtMemory
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
 #
-sub setVariable # (name, value)
+sub setVariable
 {
     my ($self, $name, $value) = @_;
 
@@ -1383,7 +1383,7 @@ sub env
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setBreakpoint # (name)
+sub setBreakpoint
 {
     my ($self, $name) = @_;
 
@@ -1402,14 +1402,14 @@ sub setBreakpoint # (name)
 #   true  - if there is a breakpoint for the test
 #   undef - otherwise
 #
-sub breakpoint # (name)
+sub breakpoint
 {
     my ($self, $name) = @_;
 
     return $self->{breakpoints}->{$name};
 }
 
-sub _filePath # (file)
+sub _filePath
 {
     my ($self, $file) = @_;
 
@@ -1426,7 +1426,7 @@ sub _filePath # (file)
     return $dataFile;
 }
 
-sub _getOption # (section, option)
+sub _getOption
 {
     my ($self, $section, $option) = @_;
 

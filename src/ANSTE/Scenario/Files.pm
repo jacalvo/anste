@@ -34,7 +34,7 @@ use ANSTE::Exceptions::InvalidType;
 #
 #   A recently created <ANSTE::Scenario::Files> object.
 #
-sub new # returns new Files object
+sub new
 {
     my $class = shift;
     my $self = {};
@@ -54,7 +54,7 @@ sub new # returns new Files object
 #
 #   ref - list of files
 #
-sub list # returns the files list
+sub list
 {
     my ($self) = @_;
 
@@ -73,7 +73,7 @@ sub list # returns the files list
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub add # (files)
+sub add
 {
     my ($self, @files) = @_;
 

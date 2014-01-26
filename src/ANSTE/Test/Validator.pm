@@ -46,7 +46,7 @@ my $SUITE_FILE = 'suite.html';
 #
 #   A recently created <ANSTE::Test::Validator> object.
 #
-sub new # returns new Validator object
+sub new
 {
     my ($class) = @_;
     my $self = {};
@@ -69,7 +69,7 @@ sub new # returns new Validator object
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub validateSuite # (suite)
+sub validateSuite
 {
     my ($self, $suite) = @_;
 

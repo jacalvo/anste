@@ -218,7 +218,7 @@ sub get
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub exec # (command, log, env, params)
+sub exec
 {
     my ($self, $command, $log, $env, $params) = @_;
 

@@ -41,7 +41,7 @@ use YAML::XS;
 #
 #   A recently created <ANSTE::Scenario::Scenario> object.
 #
-sub new # returns new Scenario object
+sub new
 {
     my ($class) = @_;
     my $self = {};
@@ -67,7 +67,7 @@ sub new # returns new Scenario object
 #
 #   string - contains the scenario name
 #
-sub name # returns name string
+sub name
 {
     my ($self) = @_;
 
@@ -86,7 +86,7 @@ sub name # returns name string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setName # name string
+sub setName
 {
     my ($self, $name) = @_;
 
@@ -104,7 +104,7 @@ sub setName # name string
 #
 #   string - contains the scenario description
 #
-sub desc # returns desc string
+sub desc
 {
     my ($self) = @_;
 
@@ -123,7 +123,7 @@ sub desc # returns desc string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setDesc # desc string
+sub setDesc
 {
     my ($self, $desc) = @_;
 
@@ -141,7 +141,7 @@ sub setDesc # desc string
 #
 #   boolean - value of the option
 #
-sub manualBridging # returns boolean
+sub manualBridging
 {
     my ($self) = @_;
 
@@ -160,7 +160,7 @@ sub manualBridging # returns boolean
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setManualBridging # (value)
+sub setManualBridging
 {
     my ($self, $manualBridging) = @_;
 
@@ -178,7 +178,7 @@ sub setManualBridging # (value)
 #
 #   string - contains the virtualizer backend name
 #
-sub virtualizer # returns virtualizer package
+sub virtualizer
 {
     my ($self) = @_;
 
@@ -197,7 +197,7 @@ sub virtualizer # returns virtualizer package
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setVirtualizer # (virtualizer)
+sub setVirtualizer
 {
     my ($self, $virtualizer) = @_;
 
@@ -215,7 +215,7 @@ sub setVirtualizer # (virtualizer)
 #
 #   string - contains the system backend name
 #
-sub system # returns system package
+sub system
 {
     my ($self) = @_;
 
@@ -234,7 +234,7 @@ sub system # returns system package
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setSystem # (system)
+sub setSystem
 {
     my ($self, $system) = @_;
 
@@ -252,7 +252,7 @@ sub setSystem # (system)
 #
 #   ref - list of <ANSTE::Scenario::Host> objects
 #
-sub hosts # returns hosts list
+sub hosts
 {
     my ($self) = @_;
 
@@ -272,7 +272,7 @@ sub hosts # returns hosts list
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if parameter has wrong type
 #
-sub addHost # (host)
+sub addHost
 {
     my ($self, $host) = @_;
 
@@ -286,7 +286,7 @@ sub addHost # (host)
 
     $host->setScenario($self);
 
-    push(@{$self->{hosts}}, $host);
+    push (@{$self->{hosts}}, $host);
 }
 
 # Method: bridges
@@ -321,7 +321,7 @@ sub bridges
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub addBridge # (network, num?)
+sub addBridge
 {
     my ($self, $network, $num) = @_;
 
@@ -331,8 +331,7 @@ sub addBridge # (network, num?)
     if (not $self->{bridges}->{$network}) {
         if (defined $num) {
             $self->{bridges}->{$network} = $num;
-        }
-        else {
+        } else {
             my $num_bridges = scalar(keys %{$self->{bridges}});
             $num_bridges++;
             $self->{bridges}->{$network} = $num_bridges;
@@ -358,7 +357,7 @@ sub addBridge # (network, num?)
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidFile> - throw if argument is not a file
 #
-sub loadFromFile # (filename)
+sub loadFromFile
 {
     my ($self, $filename) = @_;
 
@@ -417,7 +416,7 @@ sub _loadYAML
     }
 }
 
-sub _addScripts # (list, node)
+sub _addScripts
 {
     my ($self, $list, $node) = @_;
 

@@ -82,7 +82,7 @@ sub instance
 #
 #   <ANSTE::Exceptions::Error> - throw if can't execute the command
 #
-sub execute # (command)
+sub execute
 {
     my ($self, $command) = @_;
 
@@ -102,7 +102,7 @@ sub execute # (command)
     return $ret == 0;
 }
 
-sub runTest # (command, logfile, env, params)
+sub runTest
 {
     my ($self, $command, $log, $env, $params) = @_;
 
@@ -147,7 +147,7 @@ sub runTest # (command, logfile, env, params)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub mountImage # (image, mountPoint)
+sub mountImage
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -169,7 +169,7 @@ sub mountImage # (image, mountPoint)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub unmount # (mountPoint)
+sub unmount
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -206,7 +206,7 @@ sub installBasePackages
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub updatePackagesCommand # returns string
+sub updatePackagesCommand
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -224,7 +224,7 @@ sub updatePackagesCommand # returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub updateNetworkCommand # returns string
+sub updateNetworkCommand
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -242,7 +242,7 @@ sub updateNetworkCommand # returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub cleanPackagesCommand # returns string
+sub cleanPackagesCommand
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -264,7 +264,7 @@ sub cleanPackagesCommand # returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub installPackagesCommand # (packages) returns string
+sub installPackagesCommand
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -287,7 +287,7 @@ sub installPackagesCommand # (packages) returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub installPackagesCommandType # (type) returns string
+sub installPackagesCommandType
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -305,7 +305,7 @@ sub installPackagesCommandType # (type) returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub installVars # return strings
+sub installVars
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -328,7 +328,7 @@ sub installVars # return strings
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub networkConfig # (network) returns string
+sub networkConfig
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -350,7 +350,7 @@ sub networkConfig # (network) returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub hostsConfig # (network) returns string
+sub hostsConfig
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -372,7 +372,7 @@ sub hostsConfig # (network) returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub hostnameConfig # (hostname) returns string
+sub hostnameConfig
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -394,7 +394,7 @@ sub hostnameConfig # (hostname) returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub hostConfig # (hostname) returns string
+sub hostConfig
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -416,7 +416,7 @@ sub hostConfig # (hostname) returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub storeMasterAddress # (address) returns string
+sub storeMasterAddress
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -439,7 +439,7 @@ sub storeMasterAddress # (address) returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub copyToMountCommand # (orig, dest) returns string
+sub copyToMountCommand
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -461,7 +461,7 @@ sub copyToMountCommand # (orig, dest) returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub createMountDirCommand # (path) returns string
+sub createMountDirCommand
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -479,7 +479,7 @@ sub createMountDirCommand # (path) returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub firewallDefaultRules # returns string
+sub firewallDefaultRules
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -501,7 +501,7 @@ sub firewallDefaultRules # returns string
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub enableRouting # (iface)
+sub enableRouting
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -523,7 +523,7 @@ sub enableRouting # (iface)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub setupTypeScript # (type)
+sub setupTypeScript
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -546,7 +546,7 @@ sub setupTypeScript # (type)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub enableNAT # (iface, sourceAddr)
+sub enableNAT
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -569,7 +569,7 @@ sub enableNAT # (iface, sourceAddr)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub disableNAT # (iface, sourceAddr)
+sub disableNAT
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -592,7 +592,7 @@ sub disableNAT # (iface, sourceAddr)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub startVideoRecording # (filename)
+sub startVideoRecording
 {
     throw ANSTE::Exceptions::NotImplemented();
 }

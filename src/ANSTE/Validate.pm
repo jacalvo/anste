@@ -40,7 +40,7 @@ use File::Basename;
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub natural # (string)
+sub natural
 {
     my ($string) = @_;
 
@@ -59,7 +59,7 @@ sub natural # (string)
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub identifier # (string)
+sub identifier
 {
     my ($string) = @_;
 
@@ -78,7 +78,7 @@ sub identifier # (string)
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub boolean # (value)
+sub boolean
 {
     my ($value) = @_;
 
@@ -97,7 +97,7 @@ sub boolean # (value)
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub path # (path)
+sub path
 {
     my ($path) = @_;
 
@@ -116,7 +116,7 @@ sub path # (path)
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub fileReadable # (file)
+sub fileReadable
 {
     my ($file) = @_;
 
@@ -135,7 +135,7 @@ sub fileReadable # (file)
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub fileWritable # (file)
+sub fileWritable
 {
     my ($file) = @_;
 
@@ -154,7 +154,7 @@ sub fileWritable # (file)
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub directoryWritable # (dir)
+sub directoryWritable
 {
     my ($dir) = @_;
 
@@ -173,7 +173,7 @@ sub directoryWritable # (dir)
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub system # (system)
+sub system
 {
     my ($system) = @_;
 
@@ -200,7 +200,7 @@ sub system # (system)
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub virtualizer # (virtualizer)
+sub virtualizer
 {
     my ($virtualizer) = @_;
 
@@ -227,7 +227,7 @@ sub virtualizer # (virtualizer)
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub format # (format)
+sub format
 {
     my ($format) = @_;
 
@@ -253,7 +253,7 @@ sub format # (format)
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub port # (port)
+sub port
 {
     my ($port) = @_;
 
@@ -272,15 +272,14 @@ sub port # (port)
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub host # (host)
+sub host
 {
     my ($host) = @_;
 
     # Could be an ip
     if ($host =~ m/^[\d.]+$/) {
         return ip($host);
-    }
-    else { # Or a domain name
+    } else { # Or a domain name
         # Rules taken from ebox-platform (EBox::Validate::_checkDomainName)
         ($host =~ /^\w/) or return 0;
         ($host =~ /\w$/) or return 0;
@@ -305,7 +304,7 @@ sub host # (host)
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub ip # (ip)
+sub ip
 {
     my ($ip) = @_;
 
@@ -341,7 +340,7 @@ sub ip # (ip)
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub mac # (mac)
+sub mac
 {
     my ($mac) = @_;
 
@@ -362,7 +361,7 @@ sub mac # (mac)
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub suite # (suite)
+sub suite
 {
     my ($suite) = @_;
 
@@ -383,7 +382,7 @@ sub suite # (suite)
 #
 #   boolean - true if it's valid, false otherwise
 #
-sub template # (template)
+sub template
 {
     my ($template) = @_;
 

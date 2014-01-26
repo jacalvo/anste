@@ -37,7 +37,7 @@ use ANSTE::Exceptions::MissingArgument;
 #
 #   A recently created <ANSTE::Virtualizer::Virtualizer> object
 #
-sub new # returns new Virtualizer object
+sub new
 {
     my ($class) = @_;
     my $self = {};
@@ -74,7 +74,7 @@ sub instance
 #
 #   boolean - true if the exit code is 0, false otherwise
 #
-sub execute # (command)
+sub execute
 {
     my ($self, $command) = @_;
 
@@ -112,7 +112,7 @@ sub execute # (command)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub createBaseImage # (%params)
+sub createBaseImage
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -135,7 +135,7 @@ sub createBaseImage # (%params)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub shutdownImage # (image)
+sub shutdownImage
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -158,7 +158,7 @@ sub shutdownImage # (image)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub destroyImage # (image)
+sub destroyImage
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -180,7 +180,7 @@ sub destroyImage # (image)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub createVM # (name)
+sub createVM
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -202,7 +202,7 @@ sub createVM # (name)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub defineVM # (name)
+sub defineVM
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -224,7 +224,7 @@ sub defineVM # (name)
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub startVM # (name)
+sub startVM
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -246,7 +246,7 @@ sub startVM # (name)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub removeVM # (name)
+sub removeVM
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -317,7 +317,7 @@ sub imageFile # (path, name)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub createImageCopy # (baseimage, newimage)
+sub createImageCopy
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -340,7 +340,7 @@ sub createImageCopy # (baseimage, newimage)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub deleteImage # (image)
+sub deleteImage
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -359,7 +359,7 @@ sub deleteImage # (image)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub createNetwork # (network)
+sub createNetwork
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -378,7 +378,7 @@ sub createNetwork # (network)
 #
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
-sub destroyNetwork # (network)
+sub destroyNetwork
 {
     throw ANSTE::Exceptions::NotImplemented();
 }

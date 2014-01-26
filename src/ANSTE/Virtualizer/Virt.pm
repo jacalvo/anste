@@ -58,7 +58,7 @@ my $BRIDGE_PREFIX = 'anstebr';
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub createBaseImage # (%params)
+sub createBaseImage
 {
     my ($self, %params) = @_;
 
@@ -161,7 +161,7 @@ sub createBaseImage # (%params)
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub shutdownImage # (image)
+sub shutdownImage
 {
     my ($self, $image) = @_;
 
@@ -197,7 +197,7 @@ sub shutdownImage # (image)
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub destroyImage # (image)
+sub destroyImage
 {
     my ($self, $image) = @_;
 
@@ -223,7 +223,7 @@ sub destroyImage # (image)
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub createVM # (name)
+sub createVM
 {
     my ($self, $name) = @_;
 
@@ -250,7 +250,7 @@ sub createVM # (name)
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub defineVM # (name)
+sub defineVM
 {
     my ($self, $name) = @_;
 
@@ -277,7 +277,7 @@ sub defineVM # (name)
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub startVM # (name)
+sub startVM
 {
     my ($self, $name) = @_;
 
@@ -303,7 +303,7 @@ sub startVM # (name)
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub removeVM # (name)
+sub removeVM
 {
     my ($self, $name) = @_;
 
@@ -359,7 +359,7 @@ sub existsVM
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub imageFile # (path, name)
+sub imageFile
 {
     my ($self, $path, $name) = @_;
 
@@ -392,7 +392,7 @@ sub imageFile # (path, name)
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType>     - throw if argument has invalid type
 #
-sub createImageCopy # (baseimage, newimage)
+sub createImageCopy
 {
     my ($self, $baseimage, $newimage) = @_;
 
@@ -453,7 +453,7 @@ sub createImageCopy # (baseimage, newimage)
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub deleteImage # (image)
+sub deleteImage
 {
     my ($self, $image) = @_;
 
@@ -479,7 +479,7 @@ sub deleteImage # (image)
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType>     - throw if argument has invalid type
 #
-sub createNetwork # (scenario)
+sub createNetwork
 {
     my ($self, $scenario) = @_;
 
@@ -528,7 +528,7 @@ sub createNetwork # (scenario)
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType>     - throw if argument has invalid type
 #
-sub destroyNetwork # (scenario)
+sub destroyNetwork
 {
     my ($self, $scenario) = @_;
 
@@ -548,7 +548,7 @@ sub destroyNetwork # (scenario)
     }
 }
 
-sub _createImageConfig # (image, path) returns config string
+sub _createImageConfig
 {
     my ($self, $image, $path) = @_;
 
@@ -597,7 +597,7 @@ sub _createImageConfig # (image, path) returns config string
 my $bridge_mac_prefix = '00:1F:3E:5D:C7';
 my $mac_id = 80;
 
-sub _createNetworkConfig # (net, bridge) returns config string
+sub _createNetworkConfig
 {
     my ($self, $net, $bridge) = @_;
 
@@ -632,7 +632,7 @@ sub _createNetworkConfig # (net, bridge) returns config string
     return $networkConfig;
 }
 
-sub _networkForBaseImage # (ip) returns network object
+sub _networkForBaseImage
 {
     my ($self, $ip) = @_;
 

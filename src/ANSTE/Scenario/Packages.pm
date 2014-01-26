@@ -34,7 +34,7 @@ use ANSTE::Exceptions::InvalidType;
 #
 #   A recently created <ANSTE::Scenario::Packages> object.
 #
-sub new # returns new Packages object
+sub new
 {
     my $class = shift;
     my $self = {};
@@ -54,7 +54,7 @@ sub new # returns new Packages object
 #
 #   ref - list of packages
 #
-sub list # returns the package list
+sub list
 {
     my ($self) = @_;
 
@@ -73,7 +73,7 @@ sub list # returns the package list
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub add # (packages)
+sub add
 {
     my ($self, @packages) = @_;
 
@@ -81,7 +81,7 @@ sub add # (packages)
         throw ANSTE::Exceptions::MissingArgument('packages');
     }
 
-    push(@{$self->{list}}, @packages);
+    push (@{$self->{list}}, @packages);
 }
 
 sub loadYAML

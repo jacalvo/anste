@@ -39,7 +39,7 @@ use base 'ANSTE::Exceptions::Base';
 #
 #   A recently created <ANSTE::Exceptions::InvalidConfig> object.
 #
-sub new # (option, value, file)
+sub new
 {
     my ($class, $option, $value, $file) = @_;
 

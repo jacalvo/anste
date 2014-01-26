@@ -29,14 +29,14 @@ use warnings;
 #
 #   Overriden method that writes the header of the report.
 #
-sub writeHeader 
+sub writeHeader
 {
     my ($self) = @_;
 
     my $file = $self->{file};
 
     print $file "Beginning test report\n\n";
-}    
+}
 
 # Method: writeEnd
 #
@@ -49,7 +49,7 @@ sub writeEnd
     my $file = $self->{file};
 
     print $file "Ending test report\n";
-}    
+}
 
 # Method: writeSuiteHeader
 #
@@ -66,7 +66,7 @@ sub writeSuiteHeader # (name)
     my $file = $self->{file};
 
     print $file "\t$name\n";
-}    
+}
 
 # Method: writeSuiteEnd
 #
@@ -79,7 +79,7 @@ sub writeSuiteEnd
     my $file = $self->{file};
 
     print $file "\n";
-}    
+}
 
 # Method: writeTestResult
 #
@@ -102,7 +102,7 @@ sub writeTestResult # (%params)
     my $resultStr = $result == 0 ? 'OK' : 'ERROR';
 
     print $file "\t\t$name: $resultStr\n";
-}    
+}
 
 # Method: filename
 #
@@ -117,6 +117,6 @@ sub filename
     my ($self) = @_;
 
     return 'anste-report.txt';
-}    
+}
 
 1;

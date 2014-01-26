@@ -38,7 +38,7 @@ use base 'ANSTE::Exceptions::Base';
 #
 #   A recently created <ANSTE::Exceptions::NotFound> object.
 #
-sub new # (what, value)
+sub new
 {
     my ($class, $what, $value) = @_;
 
@@ -59,7 +59,7 @@ sub new # (what, value)
 #
 #   string - Contains the name of the type of element not found..
 #
-sub what # returns string
+sub what
 {
     my ($self) = @_;
 
@@ -74,7 +74,7 @@ sub what # returns string
 #
 #   string - Contains the value.
 #
-sub value # returns string
+sub value
 {
     my ($self) = @_;
 

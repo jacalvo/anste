@@ -29,7 +29,7 @@ use warnings;
 #
 #   Overriden method that writes the header of the report in HTML.
 #
-sub writeHeader 
+sub writeHeader
 {
     my ($self) = @_;
 
@@ -41,7 +41,7 @@ sub writeHeader
     print $file "</head>\n";
     print $file "<body>\n";
     print $file "<h1>ANSTE Test report</h1>\n";
-}    
+}
 
 # Method: writeEnd
 #
@@ -72,7 +72,7 @@ sub writeEnd
 #   name - String with the suite name.
 #   desc - String with the suite description.
 #
-sub writeSuiteHeader # (name, desc)
+sub writeSuiteHeader
 {
     my ($self, $name, $desc) = @_;
 
@@ -86,7 +86,7 @@ sub writeSuiteHeader # (name, desc)
     print $file "<td>Description</td>\n";
     print $file "<td>Result</td>\n";
     print $file "</tr></th>\n";
-}    
+}
 
 # Method: writeSuiteEnd
 #
@@ -99,7 +99,7 @@ sub writeSuiteEnd
     my $file = $self->{file};
 
     print $file "</table>\n";
-}    
+}
 
 # Method: writeTestResult
 #
@@ -114,7 +114,7 @@ sub writeSuiteEnd
 #   video  - *optional* String with the video path.
 #   script - *optional* String with the script path.
 #
-sub writeTestResult # (%params)
+sub writeTestResult
 {
     my ($self, %params) = @_;
 
@@ -164,6 +164,6 @@ sub filename
     my ($self) = @_;
 
     return 'index.html';
-}    
+}
 
 1;

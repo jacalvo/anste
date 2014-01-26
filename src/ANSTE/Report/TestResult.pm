@@ -35,7 +35,7 @@ use ANSTE::Exceptions::InvalidType;
 #
 #   A recently created <ANSTE::Report::TestResult> object.
 #
-sub new # returns new TestResult object
+sub new
 {
     my ($class) = @_;
     my $self = {};
@@ -62,7 +62,7 @@ sub new # returns new TestResult object
 #
 #   ref - <ANSTE::Test::Test> object.
 #
-sub test # returns test string
+sub test
 {
     my ($self) = @_;
 
@@ -82,7 +82,7 @@ sub test # returns test string
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub setTest # test string
+sub setTest
 {
     my ($self, $test) = @_;
 
@@ -105,7 +105,7 @@ sub setTest # test string
 #
 #   integer - result value
 #
-sub value # returns value
+sub value
 {
     my ($self) = @_;
 
@@ -124,7 +124,7 @@ sub value # returns value
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub setValue # (value)
+sub setValue
 {
     my ($self, $value) = @_;
 
@@ -142,7 +142,7 @@ sub setValue # (value)
 #
 #   string - contains the path of the execution log
 #
-sub log # returns log
+sub log
 {
     my ($self) = @_;
 
@@ -161,7 +161,7 @@ sub log # returns log
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub setLog # (log)
+sub setLog
 {
     my ($self, $log) = @_;
 
@@ -179,7 +179,7 @@ sub setLog # (log)
 #
 #   string - contains the path of the execution script
 #
-sub script # returns script
+sub script
 {
     my ($self) = @_;
 
@@ -198,7 +198,7 @@ sub script # returns script
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub setScript # (script)
+sub setScript
 {
     my ($self, $script) = @_;
 
@@ -216,7 +216,7 @@ sub setScript # (script)
 #
 #   string - contains the path of the video record
 #
-sub video # returns video
+sub video
 {
     my ($self) = @_;
 
@@ -235,7 +235,7 @@ sub video # returns video
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub setVideo # (video)
+sub setVideo
 {
     my ($self, $video) = @_;
 
@@ -253,7 +253,7 @@ sub setVideo # (video)
 #
 #   string - contains the date/time representation of the test start
 #
-sub startTime # returns startTime
+sub startTime
 {
     my ($self) = @_;
 
@@ -272,7 +272,7 @@ sub startTime # returns startTime
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub setStartTime # (startTime)
+sub setStartTime
 {
     my ($self, $startTime) = @_;
 
@@ -290,7 +290,7 @@ sub setStartTime # (startTime)
 #
 #   string - contains the date/time representation of the test end
 #
-sub endTime # returns endTime
+sub endTime
 {
     my ($self) = @_;
 
@@ -309,7 +309,7 @@ sub endTime # returns endTime
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument not present
 #
-sub setEndTime # (endTime)
+sub setEndTime
 {
     my ($self, $endTime) = @_;
 

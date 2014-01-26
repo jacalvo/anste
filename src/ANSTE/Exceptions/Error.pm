@@ -37,7 +37,7 @@ use base 'ANSTE::Exceptions::Base';
 #
 #   A recently created <ANSTE::Exceptions::Error> object.
 #
-sub new # (msg)
+sub new
 {
     my ($class, $msg) = @_;
 
@@ -57,7 +57,7 @@ sub new # (msg)
 #
 #   string - Contains the message
 #
-sub message # returns string
+sub message
 {
     my ($self) = @_;
 

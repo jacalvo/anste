@@ -42,7 +42,7 @@ use YAML::XS;
 #
 #   A recently created <ANSTE::Scenario::BaseImage> object.
 #
-sub new # returns new BaseImage object
+sub new
 {
     my $class = shift;
     my $self = {};
@@ -74,7 +74,7 @@ sub new # returns new BaseImage object
 #
 #   string - contains the image name
 #
-sub name # returns name string
+sub name
 {
     my ($self) = @_;
 
@@ -93,7 +93,7 @@ sub name # returns name string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setName # name string
+sub setName
 {
     my ($self, $name) = @_;
 
@@ -111,7 +111,7 @@ sub setName # name string
 #
 #   string - contains the image description
 #
-sub desc # returns desc string
+sub desc
 {
     my ($self) = @_;
 
@@ -130,7 +130,7 @@ sub desc # returns desc string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setDesc # desc string
+sub setDesc
 {
     my ($self, $desc) = @_;
 
@@ -148,7 +148,7 @@ sub setDesc # desc string
 #
 #   string - contains the memory size
 #
-sub memory # returns memory string
+sub memory
 {
     my ($self) = shift;
 
@@ -167,7 +167,7 @@ sub memory # returns memory string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setMemory # (memory)
+sub setMemory
 {
     my ($self, $memory) = @_;
 
@@ -185,7 +185,7 @@ sub setMemory # (memory)
 #
 #   string - contains the size of the image
 #
-sub size # returns size string
+sub size
 {
     my ($self) = @_;
 
@@ -205,7 +205,7 @@ sub size # returns size string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setSize # size string
+sub setSize
 {
     my ($self, $size) = @_;
 
@@ -223,7 +223,7 @@ sub setSize # size string
 #
 #   string - contains the arch of the image
 #
-sub arch # returns arch string
+sub arch
 {
     my ($self) = @_;
 
@@ -243,7 +243,7 @@ sub arch # returns arch string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setArch # arch string
+sub setArch
 {
     my ($self, $arch) = @_;
 
@@ -261,7 +261,7 @@ sub setArch # arch string
 #
 #   string - contains the size of the image
 #
-sub swap # returns size string
+sub swap
 {
     my ($self) = @_;
 
@@ -281,7 +281,7 @@ sub swap # returns size string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setSwap # returns string
+sub setSwap
 {
     my ($self, $size) = @_;
 
@@ -299,7 +299,7 @@ sub setSwap # returns string
 #
 #   string - contains the  name of the installation method
 #
-sub installMethod # returns string
+sub installMethod
 {
     my ($self) = @_;
 
@@ -319,7 +319,7 @@ sub installMethod # returns string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setInstallMethod # installMethod string
+sub setInstallMethod
 {
     my ($self, $installMethod) = @_;
 
@@ -337,7 +337,7 @@ sub setInstallMethod # installMethod string
 #
 #   string - contains the  name of the installation method
 #
-sub installSource # returns string
+sub installSource
 {
     my ($self) = @_;
 
@@ -357,7 +357,7 @@ sub installSource # returns string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setInstallSource # installSource string
+sub setInstallSource
 {
     my ($self, $installSource) = @_;
 
@@ -375,7 +375,7 @@ sub setInstallSource # installSource string
 #
 #   string - contains the name of the distribution
 #
-sub installDist # returns string
+sub installDist
 {
     my ($self) = @_;
 
@@ -394,7 +394,7 @@ sub installDist # returns string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setInstallDist # installDist string
+sub setInstallDist
 {
     my ($self, $installDist) = @_;
 
@@ -412,7 +412,7 @@ sub setInstallDist # installDist string
 #
 #   string - contains the command
 #
-sub installCommand # returns string
+sub installCommand
 {
     my ($self) = @_;
 
@@ -431,7 +431,7 @@ sub installCommand # returns string
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
-sub setInstallCommand # installCommand string
+sub setInstallCommand
 {
     my ($self, $installCommand) = @_;
 
@@ -449,7 +449,7 @@ sub setInstallCommand # installCommand string
 #
 #   ref - <ANSTE::Scenario::Packages> object.
 #
-sub packages # returns Packages object
+sub packages
 {
     my ($self) = @_;
 
@@ -469,7 +469,7 @@ sub packages # returns Packages object
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub setPackages # (packages)
+sub setPackages
 {
     my ($self, $packages) = @_;
 
@@ -492,7 +492,7 @@ sub setPackages # (packages)
 #
 #   ref - <ANSTE::Scenario::Files> object.
 #
-sub files # returns Files object
+sub files
 {
     my ($self) = @_;
 
@@ -512,7 +512,7 @@ sub files # returns Files object
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidType> - throw if argument has wrong type
 #
-sub setFiles # (files)
+sub setFiles
 {
     my ($self, $files) = @_;
 
@@ -626,7 +626,7 @@ sub postTestsScripts # returns list ref
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #   <ANSTE::Exceptions::InvalidFile> - throw if argument is not a file
 #
-sub loadFromFile # (filename)
+sub loadFromFile
 {
     my ($self, $filename) = @_;
 
@@ -649,7 +649,7 @@ sub loadFromFile # (filename)
     return $self->_loadFromYAML($image);
 }
 
-sub _addScripts # (list, node)
+sub _addScripts
 {
     my ($self, $list, $node) = @_;
 
@@ -659,7 +659,7 @@ sub _addScripts # (list, node)
     }
 }
 
-sub _loadFromYAML # (image)
+sub _loadFromYAML
 {
     my ($self, $image) = @_;
 
@@ -735,7 +735,7 @@ sub _loadFromYAML # (image)
 
 }
 
-sub _addScriptsFromYAML # (list, node)
+sub _addScriptsFromYAML
 {
     my ($self, $list, $node) = @_;
 
