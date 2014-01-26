@@ -9,7 +9,7 @@ hosts:
      type: dhcp-router
      desc: Host that acts like a DHCP router
      baseimage: ubuntu-saucy
-     memory: 128
+     memory: 256
      network:
         interfaces:
             - name: eth1
@@ -21,7 +21,7 @@ hosts:
    - name: test-client
      desc: Client that connects to the router
      baseimage: ubuntu-saucy
-     memory: 64
+     memory: 256
      network:
         interfaces:
             - name: eth1

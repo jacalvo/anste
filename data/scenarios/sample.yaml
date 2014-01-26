@@ -22,7 +22,7 @@ hosts:
    - name: hostname2
      desc: Blah blah blah
      baseimage: ubuntu-{$dist}
-     memory: 64
+     memory: 256
      network:
         interfaces:
             - name: eth1
