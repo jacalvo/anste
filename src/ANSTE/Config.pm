@@ -124,7 +124,6 @@ sub check
     $self->imagePath();
     $self->logPath();
     $self->deployPath();
-    $self->templatePath();
     $self->anstedPort();
     $self->masterPort();
     $self->firstAddress();
