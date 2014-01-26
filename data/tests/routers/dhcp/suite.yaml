@@ -1,4 +1,4 @@
-ame: DHCP Router Test Suite
+name: DHCP Router Test Suite
 desc: Checks that a client can access internet through a DHCP router
 scenario: dhcp-router.yaml
 tests:
