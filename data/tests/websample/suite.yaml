@@ -1,0 +1,18 @@
+name: Sample Suite with Web tests
+desc: Contains a set of tests
+scenario: websample.yaml
+tests:
+   - name: TestSearch
+     type: web
+     desc: Search google in google
+     host: webserver
+     script: test-search
+     vars:
+        KEYWORD: google
+
+   - name: TestPing
+     type: host
+     desc: Check that internet is still working
+     script: test-ping
+     vars:
+        HOSTNAME: www.google.com

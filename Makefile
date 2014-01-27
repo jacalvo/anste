@@ -59,6 +59,7 @@ install:
 	install -m755 data/scripts/* $(DESTDIR)$(DATADIR)/scripts
 	install -d $(DESTDIR)$(DATADIR)/tests
 	cp -a data/tests/sample $(DESTDIR)$(DATADIR)/tests
+	cp -a data/tests/websample $(DESTDIR)$(DATADIR)/tests
 	cp -a data/tests/routers $(DESTDIR)$(DATADIR)/tests
 	install -d $(DESTDIR)$(DATADIR)/common
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE
