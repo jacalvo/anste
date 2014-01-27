@@ -1,4 +1,5 @@
 HEAD
+    + Added python-anste wrapper for python-selenium
     + Remove old Selenium 1.0 support
     + Remove deprecated Xen stuff
     + Remove support for deprecated XML format

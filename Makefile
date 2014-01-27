@@ -20,7 +20,7 @@ distclean:
 	@rm -f anste-$(VERSION).tar.gz
 	@rm -f anste-$(VERSION)
 	@rm -f anste_$(VERSION)*
-	@rm -f anste_*.deb
+	@rm -f *anste_*.deb
 
 export: distclean
 	rm -rf $(EXPORT)/
@@ -33,10 +33,10 @@ dist: export
 
 deb: tests dist
 	cd $(EXPORT) && dpkg-buildpackage -rfakeroot -uc -us
-	mv ../anste_*.deb .
+	mv ../*anste_*.deb .
 
 installdeb: deb
-	dpkg -i anste_*.deb
+	dpkg -i *anste_*.deb
 	$(MAKE) distclean
 
 install:
