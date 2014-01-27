@@ -15,4 +15,4 @@ tests:
      desc: Check that internet is still working
      script: test-ping
      vars:
-        HOSTNAME: www.google.com
+        HOST: www.google.com
