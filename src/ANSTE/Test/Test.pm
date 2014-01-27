@@ -632,7 +632,7 @@ sub loadYAML
     }
 
     my $host = $test->{host};
-    if ($type eq 'host') {
+    if (defined ($type) and ($type eq 'host')) {
         $host = 'localhost';
     }
     $self->setHost($host);
