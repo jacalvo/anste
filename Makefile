@@ -51,6 +51,8 @@ install:
 	install -m644 data/images/* $(DESTDIR)$(DATADIR)/images
 	install -d $(DESTDIR)$(DATADIR)/profiles
 	install -m644 data/profiles/* $(DESTDIR)$(DATADIR)/profiles
+	install -d $(DESTDIR)/etc/anste
+	install -m644 data/conf/anste.conf $(DESTDIR)/etc/anste
 	install -d $(DESTDIR)$(DATADIR)/scenarios
 	cp -a data/scenarios/* $(DESTDIR)$(DATADIR)/scenarios
 	install -d data/files $(DESTDIR)$(DATADIR)/files
