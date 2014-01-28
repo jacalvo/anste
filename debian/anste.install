@@ -1,1 +1,1 @@
-data/conf/anste.conf /etc/anste
+debian/tmp/*

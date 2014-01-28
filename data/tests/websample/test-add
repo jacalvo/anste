@@ -1,0 +1,10 @@
+#!/usr/bin/python
+
+import anste
+
+d = anste.driver()
+d.open("/websample.html")
+d.type_var("NUM1", id="num1")
+d.type_var("NUM2", id="num2")
+d.click(id="add")
+d.assert_value(d.var("RESULT"), id="result")

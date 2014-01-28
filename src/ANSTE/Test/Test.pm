@@ -631,10 +631,14 @@ sub loadYAML
         $self->setDesc('');
     }
 
-    # FIXME: preconditions not yet supported (they will have a new syntax)
     my $host = $test->{host};
+    if (defined ($type) and ($type eq 'host')) {
+        $host = 'localhost';
+    }
     $self->setHost($host);
     my $validHost = defined ($host);
+
+    # FIXME: preconditions not yet supported (they will have a new syntax)
 #    my $validHost = 0;
 #    my $hostNodes = $node->getElementsByTagName('host', 0);
 #    for (my $i = 0; $i < $hostNodes->getLength(); $i++) {

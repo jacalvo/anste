@@ -1,0 +1,20 @@
+name: Sample Suite with Web tests
+desc: Contains a set of tests
+scenario: websample.yaml
+tests:
+   - name: InstallWebpage
+     desc: Copy webpage to /var/www
+     host: webserver
+     script: install-webpage
+     vars:
+        FILE: websample.html
+
+   - name: TestAdd
+     type: web
+     desc: Check that 11 + 31 = 42
+     host: webserver
+     script: test-add
+     vars:
+        NUM1: 11
+        NUM2: 31
+        RESULT: 42

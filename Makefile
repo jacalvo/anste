@@ -20,7 +20,7 @@ distclean:
 	@rm -f anste-$(VERSION).tar.gz
 	@rm -f anste-$(VERSION)
 	@rm -f anste_$(VERSION)*
-	@rm -f anste_*.deb
+	@rm -f *anste_*.deb
 
 export: distclean
 	rm -rf $(EXPORT)/
@@ -33,10 +33,10 @@ dist: export
 
 deb: tests dist
 	cd $(EXPORT) && dpkg-buildpackage -rfakeroot -uc -us
-	mv ../anste_*.deb .
+	mv ../*anste_*.deb .
 
 installdeb: deb
-	dpkg -i anste_*.deb
+	dpkg -i *anste_*.deb
 	$(MAKE) distclean
 
 install:
@@ -51,6 +51,8 @@ install:
 	install -m644 data/images/* $(DESTDIR)$(DATADIR)/images
 	install -d $(DESTDIR)$(DATADIR)/profiles
 	install -m644 data/profiles/* $(DESTDIR)$(DATADIR)/profiles
+	install -d $(DESTDIR)/etc/anste
+	install -m644 data/conf/anste.conf $(DESTDIR)/etc/anste
 	install -d $(DESTDIR)$(DATADIR)/scenarios
 	cp -a data/scenarios/* $(DESTDIR)$(DATADIR)/scenarios
 	install -d data/files $(DESTDIR)$(DATADIR)/files
@@ -59,6 +61,7 @@ install:
 	install -m755 data/scripts/* $(DESTDIR)$(DATADIR)/scripts
 	install -d $(DESTDIR)$(DATADIR)/tests
 	cp -a data/tests/sample $(DESTDIR)$(DATADIR)/tests
+	cp -a data/tests/websample $(DESTDIR)$(DATADIR)/tests
 	cp -a data/tests/routers $(DESTDIR)$(DATADIR)/tests
 	install -d $(DESTDIR)$(DATADIR)/common
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE

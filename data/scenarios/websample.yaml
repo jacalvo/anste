@@ -1,0 +1,22 @@
+name: Web Sample Scenario
+desc: foobar
+hosts:
+   - name: webserver
+     desc: Server to host our sample web application
+     baseimage: ubuntu-{$dist}
+     memory: 256
+     network:
+        interfaces:
+            - name: eth1
+              type: static
+              address: 192.168.2.1
+              netmask: 255.255.255.0
+            - name: eth2
+              type: static
+              address: 192.168.4.1
+              netmask: 255.255.255.0
+     packages:
+        - apache2
+        - libjs-jquery
+     files:
+        - websample.html

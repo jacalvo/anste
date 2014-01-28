@@ -1,0 +1,21 @@
+<html>
+<head>
+    <script src="jquery.min.js"></script>
+    <script>
+        $(function() {
+            $('#add').click(function() {
+                $('#result').val(parseInt($('#num1').val()) + parseInt($('#num2').val()));
+            });
+        });
+    </script>
+</head>
+<body>
+    <center>
+        <input type="text" id="num1" size="2"/>
+        <input type="button" id="add" value="+"/>
+        <input type="text" id="num2" size="2"/>
+        =
+        <input type="text" id="result" size="3"/><br/>
+    </center>
+</body>
+</html>
