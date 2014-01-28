@@ -9,4 +9,4 @@ include /usr/share/cdbs/1/class/makefile.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
 
 binary-install/python-anste::
-	dh_pysupport -ppython-anste
+	dh_python2 -ppython-anste
