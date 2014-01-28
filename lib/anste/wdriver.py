@@ -139,6 +139,9 @@ class WDriverBase():
     def assert_present(self, name=None, id=None, xpath=None, text=None, css=None, timeout=10, msg='not present'):
         self.assert_true(self.wait_for(name, id, xpath, text, css, timeout), msg)
 
+    def assert_value(self, value, name=None, id=None, xpath=None, css=None, timeout=10, msg='not present'):
+        self.assert_true(self.wait_for_value(value, name, id, xpath, css, timeout), msg)
+
     def wait_for(self, name=None, id=None, xpath=None, text=None, css=None, timeout=10):
         if name:
             print "WAIT FOR name = " + name
@@ -159,6 +162,21 @@ class WDriverBase():
         elif css:
             print "WAIT FOR css = " + css
             return self._wait_for_element_present(css, By.CSS_SELECTOR, timeout_in_seconds=timeout)
+        else:
+            raise ValueError("No valid selector passed (name, id, xpath or css)")
+    def wait_for_value(self, value, name=None, id=None, xpath=None, css=None, timeout=10):
+        if name:
+            print "WAIT FOR VALUE " + value + " IN name = " + name
+            return self._wait_for_value(name, value, By.NAME, timeout_in_seconds=timeout)
+        elif id:
+            print "WAIT FOR VALUE " + value + " IN id = " + id
+            return self._wait_for_value(id, value, By.ID, timeout_in_seconds=timeout)
+        elif xpath:
+            print "WAIT FOR VALUE " + value + " IN xpath = " + xpath
+            return self._wait_for_value(xpath, value, By.XPATH, timeout_in_seconds=timeout)
+        elif css:
+            print "WAIT FOR VALUE " + value + " IN css = " + css
+            return self._wait_for_value(css, value, By.CSS_SELECTOR, timeout_in_seconds=timeout)
         else:
             raise ValueError("No valid selector passed (name, id, xpath or css)")
 
@@ -193,8 +211,8 @@ class WDriverBase():
         except NoSuchElementException:
             return False
 
-    def _wait_for_value(self, name, value, how=By.NAME):
-        for i in range(60):
+    def _wait_for_value(self, name, value, how=By.NAME, timeout_in_seconds=10):
+        for i in range(timeout_in_seconds):
             if self._is_element_present(how, name):
                 if self.find_element(by=how, value=name).get_attribute("value") == value:
                     return True

@@ -17,3 +17,6 @@ hosts:
               netmask: 255.255.255.0
      packages:
         - apache2
+        - libjs-jquery
+     files:
+        - websample.html

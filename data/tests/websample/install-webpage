@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cp /var/local/anste/$FILE /var/www/
+ln -s /usr/share/javascript/jquery/jquery.min.js /var/www/

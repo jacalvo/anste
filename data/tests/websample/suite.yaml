@@ -2,17 +2,19 @@ name: Sample Suite with Web tests
 desc: Contains a set of tests
 scenario: websample.yaml
 tests:
-   - name: TestSearch
-     type: web
-     desc: Search google in google
+   - name: InstallWebpage
+     desc: Copy webpage to /var/www
      host: webserver
-     script: test-search
+     script: install-webpage
      vars:
-        KEYWORD: google
+        FILE: websample.html
 
-   - name: TestPing
-     type: host
-     desc: Check that internet is still working
-     script: test-ping
+   - name: TestAdd
+     type: web
+     desc: Check that 11 + 31 = 42
+     host: webserver
+     script: test-add
      vars:
-        HOST: www.google.com
+        NUM1: 11
+        NUM2: 31
+        RESULT: 42
