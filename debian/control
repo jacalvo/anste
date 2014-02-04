@@ -2,18 +2,22 @@ Source: anste
 Section: admin
 Priority: optional
 Maintainer: José Antonio Calvo <jacalvo@zentyal.com>
-Build-Depends: cdbs, dh-python, libtrycatch-lite-perl, libfile-copy-recursive-perl,
-  libsoap-lite-perl, libfile-slurp-perl, libconfig-tiny-perl, libperl6-junction-perl,
-  libterm-readline-gnu-perl, libtext-template-perl, libdevel-stacktrace-perl,
-  libyaml-libyaml-perl, libjson-xs-perl, libattempt-perl, libio-interface-perl
+Build-Depends: cdbs, dh-python, libtrycatch-lite-perl,
+               libfile-copy-recursive-perl, libsoap-lite-perl,
+               libfile-slurp-perl, libconfig-tiny-perl, libperl6-junction-perl,
+               libterm-readline-gnu-perl, libtext-template-perl,
+               libdevel-stacktrace-perl, libyaml-libyaml-perl,
+               libjson-xs-perl, libattempt-perl, libio-interface-perl
 Standards-Version: 3.7.2
 
 Package: anste
 Architecture: all
-Depends: perl, libtrycatch-lite-perl, libfile-copy-recursive-perl, libsoap-lite-perl,
-  libperl6-slurp-perl, qemu-kvm, ubuntu-vm-builder, libconfig-tiny-perl, libperl6-junction-perl,
-  libterm-readline-gnu-perl, libtext-template-perl, libvirt-bin, libyaml-libyaml-perl,
-  libjson-xs-perl, sshpass, libattempt-perl, libio-interface-perl, python-anste
+Depends: perl, libtrycatch-lite-perl, libfile-copy-recursive-perl,
+         libsoap-lite-perl, libperl6-slurp-perl, qemu-kvm, ubuntu-vm-builder,
+         libconfig-tiny-perl, libperl6-junction-perl,
+         libterm-readline-gnu-perl, libtext-template-perl, libvirt-bin,
+         libyaml-libyaml-perl, libjson-xs-perl, sshpass, libattempt-perl,
+         libio-interface-perl, libdevel-stacktrace-perl, python-anste
 Recommends: recordmydesktop
 Description: Advanced Network Service Testing Environment
  ANSTE is a tool to easily create, deploy and test network services on complex

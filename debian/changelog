@@ -1,3 +1,9 @@
+anste (0.11-1) saucy; urgency=low
+
+  * Added missing depend only present in build-depends
+
+ -- José A. Calvo <jacalvo@zentyal.com>  Tue, 04 Feb 2014 12:36:48 +0100
+
 anste (0.11) saucy; urgency=low
 
   * New upstream release.
