@@ -1,3 +1,9 @@
+anste (0.11-2) saucy; urgency=low
+
+  * Changed to correct dependency for File::Slurp
+
+ -- José A. Calvo <jacalvo@zentyal.com>  Wed, 05 Feb 2014 13:17:54 +0100
+
 anste (0.11-1) saucy; urgency=low
 
   * Added missing depend only present in build-depends
