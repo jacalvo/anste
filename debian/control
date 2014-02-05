@@ -13,7 +13,7 @@ Standards-Version: 3.7.2
 Package: anste
 Architecture: all
 Depends: perl, libtrycatch-lite-perl, libfile-copy-recursive-perl,
-         libsoap-lite-perl, libperl6-slurp-perl, qemu-kvm, ubuntu-vm-builder,
+         libsoap-lite-perl, libfile-slurp-perl, qemu-kvm, ubuntu-vm-builder,
          libconfig-tiny-perl, libperl6-junction-perl,
          libterm-readline-gnu-perl, libtext-template-perl, libvirt-bin,
          libyaml-libyaml-perl, libjson-xs-perl, sshpass, libattempt-perl,
