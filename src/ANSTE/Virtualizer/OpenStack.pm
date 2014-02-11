@@ -45,22 +45,22 @@ sub new
 
     my $self = $class->SUPER::new();
 
-    my $config = ANSTE::Config->instance();
-    my $user = $config->_getOption('virtualizer', 'user');
+    $self->{config} = ANSTE::Config->instance();
+    my $user = $self->{config}->_getOption('virtualizer', 'user');
     unless (defined $user) {
         throw ANSTE::Exceptions::MissingConfig('virtualizer/user');
     }
 
-    my $password = $config->_getOption('virtualizer', 'password');
+    my $password = $self->{config}->_getOption('virtualizer', 'password');
     unless (defined $password) {
         throw ANSTE::Exceptions::MissingConfig('virtualizer/password');
     }
 
-    my $url = $config->_getOption('virtualizer', 'url');
+    my $url = $self->{config}->_getOption('virtualizer', 'url');
     unless (defined $url) {
         throw ANSTE::Exceptions::MissingConfig('virtualizer/url');
     }
-    my $project_id = $config->_getOption('virtualizer', 'project_id');
+    my $project_id = $self->{config}->_getOption('virtualizer', 'project_id');
     unless (defined $project_id) {
         throw ANSTE::Exceptions::MissingConfig('virtualizer/project_id');
     }
@@ -72,15 +72,54 @@ sub new
                                 project_id  => $project_id,
                             );
 
-    # FIXME: REMOVE
-    print "\n\nFOO\n\n";
-    use Data::Dumper;
-    print Dumper($self->{os_networking}->create_network({'name' => 'os'}));
-    print "\n\nBar\n\n";
-
     bless($self, $class);
 
     return $self;
+}
+
+sub createBaseImage
+{
+}
+
+sub shutdownImage
+{
+}
+
+sub destroyImage
+{
+}
+
+sub createVM
+{
+}
+
+sub defineVM
+{
+}
+
+sub startVM
+{
+}
+
+sub removeVM
+{
+}
+
+sub existsVM
+{
+}
+
+sub imageFile
+{
+    return '/bin/true';
+}
+
+sub createImageCopy
+{
+}
+
+sub deleteImage
+{
 }
 
 # Method: createNetwork
@@ -108,7 +147,29 @@ sub createNetwork
                                             'ANSTE::Scenario::Scenario');
     }
 
-    #TODO
+    my $external_network_id = $self->{config}->_getOption('virtualizer', 'external_network_id');
+
+    # Create network
+    my $network = $self->{os_networking}->create_network({'name' => 'anste'});
+    $self->{network_id} = $network->{id};
+
+    my %bridges = %{$scenario->bridges()};
+    while (my ($net, $num) = each %bridges) {
+        # Get configuration
+        my $net_config = $self->_genNetConfig($self->{network_id}, $net, $num);
+
+        my $subnet = $self->{os_networking}->create_subnet($net_config);
+
+        # Only the first network is connected to the external network (ANSTE communication network)
+        if ($num == 1 and defined $external_network_id) {
+            my $router_config = { name => 'anste_router',
+                                  external_gateway_info => {network_id => $external_network_id}
+                                };
+            my $router = $self->{os_networking}->create_router($router_config);
+            $self->{os_networking}->add_router_interface($router->{id}, $subnet->{id});
+        }
+    }
+    return 1;
 }
 
 # Method: destroyNetwork
@@ -136,7 +197,36 @@ sub destroyNetwork
                                             'ANSTE::Scenario::Scenario');
     }
 
-    # TODO
+    # TODO: Delete internal interfaces
+    # TODO: Delete router
+    # FIXME: Delete network
+    # $self->{os_networking}->delete_network($self->{network_id});
+}
+
+sub _genNetConfig
+{
+    my ($self, $netID, $net, $bridge) = @_;
+
+    my $address;
+    if ($bridge == 1) {
+        $address = $self->{config}->gateway();
+    }
+    else {
+        $address = ANSTE::Validate::ip($net) ? $net : "$net.254";
+    }
+
+    # Generate cidr
+    my @addr_split = split('\.', $address);
+    # FIXME: Unharcode the /24
+    my $cidr = join('.', @addr_split[0..2]) . '.0/24';
+
+    my $networkConfig = {'name'       => "anste_subnet$bridge",
+                         'network_id' => $netID,
+                         'ip_version' => 4,
+                         'cidr'       => $cidr,
+                         'gateway_ip' => $address};
+
+    return $networkConfig;
 }
 
 1;
