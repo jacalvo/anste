@@ -152,17 +152,18 @@ sub createNetwork
 
     my $external_network_id = $self->{config}->_getOption('virtualizer', 'external_network_id');
 
-    # Create network
-    my $network = $self->{os_networking}->create_network({'name' => 'anste'});
-
-    my $status = {'network' => $network->{id}};
+    my $status = {'networks' => []};
 
     my %bridges = %{$scenario->bridges()};
     while (my ($net, $num) = each %bridges) {
+        # Create network
+        my $network = $self->{os_networking}->create_network({'name' => "anste$num"});
+
         # Get configuration
         my $net_config = $self->_genNetConfig($network->{id}, $net, $num);
-
         my $subnet = $self->{os_networking}->create_subnet($net_config);
+
+        push(@{$status->{networks}}, $network->{id});
 
         # Only the first network is connected to the external network (ANSTE communication network)
         if ($num == 1 and defined $external_network_id) {
@@ -209,7 +210,10 @@ sub destroyNetwork
         $self->{os_networking}->remove_router_interface($status->{router}, $status->{port});
         $self->{os_networking}->delete_router($status->{router});
     }
-    $self->{os_networking}->delete_network($status->{network});
+
+    for my $net (@{$status->{networks}}) {
+        $self->{os_networking}->delete_network($net);
+    }
 }
 
 sub _genNetConfig
