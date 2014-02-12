@@ -106,6 +106,20 @@ sub cleanNetwork
     }
 }
 
+sub virtualizerStatus
+{
+    my ($self) = @_;
+
+    return $self->_get('virtualizerStatus');
+}
+
+sub setVirtualizerStatus
+{
+    my ($self, $status) = @_;
+
+    $self->_set('virtualizerStatus', $status);
+}
+
 sub _set
 {
     my ($self, $var, $value) = @_;
