@@ -21,6 +21,7 @@ use strict;
 use warnings;
 
 use ANSTE::Config;
+use ANSTE::Status;
 use ANSTE::Exceptions::NotImplemented;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::MissingConfig;
@@ -46,6 +47,8 @@ sub new
     my $self = $class->SUPER::new();
 
     $self->{config} = ANSTE::Config->instance();
+    $self->{status} = ANSTE::Status->instance();
+
     my $user = $self->{config}->_getOption('virtualizer', 'user');
     unless (defined $user) {
         throw ANSTE::Exceptions::MissingConfig('virtualizer/user');
@@ -151,12 +154,13 @@ sub createNetwork
 
     # Create network
     my $network = $self->{os_networking}->create_network({'name' => 'anste'});
-    $self->{network_id} = $network->{id};
+
+    my $status = {'network' => $network->{id}};
 
     my %bridges = %{$scenario->bridges()};
     while (my ($net, $num) = each %bridges) {
         # Get configuration
-        my $net_config = $self->_genNetConfig($self->{network_id}, $net, $num);
+        my $net_config = $self->_genNetConfig($network->{id}, $net, $num);
 
         my $subnet = $self->{os_networking}->create_subnet($net_config);
 
@@ -166,9 +170,11 @@ sub createNetwork
                                   external_gateway_info => {network_id => $external_network_id}
                                 };
             my $router = $self->{os_networking}->create_router($router_config);
-            $self->{os_networking}->add_router_interface($router->{id}, $subnet->{id});
+            $status->{router} = $router->{id};
+            $status->{port} = $self->{os_networking}->add_router_interface($router->{id}, $subnet->{id});
         }
     }
+    $self->{status}->setVirtualizerStatus($status);
     return 1;
 }
 
@@ -197,10 +203,13 @@ sub destroyNetwork
                                             'ANSTE::Scenario::Scenario');
     }
 
-    # TODO: Delete internal interfaces
-    # TODO: Delete router
-    # FIXME: Delete network
-    # $self->{os_networking}->delete_network($self->{network_id});
+    my $status = $self->{status}->virtualizerStatus();
+
+    if( defined $status->{router} ) {
+        $self->{os_networking}->remove_router_interface($status->{router}, $status->{port});
+        $self->{os_networking}->delete_router($status->{router});
+    }
+    $self->{os_networking}->delete_network($status->{network});
 }
 
 sub _genNetConfig
