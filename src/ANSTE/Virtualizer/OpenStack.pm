@@ -74,14 +74,21 @@ sub new
                                 password    => $password,
                                 project_id  => $project_id,
                             );
+    $self->{os_compute} = Net::OpenStack::Compute->new(
+                                auth_url    => $url,
+                                user        => $user,
+                                password    => $password,
+                                project_id  => $project_id,
+                            );
 
     bless($self, $class);
 
     return $self;
 }
 
-sub createBaseImage
+sub skipImageCreation
 {
+    return 1;
 }
 
 sub shutdownImage

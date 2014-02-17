@@ -122,7 +122,8 @@ sub create
 
     my $virtualizer = $self->{virtualizer};
 
-    $virtualizer->createBaseImage(name => $name,
+    unless ($virtualizer->skipImageCreation()) {
+        $virtualizer->createBaseImage(name => $name,
                                   ip => $ip,
                                   memory => $memory,
                                   swap => $swap,
@@ -133,6 +134,7 @@ sub create
                                   arch => $arch,
                                   command => $command,
                                   mirror => $mirror);
+    }
 }
 
 # Method: get
