@@ -87,7 +87,13 @@ sub new
     return $self;
 }
 
+# FIXME: Remove both skips
 sub skipImageCreation
+{
+    return 1;
+}
+
+sub skipExtra
 {
     return 1;
 }

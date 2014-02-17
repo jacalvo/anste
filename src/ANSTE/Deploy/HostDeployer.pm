@@ -304,6 +304,9 @@ sub _deployCopy
         $cmd->createVirtualMachine();
     };
 
+    # FIXME: Remove
+    my $virtualizer = $self->{virtualizer};
+    unless ($virtualizer->skipExtra()) {
     try {
         # Execute pre-install scripts
         my $pre = $host->preScripts();
@@ -349,6 +352,8 @@ sub _deployCopy
     } catch ($e) {
         print "[$hostname] ERROR: $e\n";
     }
+    }
+    return 0;
 }
 
 sub _copyBaseImage

@@ -584,11 +584,12 @@ sub createVirtualMachine
 {
     my ($self, $wait) = @_;
 
+    my $virtualizer = $self->{virtualizer};
+
     unless (defined $wait) {
-        $wait = 1;
+        $wait = not $virtualizer->skipExtra();
     }
 
-    my $virtualizer = $self->{virtualizer};
     my $system = $self->{system};
 
     my $name = $self->{image}->name();
