@@ -220,7 +220,7 @@ sub importImage
     my $name = $self->{image}->name();
 
     unless ($virtualizer->existsVM($name)) {
-        $virtualizer->defineVM($name);
+        $virtualizer->defineVM($self->{image});
     }
 
     unless ($virtualizer->existsSnapshot($name, $hostname)) {
@@ -598,7 +598,7 @@ sub createVirtualMachine
 
     $system->enableNAT($iface, $addr);
 
-    $virtualizer->createVM($name);
+    $virtualizer->createVM($self->{image});
 
     if ($wait) {
         print "[$name] Waiting for the system start...\n";

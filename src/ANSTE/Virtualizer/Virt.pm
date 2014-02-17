@@ -213,7 +213,7 @@ sub destroyImage
 #
 # Parameters:
 #
-#   name - name of the libvirt configuration file for the image
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #
@@ -225,10 +225,12 @@ sub destroyImage
 #
 sub createVM
 {
-    my ($self, $name) = @_;
+    my ($self, $image) = @_;
 
-    defined $name or
-        throw ANSTE::Exceptions::MissingArgument('name');
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('$image');
+
+    my $name = $image->{name};
 
     my $path = ANSTE::Config->instance()->imagePath();
     $self->execute("virsh create $path/$name/domain.xml");
@@ -240,7 +242,7 @@ sub createVM
 #
 # Parameters:
 #
-#   name - name of the libvirt configuration file for the image
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #
@@ -252,10 +254,12 @@ sub createVM
 #
 sub defineVM
 {
-    my ($self, $name) = @_;
+    my ($self, $image) = @_;
 
-    defined $name or
-        throw ANSTE::Exceptions::MissingArgument('name');
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('$image');
+
+    my $name = $image->{name};
 
     my $path = ANSTE::Config->instance()->imagePath();
     $self->execute("virsh define $path/$name/domain.xml");

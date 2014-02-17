@@ -25,6 +25,7 @@ use ANSTE::Status;
 use ANSTE::Exceptions::NotImplemented;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::MissingConfig;
+use Net::OpenStack::Compute;
 use Net::OpenStack::Networking;
 
 # Class: OpenStack
@@ -101,23 +102,51 @@ sub destroyImage
 
 sub createVM
 {
+    my ($self, $image) = @_;
+
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('image');
+
+    my $networks = $self->{status}->virtualizerStatus()->{networks};
+
+    my @netConf = ();
+    foreach my $iface (@{$image->network()->interfaces()}) {
+        my $bridge = $iface->bridge();
+
+        my $net = {uuid => $networks->{$bridge},
+                   fixed_ip => $iface->address()};
+        push(@netConf, $net);
+    }
+
+    # FIXME: Unhardcode things
+    my $ret = $self->{os_compute}->create_server({name => $image->{name},
+                                        flavorRef => '2',
+                                        #imageRef => '9e26b2fc-7cc5-42af-8024-d5b01fdcd0b6',
+                                        imageRef => 'e09b8f13-b834-4812-aacb-db7b8ee60d0e', # (Zentyal33)
+                                        networks => \@netConf
+                                    });
+
+    # TODO: Check status
+
+    return $ret->{id};
 }
 
 sub defineVM
 {
+    my ($self, $image) = @_;
+    # FIXME
+    $self->createVM($image);
 }
 
 sub startVM
 {
+    return 1;
 }
 
-sub removeVM
-{
-}
-
-sub existsVM
-{
-}
+# sub existsVM
+# {
+#     # TODO: We need the id
+# }
 
 sub imageFile
 {
@@ -187,6 +216,8 @@ sub createNetwork
             my $router = $self->{os_networking}->create_router($router_config);
             $status->{router} = $router->{id};
             $status->{port} = $self->{os_networking}->add_router_interface($router->{id}, $subnet->{id});
+        } else {
+            # TODO: Throw exception
         }
     }
     $self->{status}->setVirtualizerStatus($status);

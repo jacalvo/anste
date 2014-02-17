@@ -171,7 +171,7 @@ sub destroyImage
 #
 # Parameters:
 #
-#   name - name of the virtual machine
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #
@@ -193,7 +193,7 @@ sub createVM
 #
 # Parameters:
 #
-#   name - name of the virtual machine
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #
