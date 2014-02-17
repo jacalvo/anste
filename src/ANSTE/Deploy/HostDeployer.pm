@@ -369,29 +369,9 @@ sub _updateHostname
 {
     my ($self) = @_;
 
-    my $cmd = $self->{cmd};
+    my $virtualizer = $self->{virtualizer};
 
-    my $ok = 0;
-
-    attempt {
-        try {
-            $cmd->mount() or die "Can't mount image: $!";
-        } catch {
-            $cmd->deleteMountPoint();
-            die "Can't mount image.";
-        }
-    } tries => 5, delay => 5;
-
-    try {
-        $cmd->copyHostFiles() or die "Can't copy files: $!";
-        $ok = 1;
-    } catch ($e) {
-        $cmd->umount() or die "Can't unmount image: $!";
-        $e->throw();
-    }
-    $cmd->umount() or die "Can't unmount image: $!";
-
-    return $ok;
+    return $virtualizer->updateHostname($self->{image}, $self->{cmd});
 }
 
 sub _generateSetupScript # (script)

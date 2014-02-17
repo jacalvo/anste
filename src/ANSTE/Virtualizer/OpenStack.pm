@@ -119,6 +119,13 @@ sub imageFile
 
 sub createImageCopy
 {
+    return 1;
+}
+
+sub updateHostname
+{
+    # TODO
+    return 1;
 }
 
 sub deleteImage
