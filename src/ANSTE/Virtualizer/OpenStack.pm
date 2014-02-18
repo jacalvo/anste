@@ -137,10 +137,17 @@ sub createVM
                                         imageRef => 'e09b8f13-b834-4812-aacb-db7b8ee60d0e', # (Zentyal33)
                                         networks => \@netConf
                                     });
+    my $id = $ret->{id};
 
-    # FIXME: Wait for the creation to finish
+    # Wait for the creation to finish
+    do {
+        sleep(1);
+        $ret = $self->{os_compute}->get_server($id);
+    } while ($ret->{status} eq 'BUILD');
 
-    $image_id = $ret->{id};
+    # TODO: Throw exception if status != ACTIVE ??
+
+    $image_id = $id;
 }
 
 # Must be called from within the main thread
@@ -199,7 +206,10 @@ sub deleteImage
 
     $self->{os_compute}->delete_server($id);
 
-    # FIXME: Wait for the creation to finish
+    # Wait for the deletion to finish
+    do {
+        sleep(1);
+    } while ($self->{os_compute}->get_server($id));
 }
 
 # Method: createNetwork
