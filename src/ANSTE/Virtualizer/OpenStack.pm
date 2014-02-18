@@ -20,6 +20,9 @@ use base 'ANSTE::Virtualizer::Virtualizer';
 use strict;
 use warnings;
 
+use threads;
+use threads::shared;
+
 use ANSTE::Config;
 use ANSTE::Status;
 use ANSTE::Exceptions::NotImplemented;
@@ -27,6 +30,8 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::MissingConfig;
 use Net::OpenStack::Compute;
 use Net::OpenStack::Networking;
+
+my $image_id :shared;
 
 # Class: OpenStack
 #
@@ -133,12 +138,19 @@ sub createVM
                                         networks => \@netConf
                                     });
 
-    # TODO: Check status of the creation
+    # FIXME: Wait for the creation to finish
 
-    $status->{images}->{$image->{name}} = [$ret->{id}];
+    $image_id = $ret->{id};
+}
+
+# Must be called from within the main thread
+sub finishImageCreation
+{
+    my ($self, $name) = @_;
+
+    my $status = $self->{status}->virtualizerStatus();
+    $status->{images}->{$name} = $image_id;
     $self->{status}->setVirtualizerStatus($status);
-
-    return $ret->{id};
 }
 
 sub defineVM
@@ -186,6 +198,8 @@ sub deleteImage
     my $id = $status->{images}->{$name};
 
     $self->{os_compute}->delete_server($id);
+
+    # FIXME: Wait for the creation to finish
 }
 
 # Method: createNetwork

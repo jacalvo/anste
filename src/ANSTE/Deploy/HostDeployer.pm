@@ -165,6 +165,7 @@ sub waitForFinish
     if  ($ret) {
         throw ANSTE::Exceptions::Error('Error in the deploy of the scenario');
     }
+    $self->{virtualizer}->finishImageCreation($self->{image}->{name});
 }
 
 # Method: shutdown
