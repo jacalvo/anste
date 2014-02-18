@@ -237,7 +237,7 @@ sub createNetwork
                                             'ANSTE::Scenario::Scenario');
     }
 
-    my $external_network_id = $self->{config}->_getOption('virtualizer', 'external_network_id');
+    my $external_router_id = $self->{config}->_getOption('virtualizer', 'external_router_id');
 
     my $status = {'networks' => {}};
 
@@ -253,13 +253,8 @@ sub createNetwork
         $status->{networks}->{$num} = $network->{id};
 
         # Only the first network is connected to the external network (ANSTE communication network)
-        if ($num == 1 and defined $external_network_id) {
-            my $router_config = { name => 'anste_router',
-                                  external_gateway_info => {network_id => $external_network_id}
-                                };
-            my $router = $self->{os_networking}->create_router($router_config);
-            $status->{router} = $router->{id};
-            $status->{port} = $self->{os_networking}->add_router_interface($router->{id}, $subnet->{id});
+        if ($num == 1 and defined $external_router_id) {
+            $status->{port} = $self->{os_networking}->add_router_interface($external_router_id, $subnet->{id});
         } else {
             # TODO: Throw exception
         }
@@ -294,10 +289,10 @@ sub destroyNetwork
     }
 
     my $status = $self->{status}->virtualizerStatus();
+    my $external_router_id = $self->{config}->_getOption('virtualizer', 'external_router_id');
 
-    if( defined $status->{router} ) {
-        $self->{os_networking}->remove_router_interface($status->{router}, $status->{port});
-        $self->{os_networking}->delete_router($status->{router});
+    if(defined $external_router_id) {
+        $self->{os_networking}->remove_router_interface($external_router_id, $status->{port});
     }
 
     for my $net (values $status->{networks}) {
