@@ -113,7 +113,8 @@ sub createVM
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
 
-    my $networks = $self->{status}->virtualizerStatus()->{networks};
+    my $status = $self->{status}->virtualizerStatus();
+    my $networks = $status->{networks};
 
     my @netConf = ();
     foreach my $iface (@{$image->network()->interfaces()}) {
@@ -132,7 +133,10 @@ sub createVM
                                         networks => \@netConf
                                     });
 
-    # TODO: Check status
+    # TODO: Check status of the creation
+
+    $status->{images}->{$image->{name}} = [$ret->{id}];
+    $self->{status}->setVirtualizerStatus($status);
 
     return $ret->{id};
 }
@@ -170,8 +174,18 @@ sub updateHostname
     return 1;
 }
 
+# TODO: Fix name
 sub deleteImage
 {
+    my ($self, $name) = @_;
+
+    defined $name or
+        throw ANSTE::Exceptions::MissingArgument('name');
+
+    my $status = $self->{status}->virtualizerStatus();
+    my $id = $status->{images}->{$name};
+
+    $self->{os_compute}->delete_server($id);
 }
 
 # Method: createNetwork
