@@ -638,28 +638,6 @@ sub loadYAML
     $self->setHost($host);
     my $validHost = defined ($host);
 
-    # FIXME: preconditions not yet supported (they will have a new syntax)
-#    my $validHost = 0;
-#    my $hostNodes = $node->getElementsByTagName('host', 0);
-#    for (my $i = 0; $i < $hostNodes->getLength(); $i++) {
-#        my $hostNode = $hostNodes->item($i);
-#        my $hostPrecondition = 1;
-#        my $var = $hostNode->getAttribute('var');
-#        if ($var) {
-#            my $expectedValue = $hostNode->getAttribute('eq');
-#            my $value = $configVars->{$var};
-#            unless (defined $value) {
-#                $value = 0;
-#            }
-#            $hostPrecondition = $expectedValue eq $value;
-#        }
-#        if ($hostPrecondition) {
-#            my $host = $hostNode->getFirstChild()->getNodeValue();
-#            $self->setHost($host);
-#            $validHost = 1;
-#            last;
-#        }
-#    }
     unless ($validHost or ($type eq 'host')) {
         throw ANSTE::Exceptions::Error("No valid host found for test $name.");
     }
@@ -715,21 +693,14 @@ sub loadYAML
         }
     }
 
-    #FIXME
-    # Check if all preconditions are satisfied
-#    my $preconditionNodes = $node->getElementsByTagName('precondition', 0);
-#    for (my $i = 0; $i < $preconditionNodes->getLength(); $i++) {
-#        my $var = $preconditionNodes->item($i)->getAttribute('var');
-#        my $expectedValue = $preconditionNodes->item($i)->getAttribute('eq');
-#        my $value = $configVars->{$var};
-#        unless (defined $value) {
-#            $value = 0;
-#        }
-#        if ($value ne $expectedValue) {
-#            $self->setPrecondition(0);
-#            last;
-#        }
-#    }
+    foreach my $name (keys %{$configVars}) {
+        my $value = $configVars->{$name};
+        if ($value) {
+            $name =~ tr/-/_/;
+            $self->setVariable("GLOBAL_$name", $value);
+        }
+    }
+
 }
 
 1;
