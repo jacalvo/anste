@@ -2,6 +2,9 @@ HEAD
     + Added ANSTE::Virtualizer::OpenStack with partial support
     + Added useOpenStack and setUseOpenStack to Anste::Status
     + Added virtualizerStatus and setVirtualizerStatus to Anste::Status
+    + Now config and cli vars are passed to the tests with the GLOBAL_ prefix
+0.11
+    + Added anste-init command to create the directory structure of a project
     + Added python-anste wrapper for python-selenium
     + Remove old Selenium 1.0 support
     + Remove deprecated Xen stuff
