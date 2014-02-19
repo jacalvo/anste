@@ -125,6 +125,12 @@ sub createImage
         $cmd->installBasePackages()
             or throw ANSTE::Exceptions::Error('Error installing packages.');
         print "done.\n";
+
+        print "[$name] Final configurations... ";
+        $cmd->finalConfigurations()
+            or throw ANSTE::Exceptions::Error('Error finishing configuration.');
+        print "done.\n";
+
     } catch ($e) {
         $self->_umountImage($cmd, $name);
         $e->throw();

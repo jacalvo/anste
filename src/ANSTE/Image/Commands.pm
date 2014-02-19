@@ -20,6 +20,7 @@ use warnings;
 use strict;
 
 use ANSTE::Config;
+use ANSTE::Status;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::HostWaiter;
 use ANSTE::ScriptGen::BasePreInstall;
@@ -669,6 +670,19 @@ sub transferFiles # (list)
 
     foreach my $file (@{$list}) {
         $self->_transferFile($file, $image, $config, $client);
+    }
+}
+
+# TODO: Doc
+sub finalConfigurations
+{
+    my ($self) = @_;
+
+    if (ANSTE::Status->instance()->useOpenStack()) {
+        my $system = $self->{system};
+        my $cmd = 'cat /dev/null > /etc/udev/rules.d/70-persistent-net.rules ' .
+                  '&& cat /dev/null > /lib/udev/rules.d/75-persistent-net-generator.rules';
+        $system->execute($cmd);
     }
 }
 
