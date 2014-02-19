@@ -1,4 +1,6 @@
 HEAD
+    + Added ANSTE::Virtualizer::OpenStack with partial support
+    + Added useOpenStack and setUseOpenStack to Anste::Status
     + Added virtualizerStatus and setVirtualizerStatus to Anste::Status
     + Added python-anste wrapper for python-selenium
     + Remove old Selenium 1.0 support

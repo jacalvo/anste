@@ -197,6 +197,10 @@ sub createVM
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+sub finishImageCreation
+{
+}
+
 # Method: defineVM
 #
 #   Override this method to define the Virtual Machine
