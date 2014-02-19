@@ -60,6 +60,7 @@ my $quiet = 0;
 my $step = 0;
 my $reuse = 0;
 my $break = '';
+my $openstack = 0;
 
 GetOptions('createimg' => \$create,
            'getimg' => \$getimg,
@@ -77,6 +78,7 @@ GetOptions('createimg' => \$create,
            'reuse' => \$reuse,
            'step' => \$step,
            'break=s' => \$break,
+           'openstack' => \$openstack,
            'help' => \$help) or pod2usage(2);
 
 pod2usage(1) if $help;
@@ -87,6 +89,9 @@ if (none($create, $getimg, $remove, $deploy, $shutdown, $test) == 1) {
 
 my $status = ANSTE::Status->instance();
 my $config = ANSTE::Config->instance();
+
+# Set conf so that images are generated with support for OpenStack
+$status->setUseOpenStack($openstack);
 
 unless ($path) {
     $path = '.';
@@ -424,6 +429,7 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -wait-fail         wait if a test fails
    -step              run tests step by step, waiting after each one
    -break <t1,t2,...> set breakpoints after the given test names
+   -openstack         images are generated with support for OpenStack
    -quiet             do not show output of commands
    -reuse             reuse the created image if exists (with -create)
                       reuse a deployed scenario (with -test)

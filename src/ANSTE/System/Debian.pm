@@ -21,6 +21,7 @@ use strict;
 use warnings;
 
 use ANSTE::Config;
+use ANSTE::Status;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
@@ -119,6 +120,10 @@ sub installBasePackages
                     'hping3',
                     'netcat',
                     'tcpdump');
+
+    if (ANSTE::Status->instance()->useOpenStack()) {
+        push(@PACKAGES, 'cloud-init');
+    }
 
     $self->execute('echo "deb http://ppa.launchpad.net/zentyal/anste/ubuntu precise main" > /etc/apt/sources.list.d/anste.list')
         or die "write anste repository to sources.list failed: $!";

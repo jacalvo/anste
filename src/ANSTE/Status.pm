@@ -120,6 +120,20 @@ sub setVirtualizerStatus
     $self->_set('virtualizerStatus', $status);
 }
 
+sub useOpenStack
+{
+    my ($self) = @_;
+
+    return $self->_get('useOpenStack');
+}
+
+sub setUseOpenStack
+{
+    my ($self, $status) = @_;
+
+    $self->_set('useOpenStack', $status);
+}
+
 sub _set
 {
     my ($self, $var, $value) = @_;
