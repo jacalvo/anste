@@ -118,6 +118,17 @@ sub createBaseImage
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# FIXME: Remove both skips
+sub skipImageCreation
+{
+    return 0;
+}
+
+sub skipExtra
+{
+    return 0;
+}
+
 # Method: shutdownImage
 #
 #   Override this method to execute the command
