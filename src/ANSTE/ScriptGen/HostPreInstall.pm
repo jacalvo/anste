@@ -160,7 +160,7 @@ sub _writeMasterAddress
 
     my $config = ANSTE::Config->instance();
     my $port = $config->masterPort();
-    my $masterIP = $config->gateway();
+    my $masterIP = $config->master();
     my $MASTER = "$masterIP:$port";
 
     print $file "# Stores the master address so anste-slave can read it\n";

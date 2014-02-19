@@ -128,6 +128,7 @@ sub check
     $self->masterPort();
     $self->firstAddress();
     $self->gateway();
+    $self->master();
     $self->natIface();
     $self->nameserverHost();
     $self->nameserver();
@@ -947,6 +948,36 @@ sub gateway
     }
 
     return $gateway;
+}
+
+# Method: master
+#
+#   Gets the value for the master IP option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub master
+{
+    my ($self) = @_;
+
+    my $master =  $self->_getOption('comm', 'master');
+    unless ($master) {
+        $master = $self->gateway();
+    }
+
+    if (not ANSTE::Validate::ip($master)) {
+        throw ANSTE::Exceptions::InvalidConfig('master',
+                                               $master,
+                                               $self->{confFile});
+    }
+
+    return $master;
 }
 
 # Method: natIface
