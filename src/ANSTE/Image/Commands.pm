@@ -673,7 +673,13 @@ sub transferFiles # (list)
     }
 }
 
-# TODO: Doc
+# Method: finalConfigurations
+#
+#   Performs the final configurations in the image
+#
+#   If openstack command line argument has been provided, removes the network
+#   persistent rules in the image.
+#
 sub finalConfigurations
 {
     my ($self) = @_;

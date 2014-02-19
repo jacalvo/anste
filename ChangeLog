@@ -1,4 +1,5 @@
 HEAD
+    + Added finalConfigurations method to ANSTE::Image::Commands
     + Added ANSTE::Virtualizer::OpenStack with partial support
     + Added useOpenStack and setUseOpenStack to Anste::Status
     + Added virtualizerStatus and setVirtualizerStatus to Anste::Status
