@@ -568,7 +568,6 @@ sub _createImageConfig
     $imageConfig .= "\t<on_poweroff>destroy</on_poweroff>\n";
     $imageConfig .= "\t<on_reboot>restart</on_reboot>\n";
     $imageConfig .= "\t<on_crash>restart</on_crash>\n";
-    $imageConfig .= "\t<cpu mode='host-passthrough'/>\n";
     $imageConfig .= "\t<devices>\n";
     $imageConfig .= "\t\t<emulator>/usr/bin/kvm</emulator>\n";
     $imageConfig .= "\t\t<disk type='file' device='disk'>\n";
