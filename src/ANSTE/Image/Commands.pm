@@ -621,7 +621,7 @@ sub createVirtualMachine
         close($fh) or die "Can't close temporary file: $!";
 
         # Upload and exec it
-        while (not $client->put($filename)) {
+        while (not $client->put($filename, 1)) {
             sleep 1;
         }
         $client->exec($filename);

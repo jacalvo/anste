@@ -113,7 +113,7 @@ sub connected
 #
 sub put
 {
-    my ($self, $file) = @_;
+    my ($self, $file, $silentErrors) = @_;
 
     defined $file or
         throw ANSTE::Exceptions::MissingArgument('file');
@@ -142,13 +142,14 @@ sub put
             );
         } catch ($e) {
             $nTries -= 1;
-            print "SOAP Error: $e. Tries left $nTries\n";
+            print "SOAP Error: $e. Tries left $nTries\n" unless $silentErrors;
             sleep 5 if $nTries;
         }
     }
 
-    if ($response->fault) {
-        die "SOAP request failed: $!";
+    if (not defined $response or $response->fault) {
+        print "SOAP request failed: $!\n" unless $silentErrors;
+        return 0;
     }
     my $result = $response->result;
     return($result eq 'OK');
