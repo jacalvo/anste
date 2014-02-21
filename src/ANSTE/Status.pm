@@ -138,6 +138,10 @@ sub _set
 {
     my ($self, $var, $value) = @_;
 
+    unless ($self->{status}) {
+        $self->{status} = $self->_readStatusFile();
+    }
+
     $self->{status}->{$var} = $value;
 
     write_file($self->_statusFile(), encode_json($self->{status}));
