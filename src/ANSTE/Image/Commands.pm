@@ -596,7 +596,8 @@ sub createVirtualMachine
     my $name = $self->{image}->name();
     my $addr = $self->ip();
 
-    my $iface = ANSTE::Config->instance()->natIface();
+    my $config = ANSTE::Config->instance();
+    my $iface = $config->natIface();
 
     $system->enableNAT($iface, $addr);
 
@@ -604,9 +605,35 @@ sub createVirtualMachine
 
     if ($wait) {
         print "[$name] Waiting for the system start...\n";
+
+        # Tell the client how to talk to us (the master)
+        my $client = new ANSTE::Comm::MasterClient;
+        my $port = $config->anstedPort();
+        my $ip = $self->ip();
+        $client->connect("http://$ip:$port");
+
+        # Generate the script
+        my ($fh, $filename) = tempfile() or die "Can't create temporary file: $!";
+        my $masterPort = $config->masterPort();
+        my $masterIP = $config->master();
+        my $MASTER = "$masterIP:$masterPort";
+        print $fh "echo $MASTER > /var/local/anste.master";
+        close($fh) or die "Can't close temporary file: $!";
+
+        # Upload and exec it
+        while (not $client->put($filename)) {
+            sleep 1;
+        }
+        $client->exec($filename);
+
+        # Wait for the execution to be done
         my $waiter = ANSTE::Comm::HostWaiter->instance();
-        $waiter->waitForReady($name);
-        print "[$name] System is up.\n";
+        my $ret = $waiter->waitForExecution($name);
+        if ($ret == 0 ) {
+            print "[$name] System is up.\n";
+        } else {
+            die "[$name] Could not set the system up.\n";
+        }
     }
 }
 
