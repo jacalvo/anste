@@ -313,6 +313,11 @@ sub networkConfig
     defined $network or
         throw ANSTE::Exceptions::MissingArgument('network');
 
+
+    my $anste_config = ANSTE::Config->instance();
+    my $masterIP = $anste_config->master();
+    my $gateway = $anste_config->gateway();
+
     my $config = '';
     $config .= "cat << EOF > /etc/network/interfaces\n";
     $config .= "auto lo\n";
@@ -320,8 +325,13 @@ sub networkConfig
     foreach my $iface (@{$network->interfaces()}) {
         $config .= "\n";
         $config .= $self->_interfaceConfig($iface);
+        if ($iface->name() eq 'eth0') {
+            # Add route to master
+            $config .= "\n";
+            $config .= $self->_staticRoute($masterIP, $gateway);
+        }
     }
-    $config .= "EOF\n";
+    $config .= "\nEOF\n";
     $config .= "\n";
 
     foreach my $route (@{$network->routes()}) {
@@ -330,6 +340,13 @@ sub networkConfig
     }
 
     return $config;
+}
+
+sub _staticRoute
+{
+    my ($self, $destinations, $gateway) = @_;
+
+    return "post-up route add -host $destinations gw $gateway";
 }
 
 # Method: hostsConfig
