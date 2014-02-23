@@ -22,6 +22,7 @@ use ANSTE::Config;
 use ANSTE::Exceptions::NotImplemented;
 use ANSTE::Exceptions::MissingArgument;
 use TryCatch::Lite;
+use Attempt;
 
 # Class: Virtualizer
 #
