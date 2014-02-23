@@ -204,12 +204,14 @@ sub deleteImage
     my $status = $self->{status}->virtualizerStatus();
     my $id = $status->{images}->{$name};
 
-    $self->{os_compute}->delete_server($id);
+    if($id) {
+        $self->{os_compute}->delete_server($id);
 
-    # Wait for the deletion to finish
-    do {
-        sleep(1);
-    } while ($self->{os_compute}->get_server($id));
+        # Wait for the deletion to finish
+        do {
+            sleep(1);
+        } while ($self->{os_compute}->get_server($id));
+    }
 }
 
 # Method: createNetwork
