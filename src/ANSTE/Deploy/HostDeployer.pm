@@ -301,7 +301,7 @@ sub _deployCopy
         }
 
         print "[$hostname] Creating virtual machine ($ip)...\n";
-        $cmd->createVirtualMachine();
+        $cmd->createVirtualMachine(1, $host);   # FIXME: Refactor
     };
 
     # FIXME: Remove

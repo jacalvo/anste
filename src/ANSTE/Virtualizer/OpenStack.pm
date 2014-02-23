@@ -130,11 +130,13 @@ sub createVM
         push(@netConf, $net);
     }
 
-    # FIXME: Unhardcode things
+    my $imageName = $host->baseImage();
+    my $images = $self->{os_compute}->get_images();
+    my $imageRefs = [ grep { $_->{name} eq $imageName->name() } @$images ];
+
     my $ret = $self->{os_compute}->create_server({name => $image->{name},
-                                        flavorRef => '2',
-                                        #imageRef => '9e26b2fc-7cc5-42af-8024-d5b01fdcd0b6',
-                                        imageRef => 'e09b8f13-b834-4812-aacb-db7b8ee60d0e', # (Zentyal33)
+                                        flavorRef => '2',           # TODO:Unhardcode
+                                        imageRef => $imageRefs->[0]->{id},
                                         networks => \@netConf
                                     });
     my $id = $ret->{id};

@@ -583,7 +583,7 @@ sub exists
 #
 sub createVirtualMachine
 {
-    my ($self, $wait) = @_;
+    my ($self, $wait, $host) = @_;  # FIXME: Remove $host
 
     my $virtualizer = $self->{virtualizer};
 
@@ -601,7 +601,7 @@ sub createVirtualMachine
 
     $system->enableNAT($iface, $addr);
 
-    $virtualizer->createVM($self->{image});
+    $virtualizer->createVM($self->{image}, $host);
 
     if ($wait) {
         print "[$name] Waiting for the system start...\n";
