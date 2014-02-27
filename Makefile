@@ -66,6 +66,7 @@ install:
 	cp -a data/tests/routers $(DESTDIR)$(DATADIR)/tests
 	install -d $(DESTDIR)$(DATADIR)/common
 	install -d $(DESTDIR)$(LIBPERL)/ANSTE
+	install -m644 src/ANSTE.pm $(DESTDIR)$(LIBPERL)
 	install -m644 src/ANSTE/Config.pm $(DESTDIR)$(LIBPERL)/ANSTE
 	install -m644 src/ANSTE/Status.pm $(DESTDIR)$(LIBPERL)/ANSTE
 	install -m644 src/ANSTE/Validate.pm $(DESTDIR)$(LIBPERL)/ANSTE
@@ -104,6 +105,7 @@ uninstall:
 	rm -rf $(DESTDIR)$(DATADIR)/scripts
 	rm -rf $(DESTDIR)$(DATADIR)/tests
 	rm -rf $(DESTDIR)$(DATADIR)/common
+	rm -f $(DESTDIR)$(LIBPERL)/ANSTE.pm
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Config.pm
 	rm -f $(DESTDIR)$(LIBPERL)/ANSTE/Validate.pm
 	rm -rf $(DESTDIR)$(LIBPERL)/ANSTE/Comm

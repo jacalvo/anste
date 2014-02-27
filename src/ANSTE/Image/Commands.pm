@@ -408,7 +408,7 @@ sub prepareSystem
     $self->createVirtualMachine();
 
     # Execute pre-install scripts
-    print "[$hostname] Executing pre-setup scripts...\n" if $config->verbose();
+    ANSTE::info("[$hostname] Executing pre-setup scripts...\n") if $config->verbose();
     $self->executeScripts($image->preScripts());
 
     my $setupScript = '/tmp/install.sh';
@@ -429,12 +429,12 @@ sub prepareSystem
         or die "Can't remove $setupScript: $!";
 
     my $list = $image->{files}->list(); # retrieve files list
-    print "[$hostname] Transferring files...";
+    ANSTE::info("[$hostname] Transferring files...");
     $self->transferFiles($list);
-    print "... done\n";
+    ANSTE::info("... done");
 
     # Execute post-install scripts
-    print "[$hostname] Executing post-setup scripts...\n" if $config->verbose();
+    ANSTE::info("Executing post-setup scripts...") if $config->verbose();
     $self->executeScripts($image->postScripts());
 
     return 1;
@@ -599,10 +599,10 @@ sub createVirtualMachine
     $virtualizer->createVM($name);
 
     if ($wait) {
-        print "[$name] Waiting for the system start...\n";
+        ANSTE::info("[$name] Waiting for the system start...");
         my $waiter = ANSTE::Comm::HostWaiter->instance();
         $waiter->waitForReady($name);
-        print "[$name] System is up.\n";
+        ANSTE::info("[$name] System is up.");
     }
 }
 
@@ -723,14 +723,14 @@ sub _executeSetup # (client, script)
     my $image = $self->{image}->name();
     my $log = '/tmp/anste-setup-script.log';
 
-    print "[$image] Executing $script...\n" if $config->verbose();
+    ANSTE::info("[$image] Executing $script...") if $config->verbose();
     $client->put($script) or print "[$image] Upload failed.\n";
     $client->exec($script, $log, $config->env()) or print "[$image] Execution failed.\n";
     my $ret = $waiter->waitForExecution($image);
     if ($ret == 0 ) {
-        print "[$image] Execution finished successfully.\n" if $config->verbose();
+        ANSTE::info("[$image] Execution finished successfully.") if $config->verbose();
     } else {
-        print "[$image] Execution finished with errors ($ret):\n\n";
+        ANSTE::info("[$image] Execution finished with errors ($ret):\n");
         $client->get($log);
         system ("cat $log");
         print "\n\n";

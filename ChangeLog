@@ -1,4 +1,6 @@
 HEAD
+    + Print timestamps with each line in verbose mode
+    + Fixed default path for chromedriver binary
     + Now config and cli vars are passed to the tests with the GLOBAL_ prefix
 0.11
     + Added anste-init command to create the directory structure of a project
