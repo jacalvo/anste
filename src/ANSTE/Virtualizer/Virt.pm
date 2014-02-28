@@ -231,7 +231,8 @@ sub createVM
         throw ANSTE::Exceptions::MissingArgument('name');
 
     my $path = ANSTE::Config->instance()->imagePath();
-    $self->execute("virsh create $path/$name/domain.xml");
+    $self->execute("virsh create $path/$name/domain.xml") or
+        throw ANSTE::Exceptions::Error("Error creating domain $name");
 }
 
 # Method: defineVM
@@ -258,7 +259,8 @@ sub defineVM
         throw ANSTE::Exceptions::MissingArgument('name');
 
     my $path = ANSTE::Config->instance()->imagePath();
-    $self->execute("virsh define $path/$name/domain.xml");
+    $self->execute("virsh define $path/$name/domain.xml") or
+        throw ANSTE::Exceptions::Error("Error defining domain $name");
 }
 
 # Method: startVM
@@ -285,6 +287,7 @@ sub startVM
         throw ANSTE::Exceptions::MissingArgument('name');
 
     $self->execute("virsh start $name");
+        throw ANSTE::Exceptions::Error("Error starting domain $name");
 }
 
 # Method: removeVM
@@ -670,6 +673,7 @@ sub createSnapshot
     my ($self, $domain, $name, $description) = @_;
 
     $self->execute("virsh snapshot-create-as $domain $name '$description'");
+        throw ANSTE::Exceptions::Error("Error creating snapshot $name in domain $domain");
 }
 
 # Method: revertSnapshot
@@ -685,7 +689,8 @@ sub revertSnapshot
 {
     my ($self, $domain, $name) = @_;
 
-    $self->execute("virsh snapshot-revert $domain $name --force");
+    $self->execute("virsh snapshot-revert $domain $name --force") or
+        throw ANSTE::Exceptions::Error("Error reverting snapshot $name in domain $domain");
 }
 
 # Method: deleteSnapshot
@@ -701,7 +706,8 @@ sub deleteSnapshot
 {
     my ($self, $domain, $name) = @_;
 
-    $self->execute("virsh snapshot-delete $domain $name");
+     $self->execute("virsh snapshot-delete $domain $name") or
+        throw ANSTE::Exceptions::Error("Error deleting snapshot $name in domain $domain");
 }
 
 # Method: existsSnapshot
