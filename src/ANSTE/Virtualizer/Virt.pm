@@ -339,7 +339,7 @@ sub existsVM
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-    my $out = `virsh list --all | grep -c '$name'`;
+    my $out = `virsh desc '$name' | grep -c 'failed to get domain'`;
     chomp($out);
 
     return $out;
