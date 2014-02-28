@@ -34,10 +34,7 @@ use ANSTE::Virtualizer::Virtualizer;
 use ANSTE::System::System;
 
 use threads;
-use threads::shared;
 use TryCatch::Lite;
-
-my $lockMount : shared;
 
 # Class: HostDeployer
 #
@@ -264,45 +261,13 @@ sub _deployCopy
     $commIface->removeGateway() unless $host->isRouter();
     unshift (@{$host->network()->interfaces()}, $commIface);
 
-    my $error = 0;
-
-    print "[$hostname] Creating a copy of the base image...\n";
-
-    try {
-        $self->_copyBaseImage() or die "Can't copy base image";
-    } catch (ANSTE::Exceptions::NotFound $e) {
-        print "[$hostname] Base image not found, can't continue.";
-        $error = 1;
-    }
-
-    if ($error) {
+    # Steps previous to the VM creation
+    unless ($cmd->preCreateVirtualMachine($host, $image)) {
         return undef;
     }
 
-    # Critical section here to prevent mount errors with loop device busy
-    # or KVM crashes when trying to create two machines at the same time
-    {
-        lock ($lockMount);
-
-        print "[$hostname] Updating hostname on the new image...\n";
-        try {
-            my $ok = $self->_updateHostname();
-            if (not $ok) {
-                print "[$hostname] Error copying host files.\n";
-                $error = 1;
-            }
-        } catch ($e) {
-            print "[$hostname] ERROR: $e\n";
-            $error = 1;
-        }
-
-        if ($error) {
-            return undef;
-        }
-
-        print "[$hostname] Creating virtual machine ($ip)...\n";
-        $cmd->createVirtualMachine(1, $host);   # FIXME: Refactor
-    };
+    print "[$hostname] Creating virtual machine ($ip)...\n";
+    $cmd->createVirtualMachine();
 
     # FIXME: Remove
     my $virtualizer = $self->{virtualizer};
@@ -354,29 +319,6 @@ sub _deployCopy
     }
     }
     return 0;
-}
-
-sub _copyBaseImage
-{
-    my ($self) = @_;
-
-    my $virtualizer = $self->{virtualizer};
-
-    my $host = $self->{host};
-
-    my $baseimage = $host->baseImage();
-    my $newimage = $self->{image};
-
-    $virtualizer->createImageCopy($baseimage, $newimage);
-}
-
-sub _updateHostname
-{
-    my ($self) = @_;
-
-    my $virtualizer = $self->{virtualizer};
-
-    return $virtualizer->updateHostname($self->{image}, $self->{cmd});
 }
 
 sub _generateSetupScript # (script)

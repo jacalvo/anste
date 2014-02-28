@@ -30,6 +30,13 @@ use File::Temp qw(tempfile);
 use File::Copy;
 use File::Copy::Recursive qw(dircopy);
 
+use threads;
+use threads::shared;
+use TryCatch::Lite;
+
+my $lockMount : shared;
+my $lockCreate : shared;
+
 # Class: Virt
 #
 #   Implementation of the Virtualizer class that interacts
@@ -207,6 +214,100 @@ sub destroyImage
     $self->execute("virsh destroy $image");
 }
 
+
+
+# Method: preCreateVM
+#
+#   TODO
+#
+# Parameters:
+#
+#   host - <ANSTE::Scenario::Host> object.
+#
+#   image - <ANSTE::Scenario::BaseImage> object.
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub preCreateVM
+{
+    my ($self, $host, $image) = @_;
+
+    defined $host or
+        throw ANSTE::Exceptions::MissingArgument('host');
+
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('image');
+
+    my $hostname = $host->name();
+
+    print "[$hostname] Creating a copy of the base image...\n";
+
+    my $error = 0;
+
+    try {
+        my $baseimage = $host->baseImage();
+        my $newimage = $self->{image};
+        $error = not $self->createImageCopy($baseimage, $image) or die "Can't copy base image";
+    } catch (ANSTE::Exceptions::NotFound $e) {
+        print "[$hostname] Base image not found, can't continue.";
+        return undef;
+    }
+
+    # Critical section here to prevent mount errors with loop device busy
+    # or KVM crashes when trying to create two machines at the same time
+    {
+        lock ($lockMount);
+
+        print "[$hostname] Updating hostname on the new image...\n";
+        try {
+            my $ok = $self->_updateHostname($self->{image}, $self->{cmd});
+            if (not $ok) {
+                print "[$hostname] Error copying host files.\n";
+                $error = 1;
+            }
+        } catch ($e) {
+            print "[$hostname] ERROR: $e\n";
+            $error = 1;
+        }
+
+    };
+
+    return not $error;
+}
+
+sub _updateHostname
+{
+    my ($self, $image, $cmd) = @_;
+
+    my $ok = 0;
+
+    attempt {
+        try {
+            $cmd->mount() or die "Can't mount image: $!";
+        } catch {
+            $cmd->deleteMountPoint();
+            die "Can't mount image.";
+        }
+    } tries => 5, delay => 5;
+
+    try {
+        $cmd->copyHostFiles() or die "Can't copy files: $!";
+        $ok = 1;
+    } catch ($e) {
+        $cmd->umount() or die "Can't unmount image: $!";
+        $e->throw();
+    }
+    $cmd->umount() or die "Can't unmount image: $!";
+
+    return $ok;
+}
+
 # Method: createVM
 #
 #   Overriden method that creates a KVM Virtual Machine.
@@ -233,7 +334,12 @@ sub createVM
     my $name = $image->{name};
 
     my $path = ANSTE::Config->instance()->imagePath();
-    $self->execute("virsh create $path/$name/domain.xml");
+
+    # KVM crashes when trying to create two machines at the same time
+    {
+        lock($lockCreate);
+        $self->execute("virsh create $path/$name/domain.xml");
+    };
 }
 
 # Method: defineVM

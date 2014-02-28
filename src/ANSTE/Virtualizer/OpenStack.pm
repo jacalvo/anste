@@ -100,7 +100,7 @@ sub skipImageCreation
 
 sub skipExtra
 {
-    return 1;
+    return 0;
 }
 
 sub shutdownImage
@@ -113,7 +113,7 @@ sub destroyImage
 
 sub createVM
 {
-    my ($self, $image) = @_;
+    my ($self, $image, $host) = @_;
 
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
@@ -129,7 +129,6 @@ sub createVM
                    fixed_ip => $iface->address()};
         push(@netConf, $net);
     }
-
     my $imageName = $host->baseImage();
     my $images = $self->{os_compute}->get_images();
     my $imageRefs = [ grep { $_->{name} eq $imageName->name() } @$images ];
@@ -150,6 +149,8 @@ sub createVM
     # TODO: Throw exception if status != ACTIVE ??
 
     $image_id = $id;
+
+    return (defined $id);
 }
 
 # Must be called from within the main thread
@@ -186,12 +187,6 @@ sub imageFile
 
 sub createImageCopy
 {
-    return 1;
-}
-
-sub updateHostname
-{
-    # TODO
     return 1;
 }
 

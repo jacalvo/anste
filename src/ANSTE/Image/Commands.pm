@@ -571,6 +571,16 @@ sub exists
     return -r $virtualizer->imageFile($path, $image);
 }
 
+# TODO: Doc
+sub preCreateVirtualMachine
+{
+    my ($self, $host, $image) = @_;
+
+    $self->{host} = $host;
+
+    return $self->{virtualizer}->preCreateVM($host, $image);
+}
+
 # Method: createVirtualMachine
 #
 #   Creates the image virtual machine using the virtualizer interface,
@@ -583,7 +593,7 @@ sub exists
 #
 sub createVirtualMachine
 {
-    my ($self, $wait, $host) = @_;  # FIXME: Remove $host
+    my ($self, $wait) = @_;
 
     my $virtualizer = $self->{virtualizer};
 
@@ -601,7 +611,7 @@ sub createVirtualMachine
 
     $system->enableNAT($iface, $addr);
 
-    $virtualizer->createVM($self->{image}, $host);
+    $virtualizer->createVM($self->{image}, $self->{host});
 
     if ($wait) {
         print "[$name] Waiting for the system start...\n";
