@@ -333,17 +333,13 @@ sub _runTests
 
         if ($stop) {
             while (1) {
-                print "$msg " .
-                    "Press 'r' to run the test again or 'c' to continue.\n";
-                my $key;
-                read(STDIN, $key, 1);
-                if ($key eq 'r') {
+                if (ANSTE::shouldIRepeat($msg) == 0) {
+                    last;
+                } else {
                     my $testResult = $self->_runOneTest($test);
                     if ($testResult and ($testResult->value() == 0)) {
                         last;
                     }
-                } if ($key eq 'c') {
-                    last;
                 }
             }
         }

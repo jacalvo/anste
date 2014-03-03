@@ -43,4 +43,27 @@ sub info
     print $output;
 }
 
+sub shouldIRepeat
+{
+
+    my ($msg) = @_;
+
+    my $ret = 0;
+
+    while (1) {
+        print "$msg " .
+            "Press 'r' to run the test/script again or 'c' to continue.\n";
+        my $key;
+        read(STDIN, $key, 1);
+        if ($key eq 'r') {
+            $ret = 1;
+            last;
+        } if ($key eq 'c') {
+           last;
+        }
+    }
+
+    return $ret;
+}
+
 1;
