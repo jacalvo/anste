@@ -721,7 +721,7 @@ sub _executeSetup # (client, script)
 
     if ($config->waitFail() or $config->wait()) {
         my $isExecutionCorrect = 0;
-        while ($isExecutionCorrect != 0) {
+        while ($isExecutionCorrect == 0) {
             try {
                 $isExecutionCorrect = $self->_executeSetupScript($client,$script);
             } catch (ANSTE::Exceptions::Error $e) {
