@@ -28,8 +28,11 @@ use ANSTE::Status;
 use ANSTE::Exceptions::NotImplemented;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::MissingConfig;
+use ANSTE::ScriptGen::HostPreInstallOS;
 use Net::OpenStack::Compute;
 use Net::OpenStack::Networking;
+
+use File::Temp qw(tempfile tempdir);
 
 my $image_id :shared;
 
@@ -297,6 +300,49 @@ sub destroyNetwork
     for my $net (values $status->{networks}) {
         $self->{os_networking}->delete_network($net);
     }
+}
+
+# Method: preCreateVM
+#
+#   TODO
+#
+# Parameters:
+#
+#   host - <ANSTE::Scenario::Host> object.
+#
+#   image - <ANSTE::Scenario::BaseImage> object.
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub preCreateVM
+{
+    my ($self, $host, $image) = @_;
+
+    defined $host or
+        throw ANSTE::Exceptions::MissingArgument('host');
+
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('image');
+
+    my $hostname = $host->name();
+
+
+    print "[$hostname] Updating hostname on the new image...\n";
+    my $gen = new ANSTE::ScriptGen::HostPreInstallOS($image);
+    # Generates the installation script on a temporary file
+    my ($fh, $filename) = tempfile() or die "Can't create temporary file: $!";
+    print "[$hostname] $filename\n";
+    $gen->writeScript($fh);
+    close($fh) or die "Can't close temporary file: $!";
+
+        #$self->_copyFiles($gen)
+    return 1;
 }
 
 sub _genNetConfig
