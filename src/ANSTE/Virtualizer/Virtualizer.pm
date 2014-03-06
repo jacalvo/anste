@@ -237,7 +237,7 @@ sub defineVM
 #
 # Parameters:
 #
-#   name - name of the virtual machine
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #

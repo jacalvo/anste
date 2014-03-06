@@ -166,28 +166,33 @@ sub finishImageCreation
     $self->{status}->setVirtualizerStatus($status);
 }
 
-sub defineVM
-{
-    my ($self, $image) = @_;
+#sub defineVM
+#{
+#    my ($self, $image) = @_;
     # FIXME
-    $self->createVM($image);
-}
+#    $self->createVM($image);
+#}
+
 
 sub startVM
 {
-    return 1;
+    my ($self, $image, $host) = @_;
+
+    $self->createVM($image, $host);
 }
 
-# sub existsVM
-# {
-#     # TODO: We need the id
-# }
+sub existsVM
+{
+    # TODO: Look for the VM??
+    return 1;
+}
 
 sub imageFile
 {
     return '/bin/true';
 }
 
+# TODO: Remove
 sub createImageCopy
 {
     return 1;
@@ -369,6 +374,16 @@ sub _genNetConfig
                          'gateway_ip' => $address};
 
     return $networkConfig;
+}
+
+# TODO: Remove
+sub revertSnapshot
+{
+}
+
+sub existsSnapshot
+{
+    return 1;
 }
 
 1;

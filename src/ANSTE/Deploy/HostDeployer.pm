@@ -231,11 +231,12 @@ sub _deploySnapshot
     my $hostname = $host->name();
     my $cmd = $self->{cmd};
 
+    # TODO: libvirt dependant => refactor
     print "[$hostname] Restoring base snapshot...\n";
     $cmd->restoreBaseSnapshot($hostname);
 
     my $virtualizer = $self->{virtualizer};
-    $virtualizer->startVM($hostname);
+    $virtualizer->startVM($self->{image}, $host);
 }
 
 sub _deployCopy

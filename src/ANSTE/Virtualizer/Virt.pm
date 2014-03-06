@@ -377,7 +377,7 @@ sub defineVM
 #
 # Parameters:
 #
-#   name - name of the domain
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #
@@ -389,11 +389,12 @@ sub defineVM
 #
 sub startVM
 {
-    my ($self, $name) = @_;
+    my ($self, $image) = @_;
 
-    defined $name or
+    defined $image or
         throw ANSTE::Exceptions::MissingArgument('name');
 
+    my $name = $image->{name};
     $self->execute("virsh start $name");
 }
 
