@@ -90,6 +90,12 @@ sub new
                                 project_id  => $project_id,
                             );
 
+    # Suffix for the elements created in OpenStack
+    $self->{suffix} = $self->{config}->_getOption('virtualizer', 'suffix');
+    unless ($self->{suffix}) {
+        $self->{suffix} = $user;
+    }
+
     bless($self, $class);
 
     return $self;
@@ -132,11 +138,13 @@ sub createVM
                    fixed_ip => $iface->address()};
         push(@netConf, $net);
     }
-    my $imageName = $host->baseImage();
+    my $imageName = $host->baseImage()->name();
     my $images = $self->{os_compute}->get_images();
-    my $imageRefs = [ grep { $_->{name} eq $imageName->name() } @$images ];
 
-    my $ret = $self->{os_compute}->create_server({name => $image->{name},
+    my $imageRefs = [ grep { $_->{name} eq $imageName } @$images ];
+
+    my $serverName = $image->{name} . "-" . $self->{suffix};
+    my $ret = $self->{os_compute}->create_server({name => $serverName,
                                         flavorRef => '2',           # TODO:Unhardcode
                                         imageRef => $imageRefs->[0]->{id},
                                         networks => \@netConf
@@ -248,10 +256,11 @@ sub createNetwork
 
     my $status = {'networks' => {}};
 
+    my $suffix = $self->{suffix};
     my %bridges = %{$scenario->bridges()};
     while (my ($net, $num) = each %bridges) {
         # Create network
-        my $network = $self->{os_networking}->create_network({'name' => "anste$num"});
+        my $network = $self->{os_networking}->create_network({'name' => "anste$num-$suffix"});
 
         # Get configuration
         my $net_config = $self->_genNetConfig($network->{id}, $net, $num);
@@ -367,7 +376,8 @@ sub _genNetConfig
     # FIXME: Unharcode the /24
     my $cidr = join('.', @addr_split[0..2]) . '.0/24';
 
-    my $networkConfig = {'name'       => "anste_subnet$bridge",
+    my $suffix = $self->{suffix};
+    my $networkConfig = {'name'       => "anste_subnet$bridge-$suffix",
                          'network_id' => $netID,
                          'ip_version' => 4,
                          'cidr'       => $cidr,
