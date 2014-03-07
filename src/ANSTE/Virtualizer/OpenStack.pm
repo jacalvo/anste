@@ -31,10 +31,14 @@ use ANSTE::Exceptions::MissingConfig;
 use ANSTE::ScriptGen::HostPreInstallOS;
 use Net::OpenStack::Compute;
 use Net::OpenStack::Networking;
+use MIME::Base64;
 
 use File::Temp qw(tempfile tempdir);
+use File::Slurp;
 
-my $image_id :shared;
+# TODO: use lock?
+my %image_id :shared;
+my %cloud_init_file :shared;
 
 # Class: OpenStack
 #
@@ -158,7 +162,8 @@ sub preCreateVM
     print "[$hostname] $filename\n";
     $gen->writeScript($fh);
     close($fh) or die "Can't close temporary file: $!";
-        #$self->_copyFiles($gen)
+
+    $cloud_init_file{$image->{name}} = $filename;
     return 1;
 }
 
@@ -186,10 +191,17 @@ sub createVM
     my $imageRefs = [ grep { $_->{name} eq $imageName } @$images ];
 
     my $serverName = $image->{name} . "-" . $self->{suffix};
+
+    my $userData = undef;
+    if (defined $cloud_init_file{$image->{name}}) {
+        my $rawUserData = read_file($cloud_init_file{$image->{name}});
+        $userData = encode_base64($rawUserData);
+    }
     my $ret = $self->{os_compute}->create_server({name => $serverName,
                                         flavorRef => '2',           # TODO:Unhardcode
                                         imageRef => $imageRefs->[0]->{id},
-                                        networks => \@netConf
+                                        networks => \@netConf,
+                                        user_data => $userData,
                                     });
     my $id = $ret->{id};
 
@@ -201,7 +213,7 @@ sub createVM
 
     # TODO: Throw exception if status != ACTIVE ??
 
-    $image_id = $id;
+    $image_id{$image->{name}} = $id;
 
     return (defined $id);
 }
@@ -212,7 +224,7 @@ sub finishImageCreation
     my ($self, $name) = @_;
 
     my $status = $self->{status}->virtualizerStatus();
-    $status->{images}->{$name} = $image_id;
+    $status->{images}->{$name} = $image_id{$name};
     $self->{status}->setVirtualizerStatus($status);
 }
 
