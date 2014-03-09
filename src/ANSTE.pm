@@ -59,7 +59,7 @@ sub shouldIRepeat
             $ret = 1;
             last;
         } if ($key eq 'c') {
-           last;
+            last;
         }
     }
 
