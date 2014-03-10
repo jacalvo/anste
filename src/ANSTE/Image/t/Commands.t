@@ -1,4 +1,4 @@
-# Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2014 Zentyal S.L.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -107,7 +107,7 @@ sub test_executeScripts_with_one_repetition_and_continue : Test(2)
     my $virtualizer = new Test::MockModule('ANSTE::Virtualizer::Virtualizer');
     $virtualizer->mock('instance', undef);  
     my $anste = new Test::MockModule('ANSTE');
-    $anste ->mock('shouldIRepeat', sub { return 0; });  
+    $anste ->mock('askForRepeat', sub { return 0; });
     
   
     my $config = new Test::MockModule('ANSTE::Config');
@@ -132,7 +132,7 @@ sub test_executeScripts_with_one_repetition_and_repeat : Test(2)
     my $virtualizer = new Test::MockModule('ANSTE::Virtualizer::Virtualizer');
     $virtualizer->mock('instance', undef);  
     my $anste = new Test::MockModule('ANSTE');
-    $anste ->mock('shouldIRepeat', sub { return 1; });  
+    $anste ->mock('askForRepeat', sub { return 1; });
     
   
     my $config = new Test::MockModule('ANSTE::Config');

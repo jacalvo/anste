@@ -728,7 +728,7 @@ sub _executeSetup # (client, script)
                 $isExecutionCorrect = 0;
             }
             if ($isExecutionCorrect == 0) {
-                if (ANSTE::shouldIRepeat("") == 0) {
+                if (ANSTE::askForRepeat("") == 0) {
                     last;
                 }
             }

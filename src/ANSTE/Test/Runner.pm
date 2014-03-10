@@ -333,7 +333,7 @@ sub _runTests
 
         if ($stop) {
             while (1) {
-                if (ANSTE::shouldIRepeat($msg) == 0) {
+                if (ANSTE::askForRepeat($msg) == 0) {
                     last;
                 } else {
                     my $testResult = $self->_runOneTest($test);

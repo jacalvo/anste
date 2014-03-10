@@ -23,6 +23,14 @@ use Time::HiRes qw(gettimeofday);
 
 my $INITIAL_TIME = time();
 
+# Method: info
+#
+#   Prints the msg passed as parameter to the console
+#
+# Parameters:
+#
+#   msg  - Contains the string with the message to print
+#
 sub info
 {
     my ($msg) = @_;
@@ -43,7 +51,15 @@ sub info
     print $output;
 }
 
-sub shouldIRepeat
+# Method: askForRepeat
+#
+#   Ask for repetition to the user
+#
+# Returns:
+#
+#   value - wheter you should repear or not
+#
+sub askForRepeat
 {
 
     my ($msg) = @_;
