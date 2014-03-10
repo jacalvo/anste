@@ -57,7 +57,7 @@ sub info
 #
 # Returns:
 #
-#   value - wheter you should repear or not
+#   value - whether you should repear or not
 #
 sub askForRepeat
 {
