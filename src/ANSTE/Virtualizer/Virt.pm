@@ -672,7 +672,7 @@ sub createSnapshot
 {
     my ($self, $domain, $name, $description) = @_;
 
-    $self->execute("virsh snapshot-create-as $domain $name '$description'");
+    $self->execute("virsh snapshot-create-as $domain $name '$description'") or
         throw ANSTE::Exceptions::Error("Error creating snapshot $name in domain $domain");
 }
 
