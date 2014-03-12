@@ -67,6 +67,7 @@ sub new
     $self->{report} = new ANSTE::Report::Report();
     $self->{system} = ANSTE::System::System->instance();
     $self->{writers} = [];
+    $self->{errors} = 0;
 
     foreach my $format (@{$config->formats()}) {
         my $writerPackage = "ANSTE::Report::$format" . 'Writer';
@@ -229,6 +230,21 @@ sub report
     my ($self) = @_;
 
     return $self->{report};
+}
+
+# Method: errors
+#
+#   Gets the number of errors in the executed tests.
+#
+# Returns:
+#
+#   int - number of errors
+#
+sub errors
+{
+    my ($self) = @_;
+
+    return $self->{errors};
 }
 
 sub _loadScenario
@@ -540,6 +556,10 @@ sub _runTest
         $ret = ($ret != 0) ? 0 : 1;
     }
     $testResult->setValue($ret);
+
+    if ($ret != 0) {
+        $self->{errors}++;
+    }
 
     return $testResult;
 }

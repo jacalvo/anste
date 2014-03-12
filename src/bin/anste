@@ -189,6 +189,8 @@ foreach my $arg (@ARGV) {
 
 $SIG{TERM} = \&term_handler;
 
+my $ret = 0;
+
 foreach my $file (@files) {
     if ($create) {
         create($file);
@@ -214,7 +216,7 @@ sub unlock_and_exit
 {
     flock ($lockFile, LOCK_UN);
     close ($lockFile);
-    exit 0;
+    exit $ret;
 }
 
 sub term_handler
@@ -388,6 +390,8 @@ sub test # (file)
         exit(1);
     }
     printResults($runner->report());
+
+    $ret = $runner->errors();
 }
 
 sub printResults # (report)
