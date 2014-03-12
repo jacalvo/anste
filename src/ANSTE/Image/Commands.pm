@@ -717,6 +717,32 @@ sub _copyFiles # (gen)
 sub _executeSetup # (client, script)
 {
     my ($self, $client, $script) = @_;
+    my $config = ANSTE::Config->instance();
+
+    if ($config->waitFail() or $config->wait()) {
+        my $isExecutionCorrect = 0;
+        while ($isExecutionCorrect == 0) {
+            try {
+                $isExecutionCorrect = $self->_executeSetupScript($client,$script);
+            } catch (ANSTE::Exceptions::Error $e) {
+                $isExecutionCorrect = 0;
+            }
+            if ($isExecutionCorrect == 0) {
+                if (ANSTE::askForRepeat("") == 0) {
+                    last;
+                }
+            }
+        }
+    } else {
+        $self->_executeSetupScript($client,$script);
+    }
+
+    return 1;
+}
+
+sub _executeSetupScript # (client, script)
+{
+    my ($self, $client, $script) = @_;
 
     my $waiter = ANSTE::Comm::HostWaiter->instance();
     my $config = ANSTE::Config->instance();
@@ -727,7 +753,7 @@ sub _executeSetup # (client, script)
     $client->put($script) or print "[$image] Upload failed.\n";
     $client->exec($script, $log, $config->env()) or print "[$image] Execution failed.\n";
     my $ret = $waiter->waitForExecution($image);
-    if ($ret == 0 ) {
+    if ($ret == 0) {
         ANSTE::info("[$image] Execution finished successfully.") if $config->verbose();
     } else {
         ANSTE::info("[$image] Execution finished with errors ($ret):\n");
@@ -737,7 +763,7 @@ sub _executeSetup # (client, script)
         throw ANSTE::Exceptions::Error("Error executing script $script, returned exit value of $ret");
     }
 
-    return ($ret);
+    return 1;
 }
 
 # Real transfer of files to the client

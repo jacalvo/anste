@@ -23,6 +23,14 @@ use Time::HiRes qw(gettimeofday);
 
 my $INITIAL_TIME = time();
 
+# Method: info
+#
+#   Prints the msg passed as parameter to the console
+#
+# Parameters:
+#
+#   msg  - Contains the string with the message to print
+#
 sub info
 {
     my ($msg) = @_;
@@ -41,6 +49,37 @@ sub info
     $output .= "$msg\n";
 
     print $output;
+}
+
+# Method: askForRepeat
+#
+#   Ask for repetition to the user
+#
+# Returns:
+#
+#   value - whether you should repear or not
+#
+sub askForRepeat
+{
+
+    my ($msg) = @_;
+
+    my $ret = 0;
+
+    while (1) {
+        print "$msg " .
+            "Press 'r' to run the test/script again or 'c' to continue.\n";
+        my $key;
+        read(STDIN, $key, 1);
+        if ($key eq 'r') {
+            $ret = 1;
+            last;
+        } if ($key eq 'c') {
+            last;
+        }
+    }
+
+    return $ret;
 }
 
 1;
