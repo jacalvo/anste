@@ -65,12 +65,14 @@ sub askForRepeat
     my ($msg) = @_;
 
     my $ret = 0;
+    my $key;
+    my $line;
 
     while (1) {
         print "$msg " .
             "Press 'r' to run the test/script again or 'c' to continue.\n";
-        my $key;
-        read(STDIN, $key, 1);
+        $line = <STDIN>;
+        $key = substr($line,0,1);
         if ($key eq 'r') {
             $ret = 1;
             last;
