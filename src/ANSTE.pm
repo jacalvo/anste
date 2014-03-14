@@ -72,7 +72,7 @@ sub askForRepeat
         print "$msg " .
             "Press 'r' to run the test/script again or 'c' to continue.\n";
         $line = <STDIN>;
-        $key = substr($line,0,1);
+        $key = substr($line, 0, 1);
         if ($key eq 'r') {
             $ret = 1;
             last;
