@@ -20,7 +20,7 @@ use ANSTE::Test::Suite;
 use ANSTE::Config;
 use ANSTE::Exceptions::InvalidFile;
 
-use Test::More tests => 10;
+use Test::More tests => 6;
 
 use constant SUITE => 'test';
 
@@ -46,9 +46,8 @@ sub test # (suite)
     my $desc = $suite->desc();
     is($desc, 'suiteDesc', 'suite desc = suiteDesc');
 
-    foreach my $test (@{$suite->tests()}) {
-        testTest($test);
-    }
+    my $test = shift @{$suite->tests()};
+    testTest($test);
 }
 
 my $suite = new ANSTE::Test::Suite();

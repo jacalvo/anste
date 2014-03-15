@@ -1,4 +1,5 @@
 HEAD
+    + Check for duplicated tests on a suite
     + Fix input read when asking for an action with -wait-fail
     + Exit code is now != 0 if any test has failed
     + Print timestamps with each line in verbose mode
