@@ -21,6 +21,7 @@ Building from source:
 
 * Download the code, from [Github](https://github.com/Zentyal/anste)
 * Check build dependencies with `dpkg-checkbuilddeps` and install them with `apt-get install` tool
+* Add zentyal/anste PPA repository if dependencies are missing (libtrycatch-lite-perl libattempt-perl)
 * Execute `make installdeb` in the root of the folder
 * Install the missing dependencies using `apt-get -f install`
 
