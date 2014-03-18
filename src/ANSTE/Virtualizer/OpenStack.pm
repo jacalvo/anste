@@ -396,6 +396,7 @@ sub _genNetConfig
     my $networkConfig = {'name'       => "anste_subnet$bridge-$suffix",
                          'network_id' => $netID,
                          'ip_version' => 4,
+                         'enable_dhcp'=> 0,
                          'cidr'       => $cidr,
                          'gateway_ip' => $address};
 
