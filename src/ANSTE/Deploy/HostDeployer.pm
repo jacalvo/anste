@@ -203,11 +203,9 @@ sub deleteImage
     my $host = $self->{host};
     my $hostname = $host->name();
 
-    unless ($host->baseImageType() eq 'raw') {
-        print "[$hostname] Deleting image...\n";
-        $virtualizer->deleteImage($hostname);
-        print "[$hostname] Image deleted.\n";
-    }
+    print "[$hostname] Deleting image...\n";
+    $virtualizer->deleteImage($hostname);
+    print "[$hostname] Image deleted.\n";
 }
 
 sub _deploy
