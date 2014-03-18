@@ -32,6 +32,7 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
 use ANSTE::Exceptions::NotFound;
 use ANSTE::System::System;
+use ANSTE::Util;
 
 use Cwd;
 use Text::Template;
@@ -67,6 +68,7 @@ sub new
     $self->{report} = new ANSTE::Report::Report();
     $self->{system} = ANSTE::System::System->instance();
     $self->{writers} = [];
+    $self->{errors} = 0;
 
     foreach my $format (@{$config->formats()}) {
         my $writerPackage = "ANSTE::Report::$format" . 'Writer';
@@ -210,8 +212,7 @@ sub _destroy
     if ($config->wait()) {
         print "Waiting for testing on the scenario. " .
               "Press any key to shutdown it and continue.\n";
-        my $key;
-        read(STDIN, $key, 1);
+        my $line = <STDIN>;
     }
     $deployer->destroy() if not $reuse;
 }
@@ -229,6 +230,21 @@ sub report
     my ($self) = @_;
 
     return $self->{report};
+}
+
+# Method: errors
+#
+#   Gets the number of errors in the executed tests.
+#
+# Returns:
+#
+#   int - number of errors
+#
+sub errors
+{
+    my ($self) = @_;
+
+    return $self->{errors};
 }
 
 sub _loadScenario
@@ -270,12 +286,12 @@ sub _runTests
 
         my $skip = 0;
         if ($config->step()) {
+            my $key;
             while (1) {
                 my $testName = $test->name();
                 print "Step by step execution. Test $testName. " .
                       "Press 'e' to execute or 's' to skip.\n";
-                my $key;
-                read (STDIN, $key, 1);
+                $key = ANSTE::Util::readChar();
                 if ($key eq 'e') {
                     last;
                 }
@@ -333,17 +349,13 @@ sub _runTests
 
         if ($stop) {
             while (1) {
-                print "$msg " .
-                    "Press 'r' to run the test again or 'c' to continue.\n";
-                my $key;
-                read(STDIN, $key, 1);
-                if ($key eq 'r') {
+                if (ANSTE::askForRepeat($msg) == 0) {
+                    last;
+                } else {
                     my $testResult = $self->_runOneTest($test);
                     if ($testResult and ($testResult->value() == 0)) {
                         last;
                     }
-                } if ($key eq 'c') {
-                    last;
                 }
             }
         }
@@ -352,11 +364,12 @@ sub _runTests
             $executeOnlyForcedTests = 1;
         }
     }
+
     if ($config->step()) {
+        my $key;
         while (1) {
             print "Press 'd' to destroy scenario.\n";
-            my $key;
-            read(STDIN, $key, 1);
+            $key = ANSTE::Util::readChar();
             if ($key eq 'd') {
                 last;
             }
@@ -544,6 +557,10 @@ sub _runTest
         $ret = ($ret != 0) ? 0 : 1;
     }
     $testResult->setValue($ret);
+
+    if ($ret != 0) {
+        $self->{errors}++;
+    }
 
     return $testResult;
 }

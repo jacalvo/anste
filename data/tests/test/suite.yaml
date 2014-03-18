@@ -7,7 +7,7 @@ tests:
       host: testHost
       script: testScript
 
-    - name: testName
-      desc: testDesc
-      host: testHost
-      script: testScript
+    - name: testName2
+      desc: testDesc2
+      host: testHost2
+      script: testScript2

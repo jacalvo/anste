@@ -246,7 +246,7 @@ sub preCreateVM
 
     my $hostname = $host->name();
 
-    print "[$hostname] Creating a copy of the base image...\n";
+    ANSTE::info("[$hostname] Creating a copy of the base image...");
 
     my $error = 0;
 
@@ -255,7 +255,7 @@ sub preCreateVM
         my $newimage = $self->{image};
         $error = not $self->createImageCopy($baseimage, $image) or die "Can't copy base image";
     } catch (ANSTE::Exceptions::NotFound $e) {
-        print "[$hostname] Base image not found, can't continue.";
+        ANSTE::info("[$hostname] Base image not found, can't continue.");
         return undef;
     }
 
@@ -264,15 +264,15 @@ sub preCreateVM
     {
         lock ($lockMount);
 
-        print "[$hostname] Updating hostname on the new image...\n";
+        ANSTE::info("[$hostname] Updating hostname on the new image...");
         try {
             my $ok = $self->_updateHostname($self->{image}, $self->{cmd});
             if (not $ok) {
-                print "[$hostname] Error copying host files.\n";
+                ANSTE::info("[$hostname] Error copying host files.");
                 $error = 1;
             }
         } catch ($e) {
-            print "[$hostname] ERROR: $e\n";
+            ANSTE::info("[$hostname] ERROR: $e");
             $error = 1;
         }
 
@@ -338,7 +338,8 @@ sub createVM
     # KVM crashes when trying to create two machines at the same time
     {
         lock($lockCreate);
-        $self->execute("virsh create $path/$name/domain.xml");
+        $self->execute("virsh create $path/$name/domain.xml") or
+            throw ANSTE::Exceptions::Error("Error creating domain $name");
     };
 }
 
@@ -368,7 +369,8 @@ sub defineVM
     my $name = $image->{name};
 
     my $path = ANSTE::Config->instance()->imagePath();
-    $self->execute("virsh define $path/$name/domain.xml");
+    $self->execute("virsh define $path/$name/domain.xml") or
+        throw ANSTE::Exceptions::Error("Error defining domain $name");
 }
 
 # Method: startVM
@@ -396,6 +398,7 @@ sub startVM
 
     my $name = $image->{name};
     $self->execute("virsh start $name");
+        throw ANSTE::Exceptions::Error("Error starting domain $name");
 }
 
 # Method: removeVM
@@ -447,7 +450,7 @@ sub existsVM
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-    my $out = `virsh list --all | grep -c '$name'`;
+    my $out = `virsh desc '$name' | grep -c 'failed to get domain'`;
     chomp($out);
 
     return $out;
@@ -679,7 +682,6 @@ sub _createImageConfig
     $imageConfig .= "\t<on_poweroff>destroy</on_poweroff>\n";
     $imageConfig .= "\t<on_reboot>restart</on_reboot>\n";
     $imageConfig .= "\t<on_crash>restart</on_crash>\n";
-    $imageConfig .= "\t<cpu mode='host-passthrough'/>\n";
     $imageConfig .= "\t<devices>\n";
     $imageConfig .= "\t\t<emulator>/usr/bin/kvm</emulator>\n";
     $imageConfig .= "\t\t<disk type='file' device='disk'>\n";
@@ -781,7 +783,8 @@ sub createSnapshot
 {
     my ($self, $domain, $name, $description) = @_;
 
-    $self->execute("virsh snapshot-create-as $domain $name '$description'");
+    $self->execute("virsh snapshot-create-as $domain $name '$description'") or
+        throw ANSTE::Exceptions::Error("Error creating snapshot $name in domain $domain");
 }
 
 # Method: revertSnapshot
@@ -797,7 +800,8 @@ sub revertSnapshot
 {
     my ($self, $domain, $name) = @_;
 
-    $self->execute("virsh snapshot-revert $domain $name --force");
+    $self->execute("virsh snapshot-revert $domain $name --force") or
+        throw ANSTE::Exceptions::Error("Error reverting snapshot $name in domain $domain");
 }
 
 # Method: deleteSnapshot
@@ -813,7 +817,8 @@ sub deleteSnapshot
 {
     my ($self, $domain, $name) = @_;
 
-    $self->execute("virsh snapshot-delete $domain $name");
+     $self->execute("virsh snapshot-delete $domain $name") or
+        throw ANSTE::Exceptions::Error("Error deleting snapshot $name in domain $domain");
 }
 
 # Method: existsSnapshot

@@ -20,6 +20,7 @@ use warnings;
 
 use ANSTE::Test::Test;
 use ANSTE::Exceptions::MissingArgument;
+use ANSTE::Exceptions::Error;
 
 use Text::Template;
 use Safe;
@@ -286,10 +287,18 @@ sub loadFromDir
     my $scenario = $suite->{scenario};
     $self->setScenario($scenario);
 
+    # Check for duplicated tests
+    my %seenTests;
+
     # Read the <test> elements
     foreach my $element (@{$suite->{tests}}) {
         my $test = new ANSTE::Test::Test();
         $test->loadYAML($element);
+        my $name = $test->name();
+        if ($seenTests{$name}) {
+            throw ANSTE::Exceptions::Error("Duplicated test found: $name");
+        }
+        $seenTests{$name} = 1;
         if ($test->precondition()) {
             $self->addTest($test);
         }

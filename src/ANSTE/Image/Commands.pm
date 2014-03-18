@@ -411,7 +411,7 @@ sub prepareSystem
     $self->createVirtualMachine();
 
     # Execute pre-install scripts
-    print "[$hostname] Executing pre-setup scripts...\n" if $config->verbose();
+    ANSTE::info("[$hostname] Executing pre-setup scripts...\n") if $config->verbose();
     $self->executeScripts($image->preScripts());
 
     my $setupScript = '/tmp/install.sh';
@@ -432,12 +432,12 @@ sub prepareSystem
         or die "Can't remove $setupScript: $!";
 
     my $list = $image->{files}->list(); # retrieve files list
-    print "[$hostname] Transferring files...";
+    ANSTE::info("[$hostname] Transferring files...");
     $self->transferFiles($list);
-    print "... done\n";
+    ANSTE::info("... done");
 
     # Execute post-install scripts
-    print "[$hostname] Executing post-setup scripts...\n" if $config->verbose();
+    ANSTE::info("Executing post-setup scripts...") if $config->verbose();
     $self->executeScripts($image->postScripts());
 
     return 1;
@@ -614,7 +614,7 @@ sub createVirtualMachine
     $virtualizer->createVM($self->{image}, $self->{host});
 
     if ($wait) {
-        print "[$name] Waiting for the system start...\n";
+        ANSTE::info("[$name] Waiting for the system start...");
 
         # Tell the client how to talk to us (the master)
         my $client = new ANSTE::Comm::MasterClient;
@@ -640,7 +640,7 @@ sub createVirtualMachine
         my $waiter = ANSTE::Comm::HostWaiter->instance();
         my $ret = $waiter->waitForExecution($name);
         if ($ret == 0 ) {
-            print "[$name] System is up.\n";
+            ANSTE::info("[$name] System is up.");
         } else {
             die "[$name] Could not set the system up.\n";
         }
@@ -777,27 +777,53 @@ sub _copyFiles # (gen)
 sub _executeSetup # (client, script)
 {
     my ($self, $client, $script) = @_;
+    my $config = ANSTE::Config->instance();
+
+    if ($config->waitFail() or $config->wait()) {
+        my $isExecutionCorrect = 0;
+        while ($isExecutionCorrect == 0) {
+            try {
+                $isExecutionCorrect = $self->_executeSetupScript($client,$script);
+            } catch (ANSTE::Exceptions::Error $e) {
+                $isExecutionCorrect = 0;
+            }
+            if ($isExecutionCorrect == 0) {
+                if (ANSTE::askForRepeat("") == 0) {
+                    last;
+                }
+            }
+        }
+    } else {
+        $self->_executeSetupScript($client,$script);
+    }
+
+    return 1;
+}
+
+sub _executeSetupScript # (client, script)
+{
+    my ($self, $client, $script) = @_;
 
     my $waiter = ANSTE::Comm::HostWaiter->instance();
     my $config = ANSTE::Config->instance();
     my $image = $self->{image}->name();
     my $log = '/tmp/anste-setup-script.log';
 
-    print "[$image] Executing $script...\n" if $config->verbose();
+    ANSTE::info("[$image] Executing $script...") if $config->verbose();
     $client->put($script) or print "[$image] Upload failed.\n";
     $client->exec($script, $log, $config->env()) or print "[$image] Execution failed.\n";
     my $ret = $waiter->waitForExecution($image);
-    if ($ret == 0 ) {
-        print "[$image] Execution finished successfully.\n" if $config->verbose();
+    if ($ret == 0) {
+        ANSTE::info("[$image] Execution finished successfully.") if $config->verbose();
     } else {
-        print "[$image] Execution finished with errors ($ret):\n\n";
+        ANSTE::info("[$image] Execution finished with errors ($ret):\n");
         $client->get($log);
         system ("cat $log");
         print "\n\n";
         throw ANSTE::Exceptions::Error("Error executing script $script, returned exit value of $ret");
     }
 
-    return ($ret);
+    return 1;
 }
 
 # Real transfer of files to the client

@@ -19,6 +19,7 @@ package ANSTE::Deploy::ScenarioDeployer;
 use strict;
 use warnings;
 
+use ANSTE;
 use ANSTE::Config;
 use ANSTE::Status;
 use ANSTE::Scenario::Scenario;
@@ -131,7 +132,7 @@ sub deploy
         $self->_createOrGetMissingBaseImages();
 
         # Set up the network before deploy
-        print "Setting up network...\n";
+        ANSTE::info("Setting up network...");
         $self->{virtualizer}->createNetwork($scenario)
             or throw ANSTE::Exceptions::Error('Error creating network.');
 
@@ -145,7 +146,7 @@ sub deploy
     foreach my $deployer (@{$self->{deployers}}) {
         my $hostname = $deployer->host()->name();
         if (not $reuse) {
-            print "[$hostname] Starting deployment...\n";
+            ANSTE::info("[$hostname] Starting deployment...");
             $deployer->startDeployThread();
         }
 
@@ -163,7 +164,7 @@ sub deploy
                 $deployer->waitForFinish();
             }
             my $host = $deployer->{host}->name();
-            print "[$host] Deployment finished.\n";
+            ANSTE::info("[$host] Deployment finished.");
         }
     }
 
@@ -229,20 +230,20 @@ sub _createOrGetMissingBaseImages
         my $hostname = $host->name();
         my $image = $host->baseImage();
         if ($host->baseImageType() eq 'raw' or $config->autoDownloadImages()) {
-            print "[$hostname] Auto-downloading base image if not exists...\n";
+            ANSTE::info("[$hostname] Auto-downloading base image if not exists...");
             my $getter = new ANSTE::Image::Getter($image);
             if ($getter->getImage()) {
-                print "[$hostname] Base image downloaded.\n";
+                ANSTE::info("[$hostname] Base image downloaded.");
             } else {
-                print "[$hostname] Base image already exists.\n";
+                ANSTE::info("[$hostname] Base image already exists.");
             }
         } else {
-            print "[$hostname] Auto-creating base image if not exists...\n";
+            ANSTE::info("[$hostname] Auto-creating base image if not exists...");
             my $creator = new ANSTE::Image::Creator($image);
             if ($creator->createImage()) {
-                print "[$hostname] Base image created.\n";
+                ANSTE::info("[$hostname] Base image created.");
             } else {
-                print "[$hostname] Base image already exists.\n";
+                ANSTE::info("[$hostname] Base image already exists.");
             }
         }
     }
@@ -257,7 +258,7 @@ sub _importMissingBaseImages
         my $image = $host->baseImage();
         my $hostname = $host->name();
         if ($host->baseImageType() eq 'raw') {
-            print "[$hostname] Auto-importing base image if not exists...\n";
+            ANSTE::info("[$hostname] Auto-importing base image if not exists...");
             my $cmd = new ANSTE::Image::Commands($image);
             $cmd->importImage($hostname);
         }

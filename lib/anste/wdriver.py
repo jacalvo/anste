@@ -265,7 +265,7 @@ class WDriverChrome(webdriver.Chrome, WDriverBase):
 
     def __init__(self):
         if not WDriverChrome.init_done:
-            default_ubuntu_path = '/usr/lib/chromium-browser/chromedriver2_server'
+            default_ubuntu_path = '/usr/lib/chromium-browser/chromedriver'
 
             if (path.exists(default_ubuntu_path)):
                 webdriver.Chrome.__init__(

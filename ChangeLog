@@ -4,6 +4,13 @@ HEAD
     + Added ANSTE::Virtualizer::OpenStack with partial support
     + Added useOpenStack and setUseOpenStack to Anste::Status
     + Added virtualizerStatus and setVirtualizerStatus to Anste::Status
+    + Fix input read when asking for a character
+    + Added ANSTE::Util::readChar method that reads a character and ignores
+      the remaining characters in the line
+    + Check for duplicated tests on a suite
+    + Exit code is now != 0 if any test has failed
+    + Print timestamps with each line in verbose mode
+    + Fixed default path for chromedriver binary
     + Now config and cli vars are passed to the tests with the GLOBAL_ prefix
 0.11
     + Added anste-init command to create the directory structure of a project

@@ -186,8 +186,7 @@ sub _shutdown
     if ($config->wait()) {
         print "Waiting for testing on the image. " .
               "Press any key to shutdown it and finish.\n";
-        my $key;
-        read(STDIN, $key, 1);
+        my $line = <STDIN>;
     }
     $cmd->shutdown();
 }

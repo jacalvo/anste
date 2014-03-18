@@ -203,9 +203,9 @@ sub deleteImage
     my $host = $self->{host};
     my $hostname = $host->name();
 
-    print "[$hostname] Deleting image...\n";
+    ANSTE::info("[$hostname] Deleting image...");
     $virtualizer->deleteImage($hostname);
-    print "[$hostname] Image deleted.\n";
+    ANSTE::info("[$hostname] Image deleted.");
 }
 
 sub _deploy
@@ -230,7 +230,7 @@ sub _deploySnapshot
     my $cmd = $self->{cmd};
 
     # TODO: libvirt dependant => refactor
-    print "[$hostname] Restoring base snapshot...\n";
+    ANSTE::info("[$hostname] Restoring base snapshot...");
     $cmd->restoreBaseSnapshot($hostname);
 
     my $virtualizer = $self->{virtualizer};
@@ -265,7 +265,7 @@ sub _deployCopy
         return undef;
     }
 
-    print "[$hostname] Creating virtual machine ($ip)...\n";
+    ANSTE::info("[$hostname] Creating virtual machine ($ip)...");
     $cmd->createVirtualMachine();
 
     # FIXME: Remove
@@ -275,12 +275,12 @@ sub _deployCopy
         # Execute pre-install scripts
         my $pre = $host->preScripts();
         if (@{$pre}) {
-            print "[$hostname] Executing pre scripts...\n";
+            ANSTE::info("[$hostname] Executing pre scripts...");
             $cmd->executeScripts($pre);
         }
 
         my $setupScript = "$hostname-setup.sh";
-        print "[$hostname] Generating setup script...\n";
+        ANSTE::info("[$hostname] Generating setup script...");
         $self->_generateSetupScript($setupScript);
         $self->_executeSetupScript($ip, $setupScript);
 
@@ -288,9 +288,9 @@ sub _deployCopy
         # scripts as well. This permits us to move trasferred file,
         # change their rights and so on.
         my $list = $host->{files}->list(); # retrieve files list
-        print "[$hostname] Transferring files...";
+        ANSTE::info("[$hostname] Transferring files...");
         $cmd->transferFiles($list);
-        print "... done\n";
+        ANSTE::info("... done");
 
         # NAT with this address is not needed anymore
         my $iface = $config->natIface();
@@ -307,14 +307,14 @@ sub _deployCopy
         # Execute post-install scripts
         my $post = $host->postScripts();
         if (@{$post}) {
-            print "[$hostname] Executing post scripts...\n";
+            ANSTE::info("[$hostname] Executing post scripts...");
             $cmd->executeScripts($post);
         }
     } catch (ANSTE::Exceptions::Error $e) {
         my $msg = $e->message();
-        print "[$hostname] ERROR: $msg\n";
+        ANSTE::info("[$hostname] ERROR: $msg");
     } catch ($e) {
-        print "[$hostname] ERROR: $e\n";
+        ANSTE::info("[$hostname] ERROR: $e");
     }
     }
     return 0;
@@ -353,19 +353,19 @@ sub _executeSetupScript
 
     my $hostname = $self->{host}->name();
 
-    print "[$hostname] Executing setup script...\n" if $verbose;
-    $client->put($script) or print "Upload failed\n";
-    $client->exec($script, "$script.out") or print "Failed\n";
+    ANSTE::info("[$hostname] Executing setup script...") if $verbose;
+    $client->put($script) or ANSTE::info("Upload failed");
+    $client->exec($script, "$script.out") or ANSTE::info("Failed");
     my $ret = $waiter->waitForExecution($hostname);
-    print "[$hostname] Setup script finished (Return value = $ret).\n";
+    ANSTE::info("[$hostname] Setup script finished (Return value = $ret).");
 
     if ($verbose) {
-        print "[$hostname] Script executed with the following output:\n";
+        ANSTE::info("[$hostname] Script executed with the following output:");
         $client->get("$script.out");
         $self->_printOutput($hostname, "$script.out");
     }
 
-    print "[$hostname] Deleting generated files...\n" if $verbose;
+    ANSTE::info("[$hostname] Deleting generated files...") if $verbose;
     $client->del($script);
     $client->del("$script.out");
     unlink ($script);
@@ -380,9 +380,9 @@ sub _printOutput # (hostname, file)
     open ($FILE, '<', $file) or die "Can't open file $file: $!";
     my @lines = <$FILE>;
     foreach my $line (@lines) {
-        print "[$hostname] $line";
+        ANSTE::info("[$hostname] $line");
     }
-    print "\n";
+    ANSTE::info("");
     close ($FILE) or die "Can't close file $file: $!";
 }
 

@@ -2,12 +2,13 @@ Source: anste
 Section: admin
 Priority: optional
 Maintainer: José Antonio Calvo <jacalvo@zentyal.com>
-Build-Depends: cdbs, dh-python, libtrycatch-lite-perl,
+Build-Depends: cdbs, dh-python, libtrycatch-lite-perl, libtest-class-perl,
                libfile-copy-recursive-perl, libsoap-lite-perl,
                libfile-slurp-perl, libconfig-tiny-perl, libperl6-junction-perl,
                libterm-readline-gnu-perl, libtext-template-perl,
                libdevel-stacktrace-perl, libyaml-libyaml-perl,
                libjson-xs-perl, libattempt-perl, libio-interface-perl,
+               libtest-mockmodule-perl, libtest-mockobject-perl,
                libnet-openstack-compute-perl, libnet-openstack-networking-perl
 Standards-Version: 3.7.2
 
