@@ -188,7 +188,11 @@ sub createVM
     my $imageName = $host->baseImage()->name();
     my $images = $self->{os_compute}->get_images();
 
-    my $imageRefs = [ grep { $_->{name} eq $imageName } @$images ];
+    my ($imageRef) = grep { $_->{name} eq $imageName } @$images;
+
+    unless ($imageRef) {
+        die "No image found with the name '$imageName'\n";;
+    }
 
     my $serverName = $image->{name} . "-" . $self->{suffix};
 
@@ -199,7 +203,7 @@ sub createVM
     }
     my $ret = $self->{os_compute}->create_server({name => $serverName,
                                         flavorRef => '2',           # TODO:Unhardcode
-                                        imageRef => $imageRefs->[0]->{id},
+                                        imageRef => $imageRef->{id},
                                         networks => \@netConf,
                                         user_data => $userData,
                                     });
