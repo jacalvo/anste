@@ -19,6 +19,7 @@ use warnings;
 package ANSTE;
 
 use ANSTE::Config;
+use ANSTE::Util;
 use Time::HiRes qw(gettimeofday);
 
 my $INITIAL_TIME = time();
@@ -66,13 +67,10 @@ sub askForRepeat
 
     my $ret = 0;
     my $key;
-    my $line;
-
     while (1) {
         print "$msg " .
             "Press 'r' to run the test/script again or 'c' to continue.\n";
-        $line = <STDIN>;
-        $key = substr($line, 0, 1);
+        $key = ANSTE::Util::readChar();
         if ($key eq 'r') {
             $ret = 1;
             last;

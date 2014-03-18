@@ -150,8 +150,7 @@ unless ($shutdown or $remove) {
     if (system ('LANGUAGE=C virsh list | grep running') == 0) {
         print "WARNING: The above virtual machines are running.\n" .
               "Press any key to continue or Control-C to stop.\n";
-        my $key;
-        read(STDIN, $key, 1);
+        my $line = <STDIN>;
     }
 
     # Clean possible mounted nbd devices from a previous scenario

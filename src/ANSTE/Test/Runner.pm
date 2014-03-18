@@ -32,6 +32,7 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
 use ANSTE::Exceptions::NotFound;
 use ANSTE::System::System;
+use ANSTE::Util;
 
 use Cwd;
 use Text::Template;
@@ -211,8 +212,7 @@ sub _destroy
     if ($config->wait()) {
         print "Waiting for testing on the scenario. " .
               "Press any key to shutdown it and continue.\n";
-        my $key;
-        read(STDIN, $key, 1);
+        my $line = <STDIN>;
     }
     $deployer->destroy() if not $reuse;
 }
@@ -286,12 +286,12 @@ sub _runTests
 
         my $skip = 0;
         if ($config->step()) {
+            my $key;
             while (1) {
                 my $testName = $test->name();
                 print "Step by step execution. Test $testName. " .
                       "Press 'e' to execute or 's' to skip.\n";
-                my $key;
-                read (STDIN, $key, 1);
+                $key = ANSTE::Util::readChar();
                 if ($key eq 'e') {
                     last;
                 }
@@ -364,11 +364,12 @@ sub _runTests
             $executeOnlyForcedTests = 1;
         }
     }
+
     if ($config->step()) {
+        my $key;
         while (1) {
             print "Press 'd' to destroy scenario.\n";
-            my $key;
-            read(STDIN, $key, 1);
+            $key = ANSTE::Util::readChar();
             if ($key eq 'd') {
                 last;
             }

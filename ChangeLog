@@ -1,6 +1,8 @@
 HEAD
+    + Fix input read when asking for a character
+    + Added ANSTE::Util::readChar method that reads a character and ignores
+      the remaining characters in the line
     + Check for duplicated tests on a suite
-    + Fix input read when asking for an action with -wait-fail
     + Exit code is now != 0 if any test has failed
     + Print timestamps with each line in verbose mode
     + Fixed default path for chromedriver binary
