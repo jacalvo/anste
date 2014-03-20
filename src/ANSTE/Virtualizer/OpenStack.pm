@@ -244,8 +244,7 @@ sub startVM
 {
     my ($self, $image, $host) = @_;
 
-    $self->createVM($image, $host);
-    $self->finishImageCreation($image->{name});
+    return $self->createVM($image, $host);
 }
 
 sub existsVM

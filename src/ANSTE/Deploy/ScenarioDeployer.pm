@@ -159,10 +159,8 @@ sub deploy
 
     if (not $reuse) {
         foreach my $deployer (@{$self->{deployers}}) {
-            # Do not wait for hosts with raw base images
-            if ($deployer->{host}->baseImageType() ne 'raw') {
-                $deployer->waitForFinish();
-            }
+            $deployer->waitForFinish();
+
             my $host = $deployer->{host}->name();
             ANSTE::info("[$host] Deployment finished.");
         }
