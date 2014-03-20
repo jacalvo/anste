@@ -196,23 +196,25 @@ sub initialNetworkConfig {
     $config .= " - rm -f /lib/udev/rules.d/75-persistent-net-generator.rules\n";
     $config .= " - rm -f /etc/udev/rules.d/70-persistent-net.rules\n";
 
-    $config .= " - cat 'auto lo' > /etc/network/interfaces\n";
-    $config .= " - cat 'iface lo inet loopback' > /etc/network/interfaces\n";
+    $config .= " - echo 'auto lo' > /etc/network/interfaces\n";
+    $config .= " - echo 'iface lo inet loopback' > /etc/network/interfaces\n";
     my $type = $iface->type();
     my $name = $iface->name();
-    $config .= " - cat 'auto $name' > /etc/network/interfaces\n";
+    $config .= " - echo 'auto $name' > /etc/network/interfaces\n";
     if ( $type == ANSTE::Scenario::NetworkInterface->IFACE_TYPE_DHCP ) {
-        $config .= " - cat 'iface $name inet dhcp' > /etc/network/interfaces\n";
+        $config .= " - echo 'iface $name inet dhcp' > /etc/network/interfaces\n";
     }
     elsif ( $type == ANSTE::Scenario::NetworkInterface->IFACE_TYPE_STATIC ) {
         my $address = $iface->address();
         my $netmask = $iface->netmask();
         my $gateway = $iface->gateway();
-        $config .= " - cat 'iface $name inet static' > /etc/network/interfaces\n";
-        $config .= " - cat 'address $address' > /etc/network/interfaces\n";
-        $config .= " - cat 'netmask $netmask' > /etc/network/interfaces\n";
+        $config .= " - ifconfig $name $address netmask $netmask\n";
+        $config .= " - route add default gw $gateway\n";
+        $config .= " - echo 'iface $name inet static' > /etc/network/interfaces\n";
+        $config .= " - echo 'address $address' > /etc/network/interfaces\n";
+        $config .= " - echo 'netmask $netmask' > /etc/network/interfaces\n";
         if ($gateway) {
-            $config .= " - cat 'gateway $gateway' > /etc/network/interfaces\n";
+            $config .= " - echo 'gateway $gateway' > /etc/network/interfaces\n";
         }
     }
     return $config;
