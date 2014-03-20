@@ -234,7 +234,10 @@ sub _deploySnapshot
     $cmd->restoreBaseSnapshot($hostname);
 
     my $virtualizer = $self->{virtualizer};
-    $virtualizer->startVM($self->{image}, $host);
+    my $ret = $virtualizer->startVM($self->{image}, $host);
+
+    # 0 is the exit status for success
+    return not $ret;
 }
 
 sub _deployCopy
