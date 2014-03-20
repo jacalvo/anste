@@ -1,4 +1,5 @@
 HEAD
+    + Now comm/gateway config is passed to the tests as COMM_gateway
     + Added master configuration key to set the IP of the master
     + Added finalConfigurations method to ANSTE::Image::Commands
     + Added ANSTE::Virtualizer::OpenStack with partial support

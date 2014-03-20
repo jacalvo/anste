@@ -611,7 +611,9 @@ sub loadYAML
     defined $test or
         throw ANSTE::Exceptions::MissingArgument('test');
 
-    my $configVars = ANSTE::Config->instance()->variables();
+    my $config = ANSTE::Config->instance();
+    my $configVars = $config->variables();
+    my $gateway = $config->gateway();
 
     my $type = $test->{type};
     if ($type) {
@@ -700,6 +702,9 @@ sub loadYAML
             $self->setVariable("GLOBAL_$name", $value);
         }
     }
+
+    # Add also comm/gateway as a variable
+    $self->setVariable("COMM_gateway", $gateway);
 
 }
 
