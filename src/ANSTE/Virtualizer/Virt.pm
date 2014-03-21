@@ -246,45 +246,47 @@ sub preCreateVM
     my $hostname = $host->name();
 
     ANSTE::info("[$hostname] Creating a copy of the base image...");
-
     my $error = 0;
-
     try {
         my $baseimage = $host->baseImage();
-        my $newimage = $self->{image};
-        $error = not $self->createImageCopy($baseimage, $image) or die "Can't copy base image";
-    } catch (ANSTE::Exceptions::NotFound $e) {
-        ANSTE::info("[$hostname] Base image not found, can't continue.");
-        return undef;
-    }
-
-    # Critical section here to prevent mount errors with loop device busy
-    # or KVM crashes when trying to create two machines at the same time
-    {
-        lock ($lockMount);
-
-        ANSTE::info("[$hostname] Updating hostname on the new image...");
-        try {
-            my $ok = $self->_updateHostname($self->{image}, $self->{cmd});
-            if (not $ok) {
-                ANSTE::info("[$hostname] Error copying host files.");
-                $error = 1;
-            }
-        } catch ($e) {
-            ANSTE::info("[$hostname] ERROR: $e");
+        if (not $self->createImageCopy($baseimage, $image)) {
+            ANSTE::info("[$hostname] Can't copy base image");
             $error = 1;
         }
+    } catch (ANSTE::Exceptions::NotFound $e) {
+        ANSTE::info("[$hostname] Base image not found, can't continue.");
+        $error = 1;
+    }
 
-    };
+    unless($error) {
+        # Critical section to prevent mount errors with loop device busy
+        {
+            lock($lockMount);
+
+            ANSTE::info("[$hostname] Updating hostname on the new image...");
+            try {
+                my $ok = $self->_updateHostname($image);
+                if (not $ok) {
+                    ANSTE::info("[$hostname] Error copying host files.");
+                    $error = 1;
+                }
+            } catch ($e) {
+                ANSTE::info("[$hostname] ERROR: $e");
+                $error = 1;
+            }
+        }
+    }
 
     return not $error;
 }
 
+# FIXME: We should not use ANSTE::Image::Comands from within a virtualizer
 sub _updateHostname
 {
-    my ($self, $image, $cmd) = @_;
+    my ($self, $image) = @_;
 
     my $ok = 0;
+    my $cmd = new ANSTE::Image::Commands($image);
 
     attempt {
         try {
@@ -331,15 +333,19 @@ sub createVM
         throw ANSTE::Exceptions::MissingArgument('$image');
 
     my $name = $image->{name};
-
     my $path = ANSTE::Config->instance()->imagePath();
 
-    # KVM crashes when trying to create two machines at the same time
+    my $error = 0;
+    # Critical section to prevent KVM crashes when trying to create
+    # two machines at the same time
     {
         lock($lockCreate);
-        $self->execute("virsh create $path/$name/domain.xml") or
-            throw ANSTE::Exceptions::Error("Error creating domain $name");
+
+        $error = $self->execute("virsh create $path/$name/domain.xml") or
+                    throw ANSTE::Exceptions::Error("Error creating domain $name");
     };
+
+    return not $error;
 }
 
 # Method: defineVM
