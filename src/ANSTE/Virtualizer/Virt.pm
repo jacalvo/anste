@@ -33,6 +33,7 @@ use File::Copy::Recursive qw(dircopy);
 use threads;
 use threads::shared;
 use TryCatch::Lite;
+use Attempt;
 
 my $lockMount : shared;
 my $lockCreate : shared;
@@ -213,8 +214,6 @@ sub destroyImage
 
     $self->execute("virsh destroy $image");
 }
-
-
 
 # Method: preCreateVM
 #
