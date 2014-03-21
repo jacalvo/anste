@@ -613,7 +613,6 @@ sub loadYAML
 
     my $config = ANSTE::Config->instance();
     my $configVars = $config->variables();
-    my $gateway = $config->gateway();
 
     my $type = $test->{type};
     if ($type) {
@@ -703,8 +702,11 @@ sub loadYAML
         }
     }
 
-    # Add also comm/gateway as a variable
+    # Add also comm/gateway and comm/first-address as a variable
+    my $gateway = $config->gateway();
     $self->setVariable("COMM_gateway", $gateway);
+    my $firstAddress = $config->firstAddress();
+    $self->setVariable("COMM_firstAddress", $firstAddress);
 
 }
 
