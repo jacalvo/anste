@@ -280,7 +280,7 @@ sub preCreateVM
     return not $error;
 }
 
-# FIXME: We should not use ANSTE::Image::Comands from within a virtualizer
+# FIXME: We should not use ANSTE::Image::Commands from within a virtualizer
 sub _updateHostname
 {
     my ($self, $image) = @_;

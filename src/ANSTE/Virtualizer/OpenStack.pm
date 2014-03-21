@@ -36,9 +36,57 @@ use MIME::Base64;
 use File::Temp qw(tempfile tempdir);
 use File::Slurp;
 
-# TODO: use lock?
-my %image_id :shared;
-my %cloud_init_file :shared;
+my %imageID: shared;
+my $lockImageID: shared;
+
+sub getImageID
+{
+    my ($self, $image) = @_;
+
+    my $id;
+    {
+        lock($lockImageID);
+        $id = $imageID{$image};
+    }
+
+    return $id;
+}
+
+sub setImageID
+{
+    my ($self, $image, $id) = @_;
+
+    {
+        lock($lockImageID);
+        $imageID{$image} = $id;
+    }
+}
+
+my %cloudInitFile: shared;
+my $lockCloudInitFile: shared;
+
+sub getCloudInitFile
+{
+    my ($self, $image) = @_;
+
+    my $file;
+    {
+        lock($lockCloudInitFile);
+        $file = $cloudInitFile{$image};
+    }
+
+    return $file;
+}
+
+sub setCloudInitFile
+{
+    my ($self, $image, $file) = @_;
+
+    {
+        lock($lockCloudInitFile);
+        $cloudInitFile{$image} = $file;
+    }
+}
 
 # Class: OpenStack
 #
@@ -163,7 +211,8 @@ sub preCreateVM
     $gen->writeScript($fh);
     close($fh) or die "Can't close temporary file: $!";
 
-    $cloud_init_file{$image->{name}} = $filename;
+    $self->setCloudInitFile($image->{name}, $filename);
+
     return 1;
 }
 
@@ -197,8 +246,9 @@ sub createVM
     my $serverName = $image->{name} . "-" . $self->{suffix};
 
     my $userData = undef;
-    if (defined $cloud_init_file{$image->{name}}) {
-        my $rawUserData = read_file($cloud_init_file{$image->{name}});
+    my $fileName = $self->getCloudInitFile($image->{name});
+    if (defined $fileName) {
+        my $rawUserData = read_file($fileName);
         $userData = encode_base64($rawUserData);
     }
     my $ret = $self->{os_compute}->create_server({name => $serverName,
@@ -217,7 +267,7 @@ sub createVM
 
     # TODO: Throw exception if status != ACTIVE ??
 
-    $image_id{$image->{name}} = $id;
+    $self->setImageID($image->{name}, $id);
 
     return (defined $id);
 }
@@ -228,7 +278,7 @@ sub finishImageCreation
     my ($self, $name) = @_;
 
     my $status = $self->{status}->virtualizerStatus();
-    $status->{images}->{$name} = $image_id{$name};
+    $status->{images}->{$name} = $self->getImageID($name);
     $self->{status}->setVirtualizerStatus($status);
 }
 
