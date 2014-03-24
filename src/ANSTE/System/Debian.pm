@@ -327,8 +327,8 @@ sub networkConfig
         $config .= $self->_interfaceConfig($iface);
         if ($iface->name() eq 'eth0') {
             # Add route to master
-            $config .= "\n";
             $config .= $self->_staticRoute($masterIP, $gateway);
+            $config .= "\n";
         }
     }
     $config .= "\nEOF\n";
