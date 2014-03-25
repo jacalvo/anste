@@ -717,16 +717,23 @@ sub transferFiles # (list)
 #   If openstack command line argument has been provided, removes the network
 #   persistent rules in the image.
 #
+# Returns:
+#
+#   boolean - true if success, false otherwise
+#
 sub finalConfigurations
 {
     my ($self) = @_;
 
+    my $ret = 1;
     if (ANSTE::Status->instance()->useOpenStack()) {
         my $system = $self->{system};
         my $cmd = 'cat /dev/null > /etc/udev/rules.d/70-persistent-net.rules ' .
                   '&& cat /dev/null > /lib/udev/rules.d/75-persistent-net-generator.rules';
-        $system->execute($cmd);
+        $ret = $system->execute($cmd);
     }
+
+    return $ret;
 }
 
 sub _disableNAT
