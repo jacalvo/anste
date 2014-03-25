@@ -23,8 +23,6 @@ use lib "$Bin/../src";
 
 use ANSTE::Comm::SlaveClient;
 
-use TryCatch::Lite;
-
 use constant MASTER => '/var/local/anste.master';
 use constant PORT => 8001;
 
@@ -57,9 +55,10 @@ sub handleReady
 {
     my $client = getClient();
     my $ok;
-    try {
+    eval {
         $ok = $client->hostReady();
-    } catch {
+    };
+    if ($@) {
         sleep 5;
         $ok = $client->hostReady();
     }
@@ -71,9 +70,10 @@ sub handleFinished
     my $client = getClient();
     my $ret = $ARGV[1];
     my $ok;
-    try {
+    eval {
         $ok = $client->executionFinished($ret);
-    } catch {
+    };
+    if ($@) {
         sleep 5;
         $ok = $client->executionFinished($ret);
     }

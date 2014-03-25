@@ -1,4 +1,5 @@
 HEAD
+    + Remove TryCatch::Lite depend in anste-slave
     + Fix input read when asking for a character
     + Added ANSTE::Util::readChar method that reads a character and ignores
       the remaining characters in the line
