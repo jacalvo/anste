@@ -21,7 +21,6 @@ use warnings;
 use ANSTE::Config;
 use ANSTE::Exceptions::NotImplemented;
 use ANSTE::Exceptions::MissingArgument;
-use TryCatch::Lite;
 
 # Class: Virtualizer
 #
