@@ -182,8 +182,10 @@ sub updateNetworkCommand
     my $config = ANSTE::Config->instance();
 
     my $dist = $config->variables()->{'dist'};
-    if ($dist eq "precise") {
+    if ($dist eq 'precise') {
         return '/etc/init.d/networking restart';
+    } elsif ($dist eq 'trusty') {
+        return 'ifup eth0; ifup eth1; ifup eth2; ifup eth3';
     } else {
         return '/sbin/restart networking';
     }
