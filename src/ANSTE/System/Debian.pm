@@ -185,7 +185,7 @@ sub updateNetworkCommand
     if ($dist eq 'precise') {
         return '/etc/init.d/networking restart';
     } elsif ($dist eq 'trusty') {
-        return 'ifup eth0; ifup eth1; ifup eth2; ifup eth3';
+        return 'ifup -a';
     } else {
         return '/sbin/restart networking';
     }
