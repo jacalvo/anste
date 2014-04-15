@@ -1,11 +1,17 @@
 name: suiteName
 desc: suiteDesc
 scenario: test.yaml
+global:
+      var1: val1
+      var2: val2
 tests:
     - name: testName
       desc: testDesc
       host: testHost
       script: testScript
+      vars:
+        var3: val3
+        var1: val4
 
     - name: testName2
       desc: testDesc2

@@ -290,9 +290,12 @@ sub loadFromDir
     # Check for duplicated tests
     my %seenTests;
 
+    my $vars = $suite->{global};
+
     # Read the <test> elements
     foreach my $element (@{$suite->{tests}}) {
         my $test = new ANSTE::Test::Test();
+        $test->addVariables($vars);
         $test->loadYAML($element);
         my $name = $test->name();
         if ($seenTests{$name}) {

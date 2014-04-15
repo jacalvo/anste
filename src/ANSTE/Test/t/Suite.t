@@ -20,7 +20,7 @@ use ANSTE::Test::Suite;
 use ANSTE::Config;
 use ANSTE::Exceptions::InvalidFile;
 
-use Test::More tests => 6;
+use Test::More tests => 9;
 
 use constant SUITE => 'test';
 
@@ -35,7 +35,10 @@ sub testTest # (test)
     is($host, 'testHost', 'host = testHost');
 	my $dir = $test->script();
     is($dir, 'testScript', 'script = testScript');
-
+    my $vars = $test->variables();
+    is($vars->{var3}, 'val3', 'local var3 is included with value val3');
+    is($vars->{var2}, 'val2', 'global var2 is included with value val2');
+    is($vars->{var1}, 'val4', 'var1 is overrided with local value val4');
 }
 
 sub test # (suite)
