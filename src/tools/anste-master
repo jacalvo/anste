@@ -124,10 +124,11 @@ sub _execute # (file)
     _put($file);
     $client->exec($file, 'out.log');
     $waiter->waitForAnyExecution();
+    $waiter->cleanExecutions();
     $client->get('out.log');
     my $content = read_file('out.log');
     $client->del('out.log');
-    $client->del($cmd);
+    $client->del($file);
     unlink 'out.log';
 
     return "Output:\n$content";
