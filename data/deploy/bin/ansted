@@ -30,14 +30,15 @@ use constant PORT => 8000;
 
 my $DIR = '/var/local/anste';
 
+# FIXME: Before the merge
 sub daemonize {
-    chdir($DIR)                  or die "Can't chdir to $DIR: $!";
-    open(STDIN, '<', '/dev/null')    or die "Can't read /dev/null: $!";
-    open(STDOUT, '>>', '/dev/null') or die "Can't write to /dev/null: $!";
-    open(STDERR, '>>', '/dev/null') or die "Can't write to /dev/null: $!";
+    #chdir($DIR)                  or die "Can't chdir to $DIR: $!";
+    #open(STDIN, '<', '/dev/null')    or die "Can't read /dev/null: $!";
+    #open(STDOUT, '>>', '/dev/null') or die "Can't write to /dev/null: $!";
+    #open(STDERR, '>>', '/dev/null') or die "Can't write to /dev/null: $!";
     defined(my $pid = fork)     or die "Can't fork: $!";
     exit if $pid;
-    setsid()                    or die "Can't start a new session: $!";
+    #setsid()                    or die "Can't start a new session: $!";
     umask 0;
 }
 

@@ -28,8 +28,11 @@ use MIME::Base64;
 #   to handle the requests from the master client.
 #
 
-my $DIR = '/var/local/anste';
-my $LOGPATH = '/var/log/anste';
+# FIXME: Before the merge
+#my $DIR = '/var/local/anste';
+#my $LOGPATH = '/var/log/anste';
+my $DIR = "anste-bin";
+my $LOGPATH = "anste-log";
 
 # Method: put
 #
@@ -140,7 +143,9 @@ sub exec
             $ret = $self->_execute($command);
         }
         sleep 1; # Avoid notification before starting to wait for finish
-        exec("/usr/local/bin/anste-slave finished $ret");
+        # FIXME: Before the merge
+        #exec("/usr/local/bin/anste-slave finished $ret");
+        exec("perl anste-slave finished $ret");
         exit(0);
     } else {
         return 'OK';
@@ -204,8 +209,10 @@ sub _executeSavingLog
     my ($self, $command, $log, $env, $params) = @_;
 
     my $name = fileparse($command);
-    my $date = `date +%y%m%d-%H-%M-%S`;
-    chomp($date);
+    # FIXME: Before the merge
+    #my $date = `date +%y%m%d-%H-%M-%S`;
+    #chomp($date);
+    my $date = 'ts';
     my $ret = system("$env \"$command\" $params > \"$log\" 2>&1");
 
     # Save the script and the log for debug purposes
