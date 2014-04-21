@@ -1,4 +1,5 @@
 HEAD
+    + Added script to generate the bundle for the windows slaves
     + Allow anste-master to run multiple scripts in the same host
     + Added support for global variables in test suites
     + Add support for trusty to properly bring up network interfaces

@@ -31,8 +31,8 @@ use MIME::Base64;
 # FIXME: Before the merge
 #my $DIR = '/var/local/anste';
 #my $LOGPATH = '/var/log/anste';
-my $DIR = "anste-bin";
-my $LOGPATH = "anste-log";
+my $DIR = "../anste-bin";
+my $LOGPATH = "../anste-log";
 
 # Method: put
 #
