@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use File::Basename;
+use File::Copy;
 use MIME::Base64;
 
 # Class: SlaveServer
@@ -194,7 +195,7 @@ sub _execute
     my $date = `date +%y%m%d-%H-%M-%S`;
     chomp($date);
 
-    system("cp $command '$LOGPATH/$name-$date'");
+    copy($command, "$LOGPATH/$name-$date");
     return system("$command > $LOGPATH/$name-$date.log 2>&1");
 }
 
@@ -208,8 +209,8 @@ sub _executeSavingLog
     my $ret = system("$env $command $params > '$log' 2>&1");
 
     # Save the script and the log for debug purposes
-    system("cp $command '$LOGPATH/$name-$date'");
-    system("cp '$log' '$LOGPATH/$name-$date.log'");
+    copy($command, "$LOGPATH/$name-$date");
+    copy($log, "$LOGPATH/$name-$date.log");
 
     return $ret;
 }
