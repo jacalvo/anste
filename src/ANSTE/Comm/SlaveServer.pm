@@ -196,7 +196,7 @@ sub _execute
     chomp($date);
 
     copy($command, "$LOGPATH/$name-$date");
-    return system("$command > $LOGPATH/$name-$date.log 2>&1");
+    return system("\"$command\" > \"$LOGPATH/$name-$date.log\" 2>&1");
 }
 
 sub _executeSavingLog
@@ -206,7 +206,7 @@ sub _executeSavingLog
     my $name = fileparse($command);
     my $date = `date +%y%m%d-%H-%M-%S`;
     chomp($date);
-    my $ret = system("$env $command $params > '$log' 2>&1");
+    my $ret = system("$env \"$command\" $params > \"$log\" 2>&1");
 
     # Save the script and the log for debug purposes
     copy($command, "$LOGPATH/$name-$date");
