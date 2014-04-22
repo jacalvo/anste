@@ -315,7 +315,7 @@ sub _deployCopy
         my $setupScript = "$hostname-setup.sh";
         ANSTE::info("[$hostname] Generating setup script...");
         $self->_generateSetupScript($setupScript);
-        $self->_executeSetupScript($ip, $setupScript);
+        $self->_executeSetup($ip, $setupScript);
 
         # It worths it stays here in order to be able to use pre/post-install
         # scripts as well. This permits us to move trasferred file,
@@ -410,6 +410,33 @@ sub _generateSetupScript # (script)
         or throw ANSTE::Exceptions::Error("Can't close file $script: $!");
 }
 
+#FIXME: Refactor this with the one in Image/Commands.pm
+sub _executeSetup # (host, script)
+{
+    my ($self, $host, $script) = @_;
+    my $config = ANSTE::Config->instance();
+
+    if ($config->waitFail() or $config->wait()) {
+        my $isExecutionCorrect = 0;
+        while ($isExecutionCorrect == 0) {
+            try {
+                $isExecutionCorrect = $self->_executeSetupScript($host,$script);
+            } catch (ANSTE::Exceptions::Error $e) {
+                $isExecutionCorrect = 0;
+            }
+            if ($isExecutionCorrect == 0) {
+                if (ANSTE::askForRepeat("") == 0) {
+                    last;
+                }
+            }
+        }
+    } else {
+        $self->_executeSetupScript($host,$script);
+    }
+
+    return 1;
+}
+
 sub _executeSetupScript
 {
     my ($self, $host, $script) = @_;
@@ -444,6 +471,8 @@ sub _executeSetupScript
     $client->del("$script.out");
     unlink ($script);
     unlink ("$script.out") if $verbose;
+
+    return 1;
 }
 
 sub _printOutput # (hostname, file)
