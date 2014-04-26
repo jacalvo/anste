@@ -56,6 +56,7 @@ sub put
 
     my $FILE;
     if (open($FILE, '>', "$DIR/$name")) {
+        binmode $FILE;
         print $FILE $content;
         close $FILE or die "Can't close: $!";
         if ($name =~ /\.tar$/) {
