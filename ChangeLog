@@ -1,4 +1,5 @@
 HEAD
+    + Added 'sikuli' test type to run sikuli tests in Windows machines
     + Use binmode in the file handler for the put command
     + Use IP set to eth0 in the scenario if any
     + Added script to generate the bundle for the windows slaves
