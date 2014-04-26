@@ -85,9 +85,6 @@ sub new
     foreach my $host (@{$scenario->hosts()}) {
         my $ip = "$base.$number";
         my $hostname = $host->name();
-        my $deployer = new ANSTE::Deploy::HostDeployer($host, $ip);
-        push(@{$self->{deployers}}, $deployer);
-        $number++;
 
         # Add the bridges needed for each host if no manual bridging option is set
         unless ($scenario->manualBridging()) {
@@ -98,8 +95,17 @@ sub new
                     my $bridge = $scenario->addBridge($net);
                     $iface->setBridge($bridge);
                 }
+
+                # IP for the Host from the scenario
+                if ($iface->name() eq 'eth0') {
+                    $ip = $iface->address();
+                }
             }
         }
+
+        my $deployer = new ANSTE::Deploy::HostDeployer($host, $ip);
+        push(@{$self->{deployers}}, $deployer);
+        $number++;
     }
 
     bless ($self, $class);
@@ -152,7 +158,7 @@ sub deploy
 
         my $ip = $deployer->ip();
         if (not $ip) {
-            throw ANSTE::Exceptions::Error("Canot get IP for host $hostname");
+            throw ANSTE::Exceptions::Error("Cannot get IP for host $hostname");
         }
         $hostIP->{$hostname} = $ip;
     }
