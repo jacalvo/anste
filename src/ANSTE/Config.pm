@@ -452,6 +452,61 @@ sub setWaitFail
     $self->{override}->{'global'}->{'wait-fail'} = $value;
 }
 
+# Method: noDestroy
+#
+#   Gets the value for the noDestroy option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub noDestroy
+{
+    my ($self) = @_;
+
+    my $noDestroy = $self->_getOption('global', 'nodestroy');
+
+    if (not ANSTE::Validate::boolean($noDestroy)) {
+        throw ANSTE::Exceptions::InvalidConfig('global/nodestroy',
+                                               $noDestroy,
+                                               $self->{confFile});
+    }
+
+    return $noDestroy;
+}
+
+# Method: setNoDestroy
+#
+#   Sets the value for the nodestroy option.
+#
+# Parameters:
+#
+#   value - String with the value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setNoDestroy
+{
+    my ($self, $value) = @_;
+
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not ANSTE::Validate::boolean($value)) {
+        throw ANSTE::Exceptions::InvalidOption('global/nodestroy',
+                                               $value);
+    }
+
+    $self->{override}->{'global'}->{'nodestroy'} = $value;
+}
+
 # Method: reuse
 #
 #   Gets the value for the reuse option.

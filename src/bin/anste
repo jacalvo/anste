@@ -55,6 +55,7 @@ my $video = '';
 my $format = '';
 my $wait = 0;
 my $waitFail = 0;
+my $noDestroy = 0;
 my $help = 0;
 my $quiet = 0;
 my $step = 0;
@@ -74,6 +75,7 @@ GetOptions('createimg' => \$create,
            'quiet' => \$quiet,
            'wait' => \$wait,
            'wait-fail' => \$waitFail,
+           'nodestroy' => \$noDestroy,
            'reuse' => \$reuse,
            'step' => \$step,
            'break=s' => \$break,
@@ -113,6 +115,9 @@ if ($wait) {
 }
 if ($waitFail) {
     $config->setWaitFail(1);
+}
+if ($noDestroy) {
+    $config->setNoDestroy(1);
 }
 if ($out) {
     $config->setLogPath($out);

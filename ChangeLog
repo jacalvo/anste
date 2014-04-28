@@ -1,4 +1,5 @@
 HEAD
+    + Added -nodestroy option to keep scenario running after finishing
     + Setup scripts now fail when any of the commands fail
     + Added support for global variables in test suites
     + Add support for trusty to properly bring up network interfaces
