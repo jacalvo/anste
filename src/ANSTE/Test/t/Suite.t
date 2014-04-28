@@ -20,7 +20,7 @@ use ANSTE::Test::Suite;
 use ANSTE::Config;
 use ANSTE::Exceptions::InvalidFile;
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 
 use constant SUITE => 'test';
 
@@ -41,6 +41,7 @@ sub testTest # (test)
     is($vars->{var1}, 'val4', 'var1 is overrided with local value val4');
     is($vars->{var4}, '', 'var4 has empty value');
     is($vars->{var5}, undef, 'var5 does not exists');
+    is($vars->{var6}, 'BAR', 'check that global variables are interpolated');
 }
 
 sub test # (suite)

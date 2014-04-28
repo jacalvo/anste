@@ -4,6 +4,7 @@ scenario: test.yaml
 global:
       var1: val1
       var2: val2
+      FOO: BAR
 tests:
     - name: testName
       desc: testDesc
@@ -13,6 +14,7 @@ tests:
         var3: val3
         var1: val4
         var4: ''
+        var6: $FOO
 
     - name: testName2
       desc: testDesc2

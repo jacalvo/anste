@@ -501,6 +501,12 @@ sub addVariables
         unless ($value) {
             $value = '';
         }
+        if (substr ($value, 0, 1) eq '$') {
+            my $var = substr ($value, 1, length ($value));
+            if (exists $self->{variables}->{$var}) {
+                $value = $self->{variables}->{$var};
+            }
+        }
         $self->setVariable($name, $value);
     }
 }
