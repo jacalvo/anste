@@ -12,6 +12,7 @@ tests:
       vars:
         var3: val3
         var1: val4
+        var4: ''
 
     - name: testName2
       desc: testDesc2
