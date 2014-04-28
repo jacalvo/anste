@@ -1,4 +1,5 @@
 HEAD
+    + Tests marked as setup or critical are not executed with -reuse
     + Added -nodestroy option to keep scenario running after finishing
     + Setup scripts now fail when any of the commands fail
     + Added support for global variables in test suites

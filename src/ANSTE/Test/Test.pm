@@ -636,7 +636,7 @@ sub loadYAML
     if ($type) {
         $self->setType($type);
     }
-    my $critical = $test->{critical};
+    my $critical = ($test->{critical} or $test->{setup});
     if ($critical) {
         $self->setCritical(1);
     }
