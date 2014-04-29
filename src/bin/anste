@@ -370,10 +370,7 @@ sub test
     try {
         if (ANSTE::Validate::suite($file)) {
             my $suite = new ANSTE::Test::Suite;
-            $suite->loadFromDir($file);
-            if ($varfile) {
-                $suite->replaceVars($varfile);
-            }
+            $suite->loadFromDir($file, $varfile);
             $runner->runSuite($suite);
         } else {
             $runner->runDir($file);

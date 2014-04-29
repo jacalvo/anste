@@ -20,7 +20,7 @@ use ANSTE::Test::Suite;
 use ANSTE::Config;
 use ANSTE::Exceptions::InvalidFile;
 
-use Test::More tests => 17;
+use Test::More tests => 18;
 
 use constant SUITE => 'test';
 
@@ -54,24 +54,20 @@ sub testTestAfterReplace
     is($vars->{var2}, 'newval2', 'global var2 is included with value newval2 after replace');
     is($vars->{var1}, 'val4', 'var1 is still overrided with local value val4 after replace');
     is($vars->{var4}, '', 'var4 still has empty value after replace');
-    is($vars->{var6}, 'newval2', 'check that global variables are interpolated after replace');
-}
-
-sub test # (suite)
-{
-    my ($suite) = @_;
-    my $name = $suite->name();
-    is($name, 'suiteName', 'suite name = suiteName');
-    my $desc = $suite->desc();
-    is($desc, 'suiteDesc', 'suite desc = suiteDesc');
-
-    my $test = $suite->tests()->[0];
-    testTest($test);
-
-    $suite->replaceVars('data/tests/test/vars.yaml');
-    testTestAfterReplace($test);
+    is($vars->{var7}, 'newval2', 'check that new global variables are interpolated after replace');
+    is($vars->{var6}, 'BAZ', 'check that previous interpolations have the new value');
 }
 
 my $suite = new ANSTE::Test::Suite();
 $suite->loadFromDir(SUITE);
-test($suite);
+my $name = $suite->name();
+is($name, 'suiteName', 'suite name = suiteName');
+my $desc = $suite->desc();
+is($desc, 'suiteDesc', 'suite desc = suiteDesc');
+my $test = $suite->tests()->[0];
+testTest($test);
+
+$suite = new ANSTE::Test::Suite();
+$suite->loadFromDir(SUITE, 'data/tests/test/vars.yaml');
+$test = $suite->tests()->[0];
+testTestAfterReplace($test);

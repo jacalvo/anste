@@ -1,7 +1,8 @@
 global:
       var2: newval2
+      FOO: BAZ
 tests:
     - name: testName
       vars:
         var3: newval3
-        var6: $var2
+        var7: $var2

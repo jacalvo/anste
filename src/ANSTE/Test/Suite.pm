@@ -249,6 +249,8 @@ sub addTest
 #   dirname - String with the name of the directory that contains a file
 #             called suite.yaml with the data of the suite.
 #
+#   varfile - *optional* path of the YAML file containing the new var values
+#
 # Exceptions:
 #
 #   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
@@ -256,7 +258,7 @@ sub addTest
 #
 sub loadFromDir
 {
-    my ($self, $dirname) = @_;
+    my ($self, $dirname, $varfile) = @_;
 
     defined $dirname or
         throw ANSTE::Exceptions::MissingArgument('dirname');
@@ -290,47 +292,36 @@ sub loadFromDir
     # Check for duplicated tests
     my %seenTests;
 
-    my $vars = $suite->{global};
+    my $global = $suite->{global};
+    my $newGlobal = undef;
+    my $varTests = {};
+
+    if ($varfile) {
+        my ($vars) = YAML::XS::LoadFile($varfile);
+        $newGlobal = $vars->{global};
+        foreach my $element (@{$vars->{tests}}) {
+            $varTests->{$element->{name}} = $element->{vars};
+        }
+    }
 
     foreach my $element (@{$suite->{tests}}) {
         my $test = new ANSTE::Test::Test();
-        $test->addVariables($vars);
+        $test->addVariables($global);
+        $test->addVariables($newGlobal) if $newGlobal;
         $test->loadYAML($element);
+
         my $name = $test->name();
         if ($seenTests{$name}) {
             throw ANSTE::Exceptions::Error("Duplicated test found: $name");
         }
         $seenTests{$name} = 1;
-        if ($test->precondition()) {
-            $self->addTest($test);
-        }
-    }
-}
 
-# Method: replaceVars
-#
-#   Replace global and tests vars with the given file
-#
-# Parameters:
-#
-#   file - path of the YAML file containing the new var values
-#
-sub replaceVars
-{
-    my ($self, $file) = @_;
-
-    my ($vars) = YAML::XS::LoadFile($file);
-    my $global = $vars->{global};
-    my $varTests = {};
-    foreach my $element (@{$vars->{tests}}) {
-        $varTests->{$element->{name}} = $element->{vars};
-    }
-
-    foreach my $test (@{$self->{tests}}) {
-        $test->addVariables($global);
-        my $name = $test->name();
         if (exists $varTests->{$name}) {
             $test->addVariables($varTests->{$name});
+        }
+
+        if ($test->precondition()) {
+            $self->addTest($test);
         }
     }
 }
