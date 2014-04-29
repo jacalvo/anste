@@ -1,4 +1,5 @@
 HEAD
+    + New -vars option to override test vars with values in YAML file
     + Allow to substitute test variables with global values using $
     + Tests marked as setup or critical are not executed with -reuse
     + Added -nodestroy option to keep scenario running after finishing

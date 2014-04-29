@@ -20,13 +20,14 @@ use ANSTE::Test::Suite;
 use ANSTE::Config;
 use ANSTE::Exceptions::InvalidFile;
 
-use Test::More tests => 12;
+use Test::More tests => 17;
 
 use constant SUITE => 'test';
 
-sub testTest # (test)
+sub testTest
 {
     my ($test) = @_;
+
     my $name = $test->name();
     is($name, 'testName', 'name = testName');
     my $desc = $test->desc();
@@ -44,6 +45,18 @@ sub testTest # (test)
     is($vars->{var6}, 'BAR', 'check that global variables are interpolated');
 }
 
+sub testTestAfterReplace
+{
+    my ($test) = @_;
+
+    my $vars = $test->variables();
+    is($vars->{var3}, 'newval3', 'local var3 is included with value newval3 after replace');
+    is($vars->{var2}, 'newval2', 'global var2 is included with value newval2 after replace');
+    is($vars->{var1}, 'val4', 'var1 is still overrided with local value val4 after replace');
+    is($vars->{var4}, '', 'var4 still has empty value after replace');
+    is($vars->{var6}, 'newval2', 'check that global variables are interpolated after replace');
+}
+
 sub test # (suite)
 {
     my ($suite) = @_;
@@ -52,8 +65,11 @@ sub test # (suite)
     my $desc = $suite->desc();
     is($desc, 'suiteDesc', 'suite desc = suiteDesc');
 
-    my $test = shift @{$suite->tests()};
+    my $test = $suite->tests()->[0];
     testTest($test);
+
+    $suite->replaceVars('data/tests/test/vars.yaml');
+    testTestAfterReplace($test);
 }
 
 my $suite = new ANSTE::Test::Suite();

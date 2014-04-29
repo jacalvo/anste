@@ -292,7 +292,6 @@ sub loadFromDir
 
     my $vars = $suite->{global};
 
-    # Read the <test> elements
     foreach my $element (@{$suite->{tests}}) {
         my $test = new ANSTE::Test::Test();
         $test->addVariables($vars);
@@ -304,6 +303,34 @@ sub loadFromDir
         $seenTests{$name} = 1;
         if ($test->precondition()) {
             $self->addTest($test);
+        }
+    }
+}
+
+# Method: replaceVars
+#
+#   Replace global and tests vars with the given file
+#
+# Parameters:
+#
+#   file - path of the YAML file containing the new var values
+#
+sub replaceVars
+{
+    my ($self, $file) = @_;
+
+    my ($vars) = YAML::XS::LoadFile($file);
+    my $global = $vars->{global};
+    my $varTests = {};
+    foreach my $element (@{$vars->{tests}}) {
+        $varTests->{$element->{name}} = $element->{vars};
+    }
+
+    foreach my $test (@{$self->{tests}}) {
+        $test->addVariables($global);
+        my $name = $test->name();
+        if (exists $varTests->{$name}) {
+            $test->addVariables($varTests->{$name});
         }
     }
 }
