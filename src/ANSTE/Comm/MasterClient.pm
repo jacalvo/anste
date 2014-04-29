@@ -148,7 +148,8 @@ sub put
         }
     }
 
-    if (not defined $response or $response->fault) {
+    return 0 unless defined $response;
+    if ($response->fault) {
         die "SOAP request failed: $!";
     }
     my $result = $response->result;
