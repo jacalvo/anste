@@ -461,15 +461,17 @@ sub _runTest
             throw ANSTE::Exceptions::NotFound('Test dir', $path);
         }
 
-        my $tmpDir = tempdir();
-        my $dir = dirname($path);
         my $basename = basename($path);
-        my $zipFile = "$tmpDir/$name.zip";
-        unless(system("cd $dir && zip -qr $zipFile $basename") == 0) {
+        my $zipFile = "$newPath/$name.zip";
+
+        # Copy to temp directory dereferencing links and rename to test name
+        system("cp -r $path $newPath");
+        system("cp -r sikuli-lib/* $newPath/$basename") if (-d 'sikuli-lib');
+
+        unless(system("cd $newPath && zip -qr $zipFile $basename") == 0) {
             ANSTE::Exceptions::Error("Could not generate zip file '$zipFile'");
         }
         $self->_uploadFileToHost($hostname, $zipFile);
-        system("rm -r $tmpDir");
 
         $logfile = "$logPath/$suiteDir/$name.txt";
         my $scriptfile = "$logPath/$suiteDir/script/$name.txt";
