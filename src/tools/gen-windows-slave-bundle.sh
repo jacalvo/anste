@@ -35,7 +35,7 @@ cp $SRC_SRC_DIR/ANSTE/Exceptions/MissingArgument.pm $DST_SRC_DIR/ANSTE/Exception
 # Default anste.master
 echo "10.6.7.1:8001" > $TMP_DIR/anste/bin/anste.master
 
-echo "cd C:\anste\bin" > $TMP_DIR/anste.bat
+echo "c: & cd C:\anste\bin" > $TMP_DIR/anste.bat
 echo "perl anste-slave ready" >> $TMP_DIR/anste.bat
 echo "perl ansted" >> $TMP_DIR/anste.bat
 
