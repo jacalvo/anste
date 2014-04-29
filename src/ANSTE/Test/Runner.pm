@@ -476,11 +476,12 @@ sub _runTest
 
         my $execScript = "$newPath/$name.cmd";
         my @scriptContent = ();
-        # TODO: Unhardcode
         push(@scriptContent, "cd ../anste-bin/\n");
-        push(@scriptContent, "\"C:\\Program Files\\7-Zip\\7z.exe\" x $name.zip\n");
+        push(@scriptContent, "\"C:\\Program Files\\7-Zip\\7z.exe\" x -y $name.zip\n");
         push(@scriptContent, "set current=\%cd\%\n");
-        push(@scriptContent, "START cmd.exe /k \"c: & cd c:\\sikuli & runIDE.cmd -r \%current\%\\$basename\"");
+        push(@scriptContent, "c: & cd c:\\sikuli\n");
+        push(@scriptContent, "echo \%errorlevel\%\n");
+        push(@scriptContent, "call runIDE.cmd -r \"\%current\%\\$basename\"\n");
         write_file($execScript, @scriptContent);
 
         # Copy the script to the results adding env and params

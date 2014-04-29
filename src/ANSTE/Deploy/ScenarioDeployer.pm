@@ -84,7 +84,6 @@ sub new
 
     foreach my $host (@{$scenario->hosts()}) {
         my $ip = "$base.$number";
-        my $hostname = $host->name();
 
         # Add the bridges needed for each host if no manual bridging option is set
         unless ($scenario->manualBridging()) {
