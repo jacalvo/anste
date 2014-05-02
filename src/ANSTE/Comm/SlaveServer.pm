@@ -21,6 +21,7 @@ use warnings;
 use File::Basename;
 use File::Copy;
 use MIME::Base64;
+use POSIX;
 
 # Class: SlaveServer
 #
@@ -198,8 +199,7 @@ sub _execute
     my ($self, $command) = @_;
 
     my $name = fileparse($command);
-    my $date = `date +%y%m%d-%H-%M-%S`;
-    chomp($date);
+    my $date = strftime("%Y-%m-%d-%H:%M:%S", localtime(time));
 
     copy($command, "$LOGPATH/$name-$date");
     return system("\"$command\" > \"$LOGPATH/$name-$date.log\" 2>&1");
@@ -210,10 +210,7 @@ sub _executeSavingLog
     my ($self, $command, $log, $env, $params) = @_;
 
     my $name = fileparse($command);
-    # FIXME: Before the merge
-    #my $date = `date +%y%m%d-%H-%M-%S`;
-    #chomp($date);
-    my $date = 'ts';
+    my $date = strftime("%Y-%m-%d-%H:%M:%S", localtime(time));
     my $ret = system("$env \"$command\" $params > \"$log\" 2>&1");
 
     # Save the script and the log for debug purposes
