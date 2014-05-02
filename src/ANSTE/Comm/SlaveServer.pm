@@ -29,11 +29,8 @@ use POSIX;
 #   to handle the requests from the master client.
 #
 
-# FIXME: Before the merge
-#my $DIR = '/var/local/anste';
-#my $LOGPATH = '/var/log/anste';
-my $DIR = "../anste-bin";
-my $LOGPATH = "../anste-log";
+my $DIR = '/var/local/anste';
+my $LOGPATH = '/var/log/anste';
 
 # Method: put
 #
@@ -145,9 +142,7 @@ sub exec
             $ret = $self->_execute($command);
         }
         sleep 1; # Avoid notification before starting to wait for finish
-        # FIXME: Before the merge
-        #exec("/usr/local/bin/anste-slave finished $ret");
-        exec("perl anste-slave finished $ret");
+        exec("/usr/local/bin/anste-slave finished $ret");
         exit(0);
     } else {
         return 'OK';

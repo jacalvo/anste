@@ -23,9 +23,7 @@ use lib "$Bin/../src";
 
 use ANSTE::Comm::SlaveClient;
 
-# FIXME: Before the merge
-#use constant MASTER => '/var/local/anste.master';
-use constant MASTER => 'anste.master';
+use constant MASTER => '/var/local/anste.master';
 
 my $command = $ARGV[0];
 

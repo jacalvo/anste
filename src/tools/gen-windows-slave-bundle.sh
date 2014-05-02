@@ -17,18 +17,20 @@ DST_SRC_DIR=$TMP_DIR/anste/src
 
 mkdir -p $TMP_DIR/anste/anste-bin
 mkdir -p $TMP_DIR/anste/anste-log
-mkdir -p $DST_BIN_DIR
 
+mkdir -p $DST_BIN_DIR
 cp $SRC_BIN_DIR/anste-slave $DST_BIN_DIR
+sed -i 's|/var/local/anste\.master|anste.master|' $DST_BIN_DIR/anste-slave
 cp $SRC_BIN_DIR/ansted $DST_BIN_DIR
+sed -i -e 's|chdir(|#chdir(|' -e 's|open(|#open(|' -e 's|setsid(|#setsid(|' $DST_BIN_DIR/ansted
 
 mkdir -p $DST_SRC_DIR/ANSTE/Comm
-
 cp $SRC_SRC_DIR/ANSTE/Comm/SlaveServer.pm $DST_SRC_DIR/ANSTE/Comm
+sed -i -e 's|/var/local|..|' -e 's|/var/log|..|' -e 's|/usr/local/bin/|perl |' $DST_SRC_DIR/ANSTE/Comm/SlaveServer.pm
+sed -i -e 's|/sbin/reboot|shutdown -r -f -t 0|' $DST_SRC_DIR/ANSTE/Comm/SlaveServer.pm
 cp $SRC_SRC_DIR/ANSTE/Comm/SlaveClient.pm $DST_SRC_DIR/ANSTE/Comm
 
 mkdir -p $DST_SRC_DIR/ANSTE/Exceptions
-
 cp $SRC_SRC_DIR/ANSTE/Exceptions/Base.pm $DST_SRC_DIR/ANSTE/Exceptions
 cp $SRC_SRC_DIR/ANSTE/Exceptions/MissingArgument.pm $DST_SRC_DIR/ANSTE/Exceptions
 
