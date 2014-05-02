@@ -96,7 +96,7 @@ sub writeScript
         throw ANSTE::Exceptions::InvalidFile('file', $file);
     }
 
-    print $file "#!/bin/sh\n";
+    print $file "#!/bin/bash -e\n";
     my $name = $self->{host}->name();
     my $desc = $self->{host}->desc();
     print $file "\n# Configuration file for host $name\n";

@@ -4,6 +4,7 @@ HEAD
     + Use IP set to eth0 in the scenario if any
     + Added script to generate the bundle for the windows slaves
     + Allow anste-master to run multiple scripts in the same host
+    + Setup scripts now fail when any of the commands fail
     + Added support for global variables in test suites
     + Add support for trusty to properly bring up network interfaces
     + Remove TryCatch::Lite depend in anste-slave
