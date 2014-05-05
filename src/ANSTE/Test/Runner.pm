@@ -460,42 +460,10 @@ sub _runTest
             throw ANSTE::Exceptions::NotFound('Test dir', $path);
         }
 
-        my $basename = basename($path);
-
-        # Copy to temp directory dereferencing links and rename to test name
-        system("cp -r $path $newPath");
-        system("cp -r sikuli-lib/* $newPath/$basename") if (-d 'sikuli-lib');
-
-        # Generate and upload test zip
-        my $zipFile = "$newPath/$name.zip";
-        unless(system("cd $newPath && zip -qr $zipFile $basename") == 0) {
-            ANSTE::Exceptions::Error("Could not generate zip file '$zipFile'");
-        }
-        $self->_uploadFileToHost($hostname, $zipFile);
-
         $logfile = "$logPath/$suiteDir/$name.txt";
         my $scriptfile = "$logPath/$suiteDir/script/$name.txt";
 
-        # Generate test script
-        my $execScript = "$newPath/$name.cmd";
-        my @scriptContent = ();
-        push(@scriptContent, "cd ../anste-bin/\n");
-        push(@scriptContent, "\"C:\\Program Files\\7-Zip\\7z.exe\" x -y $name.zip\n");
-        push(@scriptContent, "set current=\%cd\%\n");
-        push(@scriptContent, "c: & cd c:\\sikuli\n");
-        push(@scriptContent, "echo \%errorlevel\%\n");
-        push(@scriptContent, "call runIDE.cmd -r \"\%current\%\\$basename\"\n");
-        write_file($execScript, @scriptContent);
-
-        # Copy the script to the results
-        my $SCRIPT;
-        open ($SCRIPT, '>', $scriptfile);
-        binmode ($SCRIPT, ':utf8');
-
-        my $scriptContent = read_file($execScript);
-        print $SCRIPT "# Test script executed:\n";
-        print $SCRIPT $scriptContent;
-        close ($SCRIPT);
+        my $execScript = $self->_prepareSikuliScript($path, $newPath, $test, $scriptfile);
 
         my $initialTime = time();
 
@@ -747,6 +715,50 @@ sub _runWebTest
     my $env = $test->env("\n");
 
     return $self->{system}->runTest($script, $logfile, $env, '');
+}
+
+sub _prepareSikuliScript
+{
+    my ($self, $path, $newPath, $test, $scriptfile) = @_;
+
+    my $basename = basename($path);
+    my $logPath = ANSTE::Config->instance()->logPath();
+    my $name = $test->name();
+    my $hostname = $test->host();
+
+    # Copy to temp directory dereferencing links and rename to test name
+    system ("cp -r $path $newPath");
+    system ("cp -r sikuli-lib/* $newPath/$basename") if (-d 'sikuli-lib');
+
+    # Generate and upload test zip
+    my $zipFile = "$newPath/$name.zip";
+    unless (system("cd $newPath && zip -qr $zipFile $basename") == 0) {
+        ANSTE::Exceptions::Error("Could not generate zip file '$zipFile'");
+    }
+    $self->_uploadFileToHost($hostname, $zipFile);
+
+    # Generate test script
+    my $execScript = "$newPath/$name.cmd";
+    my @scriptContent;
+    push (@scriptContent, "cd ../anste-bin/\n");
+    push (@scriptContent, "\"C:\\Program Files\\7-Zip\\7z.exe\" x -y $name.zip\n");
+    push (@scriptContent, "set current=\%cd\%\n");
+    push (@scriptContent, "c: & cd c:\\sikuli\n");
+    push (@scriptContent, "echo \%errorlevel\%\n");
+    push (@scriptContent, "call runIDE.cmd -r \"\%current\%\\$basename\"\n");
+    write_file($execScript, @scriptContent);
+
+    # Copy the script to the results
+    my $SCRIPT;
+    open ($SCRIPT, '>', $scriptfile);
+    binmode ($SCRIPT, ':utf8');
+
+    my $scriptContent = read_file($execScript);
+    print $SCRIPT "# Test script executed:\n";
+    print $SCRIPT $scriptContent;
+    close ($SCRIPT);
+
+    return $execScript
 }
 
 1;
