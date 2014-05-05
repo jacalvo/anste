@@ -449,8 +449,6 @@ sub _runTest
     system ("rm -rf $newPath");
     system ("mkdir -p $newPath");
 
-    my $assertFailed = $test->assert() eq 'failed';
-
     if ($type eq 'reboot') {
         $ret = $self->_reboot($hostname);
 
@@ -463,12 +461,13 @@ sub _runTest
         }
 
         my $basename = basename($path);
-        my $zipFile = "$newPath/$name.zip";
 
         # Copy to temp directory dereferencing links and rename to test name
         system("cp -r $path $newPath");
         system("cp -r sikuli-lib/* $newPath/$basename") if (-d 'sikuli-lib');
 
+        # Generate and upload test zip
+        my $zipFile = "$newPath/$name.zip";
         unless(system("cd $newPath && zip -qr $zipFile $basename") == 0) {
             ANSTE::Exceptions::Error("Could not generate zip file '$zipFile'");
         }
@@ -477,6 +476,7 @@ sub _runTest
         $logfile = "$logPath/$suiteDir/$name.txt";
         my $scriptfile = "$logPath/$suiteDir/script/$name.txt";
 
+        # Generate test script
         my $execScript = "$newPath/$name.cmd";
         my @scriptContent = ();
         push(@scriptContent, "cd ../anste-bin/\n");
@@ -487,7 +487,7 @@ sub _runTest
         push(@scriptContent, "call runIDE.cmd -r \"\%current\%\\$basename\"\n");
         write_file($execScript, @scriptContent);
 
-        # Copy the script to the results adding env and params
+        # Copy the script to the results
         my $SCRIPT;
         open ($SCRIPT, '>', $scriptfile);
         binmode ($SCRIPT, ':utf8');
@@ -498,32 +498,10 @@ sub _runTest
         close ($SCRIPT);
 
         my $initialTime = time();
+
         $ret = $self->_runScriptOnHost($hostname, $execScript, $logfile);
 
-        # Store end time
-        my $endTime = $self->_time();
-        $testResult->setEndTime($endTime);
-        $testResult->setDuration(time() - $initialTime);
-
-        if ($config->verbose()) {
-            if (($assertFailed and ($ret == 0)) or
-                (not $assertFailed) and ($ret != 0)) {
-                system ("cat $logfile");
-            }
-        }
-
-        # Editing the log to write the starting and ending times.
-        my $contents = read_file($logfile);
-        my $LOG;
-        open($LOG, '>', $logfile);
-        my $startTime = $testResult->startTime();
-        print $LOG "Starting test '$name' at $startTime.\n\n";
-        print $LOG $contents;
-        print $LOG "\nTest finished at $endTime.\n";
-        close($LOG);
-
-        $testResult->setLog("$logfile");
-        $testResult->setScript("$suiteDir/script/$name.txt");
+        $self->_finalizeLog($logfile, $test, $testResult, $initialTime, $ret, $verbose);
     } else {
         if (not -r $path) {
             $path = $config->scriptFile($testScript);
@@ -597,33 +575,11 @@ sub _runTest
                                            $logfile, $env, $params);
         }
 
-        # Store end time
-        my $endTime = $self->_time();
-        $testResult->setEndTime($endTime);
-        $testResult->setDuration(time() - $initialTime);
-
-        if ($config->verbose()) {
-            if (($assertFailed and ($ret == 0)) or
-                (not $assertFailed) and ($ret != 0)) {
-                system ("cat $logfile");
-            }
-        }
-
-        # Editing the log to write the starting and ending times.
-        my $contents = read_file($logfile);
-        my $LOG;
-        open($LOG, '>', $logfile);
-        my $startTime = $testResult->startTime();
-        print $LOG "Starting test '$name' at $startTime.\n\n";
-        print $LOG $contents;
-        print $LOG "\nTest finished at $endTime.\n";
-        close($LOG);
-
-        $testResult->setLog("$logfile");
-        $testResult->setScript("$suiteDir/script/$name.txt");
+        $self->_finalizeLog($logfile, $test, $testResult, $initialTime, $ret, $verbose);
     }
 
     # Invert the result of the test when checking for fail
+    my $assertFailed = $test->assert() eq 'failed';
     if ($assertFailed) {
         $ret = ($ret != 0) ? 0 : 1;
     }
@@ -634,6 +590,40 @@ sub _runTest
     }
 
     return $testResult;
+}
+
+sub _finalizeLog
+{
+    my ($self, $logfile, $test, $testResult, $initialTime, $ret, $verbose) = @_;
+
+    my $name = $test->name();
+    my $assertFailed = $test->assert() eq 'failed';
+
+    # Store end time
+    my $endTime = $self->_time();
+    $testResult->setEndTime($endTime);
+    $testResult->setDuration(time() - $initialTime);
+
+    if (ANSTE::Config->instance()->verbose()) {
+        if (($assertFailed and ($ret == 0)) or
+            (not $assertFailed) and ($ret != 0)) {
+            system ("cat $logfile");
+        }
+    }
+
+    # Editing the log to write the starting and ending times.
+    my $contents = read_file($logfile);
+    my $LOG;
+    open($LOG, '>', $logfile);
+    my $startTime = $testResult->startTime();
+    print $LOG "Starting test '$name' at $startTime.\n\n";
+    print $LOG $contents;
+    print $LOG "\nTest finished at $endTime.\n";
+    close($LOG);
+
+    $testResult->setLog("$logfile");
+    my $suiteDir = $self->{suite}->dir();
+    $testResult->setScript("$suiteDir/script/$name.txt");
 }
 
 sub _time
