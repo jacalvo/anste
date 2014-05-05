@@ -37,7 +37,9 @@ use ANSTE::Util;
 use Cwd;
 use Text::Template;
 use Safe;
+use File::Basename;
 use File::Slurp;
+use File::Temp qw(tempdir);
 use TryCatch::Lite;
 
 my $SUITE_FILE = 'suite.html';
@@ -447,14 +449,59 @@ sub _runTest
     system ("rm -rf $newPath");
     system ("mkdir -p $newPath");
 
-    my $assertFailed = $test->assert() eq 'failed';
-
     if ($type eq 'reboot') {
         $ret = $self->_reboot($hostname);
 
         # Store end time
         my $endTime = $self->_time();
         $testResult->setEndTime($endTime);
+    } elsif ($type eq 'sikuli') {
+        if (not -d $path) {
+            throw ANSTE::Exceptions::NotFound('Test dir', $path);
+        }
+
+        my $basename = basename($path);
+
+        # Copy to temp directory dereferencing links and rename to test name
+        system("cp -r $path $newPath");
+        system("cp -r sikuli-lib/* $newPath/$basename") if (-d 'sikuli-lib');
+
+        # Generate and upload test zip
+        my $zipFile = "$newPath/$name.zip";
+        unless(system("cd $newPath && zip -qr $zipFile $basename") == 0) {
+            ANSTE::Exceptions::Error("Could not generate zip file '$zipFile'");
+        }
+        $self->_uploadFileToHost($hostname, $zipFile);
+
+        $logfile = "$logPath/$suiteDir/$name.txt";
+        my $scriptfile = "$logPath/$suiteDir/script/$name.txt";
+
+        # Generate test script
+        my $execScript = "$newPath/$name.cmd";
+        my @scriptContent = ();
+        push(@scriptContent, "cd ../anste-bin/\n");
+        push(@scriptContent, "\"C:\\Program Files\\7-Zip\\7z.exe\" x -y $name.zip\n");
+        push(@scriptContent, "set current=\%cd\%\n");
+        push(@scriptContent, "c: & cd c:\\sikuli\n");
+        push(@scriptContent, "echo \%errorlevel\%\n");
+        push(@scriptContent, "call runIDE.cmd -r \"\%current\%\\$basename\"\n");
+        write_file($execScript, @scriptContent);
+
+        # Copy the script to the results
+        my $SCRIPT;
+        open ($SCRIPT, '>', $scriptfile);
+        binmode ($SCRIPT, ':utf8');
+
+        my $scriptContent = read_file($execScript);
+        print $SCRIPT "# Test script executed:\n";
+        print $SCRIPT $scriptContent;
+        close ($SCRIPT);
+
+        my $initialTime = time();
+
+        $ret = $self->_runScriptOnHost($hostname, $execScript, $logfile);
+
+        $self->_finalizeLog($logfile, $test, $testResult, $initialTime, $ret, $verbose);
     } else {
         if (not -r $path) {
             $path = $config->scriptFile($testScript);
@@ -468,9 +515,10 @@ sub _runTest
         my $scriptfile = "$logPath/$suiteDir/script/$name.txt";
 
         # Copy to temp directory dereferencing links and rename to test name
-        system("cp $path $newPath/$name");
+        my $execScript = "$newPath/$name";
+        system("cp $path $execScript");
         system("cp -r lib/* $newPath/") if (-d 'lib');
-        system("chmod +x $newPath/$name");
+        system("chmod +x $execScript");
 
         my $env = $test->env();
         my $params = $test->params();
@@ -497,7 +545,7 @@ sub _runTest
         my $initialTime = time();
 
         if ($type eq 'host') {
-            $ret = $self->{system}->runTest("$newPath/$name",
+            $ret = $self->{system}->runTest($execScript,
                                              $logfile, $env, $params);
         } elsif ($type eq 'web') {
             my $videofile;
@@ -507,7 +555,7 @@ sub _runTest
                 $system->startVideoRecording($videofile);
             }
 
-            $ret = $self->_runWebTest($test, "$newPath/$name", $logfile);
+            $ret = $self->_runWebTest($test, $execScript, $logfile);
 
             if ($video) {
                 print "Ending video recording for test $name... " if $verbose;
@@ -523,37 +571,15 @@ sub _runTest
                 }
             }
         } else {
-            $ret = $self->_runScriptOnHost($hostname, "$newPath/$name",
+            $ret = $self->_runScriptOnHost($hostname, $execScript,
                                            $logfile, $env, $params);
         }
 
-        # Store end time
-        my $endTime = $self->_time();
-        $testResult->setEndTime($endTime);
-        $testResult->setDuration(time() - $initialTime);
-
-        if ($config->verbose()) {
-            if (($assertFailed and ($ret == 0)) or
-                (not $assertFailed) and ($ret != 0)) {
-                system ("cat $logfile");
-            }
-        }
-
-        # Editing the log to write the starting and ending times.
-        my $contents = read_file($logfile);
-        my $LOG;
-        open($LOG, '>', $logfile);
-        my $startTime = $testResult->startTime();
-        print $LOG "Starting test '$name' at $startTime.\n\n";
-        print $LOG $contents;
-        print $LOG "\nTest finished at $endTime.\n";
-        close($LOG);
-
-        $testResult->setLog("$logfile");
-        $testResult->setScript("$suiteDir/script/$name.txt");
+        $self->_finalizeLog($logfile, $test, $testResult, $initialTime, $ret, $verbose);
     }
 
     # Invert the result of the test when checking for fail
+    my $assertFailed = $test->assert() eq 'failed';
     if ($assertFailed) {
         $ret = ($ret != 0) ? 0 : 1;
     }
@@ -564,6 +590,40 @@ sub _runTest
     }
 
     return $testResult;
+}
+
+sub _finalizeLog
+{
+    my ($self, $logfile, $test, $testResult, $initialTime, $ret, $verbose) = @_;
+
+    my $name = $test->name();
+    my $assertFailed = $test->assert() eq 'failed';
+
+    # Store end time
+    my $endTime = $self->_time();
+    $testResult->setEndTime($endTime);
+    $testResult->setDuration(time() - $initialTime);
+
+    if (ANSTE::Config->instance()->verbose()) {
+        if (($assertFailed and ($ret == 0)) or
+            (not $assertFailed) and ($ret != 0)) {
+            system ("cat $logfile");
+        }
+    }
+
+    # Editing the log to write the starting and ending times.
+    my $contents = read_file($logfile);
+    my $LOG;
+    open($LOG, '>', $logfile);
+    my $startTime = $testResult->startTime();
+    print $LOG "Starting test '$name' at $startTime.\n\n";
+    print $LOG $contents;
+    print $LOG "\nTest finished at $endTime.\n";
+    close($LOG);
+
+    $testResult->setLog("$logfile");
+    my $suiteDir = $self->{suite}->dir();
+    $testResult->setScript("$suiteDir/script/$name.txt");
 }
 
 sub _time
@@ -596,6 +656,21 @@ sub _reboot
     my $ret = $waiter->waitForExecution($hostname);
 
     return $ret;
+}
+
+sub _uploadFileToHost
+{
+    my ($self, $hostname, $file) = @_;
+
+    my $client = new ANSTE::Comm::MasterClient();
+
+    my $config = ANSTE::Config->instance();
+    my $port = $config->anstedPort();
+    my $ip = $self->{hostIP}->{$hostname};
+
+    $client->connect("http://$ip:$port");
+
+    $client->put($file);
 }
 
 sub _runScriptOnHost

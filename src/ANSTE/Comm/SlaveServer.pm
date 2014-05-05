@@ -19,7 +19,9 @@ use strict;
 use warnings;
 
 use File::Basename;
+use File::Copy;
 use MIME::Base64;
+use POSIX;
 
 # Class: SlaveServer
 #
@@ -52,6 +54,7 @@ sub put
 
     my $FILE;
     if (open($FILE, '>', "$DIR/$name")) {
+        binmode $FILE;
         print $FILE $content;
         close $FILE or die "Can't close: $!";
         if ($name =~ /\.tar$/) {
@@ -191,11 +194,10 @@ sub _execute
     my ($self, $command) = @_;
 
     my $name = fileparse($command);
-    my $date = `date +%y%m%d-%H-%M-%S`;
-    chomp($date);
+    my $date = strftime("%Y-%m-%d-%H:%M:%S", localtime(time));
 
-    system("cp $command '$LOGPATH/$name-$date'");
-    return system("$command > $LOGPATH/$name-$date.log 2>&1");
+    copy($command, "$LOGPATH/$name-$date");
+    return system("\"$command\" > \"$LOGPATH/$name-$date.log\" 2>&1");
 }
 
 sub _executeSavingLog
@@ -203,13 +205,12 @@ sub _executeSavingLog
     my ($self, $command, $log, $env, $params) = @_;
 
     my $name = fileparse($command);
-    my $date = `date +%y%m%d-%H-%M-%S`;
-    chomp($date);
-    my $ret = system("$env $command $params > '$log' 2>&1");
+    my $date = strftime("%Y-%m-%d-%H:%M:%S", localtime(time));
+    my $ret = system("$env \"$command\" $params > \"$log\" 2>&1");
 
     # Save the script and the log for debug purposes
-    system("cp $command '$LOGPATH/$name-$date'");
-    system("cp '$log' '$LOGPATH/$name-$date.log'");
+    copy($command, "$LOGPATH/$name-$date");
+    copy($log, "$LOGPATH/$name-$date.log");
 
     return $ret;
 }

@@ -128,6 +128,7 @@ sub put
     # Reads the data
     my $FILE;
     open($FILE, '<', $file) or die "Can't open(): $!";
+    binmode $FILE;
     my $content;
     read($FILE, $content, $size);
     close($FILE);
@@ -147,6 +148,7 @@ sub put
         }
     }
 
+    return 0 unless defined $response;
     if ($response->fault) {
         die "SOAP request failed: $!";
     }

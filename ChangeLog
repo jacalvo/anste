@@ -1,4 +1,9 @@
 HEAD
+    + Added 'sikuli' test type to run sikuli tests in Windows machines
+    + Use binmode in the file handler for the put command
+    + Use IP set to eth0 in the scenario if any
+    + Added script to generate the bundle for the windows slaves
+    + Allow anste-master to run multiple scripts in the same host
     + New -vars option to override test vars with values in YAML file
     + Allow to substitute test variables with global values using $
     + Tests marked as setup or critical are not executed with -reuse

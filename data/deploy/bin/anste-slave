@@ -24,7 +24,6 @@ use lib "$Bin/../src";
 use ANSTE::Comm::SlaveClient;
 
 use constant MASTER => '/var/local/anste.master';
-use constant PORT => 8001;
 
 my $command = $ARGV[0];
 
