@@ -189,7 +189,7 @@ sub runSuite
         print "Finished deployment of scenario '$sceName'.\n"
             if not $reuse;
 
-        $self->_runTests();
+        $self->_runTests($reuse);
     } catch (ANSTE::Exceptions::Error $e) {
         my $msg = $e->message();
         print "ERROR: $msg\n";
@@ -266,7 +266,7 @@ sub _loadScenario
 
 sub _runTests
 {
-    my ($self) = @_;
+    my ($self, $reuse) = @_;
 
     my $config = ANSTE::Config->instance();
     my $suite = $self->{suite};
@@ -282,6 +282,7 @@ sub _runTests
     my $executeOnlyForcedTests = 0;
 
     foreach my $test (@{$suite->tests()}) {
+        next if ($reuse and $test->critical());
         next if ($executeOnlyForcedTests and not $test->executeAlways());
 
         my $skip = 0;

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2007-2014 José Antonio Calvo Fernández <jacalvo@zentyal.com>
 # Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -53,8 +53,10 @@ my $out = '';
 my $path = '';
 my $video = '';
 my $format = '';
+my $varfile = '';
 my $wait = 0;
 my $waitFail = 0;
+my $noDestroy = 0;
 my $help = 0;
 my $quiet = 0;
 my $step = 0;
@@ -71,9 +73,11 @@ GetOptions('createimg' => \$create,
            'out=s' => \$out,
            'video' => \$video,
            'format=s' => \$format,
+           'vars=s' => \$varfile,
            'quiet' => \$quiet,
            'wait' => \$wait,
            'wait-fail' => \$waitFail,
+           'nodestroy' => \$noDestroy,
            'reuse' => \$reuse,
            'step' => \$step,
            'break=s' => \$break,
@@ -113,6 +117,9 @@ if ($wait) {
 }
 if ($waitFail) {
     $config->setWaitFail(1);
+}
+if ($noDestroy) {
+    $config->setNoDestroy(1);
 }
 if ($out) {
     $config->setLogPath($out);
@@ -354,7 +361,7 @@ sub destroy # (file)
     $deployer->destroy();
 }
 
-sub test # (file)
+sub test
 {
     my ($file) = @_;
 
@@ -363,7 +370,7 @@ sub test # (file)
     try {
         if (ANSTE::Validate::suite($file)) {
             my $suite = new ANSTE::Test::Suite;
-            $suite->loadFromDir($file);
+            $suite->loadFromDir($file, $varfile);
             $runner->runSuite($suite);
         } else {
             $runner->runDir($file);
@@ -425,10 +432,12 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -format <fmt>      select the output format for the reports
    -wait              wait before shutting down once the test is completed
    -wait-fail         wait if a test fails
+   -nodestroy         keep scenario running after tests have finished
    -step              run tests step by step, waiting after each one
    -break <t1,t2,...> set breakpoints after the given test names
    -quiet             do not show output of commands
    -reuse             reuse the created image if exists (with -create)
                       reuse a deployed scenario (with -test)
+   -vars <file>       override suite variables with the given YAML file
 
 =cut

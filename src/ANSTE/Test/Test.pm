@@ -501,6 +501,12 @@ sub addVariables
         unless ($value) {
             $value = '';
         }
+        if (substr ($value, 0, 1) eq '$') {
+            my $var = substr ($value, 1, length ($value));
+            if (exists $self->{variables}->{$var}) {
+                $value = $self->{variables}->{$var};
+            }
+        }
         $self->setVariable($name, $value);
     }
 }
@@ -636,7 +642,7 @@ sub loadYAML
     if ($type) {
         $self->setType($type);
     }
-    my $critical = $test->{critical};
+    my $critical = ($test->{critical} or $test->{setup});
     if ($critical) {
         $self->setCritical(1);
     }

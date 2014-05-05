@@ -205,6 +205,8 @@ sub destroy
 {
     my ($self) = @_;
 
+    return if ANSTE::Config->instance()->noDestroy();
+
     my $deployers = $self->{deployers};
 
     foreach my $deployer (@{$deployers}) {
