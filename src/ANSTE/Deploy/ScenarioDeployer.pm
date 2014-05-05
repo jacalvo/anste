@@ -74,6 +74,7 @@ sub new
     $self->{deployers} = [];
 
     my $firstAddress = $config->firstAddress();
+    my $commIface = $config->commIface();
 
     # Separate the last number of the ip in order to increment it.
     my ($base, $number) =
@@ -96,7 +97,7 @@ sub new
                 }
 
                 # IP for the Host from the scenario
-                if ($iface->name() eq 'eth0') {
+                if ($iface->name() eq $commIface) {
                     $ip = $iface->address();
                 }
             }
