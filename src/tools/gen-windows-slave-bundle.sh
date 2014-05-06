@@ -26,7 +26,7 @@ sed -i -e 's|chdir(|#chdir(|' -e 's|open(|#open(|' -e 's|setsid(|#setsid(|' $DST
 
 mkdir -p $DST_SRC_DIR/ANSTE/Comm
 cp $SRC_SRC_DIR/ANSTE/Comm/SlaveServer.pm $DST_SRC_DIR/ANSTE/Comm
-sed -i -e 's|/var/local|..|' -e 's|/var/log|..|' -e 's|/usr/local/bin/|perl |' $DST_SRC_DIR/ANSTE/Comm/SlaveServer.pm
+sed -i -e 's|/var/local/anste|../anste-bin|' -e 's|/var/log/anste|../anste-log|' -e 's|/usr/local/bin/|perl |' $DST_SRC_DIR/ANSTE/Comm/SlaveServer.pm
 sed -i -e 's|/sbin/reboot|shutdown -r -f -t 0|' $DST_SRC_DIR/ANSTE/Comm/SlaveServer.pm
 cp $SRC_SRC_DIR/ANSTE/Comm/SlaveClient.pm $DST_SRC_DIR/ANSTE/Comm
 
