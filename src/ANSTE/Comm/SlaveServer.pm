@@ -194,7 +194,7 @@ sub _execute
     my ($self, $command) = @_;
 
     my $name = fileparse($command);
-    my $date = strftime("%Y-%m-%d-%H:%M:%S", localtime(time));
+    my $date = strftime("%Y%m%d-%H-%M-%S", localtime(time));
 
     copy($command, "$LOGPATH/$name-$date");
     return system("\"$command\" > \"$LOGPATH/$name-$date.log\" 2>&1");
@@ -205,7 +205,7 @@ sub _executeSavingLog
     my ($self, $command, $log, $env, $params) = @_;
 
     my $name = fileparse($command);
-    my $date = strftime("%Y-%m-%d-%H:%M:%S", localtime(time));
+    my $date = strftime("%Y%m%d-%H-%M-%S", localtime(time));
     my $ret = system("$env \"$command\" $params > \"$log\" 2>&1");
 
     # Save the script and the log for debug purposes
