@@ -737,6 +737,9 @@ sub _prepareSikuliScript
     }
     $self->_uploadFileToHost($hostname, $zipFile);
 
+    my $env = $test->env();
+    my $variables = $test->variables();
+
     # Generate test script
     my $execScript = "$newPath/$name.cmd";
     my @scriptContent;
@@ -745,6 +748,9 @@ sub _prepareSikuliScript
     push (@scriptContent, "set current=\%cd\%\n");
     push (@scriptContent, "c: & cd c:\\sikuli\n");
     push (@scriptContent, "echo \%errorlevel\%\n");
+    while (my ($name, $value) = each(%{$variables})) {
+        push (@scriptContent, "set $name=$value\n");
+    }
     push (@scriptContent, "call runIDE.cmd -r \"\%current\%\\$basename\"\n");
     write_file($execScript, @scriptContent);
 
@@ -752,6 +758,12 @@ sub _prepareSikuliScript
     my $SCRIPT;
     open ($SCRIPT, '>', $scriptfile);
     binmode ($SCRIPT, ':utf8');
+
+    if ($env) {
+        my $envStr = "# Environment passed to the test:\n";
+        $envStr .= "# $env\n";
+        print $SCRIPT $envStr;
+    }
 
     my $scriptContent = read_file($execScript);
     print $SCRIPT "# Test script executed:\n";
