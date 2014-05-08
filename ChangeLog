@@ -1,4 +1,6 @@
 HEAD
+    + Added pre-update and post-update sections in the base image definitions
+    + Added updateimg command that allow the update of base images
     + Added 'sikuli' test type to run sikuli tests in Windows machines
     + Use binmode in the file handler for the put command
     + Use IP set to eth0 in the scenario if any

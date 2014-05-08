@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -58,6 +59,8 @@ sub new
     $self->{files} = new ANSTE::Scenario::Files();
     $self->{'pre-scripts'} = [];
     $self->{'post-scripts'} = [];
+    $self->{'pre-update-scripts'} = [];
+    $self->{'post-update-scripts'} = [];
     $self->{'post-tests-scripts'} = [];
     $self->{mirror} = '';
 
@@ -527,6 +530,36 @@ sub setFiles
     $self->{files} = $files;
 }
 
+# Method: preUpdateScripts
+#
+#   Gets the list of scripts that have to be executed before the update.
+#
+# Returns:
+#
+#   ref - reference to the list of script names
+#
+sub preUpdateScripts # returns list ref
+{
+    my ($self) = @_;
+
+    return $self->{'pre-update-scripts'};
+}
+
+# Method: postUpdateScripts
+#
+#   Gets the list of scripts that have to be executed after the update.
+#
+# Returns:
+#
+#   ref - reference to the list of script names
+#
+sub postUpdateScripts # returns list ref
+{
+    my ($self) = @_;
+
+    return $self->{'post-update-scripts'};
+}
+
 # Method: preScripts
 #
 #   Gets the list of scripts that have to be executed before the setup.
@@ -716,6 +749,16 @@ sub _loadFromYAML
     my $postInstallScripts = $image->{'post-install'};
     if ($postInstallScripts) {
         $self->_addScriptsFromYAML('post-scripts', $postInstallScripts);
+    }
+
+    my $preUpdateScripts = $image->{'pre-update'};
+    if ($preUpdateScripts) {
+        $self->_addScriptsFromYAML('pre-update-scripts', $preUpdateScripts);
+    }
+
+    my $postUpdateScripts = $image->{'post-update'};
+    if ($postUpdateScripts) {
+        $self->_addScriptsFromYAML('post-update-scripts', $postUpdateScripts);
     }
 
     my $postScriptsScripts = $image->{'post-tests'};

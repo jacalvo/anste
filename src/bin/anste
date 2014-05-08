@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # Copyright (C) 2007-2014 José Antonio Calvo Fernández <jacalvo@zentyal.com>
-# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
+# Copyright (C) 2013-2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -28,6 +28,7 @@ use ANSTE::Image::Creator;
 use ANSTE::Image::Getter;
 use ANSTE::Image::Image;
 use ANSTE::Deploy::ScenarioDeployer;
+use ANSTE::Scenario::BaseImage;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Exceptions::InvalidFile;
 use ANSTE::Test::Suite;
@@ -44,6 +45,7 @@ use Fcntl qw(:flock);
 use constant LOCK_FILE => '/var/run/anste.lock';
 
 my $create = '';
+my $update = '';
 my $getimg = '';
 my $remove = '';
 my $deploy = '';
@@ -64,6 +66,7 @@ my $reuse = 0;
 my $break = '';
 
 GetOptions('createimg' => \$create,
+           'updateimg' => \$update,
            'getimg' => \$getimg,
            'remove' => \$remove,
            'deploy' => \$deploy,
@@ -85,7 +88,7 @@ GetOptions('createimg' => \$create,
 
 pod2usage(1) if $help;
 
-if (none($create, $getimg, $remove, $deploy, $shutdown, $test) == 1) {
+if (none($create, $update, $getimg, $remove, $deploy, $shutdown, $test) == 1) {
     pod2usage("$0: No action specified.");
 }
 
@@ -200,6 +203,8 @@ my $ret = 0;
 foreach my $file (@files) {
     if ($create) {
         create($file);
+    } elsif ($update) {
+        update($file);
     } elsif ($getimg) {
         getimg($file);
     } elsif ($remove) {
@@ -263,6 +268,41 @@ sub create # (file)
     }
 }
 
+sub update # (file)
+{
+    my ($file) = @_;
+
+    my $image = new ANSTE::Scenario::BaseImage();
+
+    try {
+        $image->loadFromFile($file);
+    } catch (ANSTE::Exceptions::InvalidFile $e) {
+        # Try with '$file' as the image name
+        $image->setName($file);
+        my $creator = new ANSTE::Image::Creator($image);
+        if (not $creator->update()) {
+            my $filename = $e->file();
+            print STDERR "Image '$file' does not exists.\n";
+            print STDERR "Reason: Can't open file $filename.\n";
+            exit(1);
+        }
+
+        return 0;
+    } catch (ANSTE::Exceptions::Error $e) {
+        my $msg = $e->message();
+        print STDERR "Error updating image $file:\n";
+        print STDERR "$msg\n";
+        exit(1);
+    }
+
+    my $creator = new ANSTE::Image::Creator($image);
+    if (not $creator->update()) {
+        my $name = $image->name();
+        print STDERR "The update on the image $name was not successful.\n";
+        exit(1);
+    }
+}
+
 sub getimg # (file)
 {
     my ($name) = @_;
@@ -290,7 +330,7 @@ sub remove # (file)
         my $cmd = new ANSTE::Image::Commands($image);
         if (not $cmd->deleteImage()) {
             my $filename = $e->file();
-            print STDERR "Can't load scenario $file.\n";
+            print STDERR "Image '$file' does not exists.\n";
             print STDERR "Reason: Can't open file $filename.\n";
             exit(1);
         }
@@ -421,6 +461,7 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
  Options:
    -help              show this help
    -createimg         create a base image
+   -updateimg         update a base image
    -getimg            download a base image
    -remove            delete a base image
    -deploy            deploy a scenario
