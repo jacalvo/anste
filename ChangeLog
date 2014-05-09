@@ -1,4 +1,8 @@
 HEAD
+    + Added deploy/auto-update config key to enable/disable the auto-update
+      of base images before the deploy of scenarios
+    + Added pre-update and post-update sections in the base image definitions
+    + Added updateimg command that allow the update of base images
     + Added 'sikuli' test type to run sikuli tests in Windows machines
     + Use binmode in the file handler for the put command
     + Use IP set to eth0 in the scenario if any

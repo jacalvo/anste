@@ -1,5 +1,5 @@
 # Copyright (C) 2007-2013 José Antonio Calvo Fernández <jacalvo@zentyal.com>
-# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
+# Copyright (C) 2013-2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -436,6 +436,69 @@ sub prepareSystem
     # Execute post-install scripts
     ANSTE::info("Executing post-setup scripts...") if $config->verbose();
     $self->executeScripts($image->postScripts());
+
+    return 1;
+}
+
+# Method: updateSystem
+#
+#   Updates a base image executing the proper pre-update, update
+#   and post-update scripts.
+#   The update script is generated before its execution.
+#
+# Returns:
+#
+#   boolean - true if success, false otherwise
+#
+# Exceptions:
+#
+#   TODO: change dies to throw exception
+#
+sub updateSystem
+{
+    my ($self) = @_;
+
+    my $image = $self->{image};
+    my $hostname = $image->name();
+
+    my $client = new ANSTE::Comm::MasterClient;
+
+    my $config = ANSTE::Config->instance();
+    my $port = $config->anstedPort();
+    my $ip = $self->ip();
+    $client->connect("http://$ip:$port");
+
+    $self->createVirtualMachine();
+
+    # Execute pre-update scripts
+    ANSTE::info("[$hostname] Executing pre-update scripts...\n") if $config->verbose();
+    $self->executeScripts($image->preUpdateScripts());
+
+    my $updateScript = '/tmp/update.sh';
+
+    my $FILE;
+    open($FILE, '>', $updateScript)
+        or die "Can't create $updateScript: $!";
+
+    my $system = $self->{system};
+    my $script = '';
+    $script .= $system->updatePackagesCommand() . "\n";
+    $script .= $system->updateSystemCommand() . "\n";
+    $script .= $system->cleanPackagesCommand() . "\n";
+    print $FILE $script;
+
+    close($FILE)
+        or die "Can't close file $updateScript: $!";
+
+    # TODO: Change name
+    $self->_executeSetup($client, $updateScript);
+
+    unlink($updateScript)
+        or die "Can't remove $updateScript: $!";
+
+    # Execute post-update scripts
+    ANSTE::info("Executing post-update scripts...") if $config->verbose();
+    $self->executeScripts($image->postUpdateScripts());
 
     return 1;
 }

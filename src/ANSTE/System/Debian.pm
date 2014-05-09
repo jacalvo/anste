@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -165,6 +166,22 @@ sub updatePackagesCommand
     my ($self) = @_;
 
     return 'apt-get update';
+}
+
+# Method: updateSystemCommand
+#
+#   Overridden method that returns the Debian command
+#   to update the system (dist-upgrade)
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+sub updateSystemCommand
+{
+    my ($self) = @_;
+
+    return 'apt-get dist-upgrade -y';
 }
 
 # Method: updateNetworkCommand

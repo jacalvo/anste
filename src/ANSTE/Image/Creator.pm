@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2013 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -168,6 +169,67 @@ sub createImage
     $virtualizer->destroyNetwork($scenario);
 
     print "[$name] Image creation finished.\n";
+
+    return 1;
+}
+
+# Method: update
+#
+#   Updates the image using the virtualizer interface
+#
+sub update
+{
+    my ($self) = @_;
+
+    my $image = $self->{image};
+    my $name = $image->name();
+
+    my $cmd = new ANSTE::Image::Commands($image);
+
+    if (not $cmd->exists()) {
+        print "[$name] Cannot update an image that does not exists.\n";
+        return 0;
+    }
+
+    # Starts Master Server thread
+    my $server = new ANSTE::Comm::WaiterServer();
+    $server->startThread();
+
+    # Set up the network before deploy
+    print "[$name] Setting up network...\n";
+    my $virtualizer = $self->{virtualizer};
+
+    # Get the network address for the communications interface
+    # and add the bridge to the a mock scenario
+    my $scenario = new ANSTE::Scenario::Scenario();
+    my $firstAddress = ANSTE::Config->instance()->firstAddress();
+    my ($net, $unused) =
+        $firstAddress =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3})\.(\d{1,3})$/;
+    $scenario->addBridge($net);
+
+    $virtualizer->createNetwork($scenario)
+        or throw ANSTE::Exceptions::Error('Error creating network.');
+    print "done.\n";
+
+    try {
+        print "[$name] Starting to update the image...\n";
+
+        $cmd->updateSystem()
+            or throw ANSTE::Exceptions::Error('Error updating system.');
+    } catch (ANSTE::Exceptions::Error $e) {
+        my $msg = $e->message();
+        print "ERROR: $msg\n";
+        $self->_shutdown($cmd);
+        $e->throw();
+    } catch ($e) {
+        print "ERROR: $e\n";
+    }
+    $self->_shutdown($cmd);
+
+    $virtualizer->destroyNetwork($scenario);
+
+
+    print "[$name] Image update finished.\n";
 
     return 1;
 }
