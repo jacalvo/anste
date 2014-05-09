@@ -1542,6 +1542,7 @@ sub _setDefaults
     $self->{default}->{'global'}->{'wait'} = 0;
     $self->{default}->{'global'}->{'wait-fail'} = 0;
     $self->{default}->{'global'}->{'reuse'} = 0;
+    $self->{default}->{'global'}->{'nodestroy'} = 0;
 
     $self->{default}->{'paths'}->{'images'} = '/tmp/images';
     $self->{default}->{'paths'}->{'deploy'} = "$data/deploy";
