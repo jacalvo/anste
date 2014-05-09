@@ -277,17 +277,10 @@ sub update # (file)
     try {
         $image->loadFromFile($file);
     } catch (ANSTE::Exceptions::InvalidFile $e) {
-        # Try with '$file' as the image name
-        $image->setName($file);
-        my $creator = new ANSTE::Image::Creator($image);
-        if (not $creator->update()) {
-            my $filename = $e->file();
-            print STDERR "Image '$file' does not exist.\n";
-            print STDERR "Reason: Can't open file $filename.\n";
-            exit(1);
-        }
-
-        return 0;
+        my $filename = $e->file();
+        print STDERR "Image '$file' does not exist.\n";
+        print STDERR "Reason: Can't open file $filename.\n";
+        exit(1);
     } catch (ANSTE::Exceptions::Error $e) {
         my $msg = $e->message();
         print STDERR "Error updating image $file:\n";
