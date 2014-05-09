@@ -31,6 +31,9 @@ use ANSTE::Exceptions::InvalidType;
 use ANSTE::Virtualizer::Virtualizer;
 use ANSTE::Image::Commands;
 
+use File::Slurp;
+use POSIX;
+
 # Class: ScenarioDeployer
 #
 #   Deploys a given scenario creating its corresponding virtual machines
@@ -279,24 +282,38 @@ sub _autoUpdateBaseImages
 {
     my ($self) = @_;
 
+    my $config = ANSTE::Config->instance();
+    my $imgdir = $config->imagePath();
+
+    my $timestamp = strftime("%Y%m%d", localtime(time));
+
     # TODO: Update base images at the same time
     my $scenario = $self->{scenario};
     foreach my $host (@{$scenario->hosts()}) {
         my $hostname = $host->name();
         my $baseimage = $host->baseImage();
+        my $name = $baseimage->name();
 
-        # TODO: Check timestamp and only update if not updated today
+        my $tsFile = "$imgdir/$name/last-update";
+        my $lastUpdateTS = read_file($tsFile, err_mode => 'quiet');
+        chomp($lastUpdateTS) if $lastUpdateTS;
 
-        ANSTE::info("[$hostname] Auto-updating base image...");
+        # Only update if not updated today
+        if(not $lastUpdateTS or ($lastUpdateTS lt $timestamp)) {
+            ANSTE::info("[$hostname] Auto-updating base image...");
 
-        my $cmd = new ANSTE::Image::Commands($baseimage);
+            my $cmd = new ANSTE::Image::Commands($baseimage);
 
-        if ($cmd->updateSystem()) {
-            ANSTE::info("[$hostname] Auto-update completed successfully.");
-        } else {
-            ANSTE::info("[$hostname] Could not update base image.");
+            if ($cmd->updateSystem()) {
+                ANSTE::info("[$hostname] Auto-update completed successfully.");
+            } else {
+                ANSTE::info("[$hostname] Could not update base image.");
+            }
+            $cmd->shutdown();
+
+            # Update timestamp
+            write_file($tsFile, $timestamp);
         }
-        $cmd->shutdown();
     }
 }
 
