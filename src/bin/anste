@@ -282,7 +282,7 @@ sub update # (file)
         my $creator = new ANSTE::Image::Creator($image);
         if (not $creator->update()) {
             my $filename = $e->file();
-            print STDERR "Image '$file' does not exists.\n";
+            print STDERR "Image '$file' does not exist.\n";
             print STDERR "Reason: Can't open file $filename.\n";
             exit(1);
         }
@@ -330,7 +330,7 @@ sub remove # (file)
         my $cmd = new ANSTE::Image::Commands($image);
         if (not $cmd->deleteImage()) {
             my $filename = $e->file();
-            print STDERR "Image '$file' does not exists.\n";
+            print STDERR "Image '$file' does not exist.\n";
             print STDERR "Reason: Can't open file $filename.\n";
             exit(1);
         }
