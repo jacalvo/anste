@@ -1,5 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
-# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
+# Copyright (C) 2013-2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -134,6 +134,10 @@ sub deploy
     my $config = ANSTE::Config->instance();
     my $reuse = $config->reuse();
 
+    # Starts Master Server thread
+    my $server = new ANSTE::Comm::WaiterServer();
+    $server->startThread();
+
     if (not $reuse) {
         $self->_createOrGetMissingBaseImages();
 
@@ -143,11 +147,9 @@ sub deploy
             or throw ANSTE::Exceptions::Error('Error creating network.');
 
         $self->_importMissingBaseImages();
-    }
 
-    # Starts Master Server thread
-    my $server = new ANSTE::Comm::WaiterServer();
-    $server->startThread();
+        $self->_autoUpdateBaseImages() if $config->autoUpdate();
+    }
 
     foreach my $deployer (@{$self->{deployers}}) {
         my $hostname = $deployer->host()->name();
@@ -270,6 +272,31 @@ sub _importMissingBaseImages
             my $cmd = new ANSTE::Image::Commands($image);
             $cmd->importImage($hostname);
         }
+    }
+}
+
+sub _autoUpdateBaseImages
+{
+    my ($self) = @_;
+
+    # TODO: Update base images at the same time
+    my $scenario = $self->{scenario};
+    foreach my $host (@{$scenario->hosts()}) {
+        my $hostname = $host->name();
+        my $baseimage = $host->baseImage();
+
+        # TODO: Check timestamp and only update if not updated today
+
+        ANSTE::info("[$hostname] Auto-updating base image...");
+
+        my $cmd = new ANSTE::Image::Commands($baseimage);
+
+        if ($cmd->updateSystem()) {
+            ANSTE::info("[$hostname] Auto-update completed successfully.");
+        } else {
+            ANSTE::info("[$hostname] Could not update base image.");
+        }
+        $cmd->shutdown();
     }
 }
 
