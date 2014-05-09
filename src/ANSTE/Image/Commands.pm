@@ -839,7 +839,7 @@ sub _transferFile
     my $filePath = $config->listsFile($file);
     if (-d $filePath) {
         $tarFile = "$filePath.tar";
-        system ("tar cf $tarFile $filePath");
+        system ("tar cfh $tarFile $filePath");
         $filePath = $tarFile;
     }
 
