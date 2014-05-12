@@ -290,29 +290,32 @@ sub _autoUpdateBaseImages
     # TODO: Update base images at the same time
     my $scenario = $self->{scenario};
     foreach my $host (@{$scenario->hosts()}) {
-        my $hostname = $host->name();
-        my $baseimage = $host->baseImage();
-        my $name = $baseimage->name();
+        # Do not upgrade raw base images
+        unless ($host->baseImageType() eq 'raw') {
+            my $hostname = $host->name();
+            my $baseimage = $host->baseImage();
+            my $name = $baseimage->name();
 
-        my $tsFile = "$imgdir/$name/last-update";
-        my $lastUpdateTS = read_file($tsFile, err_mode => 'quiet');
-        chomp($lastUpdateTS) if $lastUpdateTS;
+            my $tsFile = "$imgdir/$name/last-update";
+            my $lastUpdateTS = read_file($tsFile, err_mode => 'quiet');
+            chomp($lastUpdateTS) if $lastUpdateTS;
 
-        # Only update if not updated today
-        if(not $lastUpdateTS or ($lastUpdateTS lt $timestamp)) {
-            ANSTE::info("[$hostname] Auto-updating base image...");
+            # Only update if not updated today
+            if(not $lastUpdateTS or ($lastUpdateTS lt $timestamp)) {
+                ANSTE::info("[$hostname] Auto-updating base image...");
 
-            my $cmd = new ANSTE::Image::Commands($baseimage);
+                my $cmd = new ANSTE::Image::Commands($baseimage);
 
-            if ($cmd->updateSystem()) {
-                ANSTE::info("[$hostname] Auto-update completed successfully.");
-            } else {
-                ANSTE::info("[$hostname] Could not update base image.");
+                if ($cmd->updateSystem()) {
+                    ANSTE::info("[$hostname] Auto-update completed successfully.");
+                } else {
+                    ANSTE::info("[$hostname] Could not update base image.");
+                }
+                $cmd->shutdown();
+
+                # Update timestamp
+                write_file($tsFile, $timestamp);
             }
-            $cmd->shutdown();
-
-            # Update timestamp
-            write_file($tsFile, $timestamp);
         }
     }
 }
