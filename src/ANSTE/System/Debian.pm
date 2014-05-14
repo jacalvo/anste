@@ -125,6 +125,7 @@ sub installBasePackages
         push(@PACKAGES, 'cloud-init');
     }
 
+    # TODO: Unhardcode
     $self->execute('echo "deb http://ppa.launchpad.net/zentyal/anste/ubuntu precise main" > /etc/apt/sources.list.d/anste.list')
         or die "write anste repository to sources.list failed: $!";
 

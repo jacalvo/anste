@@ -198,14 +198,12 @@ sub deleteImage
 {
     my ($self) = @_;
 
-    my $virtualizer = $self->{virtualizer};
+    my $cmd = $self->{cmd};
 
     my $host = $self->{host};
-    my $hostname = $host->name();
-
-    ANSTE::info("[$hostname] Deleting image...");
-    $virtualizer->deleteImage($hostname);
-    ANSTE::info("[$hostname] Image deleted.");
+    unless ($host->baseImageType() eq 'raw') {
+        $cmd->deleteImage();
+    }
 }
 
 sub _deploy

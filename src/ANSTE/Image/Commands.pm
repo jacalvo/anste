@@ -549,7 +549,9 @@ sub deleteImage
 
     my $image = $self->{image}->name();
 
+    ANSTE::info("[$image] Deleting image...");
     $virtualizer->deleteImage($image);
+    ANSTE::info("[$image] Image deleted.");
 
     # Deletes also the VM in case it is permanent
     #TODO: This should be improved to work with raw images and detect when we are deleteing volatile ones

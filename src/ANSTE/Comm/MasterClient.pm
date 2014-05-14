@@ -101,6 +101,7 @@ sub connected
 # Parameters:
 #
 #   file - String with the name of the file.
+#   silentErrors - Boolean telling whether the SOAP errors must be silent (optional)
 #
 # Returns:
 #
