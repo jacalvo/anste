@@ -636,14 +636,26 @@ sub exists
     return -r $virtualizer->imageFile($path, $image);
 }
 
-# TODO: Doc
+# Method: preCreateVirtualMachine
+#
+#   Performs the necessary steps before the creation of a virtual machine
+#   using the virtualizer interface
+#
+# Parameters:
+#
+#   host - <ANSTE::Scenario::Host> object with the VM to create
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
 sub preCreateVirtualMachine
 {
-    my ($self, $host, $image) = @_;
+    my ($self, $host) = @_;
 
     $self->{host} = $host;
 
-    return $self->{virtualizer}->preCreateVM($host, $image);
+    return $self->{virtualizer}->preCreateVM($host, $self->{image});
 }
 
 # Method: createVirtualMachine

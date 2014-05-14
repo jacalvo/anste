@@ -262,7 +262,7 @@ sub _deployCopy
     unshift (@{$host->network()->interfaces()}, $commIface);
 
     # Steps previous to the VM creation
-    unless ($cmd->preCreateVirtualMachine($host, $image)) {
+    unless ($cmd->preCreateVirtualMachine($host)) {
         return undef;
     }
 
