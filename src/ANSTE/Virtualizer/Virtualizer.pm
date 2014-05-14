@@ -169,7 +169,23 @@ sub destroyImage
     throw ANSTE::Exceptions::NotImplemented();
 }
 
-
+# Method: createVM
+#
+#   Override this method to perform the necessary steps before the creation of
+#   the Virtual Machine with the corresponding virtualizer program.
+#
+# Parameters:
+#
+#   image - <ANSTE::Scenario::BaseImage> object.
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented>
+#
 sub preCreateVM
 {
     return 1;
@@ -197,6 +213,11 @@ sub createVM
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: finishImageCreation
+#
+#   Override this method to perform the necessary steps after the creation of
+#   the Virtual Machine with the corresponding virtualizer program.
+#
 sub finishImageCreation
 {
 }

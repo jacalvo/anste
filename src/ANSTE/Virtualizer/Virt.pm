@@ -217,7 +217,8 @@ sub destroyImage
 
 # Method: preCreateVM
 #
-#   TODO
+#   Overridden method to perform the necessary steps before the creation of
+#   a KVM Virtual Machine.
 #
 # Parameters:
 #

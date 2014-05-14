@@ -25,7 +25,6 @@ use threads::shared;
 
 use ANSTE::Config;
 use ANSTE::Status;
-use ANSTE::Exceptions::NotImplemented;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::MissingConfig;
 use ANSTE::ScriptGen::HostPreInstallOS;
@@ -169,7 +168,8 @@ sub destroyImage
 
 # Method: preCreateVM
 #
-#   TODO
+#   Overridden method to perform the necessary steps before the creation of
+#   the Virtual Machine with OpenStack
 #
 # Parameters:
 #
@@ -211,6 +211,19 @@ sub preCreateVM
     return 1;
 }
 
+
+# Method: createVM
+#
+#   Overridden method to create the Virtual Machine with OpenStack
+#
+# Parameters:
+#
+#   image - <ANSTE::Scenario::BaseImage> object.
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
 sub createVM
 {
     my ($self, $image, $host) = @_;
@@ -267,7 +280,17 @@ sub createVM
     return (defined $id);
 }
 
-# Must be called from within the main thread
+# Method: finishImageCreation
+#
+#   Overridden method to perform the necessary steps after the creation of
+#   the Virtual Machine with OpenStack
+#
+#   Note: Must be called from within the main thread
+#
+# Parameters:
+#
+#   name - String name of the VM
+#
 sub finishImageCreation
 {
     my ($self, $name) = @_;
@@ -309,7 +332,19 @@ sub createImageCopy
     return 1;
 }
 
-# TODO: Fix name
+# TODO: Change name
+# Method: deleteImage
+#
+#   Overridden method to delete an image on OpenStack
+#
+# Parameters:
+#
+#   image   - name of the image to be deleted
+#
+# Returns:
+#
+#   boolean -   indicates if the process has been successful
+#
 sub deleteImage
 {
     my ($self, $name) = @_;
@@ -332,7 +367,8 @@ sub deleteImage
 
 # Method: createNetwork
 #
-#   Overridden method that .........TODO........ for the network of the given scenario.
+#   Overridden method to do the stuff needed to set up
+#   the network for a scenario on OpenStack
 #
 # Parameters:
 #
@@ -384,7 +420,8 @@ sub createNetwork
 
 # Method: destroyNetwork
 #
-#   Overridden method that destroy previously created ....TODO.... for the network of the given scenario.
+#   Overridden method to do the stuff needed to destroy
+#   the network of a scenario on OpenStack
 #
 # Parameters:
 #
