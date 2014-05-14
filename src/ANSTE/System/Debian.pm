@@ -336,6 +336,7 @@ sub networkConfig
     my $anste_config = ANSTE::Config->instance();
     my $masterIP = $anste_config->master();
     my $gateway = $anste_config->gateway();
+    my $commIface = $anste_config->commIface();
 
     my $config = '';
     $config .= "cat << EOF > /etc/network/interfaces\n";
@@ -344,7 +345,7 @@ sub networkConfig
     foreach my $iface (@{$network->interfaces()}) {
         $config .= "\n";
         $config .= $self->_interfaceConfig($iface);
-        if ($iface->name() eq 'eth0') {
+        if ($iface->name() eq $commIface) {
             # Add route to master
             $config .= $self->_staticRoute($masterIP, $gateway);
             $config .= "\n";
