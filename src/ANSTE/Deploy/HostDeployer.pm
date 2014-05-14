@@ -269,9 +269,6 @@ sub _deployCopy
     ANSTE::info("[$hostname] Creating virtual machine ($ip)...");
     $cmd->createVirtualMachine();
 
-    # FIXME: Remove
-    my $virtualizer = $self->{virtualizer};
-    unless ($virtualizer->skipExtra()) {
     try {
         # Execute pre-install scripts
         my $pre = $host->preScripts();
@@ -316,7 +313,6 @@ sub _deployCopy
         ANSTE::info("[$hostname] ERROR: $msg");
     } catch ($e) {
         ANSTE::info("[$hostname] ERROR: $e");
-    }
     }
     return 0;
 }

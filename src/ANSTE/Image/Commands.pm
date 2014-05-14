@@ -108,22 +108,22 @@ sub create
 {
     my ($self) = @_;
 
-    my $image = $self->{image};
-    my $name = $image->name();
-    my $ip = $self->ip();
-    my $memory = $image->memory();
-    my $swap = $image->swap();
-    my $method = $image->installMethod();
-    my $source = $image->installSource();
-    my $dist = $image->installDist();
-    my $command = $image->installCommand();
-    my $size = $image->size();
-    my $arch = $image->arch();
-    my $mirror = $image->mirror();
-
     my $virtualizer = $self->{virtualizer};
 
     unless ($virtualizer->skipImageCreation()) {
+        my $image = $self->{image};
+        my $name = $image->name();
+        my $ip = $self->ip();
+        my $memory = $image->memory();
+        my $swap = $image->swap();
+        my $method = $image->installMethod();
+        my $source = $image->installSource();
+        my $dist = $image->installDist();
+        my $command = $image->installCommand();
+        my $size = $image->size();
+        my $arch = $image->arch();
+        my $mirror = $image->mirror();
+
         $virtualizer->createBaseImage(name => $name,
                                   ip => $ip,
                                   memory => $memory,
@@ -663,7 +663,7 @@ sub createVirtualMachine
     my $virtualizer = $self->{virtualizer};
 
     unless (defined $wait) {
-        $wait = not $virtualizer->skipExtra();
+        $wait = 1;
     }
 
     my $system = $self->{system};

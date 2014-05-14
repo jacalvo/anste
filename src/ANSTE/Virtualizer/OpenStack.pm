@@ -153,15 +153,10 @@ sub new
     return $self;
 }
 
-# FIXME: Remove both skips
+# FIXME: Remove
 sub skipImageCreation
 {
     return 1;
-}
-
-sub skipExtra
-{
-    return 0;
 }
 
 sub shutdownImage
