@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -207,6 +208,24 @@ sub installBasePackages
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub updatePackagesCommand
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: updateSystemCommand
+#
+#   Override this method to return the system-specific
+#   command to update the system.
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented>
+#
+sub updateSystem
 {
     throw ANSTE::Exceptions::NotImplemented();
 }

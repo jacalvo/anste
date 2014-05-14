@@ -1,5 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
-# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
+# Copyright (C) 2013-2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -133,6 +133,7 @@ sub check
     $self->nameserverHost();
     $self->nameserver();
     $self->imageMissingAction();
+    $self->autoUpdate();
     $self->vmBuilderMirror();
     $self->vmBuilderSecurityMirror();
     $self->vmBuilderProxy();
@@ -451,6 +452,61 @@ sub setWaitFail
     }
 
     $self->{override}->{'global'}->{'wait-fail'} = $value;
+}
+
+# Method: noDestroy
+#
+#   Gets the value for the noDestroy option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub noDestroy
+{
+    my ($self) = @_;
+
+    my $noDestroy = $self->_getOption('global', 'nodestroy');
+
+    if (not ANSTE::Validate::boolean($noDestroy)) {
+        throw ANSTE::Exceptions::InvalidConfig('global/nodestroy',
+                                               $noDestroy,
+                                               $self->{confFile});
+    }
+
+    return $noDestroy;
+}
+
+# Method: setNoDestroy
+#
+#   Sets the value for the nodestroy option.
+#
+# Parameters:
+#
+#   value - String with the value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setNoDestroy
+{
+    my ($self, $value) = @_;
+
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not ANSTE::Validate::boolean($value)) {
+        throw ANSTE::Exceptions::InvalidOption('global/nodestroy',
+                                               $value);
+    }
+
+    $self->{override}->{'global'}->{'nodestroy'} = $value;
 }
 
 # Method: reuse
@@ -1091,6 +1147,33 @@ sub autoDownloadImages
     return ($action eq 'auto-download');
 }
 
+# Method: autoUpdate
+#
+#   Gets the value for the auto-update option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub autoUpdate
+{
+    my ($self) = @_;
+
+    my $autoUpdate = $self->_getOption('deploy', 'auto-update');
+
+    if (not ANSTE::Validate::boolean($autoUpdate)) {
+        throw ANSTE::Exceptions::InvalidConfig('global/auto-update',
+                                               $autoUpdate,
+                                               $self->{confFile});
+    }
+
+    return $autoUpdate;
+}
+
 # Method: webProtocol
 #
 #   Gets the value for the default web protocol (http or https)
@@ -1490,6 +1573,7 @@ sub _setDefaults
     $self->{default}->{'global'}->{'wait'} = 0;
     $self->{default}->{'global'}->{'wait-fail'} = 0;
     $self->{default}->{'global'}->{'reuse'} = 0;
+    $self->{default}->{'global'}->{'nodestroy'} = 0;
 
     $self->{default}->{'paths'}->{'images'} = '/tmp/images';
     $self->{default}->{'paths'}->{'deploy'} = "$data/deploy";
@@ -1522,6 +1606,7 @@ sub _setDefaults
     $self->{default}->{'comm'}->{'nameserver'} = $nameserver;
 
     $self->{default}->{'deploy'}->{'image-missing-action'} = 'auto-create';
+    $self->{default}->{'deploy'}->{'auto-update'} = 1;
 
     $self->{default}->{'web'}->{'protocol'} = 'http';
     $self->{default}->{'web'}->{'video'} = 0;

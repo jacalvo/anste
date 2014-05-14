@@ -1,5 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
-# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
+# Copyright (C) 2013-2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -30,6 +30,9 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Virtualizer::Virtualizer;
 use ANSTE::Image::Commands;
+
+use File::Slurp;
+use POSIX;
 
 # Class: ScenarioDeployer
 #
@@ -74,6 +77,7 @@ sub new
     $self->{deployers} = [];
 
     my $firstAddress = $config->firstAddress();
+    my $commIface = $config->commIface();
 
     # Separate the last number of the ip in order to increment it.
     my ($base, $number) =
@@ -84,10 +88,6 @@ sub new
 
     foreach my $host (@{$scenario->hosts()}) {
         my $ip = "$base.$number";
-        my $hostname = $host->name();
-        my $deployer = new ANSTE::Deploy::HostDeployer($host, $ip);
-        push(@{$self->{deployers}}, $deployer);
-        $number++;
 
         # Add the bridges needed for each host if no manual bridging option is set
         unless ($scenario->manualBridging()) {
@@ -98,8 +98,17 @@ sub new
                     my $bridge = $scenario->addBridge($net);
                     $iface->setBridge($bridge);
                 }
+
+                # IP for the Host from the scenario
+                if ($iface->name() eq $commIface) {
+                    $ip = $iface->address();
+                }
             }
         }
+
+        my $deployer = new ANSTE::Deploy::HostDeployer($host, $ip);
+        push(@{$self->{deployers}}, $deployer);
+        $number++;
     }
 
     bless ($self, $class);
@@ -128,6 +137,10 @@ sub deploy
     my $config = ANSTE::Config->instance();
     my $reuse = $config->reuse();
 
+    # Starts Master Server thread
+    my $server = new ANSTE::Comm::WaiterServer();
+    $server->startThread();
+
     if (not $reuse) {
         $self->_createOrGetMissingBaseImages();
 
@@ -137,11 +150,9 @@ sub deploy
             or throw ANSTE::Exceptions::Error('Error creating network.');
 
         $self->_importMissingBaseImages();
-    }
 
-    # Starts Master Server thread
-    my $server = new ANSTE::Comm::WaiterServer();
-    $server->startThread();
+        $self->_autoUpdateBaseImages() if $config->autoUpdate();
+    }
 
     foreach my $deployer (@{$self->{deployers}}) {
         my $hostname = $deployer->host()->name();
@@ -152,7 +163,7 @@ sub deploy
 
         my $ip = $deployer->ip();
         if (not $ip) {
-            throw ANSTE::Exceptions::Error("Canot get IP for host $hostname");
+            throw ANSTE::Exceptions::Error("Cannot get IP for host $hostname");
         }
         $hostIP->{$hostname} = $ip;
     }
@@ -202,6 +213,8 @@ sub shutdown
 sub destroy
 {
     my ($self) = @_;
+
+    return if ANSTE::Config->instance()->noDestroy();
 
     my $deployers = $self->{deployers};
 
@@ -259,6 +272,48 @@ sub _importMissingBaseImages
             ANSTE::info("[$hostname] Auto-importing base image if not exists...");
             my $cmd = new ANSTE::Image::Commands($image);
             $cmd->importImage($hostname);
+        }
+    }
+}
+
+sub _autoUpdateBaseImages
+{
+    my ($self) = @_;
+
+    my $config = ANSTE::Config->instance();
+    my $imgdir = $config->imagePath();
+
+    my $timestamp = strftime("%Y%m%d", localtime(time));
+
+    # TODO: Update base images at the same time
+    my $scenario = $self->{scenario};
+    foreach my $host (@{$scenario->hosts()}) {
+        # Do not upgrade raw base images
+        unless ($host->baseImageType() eq 'raw') {
+            my $hostname = $host->name();
+            my $baseimage = $host->baseImage();
+            my $name = $baseimage->name();
+
+            my $tsFile = "$imgdir/$name/last-update";
+            my $lastUpdateTS = read_file($tsFile, err_mode => 'quiet');
+            chomp($lastUpdateTS) if $lastUpdateTS;
+
+            # Only update if not updated today
+            if(not $lastUpdateTS or ($lastUpdateTS lt $timestamp)) {
+                ANSTE::info("[$hostname] Auto-updating base image...");
+
+                my $cmd = new ANSTE::Image::Commands($baseimage);
+
+                if ($cmd->updateSystem()) {
+                    ANSTE::info("[$hostname] Auto-update completed successfully.");
+                } else {
+                    ANSTE::info("[$hostname] Could not update base image.");
+                }
+                $cmd->shutdown();
+
+                # Update timestamp
+                write_file($tsFile, $timestamp);
+            }
         }
     }
 }

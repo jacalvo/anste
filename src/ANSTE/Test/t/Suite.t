@@ -20,13 +20,14 @@ use ANSTE::Test::Suite;
 use ANSTE::Config;
 use ANSTE::Exceptions::InvalidFile;
 
-use Test::More tests => 6;
+use Test::More tests => 18;
 
 use constant SUITE => 'test';
 
-sub testTest # (test)
+sub testTest
 {
     my ($test) = @_;
+
     my $name = $test->name();
     is($name, 'testName', 'name = testName');
     my $desc = $test->desc();
@@ -35,21 +36,38 @@ sub testTest # (test)
     is($host, 'testHost', 'host = testHost');
 	my $dir = $test->script();
     is($dir, 'testScript', 'script = testScript');
-
+    my $vars = $test->variables();
+    is($vars->{var3}, 'val3', 'local var3 is included with value val3');
+    is($vars->{var2}, 'val2', 'global var2 is included with value val2');
+    is($vars->{var1}, 'val4', 'var1 is overrided with local value val4');
+    is($vars->{var4}, '', 'var4 has empty value');
+    is($vars->{var5}, undef, 'var5 does not exists');
+    is($vars->{var6}, 'BAR', 'check that global variables are interpolated');
 }
 
-sub test # (suite)
+sub testTestAfterReplace
 {
-    my ($suite) = @_;
-    my $name = $suite->name();
-    is($name, 'suiteName', 'suite name = suiteName');
-    my $desc = $suite->desc();
-    is($desc, 'suiteDesc', 'suite desc = suiteDesc');
+    my ($test) = @_;
 
-    my $test = shift @{$suite->tests()};
-    testTest($test);
+    my $vars = $test->variables();
+    is($vars->{var3}, 'newval3', 'local var3 is included with value newval3 after replace');
+    is($vars->{var2}, 'newval2', 'global var2 is included with value newval2 after replace');
+    is($vars->{var1}, 'val4', 'var1 is still overrided with local value val4 after replace');
+    is($vars->{var4}, '', 'var4 still has empty value after replace');
+    is($vars->{var7}, 'newval2', 'check that new global variables are interpolated after replace');
+    is($vars->{var6}, 'BAZ', 'check that previous interpolations have the new value');
 }
 
 my $suite = new ANSTE::Test::Suite();
 $suite->loadFromDir(SUITE);
-test($suite);
+my $name = $suite->name();
+is($name, 'suiteName', 'suite name = suiteName');
+my $desc = $suite->desc();
+is($desc, 'suiteDesc', 'suite desc = suiteDesc');
+my $test = $suite->tests()->[0];
+testTest($test);
+
+$suite = new ANSTE::Test::Suite();
+$suite->loadFromDir(SUITE, 'data/tests/test/vars.yaml');
+$test = $suite->tests()->[0];
+testTestAfterReplace($test);

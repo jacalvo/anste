@@ -173,4 +173,18 @@ sub waitForAnyExecution
     return $returnValue;
 }
 
+# Method: cleanExecutions
+#
+#   Forgets about the executions that have already been completed
+#
+sub cleanExecutions
+{
+    my ($self) = @_;
+
+    {
+        lock($lockExecuted);
+        %executed = ();
+    }
+}
+
 1;

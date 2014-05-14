@@ -113,7 +113,7 @@ sub testPackages # (packages)
     my ($packages) = @_;
 
     print "Showing Packages...\n";
-    ok(length(@{$packages->list()}) > 0, 'packages count test');
+    ok(scalar(@{$packages->list()}) > 0, 'packages count test');
     my $count = 0;
     foreach my $package (@{$packages->list()}) {
         ok(defined($package), 'package defined');

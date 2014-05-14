@@ -484,6 +484,33 @@ sub setVariable
     $self->{variables}->{$name} = $value;
 }
 
+# Method: addVariables
+#
+#     Add a set of variables and values
+#
+#   Parameters:
+#
+#     vars - hashref with variables as keys
+#
+sub addVariables
+{
+    my ($self, $vars) = @_;
+
+    foreach my $name (keys %{$vars}) {
+        my $value = $vars->{$name};
+        unless ($value) {
+            $value = '';
+        }
+        if (substr ($value, 0, 1) eq '$') {
+            my $var = substr ($value, 1, length ($value));
+            if (exists $self->{variables}->{$var}) {
+                $value = $self->{variables}->{$var};
+            }
+        }
+        $self->setVariable($name, $value);
+    }
+}
+
 # Method: variables
 #
 #   Gets the variables to be substituted on the template files.
@@ -611,14 +638,11 @@ sub loadYAML
     defined $test or
         throw ANSTE::Exceptions::MissingArgument('test');
 
-    my $config = ANSTE::Config->instance();
-    my $configVars = $config->variables();
-
     my $type = $test->{type};
     if ($type) {
         $self->setType($type);
     }
-    my $critical = $test->{critical};
+    my $critical = ($test->{critical} or $test->{setup});
     if ($critical) {
         $self->setCritical(1);
     }
@@ -684,16 +708,10 @@ sub loadYAML
         $self->setParams($params);
     }
 
-    my $vars = $test->{vars};
-    foreach my $name (keys %{$vars}) {
-        my $value = $vars->{$name};
-        if ($value) {
-            $self->setVariable($name, $value);
-        } else {
-            $self->setVariable($name, "");
-        }
-    }
+    $self->addVariables($test->{vars});
 
+    my $config = ANSTE::Config->instance();
+    my $configVars = $config->variables();
     foreach my $name (keys %{$configVars}) {
         my $value = $configVars->{$name};
         if ($value) {
