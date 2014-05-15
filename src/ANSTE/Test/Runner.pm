@@ -283,7 +283,11 @@ sub _runTests
     $report->add($suiteResult);
     my $executeOnlyForcedTests = 0;
 
-    foreach my $test (@{$suite->tests()}) {
+    my @suiteTests = @{$suite->tests()};
+    my $testNumber = 0;
+    my $testTotalNumber = scalar (@suiteTests);
+    foreach my $test (@suiteTests) {
+        $testNumber++;
         next if ($reuse and $test->critical());
         next if ($executeOnlyForcedTests and not $test->executeAlways());
 
@@ -306,7 +310,7 @@ sub _runTests
         }
         next if ($skip);
 
-        my $testResult = $self->_runOneTest($test);
+        my $testResult = $self->_runOneTest($test, $testNumber, $testTotalNumber);
         my $ret;
 
         # Adds the test report
@@ -355,7 +359,8 @@ sub _runTests
                 if (ANSTE::askForRepeat($msg) == 0) {
                     last;
                 } else {
-                    my $testResult = $self->_runOneTest($test);
+                    my $testResult = $self->_runOneTest($test,
+                        $testNumber, $testTotalNumber);
                     if ($testResult and ($testResult->value() == 0)) {
                         last;
                     }
@@ -382,11 +387,11 @@ sub _runTests
 
 sub _runOneTest
 {
-    my ($self, $test) = @_;
+    my ($self, $test, $idx, $total) = @_;
 
     my $testName = $test->name();
     my $testHost = $test->host();
-    print "Running test: $testName in host $testHost\n";
+    print "Running test ($idx/$total): $testName in host $testHost\n";
     my ($testResult, $ret);
     try {
         $testResult = $self->_runTest($test);

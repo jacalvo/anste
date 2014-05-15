@@ -1,4 +1,5 @@
 HEAD
+    + Show current test index and total tests
     + Now symlinks are dereferenced when tranfering the files to the slaves
     + Added deploy/auto-update config key to enable/disable the auto-update
       of base images before the deploy of scenarios
