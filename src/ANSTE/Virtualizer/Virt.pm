@@ -403,8 +403,7 @@ sub startVM
         throw ANSTE::Exceptions::MissingArgument('name');
 
     my $name = $image->{name};
-    $self->execute("virsh start $name");
-        throw ANSTE::Exceptions::Error("Error starting domain $name");
+    return $self->execute("virsh start $name");
 }
 
 # Method: removeVM

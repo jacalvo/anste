@@ -213,9 +213,9 @@ sub _deploy
     my $host = $self->{host};
 
     if ($host->baseImageType() eq 'raw') {
-        $self->_deploySnapshot();
+        return $self->_deploySnapshot();
     } else {
-        $self->_deployCopy();
+        return $self->_deployCopy();
     }
 }
 
@@ -232,10 +232,7 @@ sub _deploySnapshot
     $cmd->restoreBaseSnapshot($hostname);
 
     my $virtualizer = $self->{virtualizer};
-    my $ret = $virtualizer->startVM($self->{image}, $host);
-
-    # 0 is the exit status for success
-    return not $ret;
+    return  $virtualizer->startVM($self->{image}, $host);
 }
 
 sub _deployCopy
