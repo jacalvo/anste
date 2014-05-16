@@ -1,6 +1,11 @@
 name: test-bridges
 desc: test scenario with manual bridging
 manual-bridging: 1
+bridges:
+   - id: 2
+     address: 192.168.2.254
+   - id: 3
+     address: 192.168.3.254
 hosts:
      - name: server
        desc: server with manual bridging

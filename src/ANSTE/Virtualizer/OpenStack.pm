@@ -464,7 +464,6 @@ sub _genNetConfig
     if ($bridge == 1) {
         $address = $self->{config}->gateway();
     } else {
-        # FIXME: $net does not always contains a network address (manual-bridging)
         $address = ANSTE::Validate::ip($net) ? $net : "$net.254";
     }
 
