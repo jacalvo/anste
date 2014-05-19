@@ -238,8 +238,11 @@ sub createVM
     foreach my $iface (@{$image->network()->interfaces()}) {
         my $bridge = $iface->bridge();
 
-        my $net = {uuid => $networks->{$bridge},
-                   fixed_ip => $iface->address()};
+        my $net = {uuid => $networks->{$bridge}};
+        my $addr = $iface->address();
+        if ($addr) {
+            $net->{fixed_ip} = $addr;
+        }
         push(@netConf, $net);
     }
     my $imageName = $host->baseImage()->name();
