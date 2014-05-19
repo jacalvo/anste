@@ -1,4 +1,5 @@
 # Copyright (C) 2013 Zentyal S.L.
+# Copyright (C) 2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -91,6 +92,7 @@ sub remove
     unlink ($self->_statusFile());
 }
 
+# FIXME: Move to each virtualizer
 sub cleanNetwork
 {
     my @bridges = `virsh net-list 2>/dev/null | grep anste | awk '{ print \$1 }'`;
