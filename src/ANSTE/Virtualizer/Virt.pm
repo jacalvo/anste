@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -459,6 +460,19 @@ sub existsVM
     chomp($out);
 
     return $out;
+}
+
+# Method: listVMs
+#
+#   Overridden method to list all the existing KVM VMs
+#
+# Returns:
+#
+#   list - names of all the VMs
+#
+sub listVMs
+{
+    return `virsh list 2>/dev/null | tail -n +3 | head -n -1 | awk '{ print \$2 }'`;
 }
 
 # Method: imageFile

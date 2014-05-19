@@ -1,4 +1,5 @@
 HEAD
+    + Added listVMs method to the virtualizers
     + Now the gateway and the first address from the config are passed
       to the tests as COMM_gateway and COMM_firstAddress
     + Added master configuration key to set the IP of the master

@@ -321,6 +321,31 @@ sub existsVM
     return 1;
 }
 
+# Method: listVMs
+#
+#   Overridden method to list all the existing VMs in OpenStack
+#
+# Returns:
+#
+#   list - names of all the VMs
+#
+sub listVMs
+{
+    my ($self) = @_;
+
+    my @server_names = ();
+    my $servers = $self->{os_compute}->get_servers();
+    my $suffix = $self->{suffix};
+
+    for my $server (@$servers) {
+        if ($server->{name} =~ m/.*-$suffix$/) {
+            push(@server_names, $server->{name});
+        }
+    }
+
+    return @server_names;
+}
+
 sub imageFile
 {
     return '/bin/true';
