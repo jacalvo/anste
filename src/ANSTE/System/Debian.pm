@@ -190,7 +190,13 @@ sub updateSystemCommand
 {
     my ($self) = @_;
 
-    return 'apt-get dist-upgrade -y';
+    $ENV{DEBIAN_FRONTEND} = 'noninteractive';
+
+    my $forceNew = '-o DPkg::Options::=--force-confnew';
+    my $forceDef = '-o DPkg::Options::=--force-confdef';
+    my $options = "-y --force-yes $forceNew $forceDef";
+
+    return "apt-get dist-upgrade $options";
 }
 
 # Method: updateNetworkCommand

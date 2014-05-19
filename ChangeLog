@@ -6,6 +6,7 @@ HEAD
     + Added ANSTE::Virtualizer::OpenStack with partial support
     + Added useOpenStack and setUseOpenStack to Anste::Status
     + Added virtualizerStatus and setVirtualizerStatus to Anste::Status
+    + Show current test index and total tests
     + Now symlinks are dereferenced when tranfering the files to the slaves
     + Added deploy/auto-update config key to enable/disable the auto-update
       of base images before the deploy of scenarios
