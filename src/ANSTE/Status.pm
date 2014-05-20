@@ -175,7 +175,11 @@ sub _statusFile
     my ($self) = @_;
     my $id = $self->identifier();
 
-    return $self->{config}->imagePath() . "/status$id.json";
+    if ($id) {
+        return $self->{config}->imagePath() . "/status$id.json";
+    } else {
+        return $self->{config}->imagePath() . "/status.json";
+    }
 }
 
 1;
