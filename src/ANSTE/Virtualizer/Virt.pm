@@ -180,11 +180,14 @@ sub shutdownImage
 
     $self->execute("$VIRSH shutdown $image");
 
-    # FIXME: replace script with API
     # Wait until shutdown finishes
-    my $backend = ANSTE::Config->instance()->backend();
-    my $waitScript = $config->scriptFile("$backend-waitshutdown.sh");
-    system("$waitScript $image");
+    while (1) {
+        if ($self->execute("$VIRSH list | grep $image")) {
+            sleep 1;
+        } else {
+            last;
+        }
+    }
 }
 
 # Method: destroyImage
