@@ -19,6 +19,7 @@ use warnings;
 use strict;
 
 use ANSTE::Status;
+use ANSTE::Config;
 use ANSTE::Virtualizer::Virtualizer;
 
 my $force = 0;
@@ -28,8 +29,12 @@ if (@ARGV and ($ARGV[0] eq '--force')) {
 
 my $hosts = ANSTE::Status->instance()->deployedHosts();
 my $virt = ANSTE::Virtualizer::Virtualizer->instance();
+my $connect = '';
+if (ANSTE::Config->instance()->backend() eq 'lxc') {
+    $connect = '-c lxc:///';
+}
 
-my @vms = `virsh list 2>/dev/null | tail -n +3 | head -n -1 | awk '{ print \$2 }'`;
+my @vms = `virsh $connect list 2>/dev/null | tail -n +3 | head -n -1 | awk '{ print \$2 }'`;
 chomp (@vms);
 my @nonAnsteVMs;
 foreach my $vm (@vms) {
