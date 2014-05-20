@@ -420,6 +420,12 @@ sub destroyNetwork
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# TODO
+sub cleanNetwork
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 # Method: createSnapshot
 #
 #   Override this method to implement the

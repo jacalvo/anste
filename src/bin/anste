@@ -35,6 +35,7 @@ use ANSTE::Test::Suite;
 use ANSTE::Test::Runner;
 use ANSTE::Report::TextWriter;
 use ANSTE::Report::HTMLWriter;
+use ANSTE::Virtualizer::Virtualizer;
 
 use Getopt::Long;
 use Pod::Usage;
@@ -169,18 +170,21 @@ unless (flock ($lockFile, LOCK_EX | LOCK_NB)) {
 
 unless ($shutdown or $remove) {
     # Check virtual machines already running
-    if (system ('LANGUAGE=C virsh list | grep running') == 0) {
-        print "WARNING: The above virtual machines are running.\n" .
-              "Press any key to continue or Control-C to stop.\n";
-        my $line = <STDIN>;
-    }
+    # FIXME: Virtualizer dependent
+#     if (system ('LANGUAGE=C virsh list | grep running') == 0) {
+#         print "WARNING: The above virtual machines are running.\n" .
+#               "Press any key to continue or Control-C to stop.\n";
+#         my $line = <STDIN>;
+#     }
 
     # Clean possible mounted nbd devices from a previous scenario
-    system ('pkill -9 -f qemu-nbd');
+    # FIXME: Virtualizer dependent
+    #system ('pkill -9 -f qemu-nbd');
 
     # Clean network from previous executions if not reusing the deployed scenario
     unless ($reuse) {
-        ANSTE::Status->cleanNetwork();
+        my $virtualizer = ANSTE::Virtualizer::Virtualizer->instance();
+        $virtualizer->cleanNetwork($identifier);
     }
 }
 

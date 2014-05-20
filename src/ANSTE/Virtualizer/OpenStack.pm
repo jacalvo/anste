@@ -456,6 +456,11 @@ sub destroyNetwork
     }
 }
 
+# TODO
+sub cleanNetwork
+{
+}
+
 sub _genNetConfig
 {
     my ($self, $netID, $net, $bridge) = @_;
