@@ -215,6 +215,13 @@ sub destroyImage
 
     $self->deleteSnapshot($image, ANSTE::snapshotName());
     $self->execute("$VIRSH destroy $image");
+
+    my $config = ANSTE::Config->instance();
+    my $backend = $config->backend();
+    if ($backend eq 'lxc') {
+        my $path = $config->imagePath();
+        ANSTE::System::System->instance()->unmount("$path/$image/mountpoint");
+    }
 }
 
 # Method: createVM
