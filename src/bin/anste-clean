@@ -19,6 +19,7 @@ use warnings;
 use strict;
 
 use ANSTE::Status;
+use ANSTE::Virtualizer::Virtualizer;
 
 my $force = 0;
 if (@ARGV and ($ARGV[0] eq '--force')) {
@@ -26,6 +27,7 @@ if (@ARGV and ($ARGV[0] eq '--force')) {
 }
 
 my $hosts = ANSTE::Status->instance()->deployedHosts();
+my $virt = ANSTE::Virtualizer::Virtualizer->instance();
 
 my @vms = `virsh list 2>/dev/null | tail -n +3 | head -n -1 | awk '{ print \$2 }'`;
 chomp (@vms);
@@ -49,7 +51,7 @@ sub clean
 {
     foreach my $vm (@vms) {
         print "Destroying machine $vm...\n";
-        system ("virsh destroy $vm");
+        $virt->destroyImage($vm);
     }
 
     ANSTE::Status->cleanNetwork();
