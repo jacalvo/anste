@@ -45,6 +45,12 @@ my $lockCreate : shared;
 #   with libvirt.
 #
 
+sub cleanup
+{
+    # Clean possible mounted nbd devices from a previous scenario
+    system ('pkill -9 -f qemu-nbd');
+}
+
 my $BRIDGE_PREFIX = 'anstebr';
 
 # Method: createBaseImage

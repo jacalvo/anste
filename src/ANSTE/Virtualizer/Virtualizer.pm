@@ -88,6 +88,10 @@ sub execute
     return system($command) == 0;
 }
 
+sub cleanup
+{
+}
+
 # Method: createBaseImage
 #
 #   Override this method to execute the command of a

@@ -168,23 +168,24 @@ unless (flock ($lockFile, LOCK_EX | LOCK_NB)) {
     exit(1);
 }
 
-# FIXME: Virtualizer dependent code
 unless ($shutdown or $remove) {
-    # Check virtual machines already running
-    # FIXME: Virtualizer dependent
-#     if (system ('LANGUAGE=C virsh list | grep running') == 0) {
-#         print "WARNING: The above virtual machines are running.\n" .
-#               "Press any key to continue or Control-C to stop.\n";
-#         my $line = <STDIN>;
-#     }
+    my $virtualizer = ANSTE::Virtualizer::Virtualizer->instance();
 
-    # Clean possible mounted nbd devices from a previous scenario
-    # FIXME: Virtualizer dependent
-    #system ('pkill -9 -f qemu-nbd');
+    # Check virtual machines already running
+    my @vms = $virtualizer->listVMs();
+    for my $vm (@vms) {
+        print "$vm\n";
+    }
+    if (scalar(@vms) > 0) {
+        print "WARNING: The above virtual machines are running.\n" .
+              "Press any key to continue or Control-C to stop.\n";
+        my $line = <STDIN>;
+    }
+
+    $virtualizer->cleanup();
 
     # Clean network from previous executions if not reusing the deployed scenario
     unless ($reuse) {
-        my $virtualizer = ANSTE::Virtualizer::Virtualizer->instance();
         $virtualizer->cleanNetwork($identifier);
     }
 }
