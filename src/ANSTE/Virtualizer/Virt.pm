@@ -30,7 +30,6 @@ use ANSTE::Exceptions::NotFound;
 
 use File::Temp qw(tempfile);
 use File::Copy;
-use File::Copy::Recursive qw(dircopy);
 
 my $VIRSH = _virsh();
 
@@ -127,6 +126,10 @@ sub createBaseImage
         $command .= " --security-mirror $securityMirror";
     }
 
+    if ($config->backend() eq 'lxc') {
+        $command .= ' --only-chroot';
+    }
+
     $self->execute($command) or
         die "Error executing ubuntu-vm-builder";
 
@@ -215,13 +218,6 @@ sub destroyImage
 
     $self->deleteSnapshot($image, ANSTE::snapshotName());
     $self->execute("$VIRSH destroy $image");
-
-    my $config = ANSTE::Config->instance();
-    my $backend = $config->backend();
-    if ($backend eq 'lxc') {
-        my $path = $config->imagePath();
-        ANSTE::System::System->instance()->unmount("$path/$image/mountpoint");
-    }
 }
 
 # Method: createVM
@@ -251,10 +247,6 @@ sub createVM
     my $path = $config->imagePath();
     my $backend = $config->backend();
 
-    if ($backend eq 'lxc') {
-        my $system = ANSTE::System::System->instance();
-        $system->mountImage("$path/$name/disk.qcow2", "$path/$name/mountpoint");
-    }
     $self->execute("$VIRSH create $path/$name/domain.xml") or
         throw ANSTE::Exceptions::Error("Error creating domain $name");
 }
@@ -395,7 +387,7 @@ sub imageFile
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-    return "$path/$name/disk.qcow2";
+    return "$path/$name/disk";
 }
 
 # Method: copyImage
@@ -446,7 +438,8 @@ sub createImageCopy
         throw ANSTE::Exceptions::NotFound('Image', $basename);
     }
 
-    dircopy("$path/$basename", "$path/$newname");
+    system ("mkdir -p $path/$newname");
+    system ("rsync -a $path/$basename/disk $path/$newname/");
 
     # Creates the configuration file for the new image
     my $configFile = "$path/$newname/domain.xml";
@@ -606,7 +599,7 @@ sub _createImageConfig
     $imageConfig .= "\t\t<emulator>$emulator</emulator>\n";
     if ($lxc) {
         $imageConfig .= "\t\t<filesystem type='mount'>\n";
-        $imageConfig .= "\t\t\t<source dir='$path/mountpoint'/>\n";
+        $imageConfig .= "\t\t\t<source dir='$path/disk'/>\n";
         $imageConfig .= "\t\t\t<target dir='/'/>\n";
         $imageConfig .= "\t\t</filesystem>\n";
     } else {

@@ -66,7 +66,11 @@ sub new # (image) returns new Commands object
                                              'ANSTE::Scenario::BaseImage');
     }
 
-    $self->{mountPoint} = undef;
+    my $name = $image->name();
+    my $path = ANSTE::Config->instance()->imagePath();
+    # Default dir for lxc backend, for kvm this will be replaced in mount()
+    $self->{mountPoint} = "$path/$name/disk";
+
     $self->{image} = $image;
 
     $self->{system} = ANSTE::System::System->instance();
