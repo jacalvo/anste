@@ -24,6 +24,11 @@ use Time::HiRes qw(gettimeofday);
 
 my $INITIAL_TIME = time();
 
+sub snapshotName
+{
+    return 'anste-last-snapshot';
+}
+
 # Method: info
 #
 #   Prints the msg passed as parameter to the console
@@ -58,18 +63,36 @@ sub info
 #
 # Returns:
 #
-#   value - whether you should repear or not
+#   value - whether you should repeat or not
 #
 sub askForRepeat
 {
+    my ($msg) = @_;
 
+    return _ask("$msg. Press 'r' to run the test/script again or 'c' to continue.");
+}
+
+# Method: askForRevert
+#
+#   Ask for revert to snapshot to the user
+#
+# Returns:
+#
+#   value - whether you should revert or not
+#
+sub askForRevert
+{
+    return _ask("Press 'r' to revert to snapshot or 'c' to continue.");
+}
+
+sub _ask
+{
     my ($msg) = @_;
 
     my $ret = 0;
     my $key;
     while (1) {
-        print "$msg " .
-            "Press 'r' to run the test/script again or 'c' to continue.\n";
+        print "$msg\n";
         $key = ANSTE::Util::readChar();
         if ($key eq 'r') {
             $ret = 1;

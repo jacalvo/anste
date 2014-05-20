@@ -58,6 +58,7 @@ my $format = '';
 my $varfile = '';
 my $wait = 0;
 my $waitFail = 0;
+my $autoSnapshot = 0;
 my $noDestroy = 0;
 my $help = 0;
 my $quiet = 0;
@@ -80,6 +81,7 @@ GetOptions('createimg' => \$create,
            'quiet' => \$quiet,
            'wait' => \$wait,
            'wait-fail' => \$waitFail,
+           'auto-snapshot' => \$autoSnapshot,
            'nodestroy' => \$noDestroy,
            'reuse' => \$reuse,
            'step' => \$step,
@@ -120,6 +122,9 @@ if ($wait) {
 }
 if ($waitFail) {
     $config->setWaitFail(1);
+}
+if ($autoSnapshot) {
+    $config->setAutoSnapshot(1);
 }
 if ($noDestroy) {
     $config->setNoDestroy(1);
@@ -468,7 +473,8 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -wait-fail         wait if a test fails
    -nodestroy         keep scenario running after tests have finished
    -step              run tests step by step, waiting after each one
-   -break <t1,t2,...> set breakpoints after the given test names
+   -break <t1,t2,...> set breakpoints before the given test names
+   -auto-snapshot     take snapshots before each step or breakpoint
    -quiet             do not show output of commands
    -reuse             reuse the created image if exists (with -create)
                       reuse a deployed scenario (with -test)
