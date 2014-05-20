@@ -472,6 +472,7 @@ sub existsVM
 #
 sub listVMs
 {
+    # TODO: Use the identifier to filter
     return `virsh list 2>/dev/null | tail -n +3 | head -n -1 | awk '{ print \$2 }'`;
 }
 

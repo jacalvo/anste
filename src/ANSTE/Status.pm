@@ -57,6 +57,12 @@ sub instance
 
     $singleton->{identifier} = $identifier if $identifier;
 
+    $singleton->{pid} = $singleton->_get('pid');
+    unless ($singleton->{pid}) {
+        $singleton->_set('pid', $$);
+        $singleton->{pid} = $$;
+    }
+
     return $singleton;
 }
 
@@ -127,6 +133,12 @@ sub identifier
 {
     my ($self) = @_;
     return $self->{identifier};
+}
+
+sub pid
+{
+    my ($self) = @_;
+    return $self->{pid};
 }
 
 sub _set

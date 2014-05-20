@@ -167,6 +167,8 @@ sub shutdownImage
 
 sub destroyImage
 {
+    my ($self, $name) = @_;
+    $self->deleteImage($name);
 }
 
 # Method: preCreateVM
@@ -377,6 +379,10 @@ sub deleteImage
 
     my $status = $self->{status}->virtualizerStatus();
     my $id = $status->{images}->{$name};
+    unless ($id) {
+        # There should be only one server with this name, get its id
+        $id = $self->{os_compute}->get_servers_by_name($name)->[0]->{id};
+    }
 
     if($id) {
         $self->{os_compute}->delete_server($id);
@@ -482,6 +488,28 @@ sub destroyNetwork
 # TODO
 sub cleanNetwork
 {
+    my ($self, $id) = @_;
+
+    my @bridges;
+    if ($id) {
+        @bridges = `virsh net-list 2>/dev/null | grep anste | grep $id | awk '{ print \$1 }'`;
+    } else {
+        @bridges = `virsh net-list 2>/dev/null | grep anste | awk '{ print \$1 }'`;
+    }
+
+    my $networks = $self->{os_networking}->get_networks();
+
+    my $suffix = $self->{suffix};
+    my $external_router_id = $self->{config}->_getOption('virtualizer', 'external_router_id');
+    for my $net (@$networks) {
+        if ($net->{name} =~ m/.*$suffix$/) {
+            # Remove any port existing between the subnet and the external router
+            $self->{os_networking}->remove_router_interface_by_subnet($external_router_id,
+                                                                      $net->{subnets}->[0]);
+            $self->{os_networking}->delete_network($net->{id});
+        }
+    }
+
 }
 
 sub _genNetConfig

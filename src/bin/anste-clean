@@ -22,14 +22,23 @@ use strict;
 use ANSTE::Status;
 use ANSTE::Virtualizer::Virtualizer;
 
+use Getopt::Long;
+
 my $force = 0;
-if (@ARGV and ($ARGV[0] eq '--force')) {
-    $force = 1;
-}
+my $identifier = '';
+my $conf = '';
+
+GetOptions('force' => \$force,
+           'identifier=s' => \$identifier,
+           'conf=s' => \$conf);
+
+my $config = ANSTE::Config->instance();
+$config->setLocalConfPath($conf) if $conf;
+
+my $status = ANSTE::Status->instance($identifier);
+my $hosts = $status->deployedHosts();
 
 my $virtualizer = ANSTE::Virtualizer::Virtualizer->instance();
-my $hosts = ANSTE::Status->instance()->deployedHosts();
-
 my @vms = $virtualizer->listVMs();
 chomp (@vms);
 my @nonAnsteVMs;
@@ -55,17 +64,22 @@ sub clean
         $virtualizer->destroyImage($vm);
     }
 
-    ANSTE::Status->cleanNetwork();
+    my $virtualizer = ANSTE::Virtualizer::Virtualizer->instance();
+    $virtualizer->cleanNetwork($identifier);
 
-    # kill ANSTE instances
-    my @anstePids = `pgrep anste | grep -v $$ | awk '{ print \$1 }'`;
-    chomp (@anstePids);
-    foreach my $pid (@anstePids) {
-        system ("kill -9 $pid");
-    }
+    # kill ANSTE instance
+    my $pid = $status->pid();
+    system ("kill -9 $pid") if $pid;
 
-    # FIXME: Only for Virt
-    system ('pkill -9 -f qemu-nbd');
+    # FIXME: Only do this if no more anste processes running
+    #system ('pkill -9 -f qemu-nbd');
+    #my @anstePids = `pgrep anste | grep -v $$ | awk '{ print \$1 }'`;
+    #chomp (@anstePids);
+    #foreach my $pid (@anstePids) {
+    #    system ("kill -9 $pid");
+    #}
 
-    system ('rm -rf /var/tmp/anste-tests');
+    # TODO: Unhardcode
+    my $id = $status->identifier();
+    system ("rm -rf /var/tmp/anste-tests/$id");
 }
