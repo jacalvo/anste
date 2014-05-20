@@ -132,7 +132,7 @@ sub setUseOpenStack
 sub identifier
 {
     my ($self) = @_;
-    return $self->{identifier};
+    return ($self->{identifier} ? $self->{identifier} : '');
 }
 
 sub pid
@@ -187,11 +187,7 @@ sub _statusFile
     my ($self) = @_;
     my $id = $self->identifier();
 
-    if ($id) {
-        return $self->{config}->imagePath() . "/status$id.json";
-    } else {
-        return $self->{config}->imagePath() . "/status.json";
-    }
+    return $self->{config}->imagePath() . "/status$id.json";
 }
 
 1;
