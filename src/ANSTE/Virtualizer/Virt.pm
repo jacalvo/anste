@@ -1,4 +1,4 @@
-# Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2007-2014 José Antonio Calvo Fernández <jacalvo@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -23,6 +23,7 @@ use warnings;
 use ANSTE;
 use ANSTE::Config;
 use ANSTE::Image::Image;
+use ANSTE::System::System;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::NotFound;
@@ -30,6 +31,8 @@ use ANSTE::Exceptions::NotFound;
 use File::Temp qw(tempfile);
 use File::Copy;
 use File::Copy::Recursive qw(dircopy);
+
+my $VIRSH = _virsh();
 
 # Class: Virt
 #
@@ -175,10 +178,12 @@ sub shutdownImage
     # so we wait a few seconds until some operations finish
     sleep 5;
 
-    $self->execute("virsh shutdown $image");
+    $self->execute("$VIRSH shutdown $image");
 
+    # FIXME: replace script with API
     # Wait until shutdown finishes
-    my $waitScript = $config->scriptFile('kvm-waitshutdown.sh');
+    my $backend = ANSTE::Config->instance()->backend();
+    my $waitScript = $config->scriptFile("$backend-waitshutdown.sh");
     system("$waitScript $image");
 }
 
@@ -206,7 +211,7 @@ sub destroyImage
         throw ANSTE::Exceptions::MissingArgument('image');
 
     $self->deleteSnapshot($image, ANSTE::snapshotName());
-    $self->execute("virsh destroy $image");
+    $self->execute("$VIRSH destroy $image");
 }
 
 # Method: createVM
@@ -232,8 +237,15 @@ sub createVM
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-    my $path = ANSTE::Config->instance()->imagePath();
-    $self->execute("virsh create $path/$name/domain.xml") or
+    my $config = ANSTE::Config->instance();
+    my $path = $config->imagePath();
+    my $backend = $config->backend();
+
+    if ($backend eq 'lxc') {
+        my $system = ANSTE::System::System->instance();
+        $system->mountImage("$path/$name/disk.qcow2", "$path/$name/mountpoint");
+    }
+    $self->execute("$VIRSH create $path/$name/domain.xml") or
         throw ANSTE::Exceptions::Error("Error creating domain $name");
 }
 
@@ -341,7 +353,7 @@ sub existsVM
     defined $name or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-    my $out = `virsh desc '$name' | grep -c 'failed to get domain'`;
+    my $out = `$VIRSH desc '$name' | grep -c 'failed to get domain'`;
     chomp($out);
 
     return $out;
@@ -563,23 +575,37 @@ sub _createImageConfig
     my $arch = `arch`;
     chomp ($arch);
 
-    my $imageConfig = "<domain type='kvm'>\n";
+    my $lxc = ($config->backend() eq 'lxc');
+
+    my $domainType = $lxc ? 'lxc' : 'kvm';
+    my $osType = $lxc ? 'exe' : 'hvm';
+    my $init = $lxc ? '<init>/sbin/init</init>' : '';
+    my $emulator = $lxc ? '/usr/lib/libvirt/libvirt_lxc' : '/usr/bin/kvm';
+
+    my $imageConfig = "<domain type='$domainType'>\n";
     $imageConfig .= "\t<name>$name</name>\n";
     $imageConfig .= "\t<memory>$memory</memory>\n";
     $imageConfig .= "\t<vcpu>1</vcpu>\n";
-    $imageConfig .= "\t<os><type arch='$arch'>hvm</type></os>\n";
+    $imageConfig .= "\t<os><type arch='$arch'>$osType</type>$init</os>\n";
     $imageConfig .= "\t<features><acpi/></features>\n";
     $imageConfig .= "\t<clock sync='localtime'/>\n";
     $imageConfig .= "\t<on_poweroff>destroy</on_poweroff>\n";
     $imageConfig .= "\t<on_reboot>restart</on_reboot>\n";
     $imageConfig .= "\t<on_crash>restart</on_crash>\n";
     $imageConfig .= "\t<devices>\n";
-    $imageConfig .= "\t\t<emulator>/usr/bin/kvm</emulator>\n";
-    $imageConfig .= "\t\t<disk type='file' device='disk'>\n";
-    $imageConfig .= "\t\t\t<driver name='qemu' type='qcow2' cache='unsafe'/>\n";
-    $imageConfig .= "\t\t\t<source file='$path/disk.qcow2'/>\n";
-    $imageConfig .= "\t\t\t<target dev='vda' bus='virtio'/>\n";
-    $imageConfig .= "\t\t</disk>\n";
+    $imageConfig .= "\t\t<emulator>$emulator</emulator>\n";
+    if ($lxc) {
+        $imageConfig .= "\t\t<filesystem type='mount'>\n";
+        $imageConfig .= "\t\t\t<source dir='$path/mountpoint'/>\n";
+        $imageConfig .= "\t\t\t<target dir='/'/>\n";
+        $imageConfig .= "\t\t</filesystem>\n";
+    } else {
+        $imageConfig .= "\t\t<disk type='file' device='disk'>\n";
+        $imageConfig .= "\t\t\t<driver name='qemu' type='qcow2' cache='unsafe'/>\n";
+        $imageConfig .= "\t\t\t<source file='$path/disk.qcow2'/>\n";
+        $imageConfig .= "\t\t\t<target dev='vda' bus='virtio'/>\n";
+        $imageConfig .= "\t\t</disk>\n";
+    }
     foreach my $iface (@{$image->network()->interfaces()}) {
         $imageConfig .= "\t\t<interface type='bridge'>\n";
         my $bridge = $iface->bridge();
@@ -590,7 +616,11 @@ sub _createImageConfig
         $imageConfig .= "\t\t\t<model type='virtio'/>\n";
         $imageConfig .= "\t\t</interface>\n";
     }
-    $imageConfig .= "\t\t<graphics type='vnc' port='-1' autoport='yes' keymap='es'/>\n";
+    if ($lxc) {
+        $imageConfig .= "\t\t<console type='pty'/>\n";
+    } else {
+        $imageConfig .= "\t\t<graphics type='vnc' port='-1' autoport='yes' keymap='es'/>\n";
+    }
     $imageConfig .= "\t</devices>\n";
     $imageConfig .= "</domain>\n";
 
@@ -735,6 +765,11 @@ sub existsSnapshot
     chomp($out);
 
     return $out;
+}
+
+sub _virsh
+{
+    return ANSTE::Config->instance()->backend() eq 'lxc' ? 'virsh -c lxc:///' : 'virsh';
 }
 
 1;

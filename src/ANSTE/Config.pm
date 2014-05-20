@@ -288,6 +288,23 @@ sub virtualizer
     return $virtualizer;
 }
 
+# Method: backend
+#
+#   Gets the value for the virtualization backend option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+sub backend
+{
+    my ($self) = @_;
+
+    my $backend = $self->_getOption('global', 'backend');
+
+    return $backend;
+}
+
 # Method: verbose
 #
 #   Gets the value for the verbose option.

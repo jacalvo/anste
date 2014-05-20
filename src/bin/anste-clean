@@ -63,6 +63,7 @@ sub clean
         system ("kill -9 $pid");
     }
 
+    system ("mount | grep ^/dev/nbd |cut -d' ' -f1 | xargs umount");
     system ('pkill -9 -f qemu-nbd');
 
     system ('rm -rf /var/tmp/anste-tests');

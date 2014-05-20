@@ -70,6 +70,7 @@ sub mountImage
 
     $nbdDevs{$mountPoint} = $device;
 
+    $self->execute("mkdir -p $mountPoint");
     $self->execute("mount ${device}p1 $mountPoint");
 }
 
