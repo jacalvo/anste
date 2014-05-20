@@ -147,6 +147,9 @@ sub new
         $self->{suffix} = $user;
     }
 
+    my $id = $self->{status}->identifier();
+    $self->{suffix} .= $id if $id;
+
     bless($self, $class);
 
     return $self;
@@ -319,11 +322,6 @@ sub existsVM
 {
     # TODO: Look for the VM??
     return 1;
-}
-
-sub imageFile
-{
-    return '/bin/true';
 }
 
 # TODO: Remove
