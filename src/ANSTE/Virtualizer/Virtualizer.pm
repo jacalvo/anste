@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -306,6 +307,24 @@ sub removeVM
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub existsVM
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: listVMs
+#
+#   Override this method to list all the existing VMs
+#   with the corresponding virtualizer program.
+#
+# Returns:
+#
+#   list - names of all the VMs
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub listVMs
 {
     throw ANSTE::Exceptions::NotImplemented();
 }

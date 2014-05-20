@@ -168,6 +168,7 @@ unless (flock ($lockFile, LOCK_EX | LOCK_NB)) {
     exit(1);
 }
 
+# FIXME: Virtualizer dependent code
 unless ($shutdown or $remove) {
     # Check virtual machines already running
     # FIXME: Virtualizer dependent
