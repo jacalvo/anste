@@ -42,7 +42,8 @@ my $singleton;
 #
 sub instance
 {
-    my $class = shift;
+    my ($class, $identifier) = @_;
+
     unless (defined $singleton) {
         my $self = {};
 
@@ -52,6 +53,8 @@ sub instance
 
         $singleton = bless($self, $class);
     }
+
+    $singleton->{identifier} = $identifier if $identifier;
 
     return $singleton;
 }
@@ -134,6 +137,12 @@ sub setUseOpenStack
     $self->_set('useOpenStack', $status);
 }
 
+sub identifier
+{
+    my ($self) = @_;
+    return $self->{identifier};
+}
+
 sub _set
 {
     my ($self, $var, $value) = @_;
@@ -178,8 +187,9 @@ sub _readStatusFile
 sub _statusFile
 {
     my ($self) = @_;
+    my $id = $self->identifier();
 
-    return $self->{config}->imagePath() . '/status.json';
+    return $self->{config}->imagePath() . "/status$id.json";
 }
 
 1;

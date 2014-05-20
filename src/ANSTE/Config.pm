@@ -188,6 +188,26 @@ sub setUserPath
     $self->{userPath} = $path;
 }
 
+sub setLocalConfPath
+{
+    my ($self, $localConfFile) = @_;
+
+    defined $localConfFile or
+        throw ANSTE::Exceptions::MissingArgument('localConfFile');
+
+    if (not -r $localConfFile) {
+        throw ANSTE::Exceptions::InvalidOption('localConfFile', $localConfFile);
+    }
+
+    my $localConfig = Config::Tiny->read($localConfFile);
+
+    foreach my $section (keys %{$localConfig}) {
+        foreach my $key (keys %{$localConfig->{$section}}) {
+            $self->{config}->{$section}->{$key} = $localConfig->{$section}->{$key};
+        }
+    }
+}
+
 # Method: formats
 #
 #   Gets the list of values for the format option.
