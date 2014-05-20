@@ -19,6 +19,7 @@
 use warnings;
 use strict;
 
+use ANSTE::Config;
 use ANSTE::Status;
 use ANSTE::Virtualizer::Virtualizer;
 
@@ -71,8 +72,9 @@ sub clean
     my $pid = $status->pid();
     system ("kill -9 $pid") if $pid;
 
-    # FIXME: Only do this if no more anste processes running
-    #system ('pkill -9 -f qemu-nbd');
+    $virtualizer->cleanup();
+
+    # FIXME: Only do this if no more anste processes running (Do it with --force??)
     #my @anstePids = `pgrep anste | grep -v $$ | awk '{ print \$1 }'`;
     #chomp (@anstePids);
     #foreach my $pid (@anstePids) {
