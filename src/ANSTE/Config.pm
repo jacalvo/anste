@@ -587,7 +587,8 @@ sub setNoDestroy
 
 # Method: identifier
 #
-#   Gets the value for the identifier option.
+#   Gets the value for the identifier option, used when
+#   running multiple instances of ANSTE at the same time.
 #
 # Returns:
 #
@@ -614,7 +615,9 @@ sub identifier
 
 # Method: setIdentifier
 #
-#   Sets the value for the identifier option.
+#   Sets the value for the identifier option. This will be used to designate
+#   the multiple elements of an scenario, making it possible to run multiple
+#   instances of ANSTE.
 #
 # Parameters:
 #
