@@ -710,7 +710,8 @@ sub loadYAML
 
     $self->addVariables($test->{vars});
 
-    my $configVars = ANSTE::Config->instance()->variables();
+    my $config = ANSTE::Config->instance();
+    my $configVars = $config->variables();
     foreach my $name (keys %{$configVars}) {
         my $value = $configVars->{$name};
         if ($value) {
@@ -718,6 +719,13 @@ sub loadYAML
             $self->setVariable("GLOBAL_$name", $value);
         }
     }
+
+    # Add also comm/gateway and comm/first-address as a variable
+    my $gateway = $config->gateway();
+    $self->setVariable("COMM_gateway", $gateway);
+    my $firstAddress = $config->firstAddress();
+    $self->setVariable("COMM_firstAddress", $firstAddress);
+
 }
 
 1;

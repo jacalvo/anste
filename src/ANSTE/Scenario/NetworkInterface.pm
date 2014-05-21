@@ -24,6 +24,7 @@ use ANSTE::Exceptions::InvalidData;
 use ANSTE::Exceptions::Error;
 use ANSTE::Validate;
 
+use threads;
 use threads::shared;
 
 use constant AUTOASSIGNED_MAC_ADDR_START => 'DE:AD:BE:EF:00:';

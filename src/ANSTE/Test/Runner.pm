@@ -20,6 +20,7 @@ use warnings;
 
 use ANSTE;
 use ANSTE::Config;
+use ANSTE::Status;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Deploy::ScenarioDeployer;
 use ANSTE::Test::Suite;
@@ -67,6 +68,7 @@ sub new
     my $self = {};
 
     my $config = ANSTE::Config->instance();
+    $self->{status} = ANSTE::Status->instance();
 
     $self->{suite} = undef;
     $self->{report} = new ANSTE::Report::Report();
@@ -456,7 +458,8 @@ sub _runTest
     $testResult->setStartTime($self->_time());
 
     # Create a temp directory for this test
-    my $newPath = "/var/tmp/anste-tests/$name";
+    my $id = $self->{status}->identifier();
+    my $newPath = "/var/tmp/anste-tests/$id/$name";
     system ("rm -rf $newPath");
     system ("mkdir -p $newPath");
 

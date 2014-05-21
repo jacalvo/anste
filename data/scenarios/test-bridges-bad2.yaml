@@ -1,0 +1,9 @@
+name: test-bridges-bad
+desc: bad test scenario with manual bridging
+manual-bridging: 1
+bridges:
+   - id: 2
+hosts:
+     - name: server
+       desc: server with manual bridging
+       baseimage: test

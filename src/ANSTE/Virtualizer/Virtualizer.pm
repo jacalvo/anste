@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -87,6 +88,10 @@ sub execute
     return system($command) == 0;
 }
 
+sub cleanup
+{
+}
+
 # Method: createBaseImage
 #
 #   Override this method to execute the command of a
@@ -115,6 +120,12 @@ sub execute
 sub createBaseImage
 {
     throw ANSTE::Exceptions::NotImplemented();
+}
+
+# FIXME: Remove both skips
+sub skipImageCreation
+{
+    return 0;
 }
 
 # Method: shutdownImage
@@ -165,12 +176,34 @@ sub destroyImage
 
 # Method: createVM
 #
+#   Override this method to perform the necessary steps before the creation of
+#   the Virtual Machine with the corresponding virtualizer program.
+#
+# Parameters:
+#
+#   image - <ANSTE::Scenario::BaseImage> object.
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented>
+#
+sub preCreateVM
+{
+    return 1;
+}
+
+# Method: createVM
+#
 #   Override this method to create the Virtual Machine
 #   with the corresponding virtualizer program.
 #
 # Parameters:
 #
-#   name - name of the virtual machine
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #
@@ -185,6 +218,15 @@ sub createVM
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: finishImageCreation
+#
+#   Override this method to perform the necessary steps after the creation of
+#   the Virtual Machine with the corresponding virtualizer program.
+#
+sub finishImageCreation
+{
+}
+
 # Method: defineVM
 #
 #   Override this method to define the Virtual Machine
@@ -192,7 +234,7 @@ sub createVM
 #
 # Parameters:
 #
-#   name - name of the virtual machine
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #
@@ -214,7 +256,7 @@ sub defineVM
 #
 # Parameters:
 #
-#   name - name of the virtual machine
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #
@@ -269,6 +311,24 @@ sub removeVM
 #   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
 #
 sub existsVM
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# Method: listVMs
+#
+#   Override this method to list all the existing VMs
+#   with the corresponding virtualizer program.
+#
+# Returns:
+#
+#   list - names of all the VMs
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub listVMs
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
@@ -379,6 +439,12 @@ sub createNetwork
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub destroyNetwork
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# TODO
+sub cleanNetwork
 {
     throw ANSTE::Exceptions::NotImplemented();
 }

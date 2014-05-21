@@ -20,6 +20,7 @@ use warnings;
 use strict;
 
 use ANSTE::Config;
+use ANSTE::Status;
 use ANSTE::Comm::MasterClient;
 use ANSTE::Comm::HostWaiter;
 use ANSTE::ScriptGen::BasePreInstall;
@@ -107,22 +108,23 @@ sub create
 {
     my ($self) = @_;
 
-    my $image = $self->{image};
-    my $name = $image->name();
-    my $ip = $self->ip();
-    my $memory = $image->memory();
-    my $swap = $image->swap();
-    my $method = $image->installMethod();
-    my $source = $image->installSource();
-    my $dist = $image->installDist();
-    my $command = $image->installCommand();
-    my $size = $image->size();
-    my $arch = $image->arch();
-    my $mirror = $image->mirror();
-
     my $virtualizer = $self->{virtualizer};
 
-    $virtualizer->createBaseImage(name => $name,
+    unless ($virtualizer->skipImageCreation()) {
+        my $image = $self->{image};
+        my $name = $image->name();
+        my $ip = $self->ip();
+        my $memory = $image->memory();
+        my $swap = $image->swap();
+        my $method = $image->installMethod();
+        my $source = $image->installSource();
+        my $dist = $image->installDist();
+        my $command = $image->installCommand();
+        my $size = $image->size();
+        my $arch = $image->arch();
+        my $mirror = $image->mirror();
+
+        $virtualizer->createBaseImage(name => $name,
                                   ip => $ip,
                                   memory => $memory,
                                   swap => $swap,
@@ -133,6 +135,7 @@ sub create
                                   arch => $arch,
                                   command => $command,
                                   mirror => $mirror);
+    }
 }
 
 # Method: get
@@ -218,7 +221,7 @@ sub importImage
     my $name = $self->{image}->name();
 
     unless ($virtualizer->existsVM($name)) {
-        $virtualizer->defineVM($name);
+        $virtualizer->defineVM($self->{image});
     }
 
     unless ($virtualizer->existsSnapshot($name, $hostname)) {
@@ -546,7 +549,9 @@ sub deleteImage
 
     my $image = $self->{image}->name();
 
+    ANSTE::info("[$image] Deleting image...");
     $virtualizer->deleteImage($image);
+    ANSTE::info("[$image] Image deleted.");
 
     # Deletes also the VM in case it is permanent
     #TODO: This should be improved to work with raw images and detect when we are deleteing volatile ones
@@ -631,6 +636,28 @@ sub exists
     return -r $virtualizer->imageFile($path, $image);
 }
 
+# Method: preCreateVirtualMachine
+#
+#   Performs the necessary steps before the creation of a virtual machine
+#   using the virtualizer interface
+#
+# Parameters:
+#
+#   host - <ANSTE::Scenario::Host> object with the VM to create
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+sub preCreateVirtualMachine
+{
+    my ($self, $host) = @_;
+
+    $self->{host} = $host;
+
+    return $self->{virtualizer}->preCreateVM($host, $self->{image});
+}
+
 # Method: createVirtualMachine
 #
 #   Creates the image virtual machine using the virtualizer interface,
@@ -645,27 +672,55 @@ sub createVirtualMachine
 {
     my ($self, $wait) = @_;
 
+    my $virtualizer = $self->{virtualizer};
+
     unless (defined $wait) {
         $wait = 1;
     }
 
-    my $virtualizer = $self->{virtualizer};
     my $system = $self->{system};
 
     my $name = $self->{image}->name();
     my $addr = $self->ip();
 
-    my $iface = ANSTE::Config->instance()->natIface();
+    my $config = ANSTE::Config->instance();
+    my $iface = $config->natIface();
 
     $system->enableNAT($iface, $addr);
 
-    $virtualizer->createVM($name);
+    $virtualizer->createVM($self->{image}, $self->{host});
 
     if ($wait) {
         ANSTE::info("[$name] Waiting for the system start...");
+
+        # Tell the client how to talk to us (the master)
+        my $client = new ANSTE::Comm::MasterClient;
+        my $port = $config->anstedPort();
+        my $ip = $self->ip();
+        $client->connect("http://$ip:$port");
+
+        # Generate the script
+        my ($fh, $filename) = tempfile() or die "Can't create temporary file: $!";
+        my $masterPort = $config->masterPort();
+        my $masterIP = $config->master();
+        my $MASTER = "$masterIP:$masterPort";
+        print $fh "echo $MASTER > /var/local/anste.master";
+        close($fh) or die "Can't close temporary file: $!";
+
+        # Upload and exec it
+        while (not $client->put($filename, 1)) {
+            sleep 1;
+        }
+        $client->exec($filename);
+
+        # Wait for the execution to be done
         my $waiter = ANSTE::Comm::HostWaiter->instance();
-        $waiter->waitForReady($name);
-        ANSTE::info("[$name] System is up.");
+        my $ret = $waiter->waitForExecution($name);
+        if ($ret == 0 ) {
+            ANSTE::info("[$name] System is up.");
+        } else {
+            die "[$name] Could not set the system up.\n";
+        }
     }
 }
 
@@ -730,6 +785,32 @@ sub transferFiles # (list)
     foreach my $file (@{$list}) {
         $self->_transferFile($file, $image, $config, $client);
     }
+}
+
+# Method: finalConfigurations
+#
+#   Performs the final configurations in the image
+#
+#   If openstack command line argument has been provided, removes the network
+#   persistent rules in the image.
+#
+# Returns:
+#
+#   boolean - true if success, false otherwise
+#
+sub finalConfigurations
+{
+    my ($self) = @_;
+
+    my $ret = 1;
+    if (ANSTE::Status->instance()->useOpenStack()) {
+        my $system = $self->{system};
+        my $cmd = 'cat /dev/null > /etc/udev/rules.d/70-persistent-net.rules ' .
+                  '&& cat /dev/null > /lib/udev/rules.d/75-persistent-net-generator.rules';
+        $ret = $system->execute($cmd);
+    }
+
+    return $ret;
 }
 
 sub _disableNAT
