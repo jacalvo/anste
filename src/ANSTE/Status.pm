@@ -1,4 +1,5 @@
 # Copyright (C) 2013 Zentyal S.L.
+# Copyright (C) 2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -42,7 +43,8 @@ my $singleton;
 #
 sub instance
 {
-    my $class = shift;
+    my ($class, $identifier) = @_;
+
     unless (defined $singleton) {
         my $self = {};
 
@@ -51,6 +53,14 @@ sub instance
         $self->{status} = undef;
 
         $singleton = bless($self, $class);
+    }
+
+    $singleton->{identifier} = $identifier if $identifier;
+
+    $singleton->{pid} = $singleton->_get('pid');
+    unless ($singleton->{pid}) {
+        $singleton->_set('pid', $$);
+        $singleton->{pid} = $$;
     }
 
     return $singleton;
@@ -91,21 +101,6 @@ sub remove
     unlink ($self->_statusFile());
 }
 
-sub cleanNetwork
-{
-    my @bridges = `virsh net-list 2>/dev/null | grep anste | awk '{ print \$1 }'`;
-    chomp (@bridges);
-    foreach my $br (@bridges) {
-        print "Destroying network $br...\n";
-        system ("virsh net-destroy $br");
-    }
-
-    my @pids = `ps ax | grep dnsmasq | grep anste | awk '{ print \$1 }'`;
-    foreach my $pid (@pids) {
-        system ("kill -9 $pid");
-    }
-}
-
 sub virtualizerStatus
 {
     my ($self) = @_;
@@ -132,6 +127,18 @@ sub setUseOpenStack
     my ($self, $status) = @_;
 
     $self->_set('useOpenStack', $status);
+}
+
+sub identifier
+{
+    my ($self) = @_;
+    return ($self->{identifier} ? $self->{identifier} : '');
+}
+
+sub pid
+{
+    my ($self) = @_;
+    return $self->{pid};
 }
 
 sub _set
@@ -178,8 +185,9 @@ sub _readStatusFile
 sub _statusFile
 {
     my ($self) = @_;
+    my $id = $self->identifier();
 
-    return $self->{config}->imagePath() . '/status.json';
+    return $self->{config}->imagePath() . "/status$id.json";
 }
 
 1;

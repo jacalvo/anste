@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -43,6 +44,12 @@ my $lockCreate : shared;
 #   Implementation of the Virtualizer class that interacts
 #   with libvirt.
 #
+
+sub cleanup
+{
+    # Clean possible mounted nbd devices from a previous scenario
+    system ('pkill -9 -f qemu-nbd');
+}
 
 my $BRIDGE_PREFIX = 'anstebr';
 
@@ -461,6 +468,20 @@ sub existsVM
     return $out;
 }
 
+# Method: listVMs
+#
+#   Overridden method to list all the existing KVM VMs
+#
+# Returns:
+#
+#   list - names of all the VMs
+#
+sub listVMs
+{
+    # TODO: Use the identifier to filter
+    return `virsh list 2>/dev/null | tail -n +3 | head -n -1 | awk '{ print \$2 }'`;
+}
+
 # Method: imageFile
 #
 #   Overriden method to get the path o a KVM disk image.
@@ -661,9 +682,38 @@ sub destroyNetwork
     my $path = ANSTE::Config->instance()->imagePath();
 
     my %bridges = %{$scenario->bridges()};
+    my $id = ANSTE::Status->instance()->identifier();
     while (my ($net, $num) = each %bridges) {
-        $self->execute("virsh net-destroy anste-bridge$num");
+        $self->execute("virsh net-destroy anste-bridge$id$num");
         unlink("$path/anste-bridge$num.xml");
+    }
+}
+
+# TODO
+sub cleanNetwork
+{
+    my ($self, $id) = @_;
+
+    my @bridges;
+    if ($id) {
+        @bridges = `virsh net-list 2>/dev/null | grep anste | grep $id | awk '{ print \$1 }'`;
+    } else {
+        @bridges = `virsh net-list 2>/dev/null | grep anste | awk '{ print \$1 }'`;
+    }
+    chomp (@bridges);
+    foreach my $br (@bridges) {
+        print "Destroying network $br...\n";
+        system ("virsh net-destroy $br");
+    }
+
+    my @pids;
+    if ($id) {
+        @pids = `ps ax | grep dnsmasq | grep anste | grep $id | awk '{ print \$1 }'`;
+    } else {
+        @pids = `ps ax | grep dnsmasq | grep anste | awk '{ print \$1 }'`;
+    }
+    foreach my $pid (@pids) {
+        system ("kill -9 $pid");
     }
 }
 
@@ -676,6 +726,8 @@ sub _createImageConfig
     my $memory = $image->memory() * 1024;
     my $arch = `arch`;
     chomp ($arch);
+
+    my $id = ANSTE::Status->instance()->identifier();
 
     my $imageConfig = "<domain type='kvm'>\n";
     $imageConfig .= "\t<name>$name</name>\n";
@@ -698,7 +750,7 @@ sub _createImageConfig
         $imageConfig .= "\t\t<interface type='bridge'>\n";
         my $bridge = $iface->bridge();
         my $mac = $iface->hwAddress();
-        $imageConfig .= "\t\t\t<source bridge='${BRIDGE_PREFIX}${bridge}'/>\n";
+        $imageConfig .= "\t\t\t<source bridge='${BRIDGE_PREFIX}${id}${bridge}'/>\n";
         $imageConfig .= "\t\t\t<mac address='$mac'/>\n";
         # Gigabit ethernet card to improve performance
         $imageConfig .= "\t\t\t<model type='virtio'/>\n";
@@ -720,6 +772,7 @@ sub _createNetworkConfig
     my ($self, $net, $bridge) = @_;
 
     my $config = ANSTE::Config->instance();
+    my $status = ANSTE::Status->instance();
 
     # Only allow forward for the first bridge (ANSTE communication network)
     my $forward = 0;
@@ -734,14 +787,16 @@ sub _createNetworkConfig
         $address = ANSTE::Validate::ip($net) ? $net : "$net.254";
     }
 
+    my $id = $status->identifier();
+
     my $networkConfig = "<network>\n";
-    $networkConfig .= "\t<name>anste-bridge$bridge</name>\n";
+    $networkConfig .= "\t<name>anste-bridge$id$bridge</name>\n";
     if ($forward) {
-        $networkConfig .= "\t<bridge name=\"${BRIDGE_PREFIX}${bridge}\" />\n";
+        $networkConfig .= "\t<bridge name=\"${BRIDGE_PREFIX}${id}${bridge}\" />\n";
         $networkConfig .= "\t<forward mode=\"nat\" />\n";
         $networkConfig .= "\t<ip address=\"$address\" netmask=\"$netmask\" />\n";
     } else {
-        $networkConfig .= "\t<bridge name=\"${BRIDGE_PREFIX}${bridge}\" stp=\"on\" delay=\"0\" />\n";
+        $networkConfig .= "\t<bridge name=\"${BRIDGE_PREFIX}${id}${bridge}\" stp=\"on\" delay=\"0\" />\n";
         $networkConfig .= "\t<mac address=\"$bridge_mac_prefix:$mac_id\" />\n";
         $mac_id++;
     }

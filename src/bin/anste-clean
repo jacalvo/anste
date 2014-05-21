@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 # Copyright (C) 2007-2013 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -18,16 +19,28 @@
 use warnings;
 use strict;
 
+use ANSTE::Config;
 use ANSTE::Status;
+use ANSTE::Virtualizer::Virtualizer;
+
+use Getopt::Long;
 
 my $force = 0;
-if (@ARGV and ($ARGV[0] eq '--force')) {
-    $force = 1;
-}
+my $identifier = '';
+my $conf = '';
 
-my $hosts = ANSTE::Status->instance()->deployedHosts();
+GetOptions('force' => \$force,
+           'identifier=s' => \$identifier,
+           'conf=s' => \$conf);
 
-my @vms = `virsh list 2>/dev/null | tail -n +3 | head -n -1 | awk '{ print \$2 }'`;
+my $config = ANSTE::Config->instance();
+$config->setLocalConfPath($conf) if $conf;
+
+my $status = ANSTE::Status->instance($identifier);
+my $hosts = $status->deployedHosts();
+
+my $virtualizer = ANSTE::Virtualizer::Virtualizer->instance();
+my @vms = $virtualizer->listVMs();
 chomp (@vms);
 my @nonAnsteVMs;
 foreach my $vm (@vms) {
@@ -49,19 +62,26 @@ sub clean
 {
     foreach my $vm (@vms) {
         print "Destroying machine $vm...\n";
-        system ("virsh destroy $vm");
+        $virtualizer->destroyImage($vm);
     }
 
-    ANSTE::Status->cleanNetwork();
+    my $virtualizer = ANSTE::Virtualizer::Virtualizer->instance();
+    $virtualizer->cleanNetwork($identifier);
 
-    # kill ANSTE instances
-    my @anstePids = `pgrep anste | grep -v $$ | awk '{ print \$1 }'`;
-    chomp (@anstePids);
-    foreach my $pid (@anstePids) {
-        system ("kill -9 $pid");
-    }
+    # kill ANSTE instance
+    my $pid = $status->pid();
+    system ("kill -9 $pid") if $pid;
 
-    system ('pkill -9 -f qemu-nbd');
+    $virtualizer->cleanup();
 
-    system ('rm -rf /var/tmp/anste-tests');
+    # FIXME: Only do this if no more anste processes running (Do it with --force??)
+    #my @anstePids = `pgrep anste | grep -v $$ | awk '{ print \$1 }'`;
+    #chomp (@anstePids);
+    #foreach my $pid (@anstePids) {
+    #    system ("kill -9 $pid");
+    #}
+
+    # TODO: Unhardcode
+    my $id = $status->identifier();
+    system ("rm -rf /var/tmp/anste-tests/$id");
 }

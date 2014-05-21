@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -85,6 +86,10 @@ sub execute
         $command .= ' > /dev/null 2>&1';
     }
     return system($command) == 0;
+}
+
+sub cleanup
+{
 }
 
 # Method: createBaseImage
@@ -310,6 +315,24 @@ sub existsVM
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: listVMs
+#
+#   Override this method to list all the existing VMs
+#   with the corresponding virtualizer program.
+#
+# Returns:
+#
+#   list - names of all the VMs
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub listVMs
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 # Method: imageFile
 #
 #   Override this method to return the full path
@@ -416,6 +439,12 @@ sub createNetwork
 #   throws <ANSTE::Exceptions::NotImplemented>
 #
 sub destroyNetwork
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+# TODO
+sub cleanNetwork
 {
     throw ANSTE::Exceptions::NotImplemented();
 }
