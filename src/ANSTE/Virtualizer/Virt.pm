@@ -626,6 +626,12 @@ sub deleteImage
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
 
+    if (ANSTE::Config->instance()->backend() eq 'lxc') {
+        # We don't delete the disk directory with lxc, so
+        # we take advantage of rsync in subsequent executions
+        return;
+    }
+
     my $dir = ANSTE::Config->instance()->imagePath();
 
     $self->execute("rm -rf $dir/$image");
