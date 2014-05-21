@@ -474,6 +474,61 @@ sub setWaitFail
     $self->{override}->{'global'}->{'wait-fail'} = $value;
 }
 
+# Method: autoSnapshot
+#
+#   Gets the value for the autoSnapshot option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub autoSnapshot
+{
+    my ($self) = @_;
+
+    my $autoSnapshot = $self->_getOption('global', 'auto-snapshot');
+
+    if (not ANSTE::Validate::boolean($autoSnapshot)) {
+        throw ANSTE::Exceptions::InvalidConfig('global/auto-snapshot',
+                                               $autoSnapshot,
+                                               $self->{confFile});
+    }
+
+    return $autoSnapshot;
+}
+
+# Method: setAutoSnapshot
+#
+#   Sets the value for the auto-snapshot option.
+#
+# Parameters:
+#
+#   value - String with the value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setAutoSnapshot
+{
+    my ($self, $value) = @_;
+
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not ANSTE::Validate::boolean($value)) {
+        throw ANSTE::Exceptions::InvalidOption('global/auto-snapshot',
+                                               $value);
+    }
+
+    $self->{override}->{'global'}->{'auto-snapshot'} = $value;
+}
+
 # Method: noDestroy
 #
 #   Gets the value for the noDestroy option.

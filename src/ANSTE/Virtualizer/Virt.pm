@@ -21,6 +21,7 @@ use base 'ANSTE::Virtualizer::Virtualizer';
 use strict;
 use warnings;
 
+use ANSTE;
 use ANSTE::Config;
 use ANSTE::Image::Image;
 use ANSTE::Exceptions::MissingArgument;
@@ -219,6 +220,7 @@ sub destroyImage
     defined $image or
         throw ANSTE::Exceptions::MissingArgument('image');
 
+    $self->deleteSnapshot($image, ANSTE::snapshotName());
     $self->execute("virsh destroy $image");
 }
 
@@ -843,6 +845,10 @@ sub createSnapshot
 {
     my ($self, $domain, $name, $description) = @_;
 
+    if ($self->existsSnapshot($domain, $name)) {
+        $self->deleteSnapshot($domain, $name);
+    }
+
     $self->execute("virsh snapshot-create-as $domain $name '$description'") or
         throw ANSTE::Exceptions::Error("Error creating snapshot $name in domain $domain");
 }
@@ -877,7 +883,9 @@ sub deleteSnapshot
 {
     my ($self, $domain, $name) = @_;
 
-     $self->execute("virsh snapshot-delete $domain $name") or
+    return unless $self->existsSnapshot($domain, $name);
+
+    $self->execute("virsh snapshot-delete $domain $name") or
         throw ANSTE::Exceptions::Error("Error deleting snapshot $name in domain $domain");
 }
 

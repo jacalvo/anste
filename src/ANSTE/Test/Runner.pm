@@ -18,6 +18,7 @@ package ANSTE::Test::Runner;
 use strict;
 use warnings;
 
+use ANSTE;
 use ANSTE::Config;
 use ANSTE::Status;
 use ANSTE::Scenario::Scenario;
@@ -33,6 +34,7 @@ use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
 use ANSTE::Exceptions::NotFound;
 use ANSTE::System::System;
+use ANSTE::Virtualizer::Virtualizer;
 use ANSTE::Util;
 
 use Cwd;
@@ -292,13 +294,22 @@ sub _runTests
         $testNumber++;
         next if ($reuse and $test->critical());
         next if ($executeOnlyForcedTests and not $test->executeAlways());
+        my $host = $test->host();
+
+        my $stopBefore = ($config->step() or $config->breakpoint($test->name()));
 
         my $skip = 0;
-        if ($config->step()) {
+        if ($stopBefore) {
+            if ($config->autoSnapshot()) {
+                ANSTE::info("Taking snapshot of $host...");
+                $self->_virt()->createSnapshot($host, ANSTE::snapshotName(), 'auto-snapshot');
+                ANSTE::info('Snapshot done');
+            }
             my $key;
             while (1) {
                 my $testName = $test->name();
-                print "Step by step execution. Test $testName. " .
+                my $msg = $config->step() ? 'Step by step execution' : 'Breakpoint requested';
+                print "$msg. Test $testName. " .
                       "Press 'e' to execute or 's' to skip.\n";
                 $key = ANSTE::Util::readChar();
                 if ($key eq 'e') {
@@ -337,27 +348,22 @@ sub _runTests
         my $msg;
         my $stop = 0;
         my $critical = 0;
-        if ($config->breakpoint($test->name())) {
-            $stop = 1;
-            $msg = "Breakpoint requested after this test.";
-        }
-        if ($config->waitFail() && $ret != 0) {
-            $stop = 1;
-            $msg = "Test failed and wait on failure was requested.";
-        }
-
-        # Stop executing tests if a critical one fails
-        if (($ret != 0) and $test->critical()) {
-            if ($config->waitFail()) {
+        if ($ret != 0) {
+            if ($config->waitFail() or $config->autoSnapshot()) {
                 $stop = 1;
-                $msg = "Critical test failed and wait on failure was requested.";
-            } else {
+                $msg = "Test failed and wait on failure was requested.";
+            } elsif ($test->critical()) {
                 $critical = 1;
             }
         }
 
         if ($stop) {
             while (1) {
+                if ($stopBefore and $config->autoSnapshot() and ANSTE::askForRevert()) {
+                    ANSTE::info("Reverting snapshot of $host...");
+                    $self->_virt()->revertSnapshot($host, ANSTE::snapshotName());
+                    ANSTE::info('Snapshot reverted');
+                }
                 if (ANSTE::askForRepeat($msg) == 0) {
                     last;
                 } else {
@@ -780,5 +786,17 @@ sub _prepareSikuliScript
 
     return $execScript
 }
+
+sub _virt
+{
+    my ($self) = @_;
+
+    unless ($self->{virt}) {
+        $self->{virt} = ANSTE::Virtualizer::Virtualizer->instance();
+    }
+
+    return $self->{virt};
+}
+
 
 1;
