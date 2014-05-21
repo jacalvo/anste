@@ -681,10 +681,11 @@ sub destroyNetwork
         throw ANSTE::Exceptions::InvalidType('scenario',
                                             'ANSTE::Scenario::Scenario');
     }
-    my $path = ANSTE::Config->instance()->imagePath();
+    my $config = ANSTE::Config->instance();
+    my $path = $config->imagePath();
 
     my %bridges = %{$scenario->bridges()};
-    my $id = ANSTE::Status->instance()->identifier();
+    my $id = $config->identifier();
     while (my ($net, $num) = each %bridges) {
         $self->execute("virsh net-destroy anste-bridge$id$num");
         unlink("$path/anste-bridge$num.xml");
@@ -729,7 +730,7 @@ sub _createImageConfig
     my $arch = `arch`;
     chomp ($arch);
 
-    my $id = ANSTE::Status->instance()->identifier();
+    my $id = $config->identifier();
 
     my $imageConfig = "<domain type='kvm'>\n";
     $imageConfig .= "\t<name>$name</name>\n";
@@ -774,7 +775,6 @@ sub _createNetworkConfig
     my ($self, $net, $bridge) = @_;
 
     my $config = ANSTE::Config->instance();
-    my $status = ANSTE::Status->instance();
 
     # Only allow forward for the first bridge (ANSTE communication network)
     my $forward = 0;
@@ -789,7 +789,7 @@ sub _createNetworkConfig
         $address = ANSTE::Validate::ip($net) ? $net : "$net.254";
     }
 
-    my $id = $status->identifier();
+    my $id = $config->identifier();
 
     my $networkConfig = "<network>\n";
     $networkConfig .= "\t<name>anste-bridge$id$bridge</name>\n";

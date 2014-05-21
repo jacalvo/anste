@@ -121,6 +121,7 @@ sub check
     $self->verbose();
     $self->wait();
     $self->waitFail();
+    $self->identifier();
     $self->imagePath();
     $self->logPath();
     $self->deployPath();
@@ -582,6 +583,61 @@ sub setNoDestroy
     }
 
     $self->{override}->{'global'}->{'nodestroy'} = $value;
+}
+
+# Method: identifier
+#
+#   Gets the value for the identifier option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub identifier
+{
+    my ($self) = @_;
+
+    my $identifier = $self->_getOption('global', 'identifier');
+
+    if (not defined $identifier) {
+        throw ANSTE::Exceptions::InvalidConfig('global/identifier',
+                                               $identifier,
+                                               $self->{confFile});
+    }
+
+    return $identifier;
+}
+
+# Method: setIdentifier
+#
+#   Sets the value for the identifier option.
+#
+# Parameters:
+#
+#   value - String with the value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setIdentifier
+{
+    my ($self, $value) = @_;
+
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not defined $value) {
+        throw ANSTE::Exceptions::InvalidOption('global/identifier',
+                                               $value);
+    }
+
+    $self->{override}->{'global'}->{'identifier'} = $value;
 }
 
 # Method: reuse
@@ -1649,6 +1705,7 @@ sub _setDefaults
     $self->{default}->{'global'}->{'wait-fail'} = 0;
     $self->{default}->{'global'}->{'reuse'} = 0;
     $self->{default}->{'global'}->{'nodestroy'} = 0;
+    $self->{default}->{'global'}->{'identifier'} = '';
 
     $self->{default}->{'paths'}->{'images'} = '/tmp/images';
     $self->{default}->{'paths'}->{'deploy'} = "$data/deploy";
