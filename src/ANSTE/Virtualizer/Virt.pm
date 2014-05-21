@@ -1,4 +1,5 @@
 # Copyright (C) 2007-2014 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+# Copyright (C) 2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -33,11 +34,25 @@ use File::Copy;
 
 my $VIRSH = _virsh();
 
+use threads;
+use threads::shared;
+use TryCatch::Lite;
+use Attempt;
+
+my $lockMount : shared;
+my $lockCreate : shared;
+
 # Class: Virt
 #
 #   Implementation of the Virtualizer class that interacts
 #   with libvirt.
 #
+
+sub cleanup
+{
+    # Clean possible mounted nbd devices from a previous scenario
+    system ('pkill -9 -f qemu-nbd');
+}
 
 my $BRIDGE_PREFIX = 'anstebr';
 
@@ -220,13 +235,108 @@ sub destroyImage
     $self->execute("$VIRSH destroy $image");
 }
 
+# Method: preCreateVM
+#
+#   Overridden method to perform the necessary steps before the creation of
+#   a KVM Virtual Machine.
+#
+# Parameters:
+#
+#   host - <ANSTE::Scenario::Host> object.
+#
+#   image - <ANSTE::Scenario::BaseImage> object.
+#
+# Returns:
+#
+#   boolean - indicates if the process has been successful
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub preCreateVM
+{
+    my ($self, $host, $image) = @_;
+
+    defined $host or
+        throw ANSTE::Exceptions::MissingArgument('host');
+
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('image');
+
+    my $hostname = $host->name();
+
+    ANSTE::info("[$hostname] Creating a copy of the base image...");
+    my $error = 0;
+    try {
+        my $baseimage = $host->baseImage();
+        if (not $self->createImageCopy($baseimage, $image)) {
+            ANSTE::info("[$hostname] Can't copy base image");
+            $error = 1;
+        }
+    } catch (ANSTE::Exceptions::NotFound $e) {
+        ANSTE::info("[$hostname] Base image not found, can't continue.");
+        $error = 1;
+    }
+
+    unless($error) {
+        # Critical section to prevent mount errors with loop device busy
+        {
+            lock($lockMount);
+
+            ANSTE::info("[$hostname] Updating hostname on the new image...");
+            try {
+                my $ok = $self->_updateHostname($image);
+                if (not $ok) {
+                    ANSTE::info("[$hostname] Error copying host files.");
+                    $error = 1;
+                }
+            } catch ($e) {
+                ANSTE::info("[$hostname] ERROR: $e");
+                $error = 1;
+            }
+        }
+    }
+
+    return not $error;
+}
+
+# FIXME: We should not use ANSTE::Image::Commands from within a virtualizer
+sub _updateHostname
+{
+    my ($self, $image) = @_;
+
+    my $ok = 0;
+    my $cmd = new ANSTE::Image::Commands($image);
+
+    attempt {
+        try {
+            $cmd->mount() or die "Can't mount image: $!";
+        } catch {
+            $cmd->deleteMountPoint();
+            die "Can't mount image.";
+        }
+    } tries => 5, delay => 5;
+
+    try {
+        $cmd->copyHostFiles() or die "Can't copy files: $!";
+        $ok = 1;
+    } catch ($e) {
+        $cmd->umount() or die "Can't unmount image: $!";
+        $e->throw();
+    }
+    $cmd->umount() or die "Can't unmount image: $!";
+
+    return $ok;
+}
+
 # Method: createVM
 #
 #   Overriden method that creates a KVM Virtual Machine.
 #
 # Parameters:
 #
-#   name - name of the libvirt configuration file for the image
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #
@@ -238,17 +348,28 @@ sub destroyImage
 #
 sub createVM
 {
-    my ($self, $name) = @_;
+    my ($self, $image) = @_;
 
-    defined $name or
-        throw ANSTE::Exceptions::MissingArgument('name');
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('$image');
 
     my $config = ANSTE::Config->instance();
-    my $path = $config->imagePath();
     my $backend = $config->backend();
+    my $path = $config->imagePath();
+    my $name = $image->{name};
 
-    $self->execute("$VIRSH create $path/$name/domain.xml") or
-        throw ANSTE::Exceptions::Error("Error creating domain $name");
+    my $error = 0;
+    # Critical section to prevent KVM crashes when trying to create
+    # two machines at the same time
+    {
+        # FIXME: is this really a KVM or a libvirt problem? maybe with lxc is not needed
+        lock ($lockCreate) unless ($backend eq 'lxc');
+
+        $error = $self->execute("virsh create $path/$name/domain.xml") or
+                    throw ANSTE::Exceptions::Error("Error creating domain $name");
+    };
+
+    return not $error;
 }
 
 # Method: defineVM
@@ -257,7 +378,7 @@ sub createVM
 #
 # Parameters:
 #
-#   name - name of the libvirt configuration file for the image
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #
@@ -269,10 +390,12 @@ sub createVM
 #
 sub defineVM
 {
-    my ($self, $name) = @_;
+    my ($self, $image) = @_;
 
-    defined $name or
-        throw ANSTE::Exceptions::MissingArgument('name');
+    defined $image or
+        throw ANSTE::Exceptions::MissingArgument('$image');
+
+    my $name = $image->{name};
 
     my $path = ANSTE::Config->instance()->imagePath();
     $self->execute("virsh define $path/$name/domain.xml") or
@@ -285,7 +408,7 @@ sub defineVM
 #
 # Parameters:
 #
-#   name - name of the domain
+#   image - <ANSTE::Scenario::BaseImage> object.
 #
 # Returns:
 #
@@ -297,13 +420,13 @@ sub defineVM
 #
 sub startVM
 {
-    my ($self, $name) = @_;
+    my ($self, $image) = @_;
 
-    defined $name or
+    defined $image or
         throw ANSTE::Exceptions::MissingArgument('name');
 
-    $self->execute("virsh start $name");
-        throw ANSTE::Exceptions::Error("Error starting domain $name");
+    my $name = $image->{name};
+    return $self->execute("virsh start $name");
 }
 
 # Method: removeVM
@@ -359,6 +482,20 @@ sub existsVM
     chomp($out);
 
     return $out;
+}
+
+# Method: listVMs
+#
+#   Overridden method to list all the existing KVM VMs
+#
+# Returns:
+#
+#   list - names of all the VMs
+#
+sub listVMs
+{
+    # TODO: Use the identifier to filter
+    return `virsh list 2>/dev/null | tail -n +3 | head -n -1 | awk '{ print \$2 }'`;
 }
 
 # Method: imageFile
@@ -562,9 +699,38 @@ sub destroyNetwork
     my $path = ANSTE::Config->instance()->imagePath();
 
     my %bridges = %{$scenario->bridges()};
+    my $id = ANSTE::Status->instance()->identifier();
     while (my ($net, $num) = each %bridges) {
-        $self->execute("virsh net-destroy anste-bridge$num");
+        $self->execute("virsh net-destroy anste-bridge$id$num");
         unlink("$path/anste-bridge$num.xml");
+    }
+}
+
+# TODO
+sub cleanNetwork
+{
+    my ($self, $id) = @_;
+
+    my @bridges;
+    if ($id) {
+        @bridges = `virsh net-list 2>/dev/null | grep anste | grep $id | awk '{ print \$1 }'`;
+    } else {
+        @bridges = `virsh net-list 2>/dev/null | grep anste | awk '{ print \$1 }'`;
+    }
+    chomp (@bridges);
+    foreach my $br (@bridges) {
+        print "Destroying network $br...\n";
+        system ("virsh net-destroy $br");
+    }
+
+    my @pids;
+    if ($id) {
+        @pids = `ps ax | grep dnsmasq | grep anste | grep $id | awk '{ print \$1 }'`;
+    } else {
+        @pids = `ps ax | grep dnsmasq | grep anste | awk '{ print \$1 }'`;
+    }
+    foreach my $pid (@pids) {
+        system ("kill -9 $pid");
     }
 }
 
@@ -584,6 +750,8 @@ sub _createImageConfig
     my $osType = $lxc ? 'exe' : 'hvm';
     my $init = $lxc ? '<init>/sbin/init</init>' : '';
     my $emulator = $lxc ? '/usr/lib/libvirt/libvirt_lxc' : '/usr/bin/kvm';
+
+    my $id = ANSTE::Status->instance()->identifier();
 
     my $imageConfig = "<domain type='$domainType'>\n";
     $imageConfig .= "\t<name>$name</name>\n";
@@ -613,7 +781,7 @@ sub _createImageConfig
         $imageConfig .= "\t\t<interface type='bridge'>\n";
         my $bridge = $iface->bridge();
         my $mac = $iface->hwAddress();
-        $imageConfig .= "\t\t\t<source bridge='${BRIDGE_PREFIX}${bridge}'/>\n";
+        $imageConfig .= "\t\t\t<source bridge='${BRIDGE_PREFIX}${id}${bridge}'/>\n";
         $imageConfig .= "\t\t\t<mac address='$mac'/>\n";
         # Gigabit ethernet card to improve performance
         $imageConfig .= "\t\t\t<model type='virtio'/>\n";
@@ -639,6 +807,7 @@ sub _createNetworkConfig
     my ($self, $net, $bridge) = @_;
 
     my $config = ANSTE::Config->instance();
+    my $status = ANSTE::Status->instance();
 
     # Only allow forward for the first bridge (ANSTE communication network)
     my $forward = 0;
@@ -653,14 +822,16 @@ sub _createNetworkConfig
         $address = ANSTE::Validate::ip($net) ? $net : "$net.254";
     }
 
+    my $id = $status->identifier();
+
     my $networkConfig = "<network>\n";
-    $networkConfig .= "\t<name>anste-bridge$bridge</name>\n";
+    $networkConfig .= "\t<name>anste-bridge$id$bridge</name>\n";
     if ($forward) {
-        $networkConfig .= "\t<bridge name=\"${BRIDGE_PREFIX}${bridge}\" />\n";
+        $networkConfig .= "\t<bridge name=\"${BRIDGE_PREFIX}${id}${bridge}\" />\n";
         $networkConfig .= "\t<forward mode=\"nat\" />\n";
         $networkConfig .= "\t<ip address=\"$address\" netmask=\"$netmask\" />\n";
     } else {
-        $networkConfig .= "\t<bridge name=\"${BRIDGE_PREFIX}${bridge}\" stp=\"on\" delay=\"0\" />\n";
+        $networkConfig .= "\t<bridge name=\"${BRIDGE_PREFIX}${id}${bridge}\" stp=\"on\" delay=\"0\" />\n";
         $networkConfig .= "\t<mac address=\"$bridge_mac_prefix:$mac_id\" />\n";
         $mac_id++;
     }

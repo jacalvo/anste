@@ -35,6 +35,7 @@ use ANSTE::Test::Suite;
 use ANSTE::Test::Runner;
 use ANSTE::Report::TextWriter;
 use ANSTE::Report::HTMLWriter;
+use ANSTE::Virtualizer::Virtualizer;
 
 use Getopt::Long;
 use Pod::Usage;
@@ -53,6 +54,7 @@ my $shutdown = '';
 my $test = '';
 my $out = '';
 my $path = '';
+my $conf = '';
 my $video = '';
 my $format = '';
 my $varfile = '';
@@ -65,6 +67,8 @@ my $quiet = 0;
 my $step = 0;
 my $reuse = 0;
 my $break = '';
+my $openstack = 0;
+my $identifier = '';
 
 GetOptions('createimg' => \$create,
            'updateimg' => \$update,
@@ -74,6 +78,7 @@ GetOptions('createimg' => \$create,
            'shutdown' => \$shutdown,
            'test' => \$test,
            'path=s' => \$path,
+           'conf=s' => \$conf,
            'out=s' => \$out,
            'video' => \$video,
            'format=s' => \$format,
@@ -86,6 +91,8 @@ GetOptions('createimg' => \$create,
            'reuse' => \$reuse,
            'step' => \$step,
            'break=s' => \$break,
+           'openstack' => \$openstack,
+           'identifier=s' => \$identifier,
            'help' => \$help) or pod2usage(2);
 
 pod2usage(1) if $help;
@@ -94,13 +101,17 @@ if (none($create, $update, $getimg, $remove, $deploy, $shutdown, $test) == 1) {
     pod2usage("$0: No action specified.");
 }
 
-my $status = ANSTE::Status->instance();
+my $status = ANSTE::Status->instance($identifier);
 my $config = ANSTE::Config->instance();
+
+# Set conf so that images are generated with support for OpenStack
+$status->setUseOpenStack($openstack);
 
 unless ($path) {
     $path = '.';
 }
 $config->setUserPath($path);
+$config->setLocalConfPath($conf) if $conf;
 
 if ($shutdown) {
     my $scenario = $status->currentScenario();
@@ -153,27 +164,34 @@ $config->check();
 
 # Check if another instance of ANSTE is running
 my $lockFile;
-open ($lockFile, '>', LOCK_FILE);
+my $lockFilePath = LOCK_FILE;
+$lockFilePath .= $identifier if $identifier;
+open ($lockFile, '>', $lockFilePath);
 unless (flock ($lockFile, LOCK_EX | LOCK_NB)) {
-    print STDERR 'Could not get the lock for ' . LOCK_FILE . ": $!\n";
+    print STDERR 'Could not get the lock for ' . $lockFilePath . ": $!\n";
     print STDERR "Maybe another instance of ANSTE is already running\n";
     exit(1);
 }
 
 unless ($shutdown or $remove) {
+    my $virtualizer = ANSTE::Virtualizer::Virtualizer->instance();
+
     # Check virtual machines already running
-    if (system ('LANGUAGE=C virsh list | grep running') == 0) {
+    my @vms = $virtualizer->listVMs();
+    for my $vm (@vms) {
+        print "$vm\n";
+    }
+    if (scalar(@vms) > 0) {
         print "WARNING: The above virtual machines are running.\n" .
               "Press any key to continue or Control-C to stop.\n";
         my $line = <STDIN>;
     }
 
-    # Clean possible mounted nbd devices from a previous scenario
-    system ('pkill -9 -f qemu-nbd');
+    $virtualizer->cleanup();
 
     # Clean network from previous executions if not reusing the deployed scenario
     unless ($reuse) {
-        ANSTE::Status->cleanNetwork();
+        $virtualizer->cleanNetwork($identifier);
     }
 }
 
@@ -466,6 +484,7 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -shutdown          destroy the deployed scenario and delete images
    -test              test a suite
    -path <dir>        where to find the data (CWD if not specified)
+   -conf <file>       local configuration file (will overwrite the values of the global conf)
    -out  <dir>        report output directory
    -video             save video recording of web tests
    -format <fmt>      select the output format for the reports
@@ -475,9 +494,11 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -step              run tests step by step, waiting after each one
    -break <t1,t2,...> set breakpoints before the given test names
    -auto-snapshot     take snapshots before each step or breakpoint
+   -openstack         images are generated with support for OpenStack
    -quiet             do not show output of commands
    -reuse             reuse the created image if exists (with -create)
                       reuse a deployed scenario (with -test)
    -vars <file>       override suite variables with the given YAML file
+   -identifier        used as identifier when running multiple scenarios at the same time
 
 =cut

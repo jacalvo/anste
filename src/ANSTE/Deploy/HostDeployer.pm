@@ -34,11 +34,7 @@ use ANSTE::Virtualizer::Virtualizer;
 use ANSTE::System::System;
 
 use threads;
-use threads::shared;
 use TryCatch::Lite;
-use Attempt;
-
-my $lockMount : shared;
 
 # Class: HostDeployer
 #
@@ -165,6 +161,7 @@ sub waitForFinish
     if  ($ret) {
         throw ANSTE::Exceptions::Error('Error in the deploy of the scenario');
     }
+    $self->{virtualizer}->finishImageCreation($self->{image}->{name});
 }
 
 # Method: shutdown
@@ -201,15 +198,11 @@ sub deleteImage
 {
     my ($self) = @_;
 
-    my $virtualizer = $self->{virtualizer};
+    my $cmd = $self->{cmd};
 
     my $host = $self->{host};
-    my $hostname = $host->name();
-
     unless ($host->baseImageType() eq 'raw') {
-        ANSTE::info("[$hostname] Deleting image...");
-        $virtualizer->deleteImage($hostname);
-        ANSTE::info("[$hostname] Image deleted.");
+        $cmd->deleteImage();
     }
 }
 
@@ -220,9 +213,9 @@ sub _deploy
     my $host = $self->{host};
 
     if ($host->baseImageType() eq 'raw') {
-        $self->_deploySnapshot();
+        return $self->_deploySnapshot();
     } else {
-        $self->_deployCopy();
+        return $self->_deployCopy();
     }
 }
 
@@ -234,11 +227,12 @@ sub _deploySnapshot
     my $hostname = $host->name();
     my $cmd = $self->{cmd};
 
+    # TODO: libvirt dependant => refactor
     ANSTE::info("[$hostname] Restoring base snapshot...");
     $cmd->restoreBaseSnapshot($hostname);
 
     my $virtualizer = $self->{virtualizer};
-    $virtualizer->startVM($hostname);
+    return  $virtualizer->startVM($self->{image}, $host);
 }
 
 sub _deployCopy
@@ -264,45 +258,13 @@ sub _deployCopy
     $commIface->removeGateway() unless $host->isRouter();
     unshift (@{$host->network()->interfaces()}, $commIface);
 
-    my $error = 0;
-
-    ANSTE::info("[$hostname] Creating a copy of the base image...");
-
-    try {
-        $self->_copyBaseImage() or die "Can't copy base image";
-    } catch (ANSTE::Exceptions::NotFound $e) {
-        ANSTE::info("[$hostname] Base image not found, can't continue.");
-        $error = 1;
-    }
-
-    if ($error) {
+    # Steps previous to the VM creation
+    unless ($cmd->preCreateVirtualMachine($host)) {
         return undef;
     }
 
-    # Critical section here to prevent mount errors with loop device busy
-    # or KVM crashes when trying to create two machines at the same time
-    {
-        lock ($lockMount);
-
-        ANSTE::info("[$hostname] Updating hostname on the new image...");
-        try {
-            my $ok = $self->_updateHostname();
-            if (not $ok) {
-                ANSTE::info("[$hostname] Error copying host files.");
-                $error = 1;
-            }
-        } catch ($e) {
-            ANSTE::info("[$hostname] ERROR: $e");
-            $error = 1;
-        }
-
-        if ($error) {
-            return undef;
-        }
-
-        ANSTE::info("[$hostname] Creating virtual machine ($ip)...");
-        $cmd->createVirtualMachine();
-    };
+    ANSTE::info("[$hostname] Creating virtual machine ($ip)...");
+    $cmd->createVirtualMachine();
 
     try {
         # Execute pre-install scripts
@@ -349,49 +311,7 @@ sub _deployCopy
     } catch ($e) {
         ANSTE::info("[$hostname] ERROR: $e");
     }
-}
-
-sub _copyBaseImage
-{
-    my ($self) = @_;
-
-    my $virtualizer = $self->{virtualizer};
-
-    my $host = $self->{host};
-
-    my $baseimage = $host->baseImage();
-    my $newimage = $self->{image};
-
-    $virtualizer->createImageCopy($baseimage, $newimage);
-}
-
-sub _updateHostname
-{
-    my ($self) = @_;
-
-    my $cmd = $self->{cmd};
-
-    my $ok = 0;
-
-    attempt {
-        try {
-            $cmd->mount() or die "Can't mount image: $!";
-        } catch {
-            $cmd->deleteMountPoint();
-            die "Can't mount image.";
-        }
-    } tries => 5, delay => 5;
-
-    try {
-        $cmd->copyHostFiles() or die "Can't copy files: $!";
-        $ok = 1;
-    } catch ($e) {
-        $cmd->umount() or die "Can't unmount image: $!";
-        $e->throw();
-    }
-    $cmd->umount() or die "Can't unmount image: $!";
-
-    return $ok;
+    return 0;
 }
 
 sub _generateSetupScript # (script)

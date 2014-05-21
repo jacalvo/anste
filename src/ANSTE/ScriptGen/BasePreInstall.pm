@@ -111,7 +111,7 @@ sub writeScript
     my $config = ANSTE::Config->instance();
     my $port = $config->masterPort();
     # TODO: Not sure if this is correct
-    my $masterIP = $config->gateway();
+    my $masterIP = $config->master();
     my $MASTER = "$masterIP:$port";
 
     print $file "# Stores the master address so anste-slave can read it\n";

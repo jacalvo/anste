@@ -8,7 +8,8 @@ Build-Depends: cdbs, dh-python, libtrycatch-lite-perl, libtest-class-perl,
                libterm-readline-gnu-perl, libtext-template-perl,
                libdevel-stacktrace-perl, libyaml-libyaml-perl,
                libjson-xs-perl, libattempt-perl, libio-interface-perl,
-               libtest-mockmodule-perl, libtest-mockobject-perl
+               libtest-mockmodule-perl, libtest-mockobject-perl,
+               libnet-openstack-compute-perl, libnet-openstack-networking-perl
 Standards-Version: 3.7.2
 
 Package: anste
@@ -18,7 +19,8 @@ Depends: perl, libtrycatch-lite-perl, libfile-copy-recursive-perl,
          libconfig-tiny-perl, libperl6-junction-perl,
          libterm-readline-gnu-perl, libtext-template-perl, libvirt-bin,
          libyaml-libyaml-perl, libjson-xs-perl, sshpass, libattempt-perl,
-         libio-interface-perl, libdevel-stacktrace-perl, python-anste
+         libio-interface-perl, libdevel-stacktrace-perl, python-anste,
+         libnet-openstack-compute-perl, libnet-openstack-networking-perl (>= 0.2)
 Recommends: recordmydesktop
 Description: Advanced Network Service Testing Environment
  ANSTE is a tool to easily create, deploy and test network services on complex

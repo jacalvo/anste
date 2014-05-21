@@ -18,12 +18,19 @@ use warnings;
 
 use ANSTE::Scenario::Scenario;
 
-use Test::More tests => 5;
+use Test::More tests => 7;
+use Test::Exception;
 
 use constant SCENARIO => 'test-bridges.yaml';
+use constant SCENARIO_BAD => 'test-bridges-bad.yaml';
+use constant SCENARIO_BAD2 => 'test-bridges-bad2.yaml';
 
 my $scenario = new ANSTE::Scenario::Scenario();
 $scenario->loadFromFile(SCENARIO);
+my $scenario_bad = new ANSTE::Scenario::Scenario();
+throws_ok { $scenario_bad->loadFromFile(SCENARIO_BAD) } 'ANSTE::Exceptions::Error', 'Error when no bridges';
+my $scenario_bad2 = new ANSTE::Scenario::Scenario();
+throws_ok { $scenario_bad2->loadFromFile(SCENARIO_BAD2) } qr/provided for bridge 2/, 'Error when no address for a bridge';
 
 is ($scenario->manualBridging(), 1, 'manual bridging is set to 1');
 

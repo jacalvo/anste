@@ -128,6 +128,7 @@ sub check
     $self->masterPort();
     $self->firstAddress();
     $self->gateway();
+    $self->master();
     $self->natIface();
     $self->nameserverHost();
     $self->nameserver();
@@ -185,6 +186,26 @@ sub setUserPath
     }
 
     $self->{userPath} = $path;
+}
+
+sub setLocalConfPath
+{
+    my ($self, $localConfFile) = @_;
+
+    defined $localConfFile or
+        throw ANSTE::Exceptions::MissingArgument('localConfFile');
+
+    if (not -r $localConfFile) {
+        throw ANSTE::Exceptions::InvalidOption('localConfFile', $localConfFile);
+    }
+
+    my $localConfig = Config::Tiny->read($localConfFile);
+
+    foreach my $section (keys %{$localConfig}) {
+        foreach my $key (keys %{$localConfig->{$section}}) {
+            $self->{config}->{$section}->{$key} = $localConfig->{$section}->{$key};
+        }
+    }
 }
 
 # Method: formats
@@ -1075,6 +1096,36 @@ sub gateway
     }
 
     return $gateway;
+}
+
+# Method: master
+#
+#   Gets the value for the master IP option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub master
+{
+    my ($self) = @_;
+
+    my $master =  $self->_getOption('comm', 'master');
+    unless ($master) {
+        $master = $self->gateway();
+    }
+
+    if (not ANSTE::Validate::ip($master)) {
+        throw ANSTE::Exceptions::InvalidConfig('master',
+                                               $master,
+                                               $self->{confFile});
+    }
+
+    return $master;
 }
 
 # Method: natIface

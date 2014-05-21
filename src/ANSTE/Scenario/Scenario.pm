@@ -20,6 +20,7 @@ use warnings;
 
 use ANSTE::Scenario::Host;
 use ANSTE::Config;
+use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidFile;
 
@@ -328,6 +329,8 @@ sub addBridge
     defined $network or
         throw ANSTE::Exceptions::MissingArgument('network');
 
+    # TODO: Check network format
+
     if (not $self->{bridges}->{$network}) {
         if (defined $num) {
             $self->{bridges}->{$network} = $num;
@@ -396,22 +399,32 @@ sub _loadYAML
         $self->setManualBridging(1);
     }
 
-    my @bridges;
-
     # Read the host elements
     foreach my $element (@{$scenario->{hosts}}) {
         my $host = new ANSTE::Scenario::Host;
         $host->loadYAML($element);
         if ($host->precondition()) {
             $self->addHost($host);
-            push (@bridges, @{$host->bridges()});
         }
     }
 
     if ($scenario->{'manual-bridging'}) {
         my $bridges = $scenario->{'bridges'};
-        foreach my $bridgeId (@bridges) {
-            $self->{bridges}->{$bridgeId} = $bridgeId;
+
+        unless (defined $bridges) {
+            throw ANSTE::Exceptions::Error('Bridges must be provided when manual-bridging is on in the scenario');
+        }
+
+        foreach my $bridge (@{$bridges}) {
+            my $id = $bridge->{id};
+            my $addr = $bridge->{address};
+            unless (defined $addr) {
+                throw ANSTE::Exceptions::Error("Address must be provided for bridge $id in the scenario.");
+            }
+            my ($net, $unused) =
+                $addr =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3})\.(\d{1,3})$/;
+
+            $self->addBridge($net, $id);
         }
     }
 }

@@ -22,6 +22,7 @@ use strict;
 use warnings;
 
 use ANSTE::Config;
+use ANSTE::Status;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
@@ -120,6 +121,14 @@ sub installBasePackages
                     'hping3',
                     'netcat',
                     'tcpdump');
+
+    if (ANSTE::Status->instance()->useOpenStack()) {
+        push(@PACKAGES, 'cloud-init');
+    }
+
+    # TODO: Unhardcode
+    $self->execute('echo "deb http://ppa.launchpad.net/zentyal/anste/ubuntu precise main" > /etc/apt/sources.list.d/anste.list')
+        or die "write anste repository to sources.list failed: $!";
 
     $self->execute('apt-get update')
         or die "apt-get update failed: $!";
@@ -330,6 +339,12 @@ sub networkConfig
     defined $network or
         throw ANSTE::Exceptions::MissingArgument('network');
 
+
+    my $anste_config = ANSTE::Config->instance();
+    my $masterIP = $anste_config->master();
+    my $gateway = $anste_config->gateway();
+    my $commIface = $anste_config->commIface();
+
     my $config = '';
     $config .= "cat << EOF > /etc/network/interfaces\n";
     $config .= "auto lo\n";
@@ -337,8 +352,13 @@ sub networkConfig
     foreach my $iface (@{$network->interfaces()}) {
         $config .= "\n";
         $config .= $self->_interfaceConfig($iface);
+        if ($iface->name() eq $commIface) {
+            # Add route to master
+            $config .= $self->_staticRoute($masterIP, $gateway);
+            $config .= "\n";
+        }
     }
-    $config .= "EOF\n";
+    $config .= "\nEOF\n";
     $config .= "\n";
 
     foreach my $route (@{$network->routes()}) {
@@ -347,6 +367,13 @@ sub networkConfig
     }
 
     return $config;
+}
+
+sub _staticRoute
+{
+    my ($self, $destinations, $gateway) = @_;
+
+    return "post-up route add -host $destinations gw $gateway";
 }
 
 # Method: hostsConfig

@@ -1,6 +1,17 @@
 HEAD
     + Added support for LXC in addition to KVM
     + Added auto-snapshot for -break and -step modes
+    + Make anste-clean command work with any virtualizer
+    + Added listVMs method to the virtualizers
+    + Added identifier and conf command line arguments
+    + Make bridge definition mandatory when using manual-bridging
+    + Now the gateway and the first address from the config are passed
+      to the tests as COMM_gateway and COMM_firstAddress
+    + Added master configuration key to set the IP of the master
+    + Added finalConfigurations method to ANSTE::Image::Commands
+    + Added ANSTE::Virtualizer::OpenStack with partial support
+    + Added useOpenStack and setUseOpenStack to Anste::Status
+    + Added virtualizerStatus and setVirtualizerStatus to Anste::Status
     + Show current test index and total tests
     + Now symlinks are dereferenced when tranfering the files to the slaves
     + Added deploy/auto-update config key to enable/disable the auto-update
