@@ -158,8 +158,9 @@ sub waitForFinish
     my ($self) = @_;
 
     my $ret = $self->{thread}->join();
-    if  ($ret) {
-        throw ANSTE::Exceptions::Error('Error in the deploy of the scenario');
+    if (not $ret) {
+        my $host = $self->{host}->name();
+        throw ANSTE::Exceptions::Error("[$host] Error in the deployment.");
     }
     $self->{virtualizer}->finishImageCreation($self->{image}->{name});
 }
@@ -206,6 +207,7 @@ sub deleteImage
     }
 }
 
+# Return True if the deployment was successful and False otherwise
 sub _deploy
 {
     my ($self) = @_;
@@ -231,8 +233,9 @@ sub _deploySnapshot
     ANSTE::info("[$hostname] Restoring base snapshot...");
     $cmd->restoreBaseSnapshot($hostname);
 
+    ANSTE::info("[$hostname] Creating virtual machine...");
     my $virtualizer = $self->{virtualizer};
-    return  $virtualizer->startVM($self->{image}, $host);
+    return $virtualizer->startVM($self->{image}, $host);
 }
 
 sub _deployCopy
@@ -311,7 +314,7 @@ sub _deployCopy
     } catch ($e) {
         ANSTE::info("[$hostname] ERROR: $e");
     }
-    return 0;
+    return 1;
 }
 
 sub _generateSetupScript # (script)
