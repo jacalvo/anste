@@ -503,6 +503,8 @@ sub updateSystem
     ANSTE::info("Executing post-update scripts...") if $config->verbose();
     $self->executeScripts($image->postUpdateScripts());
 
+    $self->{virtualizer}->markImageUpdated($hostname);
+
     return 1;
 }
 

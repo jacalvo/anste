@@ -1,4 +1,5 @@
 HEAD
+    + Added imageNeedsUpdate and markImageUpdated imethods to the virtualizers
     + Make anste-clean command work with any virtualizer
     + Added listVMs method to the virtualizers
     + Added identifier and conf command line arguments

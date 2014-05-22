@@ -155,6 +155,24 @@ sub new
     return $self;
 }
 
+# Method: imageNeedsUpdate
+#
+#   Overridden method to tell if an OpenStack image needs an update
+#   For the moment, OpenStack images are not updated
+#
+# Parameters:
+#
+#   name   - name of the image
+#
+# Returns:
+#
+#   boolean -   indicates if the image needs an update
+#
+sub imageNeedsUpdate
+{
+    return 0;
+}
+
 # FIXME: Remove
 sub skipImageCreation
 {
