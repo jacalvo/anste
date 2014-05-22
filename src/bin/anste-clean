@@ -35,8 +35,9 @@ GetOptions('force' => \$force,
 
 my $config = ANSTE::Config->instance();
 $config->setLocalConfPath($conf) if $conf;
+$config->setIdentifier($identifier) if $identifier;
 
-my $status = ANSTE::Status->instance($identifier);
+my $status = ANSTE::Status->instance();
 my $hosts = $status->deployedHosts();
 
 my $virtualizer = ANSTE::Virtualizer::Virtualizer->instance();
@@ -66,7 +67,7 @@ sub clean
     }
 
     my $virtualizer = ANSTE::Virtualizer::Virtualizer->instance();
-    $virtualizer->cleanNetwork($identifier);
+    $virtualizer->cleanNetwork($config->identifier());
 
     # kill ANSTE instance
     my $pid = $status->pid();
@@ -82,6 +83,6 @@ sub clean
     #}
 
     # TODO: Unhardcode
-    my $id = $status->identifier();
+    my $id = $config->identifier();
     system ("rm -rf /var/tmp/anste-tests/$id");
 }

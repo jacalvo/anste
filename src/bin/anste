@@ -101,7 +101,7 @@ if (none($create, $update, $getimg, $remove, $deploy, $shutdown, $test) == 1) {
     pod2usage("$0: No action specified.");
 }
 
-my $status = ANSTE::Status->instance($identifier);
+my $status = ANSTE::Status->instance();
 my $config = ANSTE::Config->instance();
 
 # Set conf so that images are generated with support for OpenStack
@@ -158,6 +158,9 @@ if ($break) {
         $config->setBreakpoint($breakpoint);
     }
 }
+if ($identifier) {
+    $config->setIdentifier($identifier);
+}
 
 # Check the config file for missing or malformed options
 $config->check();
@@ -165,7 +168,7 @@ $config->check();
 # Check if another instance of ANSTE is running
 my $lockFile;
 my $lockFilePath = LOCK_FILE;
-$lockFilePath .= $identifier if $identifier;
+$lockFilePath .= $config->identifier();
 open ($lockFile, '>', $lockFilePath);
 unless (flock ($lockFile, LOCK_EX | LOCK_NB)) {
     print STDERR 'Could not get the lock for ' . $lockFilePath . ": $!\n";
@@ -191,7 +194,7 @@ unless ($shutdown or $remove) {
 
     # Clean network from previous executions if not reusing the deployed scenario
     unless ($reuse) {
-        $virtualizer->cleanNetwork($identifier);
+        $virtualizer->cleanNetwork($config->identifier());
     }
 }
 

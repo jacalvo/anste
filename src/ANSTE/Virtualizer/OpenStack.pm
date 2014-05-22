@@ -147,7 +147,7 @@ sub new
         $self->{suffix} = $user;
     }
 
-    my $id = $self->{status}->identifier();
+    my $id = $self->{config}->identifier();
     $self->{suffix} .= $id if $id;
 
     bless($self, $class);
