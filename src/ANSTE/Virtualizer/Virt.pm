@@ -36,6 +36,8 @@ use threads;
 use threads::shared;
 use TryCatch::Lite;
 use Attempt;
+use File::Slurp;
+use POSIX;
 
 my $lockMount : shared;
 my $lockCreate : shared;
@@ -159,6 +161,62 @@ sub createBaseImage
 
     # Rename disk image
     $self->execute("mv $dir/*.qcow2 $dir/disk.qcow2");
+}
+
+# Method: imageNeedsUpdate
+#
+#   Overridden method to tell if a KVM base image needs an update
+#   An image need an update if it was not already updated today
+#
+# Parameters:
+#
+#   name   - name of the image
+#
+# Returns:
+#
+#   boolean -   indicates if the image needs an update
+#
+sub imageNeedsUpdate
+{
+    my ($self, $name) = @_;
+
+    my $timestamp = strftime("%Y%m%d", localtime(time));
+
+    my $config = ANSTE::Config->instance();
+    my $imgdir = $config->imagePath();
+
+    my $tsFile = "$imgdir/$name/last-update";
+    my $lastUpdateTS = read_file($tsFile, err_mode => 'quiet');
+    chomp($lastUpdateTS) if $lastUpdateTS;
+
+    return (not $lastUpdateTS or ($lastUpdateTS lt $timestamp));
+}
+
+
+# Method: markImageUpdated
+#
+#   Overridden method to mark a KVM base image as updated
+#
+# Parameters:
+#
+#   name   - name of the image
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented>
+#
+sub markImageUpdated
+{
+    my ($self, $name) = @_;
+
+    my $timestamp = strftime("%Y%m%d", localtime(time));
+
+    my $config = ANSTE::Config->instance();
+    my $imgdir = $config->imagePath();
+
+    my $tsFile = "$imgdir/$name/last-update";
+
+    write_file($tsFile, $timestamp);
 }
 
 # Method: shutdownImage

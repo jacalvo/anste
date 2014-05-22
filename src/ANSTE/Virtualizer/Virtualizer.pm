@@ -122,6 +122,46 @@ sub createBaseImage
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: imageNeedsUpdate
+#
+#   Override this method to tell if a base image needs an update
+#   with the proper virtualizer
+#
+# Parameters:
+#
+#   name   - name of the image
+#
+# Returns:
+#
+#   boolean -   indicates if the image needs an update
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented>
+#
+sub imageNeedsUpdate
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
+
+# Method: markImageUpdated
+#
+#   Override this method to mark an image as updated with the proper virtualizer
+#
+# Parameters:
+#
+#   name   - name of the image
+#
+# Exceptions:
+#
+#   throws <ANSTE::Exceptions::NotImplemented>
+#
+sub markImageUpdated
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 # FIXME: Remove both skips
 sub skipImageCreation
 {
