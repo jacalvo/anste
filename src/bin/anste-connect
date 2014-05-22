@@ -33,8 +33,9 @@ GetOptions('identifier=s' => \$identifier,
 
 my $config = ANSTE::Config->instance();
 $config->setLocalConfPath($conf) if $conf;
+$config->setIdentifier($identifier) if $identifier;
 
-my $status = ANSTE::Status->instance($identifier);
+my $status = ANSTE::Status->instance();
 my $hosts = $status->deployedHosts();
 
 unless ($hosts) {
