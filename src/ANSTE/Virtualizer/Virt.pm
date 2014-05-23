@@ -750,7 +750,15 @@ sub destroyNetwork
     }
 }
 
-# TODO
+# Method: cleanNetwork
+#
+#   Override this method to implement the
+#   cleaning of the network used by the virtualizer
+#
+# Parameters:
+#
+#   identifier       - used to mark the networks
+#
 sub cleanNetwork
 {
     my ($self, $id) = @_;

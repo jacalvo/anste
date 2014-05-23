@@ -35,6 +35,8 @@ use MIME::Base64;
 use File::Temp qw(tempfile tempdir);
 use File::Slurp;
 
+use feature qw(switch);
+
 my %imageID: shared;
 my $lockImageID: shared;
 
@@ -285,8 +287,9 @@ sub createVM
         my $rawUserData = read_file($fileName);
         $userData = encode_base64($rawUserData);
     }
+    my $instanceSize = self->_calculateInstanceSize($image->memory());
     my $ret = $self->{os_compute}->create_server({name => $serverName,
-                                        flavorRef => '2',           # TODO:Unhardcode
+                                        flavorRef => $instanceSize,
                                         imageRef => $imageRef->{id},
                                         networks => \@netConf,
                                         user_data => $userData,
@@ -305,6 +308,20 @@ sub createVM
 
     return (defined $id);
 }
+
+sub _calculateInstanceSize
+{
+	my ($self, $memory) = @_;
+	my $instanceSize = 0;
+	given ($memory) {
+		when ($memory < 513) { $instanceSize = 0; }
+		when ($memory >= 513 && $memory < 1025) { $instanceSize = 1; }
+		default { $instanceSize = 2; }
+	}
+	return $instanceSize;
+}
+
+
 
 # Method: finishImageCreation
 #
@@ -372,13 +389,6 @@ sub listVMs
     return @server_names;
 }
 
-# TODO: Remove
-sub createImageCopy
-{
-    return 1;
-}
-
-# TODO: Change name
 # Method: deleteImage
 #
 #   Overridden method to delete an image on OpenStack
@@ -506,7 +516,15 @@ sub destroyNetwork
     }
 }
 
-# TODO
+# Method: cleanNetwork
+#
+#   Override this method to implement the
+#   cleaning of the network used by the virtualizer
+#
+# Parameters:
+#
+#   identifier       - used to mark the networks
+#
 sub cleanNetwork
 {
     my ($self, $id) = @_;
@@ -558,16 +576,6 @@ sub _genNetConfig
                          'gateway_ip' => $address};
 
     return $networkConfig;
-}
-
-# TODO: Remove
-sub revertSnapshot
-{
-}
-
-sub existsSnapshot
-{
-    return 1;
 }
 
 1;
