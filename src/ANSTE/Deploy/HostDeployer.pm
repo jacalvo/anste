@@ -1,5 +1,5 @@
 # Copyright (C) 2007-2011 José Antonio Calvo Fernández <jacalvo@zentyal.com>
-# Copyright (C) 2013 Rubén Durán Balda <rduran@zentyal.com>
+# Copyright (C) 2013-2014 Rubén Durán Balda <rduran@zentyal.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -269,6 +269,7 @@ sub _deployCopy
     ANSTE::info("[$hostname] Creating virtual machine ($ip)...");
     $cmd->createVirtualMachine();
 
+    my $ret = 0;
     try {
         # Execute pre-install scripts
         my $pre = $host->preScripts();
@@ -308,13 +309,15 @@ sub _deployCopy
             ANSTE::info("[$hostname] Executing post scripts...");
             $cmd->executeScripts($post);
         }
+
+        $ret = 1;
     } catch (ANSTE::Exceptions::Error $e) {
         my $msg = $e->message();
         ANSTE::info("[$hostname] ERROR: $msg");
     } catch ($e) {
         ANSTE::info("[$hostname] ERROR: $e");
     }
-    return 1;
+    return $ret;
 }
 
 sub _generateSetupScript # (script)
@@ -367,6 +370,10 @@ sub _executeSetupScript
     $client->del("$script.out");
     unlink ($script);
     unlink ("$script.out") if $verbose;
+
+    if ($ret) {
+        throw ANSTE::Exceptions::Error("Setup script execution failed.");
+    }
 }
 
 sub _printOutput # (hostname, file)
