@@ -1,4 +1,6 @@
 HEAD
+    + Now _deployCopy returns whether the deployment was okay or not
+    + Now if the setup script fails, an exception is thrown
     + Added imageNeedsUpdate and markImageUpdated methods to the virtualizers
     + Added global/identifier config key
     + Make anste-clean command work with any virtualizer
