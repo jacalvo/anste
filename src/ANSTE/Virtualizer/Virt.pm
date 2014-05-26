@@ -752,8 +752,7 @@ sub destroyNetwork
 
 # Method: cleanNetwork
 #
-#   Override this method to implement the
-#   cleaning of the network used by the virtualizer
+#   Cleaning of the network used by libvirt
 #
 # Parameters:
 #
