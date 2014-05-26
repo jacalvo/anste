@@ -35,8 +35,6 @@ use MIME::Base64;
 use File::Temp qw(tempfile tempdir);
 use File::Slurp;
 
-use feature qw(switch);
-
 my %imageID: shared;
 my $lockImageID: shared;
 
@@ -313,10 +311,12 @@ sub _calculateInstanceSize
 {
 	my ($self, $memory) = @_;
 	my $instanceSize = 0;
-	given ($memory) {
-		when ($memory < 513) { $instanceSize = 0; }
-		when ($memory >= 513 && $memory < 1025) { $instanceSize = 1; }
-		default { $instanceSize = 2; }
+	if ($memory < 513) {
+		$instanceSize = 0;
+	} elsif ($memory >= 513 && $memory < 1025) {
+		$instanceSize = 1;
+	} else {
+		$instanceSize = 2;
 	}
 	return $instanceSize;
 }
