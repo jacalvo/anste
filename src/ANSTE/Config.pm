@@ -1762,6 +1762,12 @@ sub _setDefaults
         $self->{variables}->{$var} = $self->{config}->{global}->{$var};
     }
 
+    # Add also comm/gateway and comm/first-address as variables
+    my $gateway = $self->gateway();
+    $self->{variables}->{COMM_gateway} = $gateway;
+    my $firstAddress = $self->firstAddress();
+    $self->{variables}->{COMM_firstAddress} = $firstAddress;
+
     # Breakpoints
     $self->{breakpoints} = {};
 }
