@@ -750,7 +750,14 @@ sub destroyNetwork
     }
 }
 
-# TODO
+# Method: cleanNetwork
+#
+#   Cleaning of the network used by libvirt
+#
+# Parameters:
+#
+#   identifier       - used to mark the networks
+#
 sub cleanNetwork
 {
     my ($self, $id) = @_;

@@ -483,7 +483,15 @@ sub destroyNetwork
     throw ANSTE::Exceptions::NotImplemented();
 }
 
-# TODO
+# Method: cleanNetwork
+#
+#   Override this method to implement the
+#   cleaning of the network used by the virtualizer
+#
+# Parameters:
+#
+#   identifier       - used to mark the networks
+#
 sub cleanNetwork
 {
     throw ANSTE::Exceptions::NotImplemented();
