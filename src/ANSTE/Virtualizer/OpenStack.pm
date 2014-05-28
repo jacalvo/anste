@@ -309,19 +309,17 @@ sub createVM
 
 sub _calculateInstanceSize
 {
-	my ($self, $memory) = @_;
-	my $instanceSize = 0;
-	if ($memory < 513) {
-		$instanceSize = 0;
-	} elsif ($memory >= 513 && $memory < 1025) {
-		$instanceSize = 1;
-	} else {
-		$instanceSize = 2;
-	}
-	return $instanceSize;
+    my ($self, $memory) = @_;
+    my $instanceSize = 0;
+    if ($memory < 513) {
+        $instanceSize = 0;
+    } elsif ($memory >= 513 && $memory < 1025) {
+        $instanceSize = 1;
+    } else {
+        $instanceSize = 2;
+    }
+    return $instanceSize;
 }
-
-
 
 # Method: finishImageCreation
 #

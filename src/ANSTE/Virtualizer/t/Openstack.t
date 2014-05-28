@@ -29,37 +29,37 @@ use Test::More;
 
 sub test_calculateInstanceSize_mini : Test
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	is(ANSTE::Virtualizer::OpenStack->_calculateInstanceSize(256), 0);
+    is(ANSTE::Virtualizer::OpenStack->_calculateInstanceSize(256), 0);
 }
 
 sub test_calculateInstanceSize_small_low_limit : Test
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	is(ANSTE::Virtualizer::OpenStack->_calculateInstanceSize(513), 1);
+    is(ANSTE::Virtualizer::OpenStack->_calculateInstanceSize(513), 1);
 }
 
 sub test_calculateInstanceSize_small : Test
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	is(ANSTE::Virtualizer::OpenStack->_calculateInstanceSize(1024), 1);
+    is(ANSTE::Virtualizer::OpenStack->_calculateInstanceSize(1024), 1);
 }
 
 sub test_calculateInstanceSize_medium_low_limit : Test
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	is(ANSTE::Virtualizer::OpenStack->_calculateInstanceSize(1025), 2);
+    is(ANSTE::Virtualizer::OpenStack->_calculateInstanceSize(1025), 2);
 }
 
 sub test_calculateInstanceSize_medium : Test
 {
 	my ($self) = @_;
 
-	is(ANSTE::Virtualizer::OpenStack->_calculateInstanceSize(1500), 2);
+    is(ANSTE::Virtualizer::OpenStack->_calculateInstanceSize(1500), 2);
 }
 
 
