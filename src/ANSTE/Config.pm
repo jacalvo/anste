@@ -1611,7 +1611,8 @@ sub variables
 
 # Method: env
 #
-#   Gets the ANSTE_* environment variables to be passed to setup scripts
+#   Gets the ANSTE_* environment variables to be passed to setup scripts.
+#   Also add all the variables substituted on the YAML files
 #
 # Returns:
 #
@@ -1626,6 +1627,11 @@ sub env
     my $env = '';
     foreach my $key (@keys) {
         $env .= "$key=\"$ENV{$key}\" ";
+    }
+
+    while (my ($name, $value) = each(%{$self->{variables}})) {
+        $name =~ tr/-/_/;
+        $env .= "$name=\"$value\" ";
     }
     chop ($env);
 
