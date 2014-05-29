@@ -189,6 +189,19 @@ sub setUserPath
     $self->{userPath} = $path;
 }
 
+# Method: setLocalConfPath
+#
+#   Uses the configuration file provided as a parameter to override conf keys
+#
+# Parameters:
+#
+#   path - String with the path to the file.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if argument is not a file
+#
 sub setLocalConfPath
 {
     my ($self, $localConfFile) = @_;
@@ -207,6 +220,8 @@ sub setLocalConfPath
             $self->{config}->{$section}->{$key} = $localConfig->{$section}->{$key};
         }
     }
+
+    $self->_setVariables();
 }
 
 # Method: formats
@@ -1757,6 +1772,16 @@ sub _setDefaults
         $dist = 'lucid';
     }
 
+    $self->_setVariables();
+
+    # Breakpoints
+    $self->{breakpoints} = {};
+}
+
+sub _setVariables
+{
+    my ($self) = @_;
+
     # Default values for variables taken from [global] section, overridable by commandline option
     foreach my $var (keys %{$self->{config}->{global}}) {
         $self->{variables}->{$var} = $self->{config}->{global}->{$var};
@@ -1767,9 +1792,6 @@ sub _setDefaults
     $self->{variables}->{COMM_gateway} = $gateway;
     my $firstAddress = $self->firstAddress();
     $self->{variables}->{COMM_firstAddress} = $firstAddress;
-
-    # Breakpoints
-    $self->{breakpoints} = {};
 }
 
 1;
