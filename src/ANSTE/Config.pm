@@ -1792,6 +1792,8 @@ sub _setVariables
     $self->{variables}->{COMM_gateway} = $gateway;
     my $firstAddress = $self->firstAddress();
     $self->{variables}->{COMM_firstAddress} = $firstAddress;
+    my $commIface = $self->commIface();
+    $self->{variables}->{COMM_commIface} = $commIface;
 }
 
 1;
