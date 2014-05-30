@@ -725,7 +725,8 @@ sub loadYAML
     $self->setVariable("COMM_gateway", $gateway);
     my $firstAddress = $config->firstAddress();
     $self->setVariable("COMM_firstAddress", $firstAddress);
-
+    my $commIface = $config->commIface();
+    $self->setVariable("COMM_commIface", $commIface);
 }
 
 1;
