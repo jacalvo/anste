@@ -140,6 +140,10 @@ sub installBasePackages
     $self->execute('update-rc.d ansted defaults 99')
         or die "update-rc.d failed: $!";
 
+    if (ANSTE::Status->instance()->useOpenStack()) {
+        $self->execute('echo "\n\napt_preserve_sources_list: True\n" >> /etc/cloud/cloud.cfg');
+    }
+
     return($ret);
 }
 

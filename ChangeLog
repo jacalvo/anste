@@ -1,4 +1,5 @@
 HEAD
+    + Now cloid-init is configured to preserve the sources list
     + Now variables are also provided to the setup scripts
     + Now _deployCopy returns whether the deployment was okay or not
     + Now if the setup script fails, an exception is thrown
