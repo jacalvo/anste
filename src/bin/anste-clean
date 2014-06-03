@@ -75,12 +75,14 @@ sub clean
 
     $virtualizer->cleanup();
 
-    # FIXME: Only do this if no more anste processes running (Do it with --force??)
-    #my @anstePids = `pgrep anste | grep -v $$ | awk '{ print \$1 }'`;
-    #chomp (@anstePids);
-    #foreach my $pid (@anstePids) {
-    #    system ("kill -9 $pid");
-    #}
+    # TODO: This can interfer when running two instances of ANSTE in the same machine
+    if ($force) {
+        my @anstePids = `pgrep anste | grep -v $$ | awk '{ print \$1 }'`;
+        chomp (@anstePids);
+        foreach my $pid (@anstePids) {
+            system ("kill -9 $pid");
+        }
+    }
 
     # TODO: Unhardcode
     my $id = $config->identifier();
