@@ -143,6 +143,7 @@ sub check
     $self->webRecordAll();
     $self->virtSize();
     $self->virtMemory();
+    $self->browser();
 
     return 1;
 }
@@ -711,6 +712,61 @@ sub setReuse
     }
 
     $self->{override}->{'global'}->{'reuse'} = $value;
+}
+
+# Method: browser
+#
+#   Gets the value for the browser to be used with webdriver
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub browser
+{
+    my ($self) = @_;
+
+    my $browser = $self->_getOption('global', 'browser');
+
+    if (not defined $browser) {
+        throw ANSTE::Exceptions::InvalidConfig('global/browser',
+                                               $browser,
+                                               $self->{confFile});
+    }
+
+    return $browser;
+}
+
+# Method: setBrowser
+#
+#   Sets the value for the browser option.
+#
+# Parameters:
+#
+#   value - String with the value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setBrowser
+{
+    my ($self, $value) = @_;
+
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not defined $value) {
+        throw ANSTE::Exceptions::InvalidOption('global/browser',
+                                               $value);
+    }
+
+    $self->{override}->{'global'}->{'browser'} = $value;
 }
 
 # Method: imagePath
@@ -1730,6 +1786,7 @@ sub _setDefaults
     $self->{default}->{'global'}->{'reuse'} = 0;
     $self->{default}->{'global'}->{'nodestroy'} = 0;
     $self->{default}->{'global'}->{'identifier'} = '';
+    $self->{default}->{'global'}->{'browser'} = '';
 
     $self->{default}->{'paths'}->{'images'} = '/tmp/images';
     $self->{default}->{'paths'}->{'deploy'} = "$data/deploy";
