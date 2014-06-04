@@ -1,5 +1,6 @@
 HEAD
     + Adding browser global option for webdriver tests
+    + Added restorelast command to anste-snapshot
     + Now cloud-init is configured to preserve the sources list
     + Now variables are also provided to the setup scripts
     + Now _deployCopy returns whether the deployment was okay or not

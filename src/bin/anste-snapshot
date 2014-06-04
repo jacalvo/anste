@@ -41,6 +41,8 @@ if ($command eq 'list') {
         save($name, $desc);
     } elsif ($command eq 'restore') {
         restore($name);
+    } elsif ($command eq 'restorelast') {
+        restorelast($name);
     } elsif ($command eq 'remove') {
         remove($name);
     } else {
@@ -93,6 +95,14 @@ sub restore
     ANSTE::Scenario::Snapshot->restore($name);
 }
 
+sub restorelast
+{
+    my ($host) = @_;
+
+    # TODO: move this to virtualizer
+    system ("virsh snapshot-revert $host anste-last-snapshot");
+}
+
 sub usage
 {
     print "Usage: $0 <command> [arg]\n\n";
@@ -100,7 +110,8 @@ sub usage
     print "   save <name> [desc]  save snapshot of the current scenario with the given name\n";
     print "   restore <name>      restore a saved snapshot with the given name\n";
     print "   list                list saved snapshots\n";
-    print "   remove <name>       delete a saved snapshot\n\n";
+    print "   remove <name>       delete a saved snapshot\n";
+    print "   restorelast <host>  restore last autosaved snapshot of the given host\n\n";
     exit (1);
 }
 
