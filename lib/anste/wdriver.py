@@ -257,6 +257,8 @@ class WDriverFirefox(webdriver.Firefox, WDriverBase):
 class WDriverChrome(webdriver.Chrome, WDriverBase):
     init_done = False
     instance = None
+    default_ubuntu_path = '/usr/lib/chromium-browser/chromedriver'
+
 
     def __new__(cls, *args, **kargs):
         if cls.instance is None:
@@ -265,16 +267,18 @@ class WDriverChrome(webdriver.Chrome, WDriverBase):
 
     def __init__(self):
         if not WDriverChrome.init_done:
-            default_ubuntu_path = '/usr/lib/chromium-browser/chromedriver'
-
-            if (path.exists(default_ubuntu_path)):
+            if (self.exists()):
                 webdriver.Chrome.__init__(
-                    self, executable_path=default_ubuntu_path)
+                    self, executable_path=self.default_ubuntu_path)
             else:
                 webdriver.Chrome.__init__(self)
             WDriverBase.__init__(self)
             WDriverChrome.init_done = True
             atexit.register(self.quit)
+
+    @classmethod
+    def exists(cls):
+        return path.exists(cls.default_ubuntu_path)
 
 class WDriverPhantomJS(webdriver.PhantomJS, WDriverBase):
     init_done = False
@@ -292,12 +296,22 @@ class WDriverPhantomJS(webdriver.PhantomJS, WDriverBase):
             WDriverPhantomJS.init_done = True
             atexit.register(self.quit)
 
+    @classmethod
+    def exists(cls):
+        default_phantomjs_path = '/usr/bin/phantomjs'
+        return path.exists(default_phantomjs_path)
+
 def instance():
-    if environ.has_key("ANSTE_BROWSER"):
-        if environ["ANSTE_BROWSER"] == "Chrome":
+    if environ.has_key("GLOBAL_browser"):
+        if environ["GLOBAL_browser"] == "Chrome":
             return WDriverChrome()
-        elif environ["ANSTE_BROWSER"] == "Firefox":
+        elif environ["GLOBAL_browser"] == "Firefox":
             return WDriverFirefox()
             atexit.register(self.quit)
+
+    if ZDriverPhantomJS.exists():
+        return ZDriverPhantomJS(client_base)
+    elif ZDriverChrome.exists():
+        return ZDriverChrome(client_base)
 
     return WDriverPhantomJS()
