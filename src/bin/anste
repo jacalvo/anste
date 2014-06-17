@@ -184,7 +184,7 @@ unless ($shutdown or $remove) {
     for my $vm (@vms) {
         print "$vm\n";
     }
-    if (scalar(@vms) > 0) {
+    if ((scalar(@vms) > 0) and (not $reuse)) {
         print "WARNING: The above virtual machines are running.\n" .
               "Press any key to continue or Control-C to stop.\n";
         my $line = <STDIN>;

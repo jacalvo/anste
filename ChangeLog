@@ -1,4 +1,5 @@
 HEAD
+    + Do not warn about running machines with -reuse
     + Adding browser global option for webdriver tests
     + Added restorelast command to anste-snapshot
     + Now cloud-init is configured to preserve the sources list
