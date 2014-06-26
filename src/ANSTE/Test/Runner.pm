@@ -402,6 +402,9 @@ sub _runOneTest
     try {
         my $tries = $test->tries();
         while ($tries) {
+            if ($test->tries() > 1){
+                ANSTE::info("Number of tries left $tries...")
+            }
             $testResult = $self->_runTest($test);
             $ret = $testResult->value();
             last if ($ret == 0);
