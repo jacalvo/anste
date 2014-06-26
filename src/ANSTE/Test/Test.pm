@@ -51,6 +51,7 @@ sub new
     $self->{critical} = 0;
     $self->{executeAlways} = 0;
     $self->{precondition} = 1;
+    $self->{tries} = 1;
 
     bless($self, $class);
 
@@ -166,6 +167,43 @@ sub setAssert
         throw ANSTE::Exceptions::MissingArgument('assert');
 
     $self->{assert} = $assert;
+}
+
+# Method: tries
+#
+#   Gets the number of times the test should be executed until it passes.
+#
+# Returns:
+#
+#   string - Name of the triesectory of this test.
+#
+sub tries
+{
+    my ($self) = @_;
+
+    return $self->{tries};
+}
+
+# Method: setTries
+#
+#   Sets the number of times the test should be executed until it passes.
+#
+# Parameters:
+#
+#   tries - number of tries
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
+sub setTries
+{
+    my ($self, $tries) = @_;
+
+    defined $tries or
+        throw ANSTE::Exceptions::MissingArgument('tries');
+
+    $self->{tries} = $tries;
 }
 
 # Method: host
@@ -698,6 +736,11 @@ sub loadYAML
     my $assert = $test->{assert};
     if ($assert) {
         $self->setAssert($assert);
+    }
+
+    my $tries = $test->{tries};
+    if ($tries) {
+        $self->setTries($tries);
     }
 
     my $params = $test->{params};

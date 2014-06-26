@@ -1,4 +1,5 @@
 HEAD
+    + Allow to define number of tries of a test before it passes
     + Do not warn about running machines with -reuse
     + Adding browser global option for webdriver tests
     + Added restorelast command to anste-snapshot
