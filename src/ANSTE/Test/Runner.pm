@@ -400,8 +400,13 @@ sub _runOneTest
     print "Running test ($idx/$total): $testName in host $testHost\n";
     my ($testResult, $ret);
     try {
-        $testResult = $self->_runTest($test);
-        $ret = $testResult->value();
+        my $tries = $test->tries();
+        while ($tries) {
+            $testResult = $self->_runTest($test);
+            $ret = $testResult->value();
+            last if ($ret == 0);
+            $tries--;
+        }
     } catch (ANSTE::Exceptions::NotFound $e) {
         my $what = $e->what();
         my $value = $e->value();
