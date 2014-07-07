@@ -677,6 +677,8 @@ sub reloadVars
     my ($self) = @_;
 
     my $suite = $self->{suite};
+    return unless defined ($suite);
+
     my $file = $suite->{file};
     my $varfile = $suite->{varfile};
 
