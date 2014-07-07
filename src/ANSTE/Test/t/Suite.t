@@ -20,7 +20,7 @@ use ANSTE::Test::Suite;
 use ANSTE::Config;
 use ANSTE::Exceptions::InvalidFile;
 
-use Test::More tests => 18;
+use Test::More tests => 20;
 
 use constant SUITE => 'test';
 
@@ -43,6 +43,11 @@ sub testTest
     is($vars->{var4}, '', 'var4 has empty value');
     is($vars->{var5}, undef, 'var5 does not exists');
     is($vars->{var6}, 'BAR', 'check that global variables are interpolated');
+
+    $test->reloadVars();
+    $vars = $test->variables();
+    is($vars->{var3}, 'val3', 'local var3 is included with value val3 after reload');
+    is($vars->{var2}, 'val2', 'global var2 is included with value val2 after reload');
 }
 
 sub testTestAfterReplace

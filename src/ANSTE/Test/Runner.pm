@@ -73,6 +73,7 @@ sub new
     $self->{system} = ANSTE::System::System->instance();
     $self->{writers} = [];
     $self->{errors} = 0;
+    $self->{retest} = 0;
 
     foreach my $format (@{$config->formats()}) {
         my $writerPackage = "ANSTE::Report::$format" . 'Writer';
@@ -365,8 +366,8 @@ sub _runTests
                 if (ANSTE::askForRepeat($msg) == 0) {
                     last;
                 } else {
-                    my $testResult = $self->_runOneTest($test,
-                        $testNumber, $testTotalNumber);
+                    $self->{retest} = 1;
+                    my $testResult = $self->_runOneTest($test, $testNumber, $testTotalNumber);
                     if ($testResult and ($testResult->value() == 0)) {
                         last;
                     }
@@ -394,6 +395,10 @@ sub _runTests
 sub _runOneTest
 {
     my ($self, $test, $idx, $total) = @_;
+
+    if ($self->{retest}) {
+        $test->reloadVars();
+    }
 
     my $testName = $test->name();
     my $testHost = $test->host();
