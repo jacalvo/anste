@@ -22,6 +22,8 @@ use ANSTE::Exceptions::Error;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Config;
 
+use YAML::XS;
+
 # Class: Test
 #
 #   Contains the information of a test.
@@ -37,9 +39,10 @@ use ANSTE::Config;
 #
 sub new
 {
-    my ($class) = @_;
+    my ($class, $suite) = @_;
     my $self = {};
 
+    $self->{suite} = $suite;
     $self->{name} = '';
     $self->{desc} = '';
     $self->{script} = '';
@@ -667,6 +670,43 @@ sub setPrecondition
     my ($self, $ok) = @_;
 
     $self->{precondition} = $ok;
+}
+
+sub reloadVars
+{
+    my ($self) = @_;
+
+    my $suite = $self->{suite};
+    my $file = $suite->{file};
+    my $varfile = $suite->{varfile};
+
+    my ($suiteYAML) = YAML::XS::LoadFile($file);
+
+    my $global = $suiteYAML->{global};
+    my $newGlobal = undef;
+    my $newVars = undef;
+
+    if ($varfile) {
+        my ($vars) = YAML::XS::LoadFile($varfile);
+        $newGlobal = $vars->{global};
+
+        foreach my $element (@{$vars->{tests}}) {
+            if ($element->{name} eq $self->{name}) {
+                $newVars = $element->{vars};
+                last;
+            }
+        }
+    }
+
+    foreach my $test (@{$suite->{tests}}) {
+        if ($test->{name} eq $self->{name}) {
+            $test->addVariables($global);
+            $self->addVariables($newGlobal) if $newGlobal;
+            $self->loadYAML($test);
+            $self->addVariables($newVars) if $newVars;
+            last;
+        }
+    }
 }
 
 sub loadYAML

@@ -270,6 +270,7 @@ sub loadFromDir
     if (not -r $file) {
         throw ANSTE::Exceptions::InvalidFile('dirname', $file);
     }
+    $self->{file} = $file;
 
     my $template = new Text::Template(SOURCE => $file)
         or die "Couldn't construct template: $Text::Template::ERROR";
@@ -302,10 +303,11 @@ sub loadFromDir
         foreach my $element (@{$vars->{tests}}) {
             $varTests->{$element->{name}} = $element->{vars};
         }
+        $self->{varfile} = $varfile;
     }
 
     foreach my $element (@{$suite->{tests}}) {
-        my $test = new ANSTE::Test::Test();
+        my $test = new ANSTE::Test::Test($self);
         $test->addVariables($global);
         $test->addVariables($newGlobal) if $newGlobal;
         $test->loadYAML($element);
