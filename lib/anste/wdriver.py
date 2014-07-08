@@ -253,6 +253,7 @@ class WDriverFirefox(webdriver.Firefox, WDriverBase):
             webdriver.Firefox.__init__(self)
             WDriverBase.__init__(self)
             WDriverFirefox.init_done = True
+            atexit.register(self.quit)
 
 class WDriverChrome(webdriver.Chrome, WDriverBase):
     init_done = False
@@ -307,7 +308,6 @@ def instance():
             return WDriverChrome()
         elif environ["GLOBAL_browser"] == "Firefox":
             return WDriverFirefox()
-            atexit.register(self.quit)
 
     if WDriverPhantomJS.exists():
         return WDriverPhantomJS(client_base)
