@@ -309,9 +309,9 @@ def instance():
             return WDriverFirefox()
             atexit.register(self.quit)
 
-    if ZDriverPhantomJS.exists():
-        return ZDriverPhantomJS(client_base)
-    elif ZDriverChrome.exists():
-        return ZDriverChrome(client_base)
+    if WDriverPhantomJS.exists():
+        return WDriverPhantomJS(client_base)
+    elif WDriverChrome.exists():
+        return WDriverChrome(client_base)
 
     return WDriverPhantomJS()
