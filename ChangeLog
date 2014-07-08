@@ -1,4 +1,5 @@
 HEAD
+    + Take screenshot at the end of webdriver tests
     + Suite description is now parsed again when re-running a test
     + Allow to define number of tries of a test before it passes
     + Do not warn about running machines with -reuse
