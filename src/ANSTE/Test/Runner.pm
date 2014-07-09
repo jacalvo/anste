@@ -415,6 +415,9 @@ sub _runOneTest
             last if ($ret == 0);
             $tries--;
         }
+        if ($ret != 0) {
+            $self->{errors}++;
+        }
     } catch (ANSTE::Exceptions::NotFound $e) {
         my $what = $e->what();
         my $value = $e->value();
@@ -577,10 +580,6 @@ sub _runTest
         $ret = ($ret != 0) ? 0 : 1;
     }
     $testResult->setValue($ret);
-
-    if ($ret != 0) {
-        $self->{errors}++;
-    }
 
     return $testResult;
 }
