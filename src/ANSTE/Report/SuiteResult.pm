@@ -94,7 +94,7 @@ sub setSuite
 
 # Method: add
 #
-#   Add a test result to the suite result.
+#   Add a test result to the suite result. Replaces the last test if it's the same.
 #
 # Parameters:
 #
@@ -113,8 +113,11 @@ sub add
         throw ANSTE::Exceptions::MissingArgument('test');
 
     if (not $test->isa('ANSTE::Report::TestResult')) {
-        throw ANSTE::Exceptions::InvalidType('test',
-                                             'ANSTE::Report::TestResult');
+        throw ANSTE::Exceptions::InvalidType('test', 'ANSTE::Report::TestResult');
+    }
+
+    if (@{$self->{tests}} and ($self->{tests}->[-1]->test()->name() eq $test->test()->name())) {
+        pop (@{$self->{tests}});
     }
 
     push (@{$self->{tests}}, $test);

@@ -1,4 +1,5 @@
 HEAD
+    + Test report is now properly generated after re-running tests
     + Suite description is now parsed again when re-running a test
     + Allow to define number of tries of a test before it passes
     + Do not warn about running machines with -reuse

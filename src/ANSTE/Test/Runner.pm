@@ -327,14 +327,7 @@ sub _runTests
 
         # Adds the test report
         if ($testResult) {
-            $suiteResult->add($testResult);
-
-            # Write test reports
-            my $logPath = $config->logPath();
-            foreach my $writer (@{$self->{writers}}) {
-                $writer->write("$logPath/" . $writer->filename());
-            }
-            $report->setTime($self->_time());
+            $self->_addResultToReport($report, $suiteResult, $testResult);
             $ret = $testResult->value();
         } else {
             $ret = -1;
@@ -368,8 +361,9 @@ sub _runTests
                 } else {
                     $self->{retest} = 1;
                     my $testResult = $self->_runOneTest($test, $testNumber, $testTotalNumber);
-                    if ($testResult and ($testResult->value() == 0)) {
-                        last;
+                    if ($testResult) {
+                        $self->_addResultToReport($report, $suiteResult, $testResult);
+                        last if ($testResult->value() == 0);
                     }
                 }
             }
@@ -582,6 +576,21 @@ sub _runTest
     $testResult->setValue($ret);
 
     return $testResult;
+}
+
+sub _addResultToReport
+{
+    my ($self, $report, $suiteResult, $testResult) = @_;
+
+    $suiteResult->add($testResult);
+
+    # Write test reports
+    my $config = ANSTE::Config->instance();
+    my $logPath = $config->logPath();
+    foreach my $writer (@{$self->{writers}}) {
+        $writer->write("$logPath/" . $writer->filename());
+    }
+    $report->setTime($self->_time());
 }
 
 sub _finalizeLog
