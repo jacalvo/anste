@@ -101,7 +101,8 @@ sub _writeSuiteFile
                 value => $test->value(),
                 log => $log,
                 script => $script,
-                video => $video);
+                video => $video,
+                dir => dirname($file));
     }
     $self->writeSuiteEnd();
 
