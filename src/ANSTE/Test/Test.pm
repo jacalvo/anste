@@ -700,9 +700,9 @@ sub reloadVars
         }
     }
 
-    foreach my $test (@{$suite->{tests}}) {
+    foreach my $test (@{$suiteYAML->{tests}}) {
         if ($test->{name} eq $self->{name}) {
-            $test->addVariables($global);
+            $self->addVariables($global);
             $self->addVariables($newGlobal) if $newGlobal;
             $self->loadYAML($test);
             $self->addVariables($newVars) if $newVars;

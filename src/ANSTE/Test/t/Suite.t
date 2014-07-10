@@ -20,7 +20,7 @@ use ANSTE::Test::Suite;
 use ANSTE::Config;
 use ANSTE::Exceptions::InvalidFile;
 
-use Test::More tests => 20;
+use Test::More tests => 22;
 
 use constant SUITE => 'test';
 
@@ -44,10 +44,21 @@ sub testTest
     is($vars->{var5}, undef, 'var5 does not exists');
     is($vars->{var6}, 'BAR', 'check that global variables are interpolated');
 
+    my $yaml = 'data/tests/test/suite.yaml';
+    system ("cp $yaml /tmp/suite.yaml.bak");
+    system ("sed -i 's/var3: val3/var3: val66/g' $yaml");
+    system ("sed -i 's/var2: val2/var2: FOO/g' $yaml");
+    system ("sed -i 's/testHost/hostModified/g' $yaml");
+
     $test->reloadVars();
+    system ("mv /tmp/suite.yaml.bak $yaml");
+
+    is($test->host(), 'hostModified', 'host = hostModified after reload');
+
     $vars = $test->variables();
-    is($vars->{var3}, 'val3', 'local var3 is included with value val3 after reload');
-    is($vars->{var2}, 'val2', 'global var2 is included with value val2 after reload');
+    is($vars->{var3}, 'val66', 'local var3 is val66 after reload');
+    is($vars->{var2}, 'FOO', 'global var2 is FOO after reload');
+    is($vars->{var6}, 'BAR', 'global var6 is still BAR after reload');
 }
 
 sub testTestAfterReplace
