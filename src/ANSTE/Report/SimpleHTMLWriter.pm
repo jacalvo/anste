@@ -124,6 +124,7 @@ sub writeTestResult
     my $file = $params{log};
     my $video = $params{video};
     my $script = $params{script};
+    my $dir = $params{dir};
 
     my $filehandle = $self->{file};
 
@@ -138,6 +139,12 @@ sub writeTestResult
     }
     if ($script) {
         $resultStr .= " (<a href=\"$script\">script</a>)";
+    }
+
+    if (-f 'fail.png') {
+        my $dest = "$dir/$name.png";
+        system ("mv fail.png $dest");
+        $resultStr .= " (<a href=\"$dest\">screenshot</a>)";
     }
 
     if (not $desc) {
