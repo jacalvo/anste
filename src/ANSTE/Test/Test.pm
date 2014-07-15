@@ -424,6 +424,43 @@ sub setScript
     $self->{script} = $script;
 }
 
+# Method: shellcmd
+#
+#   Gets the directory of the test shellcmds.
+#
+# Returns:
+#
+#   string - Name of the directory of this test.
+#
+sub shellcmd
+{
+    my ($self) = @_;
+
+    return $self->{shellcmd};
+}
+
+# Method: setShellCmd
+#
+#   Sets the directory for this test object to the given value.
+#
+# Parameters:
+#
+#   name - String with the relative path of the test directory.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if parameter is not present
+#
+sub setShellCmd
+{
+    my ($self, $shellcmd) = @_;
+
+    defined $shellcmd or
+        throw ANSTE::Exceptions::MissingArgument('shellcmd');
+
+    $self->{shellcmd} = $shellcmd;
+}
+
 # Method: params
 #
 #   Gets the execution params for the test script.
@@ -773,6 +810,15 @@ sub loadYAML
     my $script = $test->{script};
     if ($script) {
         $self->setScript($script);
+    }
+
+    my $shellcmd = $test->{shellcmd};
+    if ($shellcmd) {
+        $self->setShellCmd($shellcmd);
+    }
+
+    if ($script and $shellcmd) {
+        throw ANSTE::Exceptions::Error("Both script and shellcmd defined for test $name.");
     }
 
     my $assert = $test->{assert};
