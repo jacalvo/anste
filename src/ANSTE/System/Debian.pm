@@ -65,7 +65,7 @@ sub mountImage
     my $num = scalar keys %nbdDevs;
     my $device = "/dev/nbd$num";
 
-    $self->execute('modprobe nbd max_part=63');
+    $self->execute('modprobe nbd nbds_max=32');
 
     $self->execute("qemu-nbd -c $device $image");
 
