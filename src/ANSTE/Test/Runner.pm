@@ -170,15 +170,14 @@ sub runSuite
                                             'ANSTE::Test::Suite');
     }
 
+    my $scenarioFile = $suite->scenario();
+    my $scenario = $self->_loadScenario($scenarioFile, $suite);
+
     my $validator = new ANSTE::Test::Validator;
-    $validator->validateSuite($suite);
+    $validator->validateSuite($suite, $scenario);
 
     $self->{suite} = $suite;
     my $suiteName = $suite->name();
-
-    my $scenarioFile = $suite->scenario();
-
-    my $scenario = $self->_loadScenario($scenarioFile, $suite);
 
     my $config = ANSTE::Config->instance();
     my $reuse = $config->reuse();

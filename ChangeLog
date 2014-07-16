@@ -1,4 +1,5 @@
 HEAD
+    + Ensure that hosts are defined in the scenario before running a suite
     + Allow to specify shell commands directly in YAML test description
     + Allow to create up to 32 nbd devices
     + Take screenshot at the end of webdriver tests

@@ -71,7 +71,7 @@ sub new
 #
 sub validateSuite
 {
-    my ($self, $suite) = @_;
+    my ($self, $suite, $scenario) = @_;
 
     defined $suite or
         throw ANSTE::Exceptions::MissingArgument('suite');
@@ -83,9 +83,17 @@ sub validateSuite
 
     my $config = ANSTE::Config->instance();
 
+    my %validHosts = map { $_->name() => 1 } @{$scenario->hosts()};
+
     foreach my $test (@{$suite->tests()}) {
         my $suiteDir = $suite->dir();
         my $testScript = $test->script();
+        my $testHost = $test->host();
+        my $testName = $test->name();
+
+        if ($testHost and (not exists $validHosts{$testHost})) {
+            throw ANSTE::Exceptions::Error("Host $testHost from test $testName not defined in scenario");
+        }
 
         my $path;
         if ($testScript =~ m{/}) {
