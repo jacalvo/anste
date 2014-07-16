@@ -57,6 +57,7 @@ sub _loadPostTestsScriptsAsTests
         $test->setScript($script);
         $test->setHost($hostName);
         $test->setExecuteAlways(1);
+        $test->{postScript} = 1;
 
         $suite->addTest($test);
     }

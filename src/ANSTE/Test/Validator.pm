@@ -102,7 +102,7 @@ sub validateSuite
             $path = $config->testFile("$suiteDir/$testScript");
         }
 
-        unless ((-r $path) or ($test->type() eq 'reboot')) {
+        unless ((-r $path) or ($test->type() eq 'reboot') or $test->{postScript}) {
             throw ANSTE::Exceptions::NotFound('Test script', "$path");
         }
     }

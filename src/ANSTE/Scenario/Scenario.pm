@@ -429,14 +429,4 @@ sub _loadYAML
     }
 }
 
-sub _addScripts
-{
-    my ($self, $list, $node) = @_;
-
-    foreach my $scriptNode ($node->getElementsByTagName('script', 0)) {
-        my $script = $scriptNode->getFirstChild()->getNodeValue();
-        push(@{$self->{$list}}, $script);
-    }
-}
-
 1;
