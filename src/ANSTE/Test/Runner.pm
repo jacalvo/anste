@@ -41,7 +41,7 @@ use Text::Template;
 use Safe;
 use File::Basename;
 use File::Slurp;
-use File::Temp qw(tempdir);
+use File::Temp qw(tempfile tempdir);
 use TryCatch::Lite;
 
 my $SUITE_FILE = 'suite.html';
@@ -440,13 +440,22 @@ sub _runTest
     my $testScript = $test->script();
 
     my $path;
-    if ($testScript =~ m{/}) {
-        $path = "tests/$testScript";
+    if ($testScript) {
+        if ($testScript =~ m{/}) {
+            $path = "tests/$testScript";
+        } else {
+            $path = $config->testFile("$suiteDir/$testScript");
+        }
+        unless ($path) {
+            throw ANSTE::Exceptions::NotFound("In test '$name', script '$testScript'");
+        }
     } else {
-        $path = $config->testFile("$suiteDir/$testScript");
-    }
-    unless ($path) {
-        throw ANSTE::Exceptions::NotFound("In test '$name', script '$testScript'");
+        my $cmd = $test->shellcmd();
+        my ($fh, $filename) = tempfile() or die "Can't create temporary script file: $!";
+        $path = $filename;
+        print $fh "#!/bin/bash\n";
+        print $fh "$cmd\n";
+        close($fh) or die "Can't close temporary script file: $!";
     }
 
     my $logPath = $config->logPath();

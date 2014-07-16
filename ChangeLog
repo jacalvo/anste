@@ -1,4 +1,5 @@
 HEAD
+    + Allow to specify shell commands directly in YAML test description
     + Allow to create up to 32 nbd devices
     + Take screenshot at the end of webdriver tests
     + Test report is now properly generated after re-running tests
