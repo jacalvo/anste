@@ -91,8 +91,10 @@ sub validateSuite
         my $testHost = $test->host();
         my $testName = $test->name();
         my $externalHost = $test->externalHost();
+        my $testType = $test->type();
 
-        if ($testHost and not $externalHost and (not exists $validHosts{$testHost})) {
+        if ($testHost and not $externalHost and not ($testType eq 'host')
+                and (not exists $validHosts{$testHost})) {
             throw ANSTE::Exceptions::Error("Host $testHost from test $testName not defined in scenario");
         }
 
