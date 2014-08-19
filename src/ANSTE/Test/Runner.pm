@@ -107,7 +107,8 @@ sub runDir
     defined $suites or
         throw ANSTE::Exceptions::MissingArgument('suites');
 
-    my $dir = ANSTE::Config->instance()->testFile($suites);
+    my $config = ANSTE::Config->instance();
+    my $dir = $config->testFile($suites);
 
     my @dirs;
 
@@ -139,6 +140,7 @@ sub runDir
             my $suiteDir = "$suites/$subdir";
             $suite->loadFromDir($suiteDir);
             $self->runSuite($suite);
+            last if ($config->abortOnFail() and $self->errors());
         } else {
             throw ANSTE::Exceptions::Error("There isn't any test in $subdir (from $dir/$SUITE_LIST_FILE)");
         }
