@@ -498,7 +498,7 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -format <fmt>      select the output format for the reports
    -wait              wait before shutting down once the test is completed
    -wait-fail         wait if a test fails
-   -abort-on-fail     do not continue excuting suites when one of them fails
+   -abort-on-fail     do not continue executing suites when one of them fails
    -nodestroy         keep scenario running after tests have finished
    -step              run tests step by step, waiting after each one
    -break <t1,t2,...> set breakpoints before the given test names
