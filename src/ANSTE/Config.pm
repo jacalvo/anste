@@ -491,6 +491,61 @@ sub setWaitFail
     $self->{override}->{'global'}->{'wait-fail'} = $value;
 }
 
+# Method: abortOnFail
+#
+#   Gets the value for the abortOnFail option.
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub abortOnFail
+{
+    my ($self) = @_;
+
+    my $abortOnFail = $self->_getOption('global', 'abort-on-fail');
+
+    if (not ANSTE::Validate::boolean($abortOnFail)) {
+        throw ANSTE::Exceptions::InvalidConfig('global/abort-on-fail',
+                                               $abortOnFail,
+                                               $self->{confFile});
+    }
+
+    return $abortOnFail;
+}
+
+# Method: setAbortOnFail
+#
+#   Sets the value for the abort-on-fail option.
+#
+# Parameters:
+#
+#   value - String with the value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#   <ANSTE::Exceptions::InvalidOption> - throw if option is not valid
+#
+sub setAbortOnFail
+{
+    my ($self, $value) = @_;
+
+    defined $value or
+        throw ANSTE::Exceptions::MissingArgument('value');
+
+    if (not ANSTE::Validate::boolean($value)) {
+        throw ANSTE::Exceptions::InvalidOption('global/abort-on-fail',
+                                               $value);
+    }
+
+    $self->{override}->{'global'}->{'abort-on-fail'} = $value;
+}
+
 # Method: autoSnapshot
 #
 #   Gets the value for the autoSnapshot option.
@@ -1783,6 +1838,7 @@ sub _setDefaults
     $self->{default}->{'global'}->{'verbose'} = 1;
     $self->{default}->{'global'}->{'wait'} = 0;
     $self->{default}->{'global'}->{'wait-fail'} = 0;
+    $self->{default}->{'global'}->{'abort-on-fail'} = 0;
     $self->{default}->{'global'}->{'reuse'} = 0;
     $self->{default}->{'global'}->{'nodestroy'} = 0;
     $self->{default}->{'global'}->{'identifier'} = '';
