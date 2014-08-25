@@ -147,7 +147,7 @@ sub writeTestResult
     }
 
     if (-f $dest) {
-        $resultStr .= " (<a href=\"$dest\">screenshot</a>)";
+        $resultStr .= " (<a href=\"$name.png\">screenshot</a>)";
     }
 
     if (not $desc) {
