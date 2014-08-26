@@ -592,11 +592,19 @@ sub _addResultToReport
 {
     my ($self, $report, $suiteResult, $testResult) = @_;
 
-    $suiteResult->add($testResult);
-
-    # Write test reports
     my $config = ANSTE::Config->instance();
     my $logPath = $config->logPath();
+
+    $suiteResult->add($testResult);
+    my $name = $testResult->test()->name();
+    my $dir = $suiteResult->suite()->dir();
+    my $dest = "$logPath/$dir/$name.png";
+
+    if (-f 'fail.png') {
+        system ("mv fail.png $dest");
+    }
+
+    # Write test reports
     foreach my $writer (@{$self->{writers}}) {
         $writer->write("$logPath/" . $writer->filename());
     }

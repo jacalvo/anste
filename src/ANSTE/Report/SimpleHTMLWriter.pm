@@ -142,10 +142,6 @@ sub writeTestResult
     }
 
     my $dest = "$dir/$name.png";
-    if (-f 'fail.png') {
-        system ("mv fail.png $dest");
-    }
-
     if (-f $dest) {
         $resultStr .= " (<a href=\"$name.png\">screenshot</a>)";
     }

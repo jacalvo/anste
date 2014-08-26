@@ -96,7 +96,8 @@ sub write
                                    desc => $desc,
                                    value => $test->value(),
                                    log => $test->log(),
-                                   video => $test->video());
+                                   video => $test->video(),
+                                   dir => $suite->dir());
         }
         $self->writeSuiteEnd();
     }

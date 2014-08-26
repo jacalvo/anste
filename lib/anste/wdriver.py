@@ -133,8 +133,7 @@ class WDriverBase():
 
     def assert_true(self, expr, msg='assertion failed'):
         if not expr:
-            print msg
-            exit(1)
+            raise Exception("Failed in driver assertion with error: " + msg)
 
     def assert_present(self, name=None, id=None, xpath=None, text=None, css=None, timeout=10, msg='not present'):
         self.assert_true(self.wait_for(name, id, xpath, text, css, timeout), msg)
