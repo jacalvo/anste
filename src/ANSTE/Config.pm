@@ -1461,6 +1461,32 @@ sub webProtocol
     return $protocol;
 }
 
+# Method: webPort
+#
+#   Gets the value for the default web port
+#
+# Returns:
+#
+#   string - Value for the option.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::InvalidConfig> - throw if option is not valid
+#
+sub webPort
+{
+    my ($self) = @_;
+
+    my $port = $self->_getOption('web', 'port');
+
+    unless ($port) {
+        throw ANSTE::Exceptions::InvalidConfig('web/port',
+                                               $port,
+                                               $self->{confFile});
+    }
+
+    return $port;
+}
 
 # Method: webVideo
 #

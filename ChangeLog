@@ -1,4 +1,5 @@
 HEAD
+    + Default port for web tests can now be specified in anste.conf
     + New -abort-on-fail option to stop suite execution when first suite fails
     + Ensure that hosts are defined in the scenario before running a suite
     + Allow to specify shell commands directly in YAML test description

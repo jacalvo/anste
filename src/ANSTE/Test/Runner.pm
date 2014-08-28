@@ -749,6 +749,11 @@ sub _runWebTest
     }
 
     my $config = ANSTE::Config->instance();
+
+    unless ($port) {
+        $port = $config->webPort();
+    }
+
     unless ($protocol) {
         $protocol = $config->webProtocol();
     }
