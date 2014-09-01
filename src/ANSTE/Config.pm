@@ -1479,12 +1479,6 @@ sub webPort
 
     my $port = $self->_getOption('web', 'port');
 
-    unless ($port) {
-        throw ANSTE::Exceptions::InvalidConfig('web/port',
-                                               $port,
-                                               $self->{confFile});
-    }
-
     return $port;
 }
 
