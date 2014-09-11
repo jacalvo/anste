@@ -1,4 +1,5 @@
 HEAD
+    + Add execute-always option to tests to be executed also with critical fails
     + Default port for web tests can now be specified in anste.conf
     + New -abort-on-fail option to stop suite execution when first suite fails
     + Ensure that hosts are defined in the scenario before running a suite

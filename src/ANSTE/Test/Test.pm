@@ -763,6 +763,9 @@ sub loadYAML
     if ($critical) {
         $self->setCritical(1);
     }
+    if ($test->{'execute-always'}) {
+        $self->setExecuteAlways(1);
+    }
 
     my $name = $test->{name};
     $self->setName($name);
