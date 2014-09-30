@@ -293,6 +293,7 @@ sub _runTests
     foreach my $test (@suiteTests) {
         $testNumber++;
         next if ($reuse and $test->critical());
+        next if ($test->reuseOnly() and not $reuse);
         next if ($executeOnlyForcedTests and not $test->executeAlways());
         my $host = $test->host();
 
