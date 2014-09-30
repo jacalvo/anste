@@ -53,6 +53,7 @@ sub new
     $self->{type} = '';
     $self->{critical} = 0;
     $self->{executeAlways} = 0;
+    $self->{reuseOnly} = 0;
     $self->{precondition} = 1;
     $self->{tries} = 1;
 
@@ -679,6 +680,31 @@ sub setExecuteAlways
     $self->{executeAlways} = $executeAlways;
 }
 
+# Method: reuseOnly
+#
+#   Gets if the test should be executed only with -reuse
+#
+# Returns:
+#
+#   boolean - true if the test should be only in reuse mode
+#
+sub reuseOnly
+{
+    my ($self) = @_;
+
+    return $self->{reuseOnly};
+}
+
+# Method: setReuseOnly
+#
+#   Specifies if the test should be executed only in reuse mode
+#
+sub setReuseOnly
+{
+    my ($self, $reuseOnly) = @_;
+    $self->{reuseOnly} = $reuseOnly;
+}
+
 # Method: precondition
 #
 #   Gets if this test has passed the required precondition
@@ -765,6 +791,9 @@ sub loadYAML
     }
     if ($test->{'execute-always'}) {
         $self->setExecuteAlways(1);
+    }
+    if ($test->{'reuse-only'}) {
+        $self->setReuseOnly(1);
     }
 
     my $name = $test->{name};
