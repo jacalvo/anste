@@ -503,6 +503,7 @@ sub _runTest
         $ret = $self->_runScriptOnHost($hostname, $execScript, $logfile);
 
         $self->_finalizeLog($logfile, $test, $testResult, $initialTime, $ret, $verbose);
+        $self->_takeScreenshot($test,"$logPath/$suiteDir/$name.ppm",$ret);
     } else {
         if (not -r $path) {
             $path = $config->scriptFile($testScript);
@@ -841,5 +842,18 @@ sub _virt
     return $self->{virt};
 }
 
+sub _takeScreenshot
+{
+    my ($self, $test, $file, $ret) = @_;
+
+    my $assertFailed = $test->assert() eq 'failed';
+    my $hostname = $test->host();
+
+    if (($assertFailed and ($ret == 0)) or
+        (not $assertFailed) and ($ret != 0)) {
+        $self->_virt()->takeScreenshot($hostname, $file);
+    }
+
+}
 
 1;
