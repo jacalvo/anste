@@ -557,4 +557,18 @@ sub existsSnapshot
     throw ANSTE::Exceptions::NotImplemented();
 }
 
+# Method: takeScreenshot
+#
+#   Override this method to take an screenshot of the screen
+#
+# Parameters:
+#
+#   domain       - virtual machine name
+#   file         - screenshot file
+#
+sub takeScreenshot
+{
+    throw ANSTE::Exceptions::NotImplemented();
+}
+
 1;

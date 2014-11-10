@@ -973,4 +973,21 @@ sub existsSnapshot
     return $out;
 }
 
+# Method: takeScreenshot
+#
+#   Override this method to take an screenshot of the screen
+#
+# Parameters:
+#
+#   domain       - virtual machine name
+#   file         - screenshot file
+#
+sub takeScreenshot
+{
+    my ($self, $domain, $file) = @_;
+
+    $self->execute("virsh screenshot $domain $file") or
+        throw ANSTE::Exceptions::Error("Error taking screenshot $file in domain $domain");
+}
+
 1;

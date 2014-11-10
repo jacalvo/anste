@@ -145,6 +145,11 @@ sub writeTestResult
     if (-f $dest) {
         $resultStr .= " (<a href=\"$name.png\">screenshot</a>)";
     }
+    $dest = "$dir/$name.ppm";
+    if (-f $dest) {
+        $resultStr .= " (<a href=\"$name.ppm\">screenshot</a>)";
+    }
+
 
     if (not $desc) {
         $desc = '&nbsp;';
