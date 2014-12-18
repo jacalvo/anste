@@ -21,6 +21,7 @@ use warnings;
 use ANSTE::Test::Test;
 use ANSTE::Exceptions::MissingArgument;
 use ANSTE::Exceptions::Error;
+use ANSTE::Util;
 
 use Text::Template;
 use Safe;
@@ -272,13 +273,16 @@ sub loadFromDir
     }
     $self->{file} = $file;
 
-    my $template = new Text::Template(SOURCE => $file)
+    my $tempProcessedFile= ANSTE::Util::processYamlFile($file);
+
+    my $template = new Text::Template(SOURCE => $tempProcessedFile)
         or die "Couldn't construct template: $Text::Template::ERROR";
     my $variables = $config->variables();
     my $text = $template->fill_in(HASH => $variables, SAFE => new Safe)
         or die "Couldn't fill in the template: $Text::Template::ERROR";
 
     my ($suite) = YAML::XS::Load($text);
+    system("rm -f $tempProcessedFile");
 
     # Read name and description of the suite
     my $name = $suite->{name};

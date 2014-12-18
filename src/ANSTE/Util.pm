@@ -15,6 +15,12 @@
 
 package ANSTE::Util;
 
+use File::Slurp;
+use File::Basename;
+
+use ANSTE::Config;
+use ANSTE::Exceptions::Error;
+
 use strict;
 use warnings;
 
@@ -30,6 +36,62 @@ sub readChar
 {
     my $line = <STDIN>;
     return substr($line, 0, 1);
+}
+
+# Function: processYamlFile
+#
+#   Processes a YAML *file* using CPP and returns the output file path
+#
+# Returns:
+#
+#   char - path to the processed YAML file
+#
+sub processYamlFile
+{
+    my ($pathToFile) = @_;
+
+    if (not -r $pathToFile) {
+        throw ANSTE::Exceptions::Error("$pathToFile file does not exist");
+    }
+
+    my($file, $dir) = fileparse($pathToFile);
+    my $outputFilePath = "/tmp/$file";
+
+    # Remove YAML comments but our cpp keywords
+    my @cppKeywords = qw(include if elif else endif);
+
+    my @output;
+    my @input = read_file($pathToFile);
+    foreach my $line (@input) {
+        if (index($line, "#") != -1) {
+            my $isComment = 1;
+            foreach my $keyword (@cppKeywords) {
+                if (index($line, "#$keyword") != -1) {
+                    $isComment = 0;
+                    last;
+                }
+            }
+            next if $isComment;
+        }
+
+        push(@output, $line);
+    }
+
+    write_file("$outputFilePath.tmp", @output);
+
+    # CPP process
+    my $dataPath = ANSTE::Config->instance()->{dataPath};
+    $dataPath = "$dataPath/tests";
+    my $failure = system("cpp -w -I $dataPath $outputFilePath.tmp $outputFilePath");
+
+    # Delete temporal file
+    unlink("$outputFilePath.tmp");
+
+    if ($failure) {
+        die "Couldn't process the file $pathToFile using CPP";
+    }
+
+    return $outputFilePath;
 }
 
 1;
