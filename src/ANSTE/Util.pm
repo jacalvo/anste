@@ -57,10 +57,9 @@ sub processYamlFile
     my($file, $dir) = fileparse($pathToFile);
     my $outputFilePath = "/tmp/$file";
 
-    # Remove YAML comments but our cpp keywords
+    # Check that there are no comments at the YAML file
     my @cppKeywords = qw(include if elif else endif);
 
-    my @output;
     my @input = read_file($pathToFile);
     foreach my $line (@input) {
         if (index($line, "#") != -1) {
@@ -71,21 +70,17 @@ sub processYamlFile
                     last;
                 }
             }
-            next if $isComment;
+
+            if ($isComment) {
+                die("There was a comment line at $pathToFile file.\n$line\nCPP would have failed.");
+            }
         }
-
-        push(@output, $line);
     }
-
-    write_file("$outputFilePath.tmp", @output);
 
     # CPP process
     my $dataPath = ANSTE::Config->instance()->{dataPath};
     $dataPath = "$dataPath/tests";
-    my $failure = system("cpp -w -I $dataPath -I tests/ $outputFilePath.tmp $outputFilePath");
-
-    # Delete temporal file
-    unlink("$outputFilePath.tmp");
+    my $failure = system("cpp -w -I $dataPath -I tests/ $pathToFile $outputFilePath");
 
     if ($failure) {
         die "Couldn't process the file $pathToFile using CPP";
