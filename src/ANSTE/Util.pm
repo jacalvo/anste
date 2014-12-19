@@ -82,7 +82,7 @@ sub processYamlFile
     # CPP process
     my $dataPath = ANSTE::Config->instance()->{dataPath};
     $dataPath = "$dataPath/tests";
-    my $failure = system("cpp -w -I $dataPath $outputFilePath.tmp $outputFilePath");
+    my $failure = system("cpp -w -I $dataPath -I tests/ $outputFilePath.tmp $outputFilePath");
 
     # Delete temporal file
     unlink("$outputFilePath.tmp");
