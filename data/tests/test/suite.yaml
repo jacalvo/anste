@@ -16,6 +16,8 @@ tests:
         var4: ''
         var6: $FOO
 
+#include "test/include.yaml"
+
     - name: testName2
       desc: testDesc2
       host: testHost2

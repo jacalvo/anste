@@ -20,7 +20,7 @@ use ANSTE::Test::Suite;
 use ANSTE::Config;
 use ANSTE::Exceptions::InvalidFile;
 
-use Test::More tests => 22;
+use Test::More tests => 27;
 
 use constant SUITE => 'test';
 
@@ -61,6 +61,22 @@ sub testTest
     is($vars->{var6}, 'BAR', 'global var6 is still BAR after reload');
 }
 
+sub testIncludeTest
+{
+    my ($test) = @_;
+
+    my $name = $test->name();
+    is($name, 'includedTest', 'name = includedTest');
+    my $desc = $test->desc();
+    is($desc, 'Included Description', 'desc = Included Description');
+    my $host = $test->host();
+    is($host, 'testHost', 'host = testHost');
+    my $dir = $test->script();
+    is($dir, 'includedScript', 'script = includedScript');
+    my $vars = $test->variables();
+    is($vars->{var1}, 'cow', 'local var1 is included with value cow');
+}
+
 sub testTestAfterReplace
 {
     my ($test) = @_;
@@ -82,6 +98,8 @@ my $desc = $suite->desc();
 is($desc, 'suiteDesc', 'suite desc = suiteDesc');
 my $test = $suite->tests()->[0];
 testTest($test);
+$test = $suite->tests()->[1];
+testIncludeTest($test);
 
 $suite = new ANSTE::Test::Suite();
 $suite->loadFromDir(SUITE, 'data/tests/test/vars.yaml');
