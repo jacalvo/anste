@@ -1,0 +1,6 @@
+    - name: includedTest
+      desc: Included Description
+      host: testHost
+      script: includedScript
+      vars:
+        var1: cow
