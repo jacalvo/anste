@@ -61,7 +61,9 @@ sub processYamlFile
     my @cppKeywords = qw(include if elif else endif define);
 
     my @input = read_file($pathToFile);
+    my $numline = 0;
     foreach my $line (@input) {
+        $numline++;
         if ((index($line, "#") != -1) && (index($line, "##") == -1)) {
             my $isComment = 1;
             foreach my $keyword (@cppKeywords) {
@@ -72,7 +74,7 @@ sub processYamlFile
             }
 
             if ($isComment) {
-                die("There was an invalid comment line at $pathToFile file.\n$line\nCPP would have failed.\n Use ## to comment a line not a single #.");
+                throw ANSTE::Exceptions::Error("Invalid comment found at $pathToFile, line $numline:\n\n$line\nUse // or /* */ for comments instead of #.");
             }
         }
     }
