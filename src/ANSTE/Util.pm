@@ -57,12 +57,12 @@ sub processYamlFile
     my($file, $dir) = fileparse($pathToFile);
     my $outputFilePath = "/tmp/$file";
 
-    # Check that there are no comments at the YAML file
-    my @cppKeywords = qw(include if elif else endif);
+    # Check that there are no invalid comments at the YAML file
+    my @cppKeywords = qw(include if elif else endif define);
 
     my @input = read_file($pathToFile);
     foreach my $line (@input) {
-        if (index($line, "#") != -1) {
+        if ((index($line, "#") != -1) && (index($line, "##") == -1)) {
             my $isComment = 1;
             foreach my $keyword (@cppKeywords) {
                 if (index($line, "#$keyword") != -1) {
@@ -72,7 +72,7 @@ sub processYamlFile
             }
 
             if ($isComment) {
-                die("There was a comment line at $pathToFile file.\n$line\nCPP would have failed.");
+                die("There was an invalid comment line at $pathToFile file.\n$line\nCPP would have failed.\n Use ## to comment a line not a single #.");
             }
         }
     }
