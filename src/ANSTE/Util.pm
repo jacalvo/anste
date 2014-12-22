@@ -64,7 +64,7 @@ sub processYamlFile
     my $numline = 0;
     foreach my $line (@input) {
         $numline++;
-        if ((index($line, "#") != -1) && (index($line, "##") == -1)) {
+        if (index($line, "#") != -1) {
             my $isComment = 1;
             foreach my $keyword (@cppKeywords) {
                 if (index($line, "#$keyword") != -1) {
