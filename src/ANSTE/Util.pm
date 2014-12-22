@@ -23,6 +23,7 @@ use ANSTE::Exceptions::Error;
 
 use strict;
 use warnings;
+no warnings 'experimental::smartmatch';
 
 # Function: readChar
 #
@@ -58,24 +59,15 @@ sub processYamlFile
     my $outputFilePath = "/tmp/$file";
 
     # Check that there are no invalid comments at the YAML file
-    my @cppKeywords = qw(include if elif else endif define);
+    my @cppKeywords = qw(include if elif else endif define ifdef ifndef);
 
     my @input = read_file($pathToFile);
     my $numline = 0;
     foreach my $line (@input) {
         $numline++;
-        if (index($line, "#") != -1) {
-            my $isComment = 1;
-            foreach my $keyword (@cppKeywords) {
-                if (index($line, "#$keyword") != -1) {
-                    $isComment = 0;
-                    last;
-                }
-            }
-
-            if ($isComment) {
-                throw ANSTE::Exceptions::Error("Invalid comment found at $pathToFile, line $numline:\n\n$line\nUse // or /* */ for comments instead of #.");
-            }
+        my ($comment, $keyword) = $line =~ /^\s*(#)([^\s]*)/;
+        if ($comment and not ($keyword ~~ @cppKeywords)) {
+            throw ANSTE::Exceptions::Error("Invalid comment found at $pathToFile, line $numline:\n\n$line\nUse // or /* */ for comments instead of #.");
         }
     }
 
