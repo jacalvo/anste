@@ -745,7 +745,10 @@ sub reloadVars
     my $file = $suite->{file};
     my $varfile = $suite->{varfile};
 
-    my ($suiteYAML) = YAML::XS::LoadFile($file);
+    my $tempProcessedFile = ANSTE::Util::processYamlFile($file);
+
+    my ($suiteYAML) = YAML::XS::LoadFile($tempProcessedFile);
+    system("rm -f $tempProcessedFile");
 
     my $global = $suiteYAML->{global};
     my $newGlobal = undef;
