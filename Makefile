@@ -46,6 +46,7 @@ install:
 	install -m755 src/bin/anste-snapshot $(DESTDIR)$(SBINDIR)
 	install -d $(DESTDIR)$(BINDIR)
 	install -m755 src/bin/anste-connect $(DESTDIR)$(BINDIR)
+	install -m755 src/bin/anste-run $(DESTDIR)$(BINDIR)
 	install -m755 src/bin/anste-init $(DESTDIR)$(BINDIR)
 	install -d $(DESTDIR)$(DATADIR)
 	install -d data/images $(DESTDIR)$(DATADIR)/images
@@ -98,6 +99,7 @@ uninstall:
 	rm -f $(DESTDIR)$(SBINDIR)/anste-clean
 	rm -f $(DESTDIR)$(SBINDIR)/anste-snapshot
 	rm -f $(DESTDIR)$(BINDIR)/anste-connect
+	rm -f $(DESTDIR)$(BINDIR)/anste-run
 	rm -f $(DESTDIR)$(BINDIR)/anste-init
 	rm -rf $(DESTDIR)$(DATADIR)/images
 	rm -rf $(DESTDIR)$(DATADIR)/profiles

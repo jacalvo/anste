@@ -1,0 +1,96 @@
+#!/usr/bin/perl
+
+# Copyright (C) 2015 José Antonio Calvo Fernández <jacalvo@zentyal.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License, version 2, as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+use warnings;
+use strict;
+
+use ANSTE::Status;
+use ANSTE::Validate;
+use ANSTE::Comm::MasterClient;
+use ANSTE::Comm::WaiterServer;
+use ANSTE::Comm::HostWaiter;
+use File::Slurp;
+use TryCatch::Lite;
+
+my $PORT = 8000;
+
+my $status = ANSTE::Status->instance();
+my $hosts = $status->deployedHosts();
+
+unless ($hosts) {
+    print "Cannot get hosts info, probably there is no scenario deployed.\n";
+    exit (1);
+}
+
+my ($host, $file) = @ARGV;
+
+unless ($host and $file) {
+    print "Usage: $0 <host> <script>\n\n";
+    print "Run a scriptin any of the deployed hosts of the scenario.\n";
+    printCurrentHosts();
+    exit (1);
+}
+
+if (exists $hosts->{$host}) {
+    if (ANSTE::Validate::fileReadable($file)) {
+        run($hosts->{$host}, $file);
+    } else {
+        print "File $file not found\n";
+    }
+} else {
+    print "Host '$host' not found in the current scenario.\n";
+    printCurrentHosts();
+}
+
+sub run
+{
+    my ($host, $script) = @_;
+
+    my $server = new ANSTE::Comm::WaiterServer();
+    $server->startThread();
+    my $waiter = ANSTE::Comm::HostWaiter->instance();
+    my $client = new ANSTE::Comm::MasterClient;
+    $client->connect("http://$host:$PORT");
+
+    unless ($client->connected()) {
+        print "Cannot connect to $host\n";
+        exit (1);
+    }
+
+    $client->put($file);
+    my $ret = $client->exec($file, 'out.log');
+    $waiter->waitForAnyExecution();
+    $waiter->cleanExecutions();
+    $client->get('out.log');
+    my $content = read_file('out.log');
+    $client->del('out.log');
+    $client->del($file);
+    unlink 'out.log';
+
+    print "Output:\n$content\n\n";
+
+    print "Return Value: $ret\n";
+}
+
+sub printCurrentHosts
+{
+    print "\n";
+    print "Current hosts list:\n";
+    print "-------------------\n";
+    print join ("\n", keys %{$hosts});
+    print "\n\n";
+}
