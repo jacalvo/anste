@@ -25,6 +25,8 @@ use Net::Domain qw(hostname);
 
 use constant URI => "urn:ANSTE::Comm::MasterServer";
 
+$SOAP::Constants::MAX_CONTENT_SIZE = 32768;
+
 # Class: SlaveClient
 #
 #   Client that runs on the slave hosts and sends notifications
