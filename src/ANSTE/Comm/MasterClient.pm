@@ -28,6 +28,8 @@ use TryCatch::Lite;
 
 use constant URI => 'urn:ANSTE::Comm::SlaveServer';
 
+$SOAP::Constants::MAX_CONTENT_SIZE = 32768;
+
 # Class: MasterClient
 #
 #   Client that runs on the master host and send commands

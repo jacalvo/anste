@@ -1,4 +1,5 @@
 HEAD
+    + Increase SOAP::Lite max msg size to 32MB
     + Added support for cpp directives like #include in suite.yaml files
     + Support added for screenshots on failure to sikuli type of tests
     + Add reuse-only option to tests to be executed only with -reuse flag
