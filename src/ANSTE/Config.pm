@@ -769,6 +769,43 @@ sub setReuse
     $self->{override}->{'global'}->{'reuse'} = $value;
 }
 
+# Method: jump
+#
+#   Gets the value for the jump-to option.
+#
+# Returns:
+#
+#   string - Test name to jump to or empty string if option is unset.
+#
+sub jump
+{
+    my ($self) = @_;
+
+    return $self->_getOption('global', 'jump');
+}
+
+# Method: setJump
+#
+#   Sets the value for the jump-to option.
+#
+# Parameters:
+#
+#   test - String with the test name to jump to.
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setJump
+{
+    my ($self, $test) = @_;
+
+    defined $test or
+        throw ANSTE::Exceptions::MissingArgument('test');
+
+    $self->{override}->{'global'}->{'jump'} = $test;
+}
+
 # Method: browser
 #
 #   Gets the value for the browser to be used with webdriver

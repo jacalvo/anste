@@ -67,6 +67,7 @@ my $help = 0;
 my $quiet = 0;
 my $step = 0;
 my $reuse = 0;
+my $jump = '';
 my $break = '';
 my $openstack = 0;
 my $identifier = '';
@@ -93,6 +94,7 @@ GetOptions('createimg' => \$create,
            'reuse' => \$reuse,
            'step' => \$step,
            'break=s' => \$break,
+           'jump-to=s' => \$jump,
            'openstack' => \$openstack,
            'identifier=s' => \$identifier,
            'help' => \$help) or pod2usage(2);
@@ -151,8 +153,11 @@ if ($out) {
 if ($video) {
     $config->setWebVideo(1);
 }
-if ($reuse) {
+if ($reuse or $jump) {
     $config->setReuse(1);
+}
+if ($jump) {
+    $config->setJump($jump);
 }
 if ($step) {
     $config->setStep(1);
@@ -507,6 +512,7 @@ anste [options] [file ...] [var1=value1 var2=value2 ...]
    -quiet             do not show output of commands
    -reuse             reuse the created image if exists (with -create)
                       reuse a deployed scenario (with -test)
+   -jump-to <test>    reuse deployed scenario starting from specified test
    -vars <file>       override suite variables with the given YAML file
    -identifier        used as identifier when running multiple scenarios at the same time
 
