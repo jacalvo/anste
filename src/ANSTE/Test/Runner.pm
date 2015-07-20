@@ -183,6 +183,7 @@ sub runSuite
 
     my $config = ANSTE::Config->instance();
     my $reuse = $config->reuse();
+    my $jump = $config->jump();
 
     my $sceName = $scenario->name();
     print "Deploying scenario '$sceName' for suite '$suiteName'...\n"
@@ -195,7 +196,7 @@ sub runSuite
         print "Finished deployment of scenario '$sceName'.\n"
             if not $reuse;
 
-        $self->_runTests($reuse);
+        $self->_runTests($reuse, $jump);
     } catch (ANSTE::Exceptions::Error $e) {
         my $msg = $e->message();
         print "ERROR: $msg\n";
@@ -272,7 +273,7 @@ sub _loadScenario
 
 sub _runTests
 {
-    my ($self, $reuse) = @_;
+    my ($self, $reuse, $jump) = @_;
 
     my $config = ANSTE::Config->instance();
     my $suite = $self->{suite};
@@ -290,11 +291,16 @@ sub _runTests
     my @suiteTests = @{$suite->tests()};
     my $testNumber = 0;
     my $testTotalNumber = scalar (@suiteTests);
+    my $skipBeforeJump = $jump;
     foreach my $test (@suiteTests) {
         $testNumber++;
-        next if ($reuse and $test->critical());
-        next if ($test->reuseOnly() and not $reuse);
+        next if ($reuse and $test->critical() and not $jump);
+        next if ($test->reuseOnly() and (not $reuse or $jump));
         next if ($executeOnlyForcedTests and not $test->executeAlways());
+        if ($skipBeforeJump and ($test->name() eq $jump)) {
+            $skipBeforeJump = 0;
+        }
+        next if ($skipBeforeJump);
         my $host = $test->host();
 
         my $stopBefore = ($config->step() or $config->breakpoint($test->name()));
