@@ -70,6 +70,7 @@ sub instance
 # Parameters:
 #
 #   command - string that contains the command to be executed
+#   silent  - *optional* boolean to indicate if output should be discarded
 #
 # Returns:
 #
@@ -77,12 +78,12 @@ sub instance
 #
 sub execute
 {
-    my ($self, $command) = @_;
+    my ($self, $command, $silent) = @_;
 
     defined $command or
         throw ANSTE::Exceptions::MissingArgument('command');
 
-    if (not ANSTE::Config->instance()->verbose()) {
+    if ($silent or not ANSTE::Config->instance()->verbose()) {
         $command .= ' > /dev/null 2>&1';
     }
     return system($command) == 0;
