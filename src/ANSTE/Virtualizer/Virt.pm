@@ -800,7 +800,11 @@ sub _createImageConfig
     my $imageConfig = "<domain type='kvm'>\n";
     $imageConfig .= "\t<name>$name</name>\n";
     $imageConfig .= "\t<memory>$memory</memory>\n";
-    $imageConfig .= "\t<vcpu>1</vcpu>\n";
+    if ($name eq 'zentyal-server'){
+        $imageConfig .= "\t<vcpu>2</vcpu>\n";
+    } else {
+        $imageConfig .= "\t<vcpu>1</vcpu>\n";
+    }
     $imageConfig .= "\t<os><type arch='$arch'>hvm</type></os>\n";
     $imageConfig .= "\t<features><acpi/></features>\n";
     $imageConfig .= "\t<clock sync='localtime'/>\n";
