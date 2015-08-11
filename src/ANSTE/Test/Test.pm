@@ -427,11 +427,11 @@ sub setScript
 
 # Method: shellcmd
 #
-#   Gets the directory of the test shellcmds.
+#   Gets the shell command to test.
 #
 # Returns:
 #
-#   string - Name of the directory of this test.
+#   string - the shell command to test
 #
 sub shellcmd
 {
@@ -442,11 +442,11 @@ sub shellcmd
 
 # Method: setShellCmd
 #
-#   Sets the directory for this test object to the given value.
+#   Sets the shell command for this test object to the given value.
 #
 # Parameters:
 #
-#   name - String with the relative path of the test directory.
+#   name - String with the shell command for this test object
 #
 # Exceptions:
 #

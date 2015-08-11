@@ -459,11 +459,13 @@ sub _runTest
         }
     } else {
         my $cmd = $test->shellcmd();
-        my ($fh, $filename) = tempfile() or die "Can't create temporary script file: $!";
-        $path = $filename;
-        print $fh "#!/bin/bash\n";
-        print $fh "$cmd\n";
-        close($fh) or die "Can't close temporary script file: $!";
+        if ($cmd) {
+            my ($fh, $filename) = tempfile() or die "Can't create temporary script file: $!";
+            $path = $filename;
+            print $fh "#!/bin/bash\n";
+            print $fh "$cmd\n";
+            close($fh) or die "Can't close temporary script file: $!";
+        }
     }
 
     my $logPath = $config->logPath();
