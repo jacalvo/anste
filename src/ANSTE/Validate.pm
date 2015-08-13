@@ -392,4 +392,34 @@ sub template
     return -r $file;
 }
 
+# Function: breakpoints
+#
+#   Checks if the given breakpoints are in the given testsuite
+#
+# Parameters:
+#
+#   suite - <ANSTE::Test::Suite> the test suite to check against
+#
+#   breakpoints - Array ref of Strings with the given breakpoints
+#
+# Returns:
+#
+#   array ref - containing invalid breakpoint names
+#
+sub breakpoints
+{
+    my ($suite, $breakpoints) = @_;
+
+    my @invalidBreakpoints;
+    my %tests = map { $_->name() => 1 } @{$suite->tests()};
+
+    foreach my $breakpoint (@{$breakpoints}) {
+        unless (exists $tests{$breakpoint}) {
+            push (@invalidBreakpoints, $breakpoint);
+        }
+    }
+
+    return \@invalidBreakpoints;
+}
+
 1;
