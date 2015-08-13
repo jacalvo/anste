@@ -921,7 +921,7 @@ sub createSnapshot
         $self->deleteSnapshot($domain, $name);
     }
 
-    $self->execute("virsh snapshot-create-as $domain $name '$description'") or
+    $self->execute("virsh snapshot-create-as $domain '$name' '$description'") or
         throw ANSTE::Exceptions::Error("Error creating snapshot $name in domain $domain");
 }
 
@@ -949,7 +949,7 @@ sub revertSnapshot
         $self->execute("virsh net-create $bridge");
     }
 
-    $self->execute("virsh snapshot-revert $domain $name --force") or
+    $self->execute("virsh snapshot-revert $domain '$name' --force") or
         throw ANSTE::Exceptions::Error("Error reverting snapshot $name in domain $domain");
 }
 
@@ -968,7 +968,7 @@ sub deleteSnapshot
 
     return unless $self->existsSnapshot($domain, $name);
 
-    $self->execute("virsh snapshot-delete $domain $name") or
+    $self->execute("virsh snapshot-delete $domain '$name'") or
         throw ANSTE::Exceptions::Error("Error deleting snapshot $name in domain $domain");
 }
 
