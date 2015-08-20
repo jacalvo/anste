@@ -1846,6 +1846,25 @@ sub breakpoint
     return $self->{breakpoints}->{$name};
 }
 
+# Method: breakpoints
+#
+#   Get the defined breakpoints
+#
+# Returns:
+#
+#   array ref - the breakpoint names
+#
+sub breakpoints
+{
+    my ($self) = @_;
+
+    if (exists ($self->{breakpoints})) {
+        my @bks = keys %{$self->{breakpoints}};
+        return \@bks;
+    }
+    return [];
+}
+
 sub _filePath
 {
     my ($self, $file) = @_;

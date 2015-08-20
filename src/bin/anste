@@ -441,6 +441,10 @@ sub test
         if (ANSTE::Validate::suite($file)) {
             my $suite = new ANSTE::Test::Suite;
             $suite->loadFromDir($file, $varfile);
+            my $invalidBreaks = ANSTE::Validate::breakpoints($suite, $config->breakpoints());
+            if (@{$invalidBreaks}) {
+                print STDERR "The following breakpoints are not defined, skipping: " . join(", ", @{$invalidBreaks}) . "\n";
+            }
             $runner->runSuite($suite);
         } else {
             $runner->runDir($file);
