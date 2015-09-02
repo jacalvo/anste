@@ -1,4 +1,6 @@
 HEAD
+    + Show test type in console output
+    + Added anste-snapshot tool
     + Add -jump-to option similar to -reuse but starting directly from
       the specified test
     + Increase SOAP::Lite max msg size to 32MB
@@ -17,7 +19,6 @@ HEAD
     + Allow to define number of tries of a test before it passes
     + Do not warn about running machines with -reuse
     + Adding browser global option for webdriver tests
-    + Added restorelast command to anste-snapshot
     + Now cloud-init is configured to preserve the sources list
     + Now variables are also provided to the setup scripts
     + Now _deployCopy returns whether the deployment was okay or not
@@ -98,7 +99,6 @@ HEAD
     + Allow to specify if the host of a web test is an external_host
     + Show output when setup scripts fail
     + Use qcow2 images instead of raw to support snapshots
-    + Added anste-snapshot tool
     + Allow to define relative_url of a web test
     + Set options from [global] conf as commandline variables if not specified
     + Fixed check of running machines when system language is not English

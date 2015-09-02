@@ -66,8 +66,7 @@ sub new
     my ($class) = @_;
     my $self = {};
 
-    my $config = ANSTE::Config->instance();
-
+    $self->{config} = ANSTE::Config->instance();
     $self->{suite} = undef;
     $self->{report} = new ANSTE::Report::Report();
     $self->{system} = ANSTE::System::System->instance();
@@ -75,7 +74,7 @@ sub new
     $self->{errors} = 0;
     $self->{retest} = 0;
 
-    foreach my $format (@{$config->formats()}) {
+    foreach my $format (@{$self->{config}->formats()}) {
         my $writerPackage = "ANSTE::Report::$format" . 'Writer';
         eval "use $writerPackage";
         die "Can't load package $writerPackage: $@" if $@;
@@ -404,7 +403,13 @@ sub _runOneTest
 
     my $testName = $test->name();
     my $testHost = $test->host();
-    print "Running test ($idx/$total): $testName in host $testHost\n";
+    my $testType = $test->type();
+    if ($testType eq '') {
+        $testType = 'script';
+    } elsif ($testType eq 'web') {
+        $testType = $self->{config}->browser();
+    }
+    print "Running $testType test ($idx/$total): $testName in host $testHost\n";
     my ($testResult, $ret);
     try {
         my $tries = $test->tries();
@@ -459,11 +464,13 @@ sub _runTest
         }
     } else {
         my $cmd = $test->shellcmd();
-        my ($fh, $filename) = tempfile() or die "Can't create temporary script file: $!";
-        $path = $filename;
-        print $fh "#!/bin/bash\n";
-        print $fh "$cmd\n";
-        close($fh) or die "Can't close temporary script file: $!";
+        if ($cmd) {
+            my ($fh, $filename) = tempfile() or die "Can't create temporary script file: $!";
+            $path = $filename;
+            print $fh "#!/bin/bash\n";
+            print $fh "$cmd\n";
+            close($fh) or die "Can't close temporary script file: $!";
+        }
     }
 
     my $logPath = $config->logPath();

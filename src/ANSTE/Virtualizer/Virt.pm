@@ -409,8 +409,15 @@ sub createVM
     {
         lock($lockCreate);
 
-        $error = $self->execute("virsh create $path/$name/domain.xml") or
-                    throw ANSTE::Exceptions::Error("Error creating domain $name");
+        # Undefine if already exists, it may fail if there are snapshots
+        if ($self->execute("virsh dominfo $name", 1)) {
+            $self->execute("virsh undefine $name") or
+                    throw ANSTE::Exceptions::Error("Error undefining previous domain $name");
+        }
+        $error = $self->execute("virsh define $path/$name/domain.xml") or
+                    throw ANSTE::Exceptions::Error("Error defining domain $name");
+        $error = $self->execute("virsh start $name") or
+                    throw ANSTE::Exceptions::Error("Error starting domain $name");
     };
 
     return not $error;
@@ -918,7 +925,7 @@ sub createSnapshot
         $self->deleteSnapshot($domain, $name);
     }
 
-    $self->execute("virsh snapshot-create-as $domain $name '$description'") or
+    $self->execute("virsh snapshot-create-as $domain '$name' '$description'") or
         throw ANSTE::Exceptions::Error("Error creating snapshot $name in domain $domain");
 }
 
@@ -935,7 +942,18 @@ sub revertSnapshot
 {
     my ($self, $domain, $name) = @_;
 
-    $self->execute("virsh snapshot-revert $domain $name --force") or
+    # Make sure to bring network bridges up if they are not up yet,
+    # this is not the perfect solution, could be better to have some snapshot
+    # metadata and read from it, but it's a good and quick workaround
+    # to make this feature more useful
+    my $path = ANSTE::Config->instance()->imagePath();
+    for my $bridge (glob ("$path/anste-bridge*.xml")) {
+        my ($brname) = $bridge =~ m{$path/(anste-bridge.*)\.xml};
+        next if $self->execute("virsh net-info $brname", 1);
+        $self->execute("virsh net-create $bridge");
+    }
+
+    $self->execute("virsh snapshot-revert $domain '$name' --force") or
         throw ANSTE::Exceptions::Error("Error reverting snapshot $name in domain $domain");
 }
 
@@ -954,7 +972,7 @@ sub deleteSnapshot
 
     return unless $self->existsSnapshot($domain, $name);
 
-    $self->execute("virsh snapshot-delete $domain $name") or
+    $self->execute("virsh snapshot-delete $domain '$name'") or
         throw ANSTE::Exceptions::Error("Error deleting snapshot $name in domain $domain");
 }
 
