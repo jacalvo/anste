@@ -1,4 +1,5 @@
 HEAD
+    + Show test type in console output
     + Added anste-snapshot tool
     + Add -jump-to option similar to -reuse but starting directly from
       the specified test

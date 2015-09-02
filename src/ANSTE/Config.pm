@@ -1918,7 +1918,7 @@ sub _setDefaults
     $self->{default}->{'global'}->{'reuse'} = 0;
     $self->{default}->{'global'}->{'nodestroy'} = 0;
     $self->{default}->{'global'}->{'identifier'} = '';
-    $self->{default}->{'global'}->{'browser'} = '';
+    $self->{default}->{'global'}->{'browser'} = 'PhantomJS';
 
     $self->{default}->{'paths'}->{'images'} = '/tmp/images';
     $self->{default}->{'paths'}->{'deploy'} = "$data/deploy";
