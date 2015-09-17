@@ -18,18 +18,23 @@ use warnings;
 
 use ANSTE::Image::Image;
 
-use Test::More tests => 5;
+use Test::More tests => 7;
 
 my $image = new ANSTE::Image::Image(name => 'Name',
                                     ip => '192.168.0.150',
-                                    memory => '256M');
+                                    memory => '256M',
+                                    cpus => 2);
 
 is($image->name(), 'Name', 'image->name == Name');
 is($image->ip(), '192.168.0.150', 'image->ip == 192.168.0.150');
 is($image->memory(), '256M', 'image->memory == 256M');
+is($image->cpus(), '2', 'image->cpus == 2');
 
 $image->setIp('192.168.0.160');
 is($image->ip(), '192.168.0.160', 'image set new ip');
 
 $image->setMemory('512M');
 is($image->memory(), '512M', 'image set new memory');
+
+$image->setCpus('4');
+is($image->cpus(), '4', 'image set cpus');

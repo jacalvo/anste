@@ -1,6 +1,7 @@
 name: imageName
 desc: imageDesc
 memory: imageMemory
+cpus: imageCpus
 swap: imageSwap
 arch: imageArch
 size: imageSize

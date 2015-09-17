@@ -116,6 +116,7 @@ sub create
         my $ip = $self->ip();
         my $memory = $image->memory();
         my $swap = $image->swap();
+        my $cpus = $image->cpus();
         my $method = $image->installMethod();
         my $source = $image->installSource();
         my $dist = $image->installDist();
@@ -128,6 +129,7 @@ sub create
                                   ip => $ip,
                                   memory => $memory,
                                   swap => $swap,
+                                  cpus => $cpus,
                                   method => $method,
                                   source => $source,
                                   dist => $dist,

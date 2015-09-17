@@ -208,6 +208,44 @@ sub setMemory
     $self->{memory} = $memory;
 }
 
+# Method: cpus
+#
+#   Gets the number of CPUs
+#
+# Returns:
+#
+#   string - contains the number of CPUs
+#
+sub cpus
+{
+    my ($self) = shift;
+
+    return $self->{cpus};
+}
+
+# Method: setCpus
+#
+#   Sets the number of CPUs
+#
+# Parameters:
+#
+#   cpus - String with the number of CPUs
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setCpus
+{
+    my ($self, $cpus) = @_;
+
+    defined $cpus or
+        throw ANSTE::Exceptions::MissingArgument('cpus');
+
+    $self->{cpus} = $cpus;
+}
+
+
 # Method: baseImage
 #
 #   Gets the object with the information of the base image of the host.
@@ -553,6 +591,11 @@ sub loadYAML
     my $memory = $host->{memory};
     if ($memory) {
         $self->setMemory($memory);
+    }
+
+    my $cpus = $host->{cpus};
+    if ($cpus) {
+        $self->setCpus($cpus);
     }
 
     my $network = $host->{network};

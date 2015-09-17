@@ -19,7 +19,7 @@ use warnings;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Config;
 
-use Test::More tests => 54;
+use Test::More tests => 55;
 
 use constant SCENARIO => 'test.yaml';
 
@@ -94,6 +94,8 @@ sub testBaseImage # (image)
     is($desc, 'imageDesc', 'desc = imageDesc');
     my $memory = $image->memory();
     is($memory, 'imageMemory', 'memory = imageMemory');
+    my $cpus = $image->cpus();
+    is($cpus, 'imageCpus', 'cpus = imageCpus');
     my $size = $image->size();
     is($size, 'imageSize', 'size = imageSize');
     my $method = $image->installMethod();

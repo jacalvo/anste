@@ -39,6 +39,7 @@ use ANSTE::Exceptions::MissingArgument;
 #   name   - *optional* String with the image hostname.
 #   ip     - *optional* String with the image IP address.
 #   memory - *optional* String with the image memory size.
+#   cpus   - *optional* String with the image cpus number.
 #   swap   - *optional* String with the swap partition size.
 #
 # Returns:
@@ -59,6 +60,9 @@ sub new # returns new Image object
     }
     if (exists $params{memory}) {
         $self->{memory} = $params{memory};
+    }
+    if (exists $params{cpus}) {
+        $self->{cpus} = $params{cpus};
     }
     if (exists $params{swap}) {
         $self->{swap} = $params{swap};

@@ -81,10 +81,15 @@ sub new
     if (not $memory) {
         $memory = $host->baseImage()->memory();
     }
+    my $cpus = $host->cpus();
+    if (not $cpus) {
+        $cpus = $host->baseImage()->cpus();
+    }
     my $swap = $host->baseImage()->swap();
     my $image = new ANSTE::Image::Image(name => $hostname,
                                         memory => $memory,
                                         swap => $swap,
+                                        cpus => $cpus,
                                         ip => $ip);
     $image->setNetwork($host->network());
 

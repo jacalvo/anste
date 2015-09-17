@@ -180,6 +180,43 @@ sub setMemory
     $self->{memory} = $memory;
 }
 
+# Method: cpus
+#
+#   Gets the number of CPUs
+#
+# Returns:
+#
+#   string - contains the number of CPUs
+#
+sub cpus
+{
+    my ($self) = shift;
+
+    return $self->{cpus};
+}
+
+# Method: setCpus
+#
+#   Sets the number of CPUs
+#
+# Parameters:
+#
+#   cpus - String with the number of CPUs
+#
+# Exceptions:
+#
+#   <ANSTE::Exceptions::MissingArgument> - throw if argument is not present
+#
+sub setCpus
+{
+    my ($self, $cpus) = @_;
+
+    defined $cpus or
+        throw ANSTE::Exceptions::MissingArgument('cpus');
+
+    $self->{cpus} = $cpus;
+}
+
 # Method: size
 #
 #   Gets the size of the image.
@@ -702,20 +739,26 @@ sub _loadFromYAML
     my $desc = $image->{desc};
     $self->setDesc($desc);
 
-    my $memory= $image->{memory};
+    my $memory = $image->{memory};
     if ($memory) {
         $self->setMemory($memory);
     }
 
+    my $cpus = $image->{cpus};
+    unless ($cpus) {
+        $cpus = 1;
+    }
+    $self->setCpus($cpus);
+
     my $size = $image->{size};
     $self->setSize($size);
 
-    my $arch= $image->{arch};
+    my $arch = $image->{arch};
     if ($arch) {
         $self->setArch($arch);
     }
 
-    my $swap= $image->{swap};
+    my $swap = $image->{swap};
     if ($swap) {
         $self->setSwap($swap);
     }
@@ -775,7 +818,6 @@ sub _loadFromYAML
     if ($files) {
         $self->files()->loadYAML($files);
     }
-
 }
 
 sub _addScriptsFromYAML

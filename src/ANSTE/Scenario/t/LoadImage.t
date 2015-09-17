@@ -19,7 +19,7 @@ use warnings;
 use ANSTE::Scenario::BaseImage;
 use ANSTE::Config;
 
-use Test::More tests => 27;
+use Test::More tests => 28;
 
 sub testImage # (image)
 {
@@ -37,6 +37,8 @@ sub testImage # (image)
     is($arch, 'imageArch', 'image arch = imageArch');
     my $swap = $image->swap();
     is($swap, 'imageSwap', 'image swap = imageSwap');
+    my $cpus = $image->cpus();
+    is($cpus, 'imageCpus', 'image cpus = imageCpus');
 
     my $installMethod = $image->installMethod();
     is($installMethod, 'copy', 'image installMethod = copy');
