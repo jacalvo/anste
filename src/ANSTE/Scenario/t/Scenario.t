@@ -19,7 +19,7 @@ use warnings;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Config;
 
-use Test::More tests => 55;
+use Test::More tests => 56;
 
 use constant SCENARIO => 'test.yaml';
 
