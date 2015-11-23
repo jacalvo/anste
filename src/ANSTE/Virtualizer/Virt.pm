@@ -34,7 +34,7 @@ use File::Copy::Recursive qw(dircopy);
 
 use threads;
 use threads::shared;
-use TryCatch::Lite;
+use TryCatch;
 use Attempt;
 use File::Slurp;
 use POSIX;

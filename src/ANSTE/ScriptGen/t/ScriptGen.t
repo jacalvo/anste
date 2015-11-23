@@ -31,7 +31,7 @@ use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
 
 use Test::More tests => 7;
-use TryCatch::Lite;
+use TryCatch;
 
 use constant IMAGE => 'ubuntu-saucy.yaml';
 use constant SCENARIO => 'scenario.yaml';

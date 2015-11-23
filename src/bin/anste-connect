@@ -21,7 +21,7 @@ use strict;
 
 use ANSTE::Config;
 use ANSTE::Status;
-use TryCatch::Lite;
+use TryCatch;
 
 use Getopt::Long;
 

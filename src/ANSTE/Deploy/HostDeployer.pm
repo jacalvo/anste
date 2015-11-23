@@ -34,7 +34,7 @@ use ANSTE::Virtualizer::Virtualizer;
 use ANSTE::System::System;
 
 use threads;
-use TryCatch::Lite;
+use TryCatch;
 
 # Class: HostDeployer
 #

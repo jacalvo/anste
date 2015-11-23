@@ -28,7 +28,7 @@ use ANSTE::Exceptions::InvalidType;
 use ANSTE::Config;
 
 use Perl6::Junction qw(any);
-use TryCatch::Lite;
+use TryCatch;
 
 # Class: Host
 #

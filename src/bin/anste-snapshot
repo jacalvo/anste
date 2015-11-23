@@ -20,7 +20,7 @@ use strict;
 
 use ANSTE::Config;
 use ANSTE::Scenario::Snapshot;
-use TryCatch::Lite;
+use TryCatch;
 
 my ($command, $name, $desc) = @ARGV;
 
