@@ -1,0 +1,48 @@
+@media all and (max-width:985px) {
+	.wrapper {width: 95%;}
+	header {min-height: 1px;padding-bottom: 10px;}
+	header .container {width: 95%;}
+
+	h1 {font-size: 20px;margin: 2px 10px 0;}
+	.title img {height:25px; width:25px;}
+
+	h2 {font-size: 20px;}
+
+	h3 {font-size: 14px;}
+
+	pre {min-width:88%;}
+
+	iframe {height:auto;min-height: 255px;width:100%;}
+
+	.table-col {height:95%;}
+
+	.tool, .use {height:auto;}
+
+}
+
+@media all and (max-width:760px) {
+	h1 {margin: 1px 10px 0;width: 80%;}
+
+	h3 {font-size: 12px;}
+
+	.col-2 {width:100%;}
+
+	.section-table {float:none; display:block; width:100%;}
+
+	.table-col {height:auto;}
+
+	.section {float:none;width: 100%;}
+
+	pre {
+		 white-space: pre-wrap;       /* css-3 */
+		 white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+		 white-space: -pre-wrap;      /* Opera 4-6 */
+		 white-space: -o-pre-wrap;    /* Opera 7 */
+		 word-wrap: break-word;
+		 width: 86%;
+		 min-width: 1px;
+	}
+}
+
+.hightlight {line-height: 60px;}
+
