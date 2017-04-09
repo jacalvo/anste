@@ -39,7 +39,7 @@ use ANSTE::Virtualizer::Virtualizer;
 
 use Getopt::Long;
 use Pod::Usage;
-use TryCatch::Lite;
+use TryCatch;
 use Perl6::Junction qw(none);
 use Fcntl qw(:flock);
 

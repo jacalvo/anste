@@ -28,7 +28,7 @@ use ANSTE::Exceptions::InvalidType;
 use ANSTE::Scenario::Scenario;
 use ANSTE::Virtualizer::Virtualizer;
 
-use TryCatch::Lite;
+use TryCatch;
 
 # Class: Creator
 #

@@ -26,7 +26,7 @@ use ANSTE::Exceptions::NotFound;
 use Cwd;
 use JSON::XS;
 use File::Slurp;
-use TryCatch::Lite;
+use TryCatch;
 
 # Class: Snapshot
 #

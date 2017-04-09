@@ -22,7 +22,7 @@ use lib "$Bin/../src";
 use ANSTE::Validate;
 
 use Test::More tests => 14;
-use TryCatch::Lite;
+use TryCatch;
 use File::Temp qw(tempdir);
 
 ok(ANSTE::Validate::path('/tmp/'), 'correct path');

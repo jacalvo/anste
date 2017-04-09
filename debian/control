@@ -2,7 +2,7 @@ Source: anste
 Section: admin
 Priority: optional
 Maintainer: José Antonio Calvo <jacalvo@zentyal.com>
-Build-Depends: cdbs, dh-python, libtrycatch-lite-perl, libtest-class-perl,
+Build-Depends: cdbs, dh-python, libtrycatch-perl, libtest-class-perl,
                libfile-copy-recursive-perl, libsoap-lite-perl,
                libfile-slurp-perl, libconfig-tiny-perl, libperl6-junction-perl,
                libterm-readline-gnu-perl, libtext-template-perl,
@@ -14,7 +14,7 @@ Standards-Version: 3.7.2
 
 Package: anste
 Architecture: all
-Depends: perl, libtrycatch-lite-perl, libfile-copy-recursive-perl,
+Depends: perl, libtrycatch-perl, libfile-copy-recursive-perl,
          libsoap-lite-perl, libfile-slurp-perl, qemu-kvm, ubuntu-vm-builder,
          libconfig-tiny-perl, libperl6-junction-perl,
          libterm-readline-gnu-perl, libtext-template-perl, libvirt-bin,

@@ -24,7 +24,7 @@ use ANSTE::Exceptions::NotFound;
 
 use JSON::XS;
 use File::Slurp;
-use TryCatch::Lite;
+use TryCatch;
 
 # Class: Status
 #

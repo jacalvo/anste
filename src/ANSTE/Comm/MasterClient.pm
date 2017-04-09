@@ -24,7 +24,7 @@ use ANSTE::Exceptions::InvalidFile;
 
 use SOAP::Lite; # +trace => 'debug';
 use MIME::Base64;
-use TryCatch::Lite;
+use TryCatch;
 
 use constant URI => 'urn:ANSTE::Comm::SlaveServer';
 

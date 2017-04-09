@@ -27,7 +27,7 @@ use ANSTE::Exceptions::NotFound;
 
 use Cwd;
 use File::Temp qw(tempdir);
-use TryCatch::Lite;
+use TryCatch;
 use File::Slurp;
 
 my $SUITE_FILE = 'suite.html';

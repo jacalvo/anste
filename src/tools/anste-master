@@ -28,7 +28,7 @@ use ANSTE::Comm::HostWaiter;
 
 use Term::ReadLine;
 use File::Slurp;
-use TryCatch::Lite;
+use TryCatch;
 
 my $term = new Term::ReadLine('anste-master');
 

@@ -42,7 +42,7 @@ use Safe;
 use File::Basename;
 use File::Slurp;
 use File::Temp qw(tempfile tempdir);
-use TryCatch::Lite;
+use TryCatch;
 
 my $SUITE_FILE = 'suite.html';
 my $SUITE_LIST_FILE = 'suites.list';
