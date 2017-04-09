@@ -140,6 +140,9 @@ sub installBasePackages
     $self->execute('update-rc.d ansted defaults 99')
         or die "update-rc.d failed: $!";
 
+    $self->execute("sed -i 's/quiet splash/quiet splash net.ifnames=0 biosdevname=0/g' /boot/grub/menu.lst")
+        or die "edit /boot/grub/menu.lst failed: $!";
+
     if (ANSTE::Status->instance()->useOpenStack()) {
         $self->execute('echo "\n\napt_preserve_sources_list: True\n" >> /etc/cloud/cloud.cfg');
     }
@@ -218,7 +221,9 @@ sub updateNetworkCommand
     my $config = ANSTE::Config->instance();
 
     my $dist = $config->variables()->{'dist'};
-    if ($dist eq 'precise') {
+    if ($dist eq 'xenial') {
+        return '/bin/systemctl restart networking';
+    } elsif ($dist eq 'precise') {
         return '/etc/init.d/networking restart';
     } elsif ($dist eq 'trusty') {
         return 'ifdown -a; ifup -a';
