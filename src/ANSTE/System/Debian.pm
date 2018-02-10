@@ -108,8 +108,7 @@ sub installBasePackages
         push(@PACKAGES, 'cloud-init');
     }
 
-    # TODO: Unhardcode
-    $self->execute('echo "deb http://ppa.launchpad.net/zentyal/anste/ubuntu precise main" > /etc/apt/sources.list.d/anste.list')
+    $self->execute('echo "deb http://archive.zentyal.org/zentyal anste main" > /etc/apt/sources.list.d/anste.list')
         or die "write anste repository to sources.list failed: $!";
 
     $self->execute('apt-get update')
@@ -184,7 +183,7 @@ sub updateSystemCommand
 
     my $forceNew = '-o DPkg::Options::=--force-confnew';
     my $forceDef = '-o DPkg::Options::=--force-confdef';
-    my $options = "-y --force-yes $forceNew $forceDef";
+    my $options = "-y $forceNew $forceDef";
 
     return "apt-get dist-upgrade $options";
 }
@@ -250,7 +249,7 @@ sub installPackagesCommand
 
     my $packages = join(' ', @packages);
 
-    return 'DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y --force-yes $APT_OPTIONS ' . $packages;
+    return 'DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y $APT_OPTIONS ' . $packages;
 }
 
 # Method: installPackagesCommandType
@@ -867,7 +866,7 @@ sub _installPackages
 
     my $forceNew = '-o DPkg::Options::=--force-confnew';
     my $forceDef = '-o DPkg::Options::=--force-confdef';
-    my $options = "-y --force-yes $forceNew $forceDef";
+    my $options = "-y $forceNew $forceDef";
 
     my $list = join(' ', @list);
     my $command = "apt-get install $options $list";
