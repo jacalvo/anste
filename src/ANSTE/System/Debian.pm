@@ -28,11 +28,6 @@ use ANSTE::Exceptions::InvalidType;
 use ANSTE::Exceptions::InvalidFile;
 use File::Basename;
 
-use threads;
-use threads::shared;
-
-my %nbdDevs : shared;
-
 # Class: System
 #
 #    Implementation of the System class that interacts
@@ -62,16 +57,7 @@ sub mountImage
     defined $mountPoint or
         throw ANSTE::Exceptions::MissingArgument('mountPoint');
 
-    my $num = scalar keys %nbdDevs;
-    my $device = "/dev/nbd$num";
-
-    $self->execute('modprobe nbd nbds_max=32');
-
-    $self->execute("qemu-nbd -c $device $image");
-
-    $nbdDevs{$mountPoint} = $device;
-
-    $self->execute("mount ${device}p1 $mountPoint");
+    $self->execute("guestmount -a $image -m /dev/sda1 $mountPoint");
 }
 
 # Method: unmount
@@ -94,10 +80,7 @@ sub unmount
     defined $mountPoint or
         throw ANSTE::Exceptions::MissingArgument('mountPoint');
 
-    $self->execute("umount $mountPoint");
-
-    my $loopDev = $nbdDevs{$mountPoint};
-    $self->execute("qemu-nbd -d $loopDev");
+    $self->execute("guestunmount $mountPoint");
 }
 
 # Method: installBasePackages
